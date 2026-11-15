@@ -2,7 +2,8 @@ version = 1
 
 # Files that cannot carry a comment header, or whose format makes one
 # awkward: documentation, repository metadata, GitHub templates, test
-# configuration, and translation catalogs, which gettext regenerates.
+# configuration, translation catalogs, which gettext regenerates, and the
+# Cacti template export and data query files, which Cacti reads and writes.
 [[annotations]]
 path = [
     "README.md",
@@ -18,6 +19,8 @@ path = [
     "locales/po/**",
     "tests/fixtures/**",
     "locales/LC_MESSAGES/**",
+    "templates/**",
+    "resource/**",
 ]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2026 Thomas Vincent <thomasvincent@gmail.com>"

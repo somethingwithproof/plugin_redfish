@@ -38,7 +38,7 @@ const REDFISH_TABLES = [
 	'plugin_redfish_secret',
 ];
 
-const REDFISH_HOOKS = ['config_arrays', 'config_settings', 'draw_navigation_text', 'poller_bottom'];
+const REDFISH_HOOKS = ['api_device_new', 'config_arrays', 'config_settings', 'device_remove', 'draw_navigation_text', 'graph_buttons', 'poller_bottom'];
 
 beforeEach(function () {
 	lifecycle('reset');

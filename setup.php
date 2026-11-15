@@ -192,6 +192,45 @@ function redfish_credential_store(): \Somethingwithproof\Redfish\CredentialStore
 	return new \Somethingwithproof\Redfish\CredentialStore(redfish_credentials(), redfish_settings()->vaultKeyFile);
 }
 
+function redfish_cacti_objects(): \Somethingwithproof\Redfish\CactiObjectRepository {
+	return new \Somethingwithproof\Redfish\CactiObjectRepository(false);
+}
+
+function redfish_template_installer(): \Somethingwithproof\Redfish\TemplateInstaller {
+	global $config;
+
+	return new \Somethingwithproof\Redfish\TemplateInstaller(__DIR__, $config['base_path'], redfish_cacti_objects());
+}
+
+function redfish_provisioner(): \Somethingwithproof\Redfish\DeviceProvisioner {
+	global $config;
+
+	return new \Somethingwithproof\Redfish\DeviceProvisioner(
+		redfish_bmcs(),
+		redfish_cacti_objects(),
+		$config['base_path'],
+		static fn (int $hostId, int $userId): bool => (bool) is_device_allowed($hostId, $userId)
+	);
+}
+
+/**
+ * The data query answerer of scripts/ss_redfish_members.php.
+ */
+function redfish_member_query(): \Somethingwithproof\Redfish\MemberQuery {
+	$clock = new \Somethingwithproof\Redfish\SystemClock();
+
+	return new \Somethingwithproof\Redfish\MemberQuery(new \Somethingwithproof\Redfish\NodeCacheRepository(false), \Somethingwithproof\Redfish\FreshnessEvaluator::fromSettings($clock, redfish_settings()), $clock);
+}
+
+/**
+ * The summary answerer of scripts/ss_redfish_summary.php.
+ */
+function redfish_summary_script(): \Somethingwithproof\Redfish\SummaryScript {
+	$clock = new \Somethingwithproof\Redfish\SystemClock();
+
+	return new \Somethingwithproof\Redfish\SummaryScript(new \Somethingwithproof\Redfish\NodeCacheRepository(false), \Somethingwithproof\Redfish\FreshnessEvaluator::fromSettings($clock, redfish_settings()), $clock);
+}
+
 /**
  * Bring the schema, hooks, and realms up to the code's version.
  *
@@ -210,10 +249,15 @@ function plugin_redfish_upgrade(bool $grant = false): bool {
 		return false;
 	}
 
-	$info   = plugin_redfish_version();
-	$schema = new \Somethingwithproof\Redfish\Schema(false);
+	$info      = plugin_redfish_version();
+	$schema    = new \Somethingwithproof\Redfish\Schema(false);
+	$templates = redfish_template_installer();
 
-	if ($schema->isCurrent() && $schema->recordedPluginVersion() === $info['version'] && $schema->hooksRegistered()) {
+	// A template install that failed for this template version is retried
+	// only from the Plugins page or the health page, not on every request.
+	$templatesSettled = $templates->isCurrent() || ($templates->failure() !== '' && !$grant);
+
+	if ($schema->isCurrent() && $schema->recordedPluginVersion() === $info['version'] && $schema->hooksRegistered() && $templatesSettled) {
 		return true;
 	}
 
@@ -224,6 +268,12 @@ function plugin_redfish_upgrade(bool $grant = false): bool {
 	$schema->trackTables();
 
 	redfish_setup_hooks($grant);
+
+	// A missing template stops only device provisioning, which the health
+	// page reports; the plugin's pages and collector still work.
+	if (!$templates->isCurrent() && ($grant || $templates->failure() === '')) {
+		$templates->install();
+	}
 
 	$schema->recordPluginVersion($info['version'], $info['author'], $info['homepage']);
 
@@ -296,6 +346,10 @@ function plugin_redfish_uninstall(): void {
 	} else {
 		$schema->forgetVersion();
 	}
+
+	// The shipped templates and every graph made from them stay; only the
+	// query files the plugin wrote and that nobody changed are removed.
+	redfish_template_installer()->uninstall();
 }
 
 function redfish_config_arrays(): void {
@@ -335,6 +389,84 @@ function redfish_draw_navigation_text($nav) {
 	}
 
 	return array_merge($nav, \Somethingwithproof\Redfish\Pages::navigation());
+}
+
+/**
+ * device_remove hook: a deleted device no longer carries a BMC. The BMC, its
+ * credential, and its cache stay, unmapped, so only administrators see it
+ * until it is mapped again (REQ-DEV-003, REQ-DEV-005).
+ *
+ * @param mixed $hostIds
+ * @return mixed
+ */
+function redfish_device_remove($hostIds) {
+	if (!redfish_boot()) {
+		return $hostIds;
+	}
+
+	$ids = array();
+
+	foreach (is_array($hostIds) ? $hostIds : array($hostIds) as $id) {
+		if (is_numeric($id) && (int) $id > 0) {
+			$ids[] = (int) $id;
+		}
+	}
+
+	$count = redfish_bmcs()->unmapHosts($ids);
+
+	if ($count > 0) {
+		\Somethingwithproof\Redfish\Log::info(sprintf('%d BMCs lost their device when it was deleted; they can be mapped again from the BMC list', $count));
+	}
+
+	return $hostIds;
+}
+
+/**
+ * api_device_new hook, which Cacti runs after every device save: a mapped
+ * device moved to another poller than its BMC's is reported, not changed
+ * back (REQ-DEV-006). The health page shows it too.
+ *
+ * @param mixed $save
+ * @return mixed
+ */
+function redfish_api_device_new($save) {
+	if (!redfish_boot() || !is_array($save) || !isset($save['id']) || !is_numeric($save['id'])) {
+		return $save;
+	}
+
+	$bmc    = redfish_bmcs()->findByHost((int) $save['id']);
+	$poller = isset($save['poller_id']) && is_numeric($save['poller_id']) ? (int) $save['poller_id'] : 0;
+
+	if ($bmc !== null && $poller > 0 && $poller !== $bmc->pollerId) {
+		\Somethingwithproof\Redfish\Log::warning(sprintf('Device %d of BMC %d is now polled by poller %d, but the BMC is read by poller %d', (int) $save['id'], $bmc->id, $poller, $bmc->pollerId));
+	}
+
+	return $save;
+}
+
+/**
+ * graph_buttons hook: link the graphs of a device with a BMC to all of that
+ * device's Redfish graphs (REQ-GRAPH-003).
+ *
+ * @param mixed $data
+ * @return mixed
+ */
+function redfish_graph_buttons($data) {
+	global $config;
+
+	if (!redfish_boot() || !api_plugin_is_enabled('redfish')) {
+		return $data;
+	}
+
+	$payload = is_array($data) && isset($data[1]) && is_array($data[1]) ? $data[1] : array();
+	$graphId = isset($payload['local_graph_id']) && is_numeric($payload['local_graph_id']) ? (int) $payload['local_graph_id'] : 0;
+	$hostId  = (new \Somethingwithproof\Redfish\GraphLinks(redfish_bmcs(), redfish_cacti_objects()))->hostFor($graphId);
+
+	if ($hostId > 0 && is_device_allowed($hostId, redfish_user_id())) {
+		print \Somethingwithproof\Redfish\GraphLinks::html($config['url_path'], $hostId);
+	}
+
+	return $data;
 }
 
 /**

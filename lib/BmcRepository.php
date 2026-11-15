@@ -99,6 +99,53 @@ final class BmcRepository {
 	}
 
 	/**
+	 * The BMC mapped to a Cacti device, or null. A device carries at most one
+	 * BMC, because the script server finds a BMC by its device.
+	 */
+	public function findByHost(int $hostId, int $exceptId = 0): ?Bmc {
+		$id = $hostId > 0 ? (int) db_fetch_cell_prepared('SELECT id FROM plugin_redfish_bmc WHERE host_id = ? AND id != ? ORDER BY id LIMIT 1', [$hostId, $exceptId], '', true, $this->connection) : 0;
+
+		return $id > 0 ? $this->find($id) : null;
+	}
+
+	/**
+	 * Map a BMC to a device the provisioner created or attached, with an
+	 * audit entry.
+	 */
+	public function mapHost(int $bmcId, int $hostId, int $userId): bool {
+		$ok = db_execute_prepared('UPDATE plugin_redfish_bmc SET host_id = ?, updated_at = ? WHERE id = ?', [$hostId, $this->clock->now(), $bmcId], true, $this->connection);
+
+		if ($ok) {
+			$this->audit($bmcId, $userId, 'update', ['host_id']);
+		}
+
+		return (bool) $ok && $this->find($bmcId)?->hostId === $hostId;
+	}
+
+	/**
+	 * device_remove hook: BMCs of deleted devices become unmapped. The BMC,
+	 * its credential, and its cache stay (REQ-DEV-003).
+	 *
+	 * @param list<int> $hostIds
+	 */
+	public function unmapHosts(array $hostIds): int {
+		$hostIds = array_values(array_filter($hostIds, static fn (int $id): bool => $id > 0));
+
+		if ($hostIds === []) {
+			return 0;
+		}
+
+		$ids = array_map(static fn (array $row): int => Row::int($row, 'id'), Row::rows(db_fetch_assoc_prepared('SELECT id FROM plugin_redfish_bmc WHERE host_id IN (' . implode(', ', array_fill(0, count($hostIds), '?')) . ')', $hostIds, true, $this->connection)));
+
+		foreach ($ids as $id) {
+			db_execute_prepared('UPDATE plugin_redfish_bmc SET host_id = 0, updated_at = ? WHERE id = ?', [$this->clock->now(), $id], true, $this->connection);
+			$this->audit($id, 0, 'unmap', ['host_id']);
+		}
+
+		return count($ids);
+	}
+
+	/**
 	 * Device choices for the edit form: id => description.
 	 *
 	 * @return array<int, string>

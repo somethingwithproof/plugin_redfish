@@ -1,0 +1,54 @@
+<interface>
+	<name>Redfish Power Supplies</name>
+	<description>Power supplies of a server, read over Redfish and answered from the plugin cache</description>
+	<script_path>|path_cacti|/plugins/redfish/scripts/ss_redfish_members.php</script_path>
+	<script_function>ss_redfish_members</script_function>
+	<script_server>php</script_server>
+	<arg_prepend>|host_id| psu</arg_prepend>
+	<arg_index>index</arg_index>
+	<arg_query>query</arg_query>
+	<arg_get>get</arg_get>
+	<arg_num_indexes>num_indexes</arg_num_indexes>
+	<output_delimiter>!</output_delimiter>
+	<index_order>redfishIndex</index_order>
+	<index_order_type>alphabetic</index_order_type>
+	<index_title_format>|chosen_order_field|</index_title_format>
+
+	<fields>
+		<redfishIndex>
+			<name>Member Key</name>
+			<direction>input</direction>
+			<query_name>index</query_name>
+		</redfishIndex>
+		<redfishName>
+			<name>Name</name>
+			<direction>input</direction>
+			<query_name>name</query_name>
+		</redfishName>
+		<redfishChassis>
+			<name>Chassis</name>
+			<direction>input</direction>
+			<query_name>chassis</query_name>
+		</redfishChassis>
+		<redfishUnit>
+			<name>Unit</name>
+			<direction>input</direction>
+			<query_name>unit</query_name>
+		</redfishUnit>
+		<psu_input_watts>
+			<name>Input Power (W)</name>
+			<direction>output</direction>
+			<query_name>psu_input_watts</query_name>
+		</psu_input_watts>
+		<psu_output_watts>
+			<name>Output Power (W)</name>
+			<direction>output</direction>
+			<query_name>psu_output_watts</query_name>
+		</psu_output_watts>
+		<psu_health>
+			<name>Supply Health (0 OK, 1 Warning, 2 Critical)</name>
+			<direction>output</direction>
+			<query_name>psu_health</query_name>
+		</psu_health>
+	</fields>
+</interface>

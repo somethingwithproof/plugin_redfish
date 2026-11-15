@@ -45,5 +45,6 @@ $redfish_page     = new \Somethingwithproof\Redfish\HealthPage(
 );
 
 top_header();
-$redfish_page->render($redfish_settings, api_user_realm_auth('redfish_bmcs.php'));
+$redfish_admin = api_user_realm_auth('redfish_bmcs.php');
+$redfish_page->render($redfish_settings, $redfish_admin, \Somethingwithproof\Redfish\DeviceWarnings::for(\Somethingwithproof\Redfish\HealthPage::visible(redfish_device_scope()->filter(redfish_bmcs()->all()), $redfish_admin), redfish_cacti_objects(), redfish_template_installer()));
 bottom_footer();

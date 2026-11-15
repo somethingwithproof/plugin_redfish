@@ -186,16 +186,58 @@ msgstr ""
 msgid "Enabled"
 msgstr ""
 
-#: lib/BmcsPage.php lib/CredentialsPage.php
-msgid "Delete"
-msgstr ""
-
 #: lib/BmcsPage.php
 msgid "Retry Now"
 msgstr ""
 
 #: lib/BmcsPage.php
+msgid "Add Graphs"
+msgstr ""
+
+#: lib/BmcsPage.php
+msgid "Create Device"
+msgstr ""
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Delete"
+msgstr ""
+
+#: lib/BmcsPage.php
 msgid "Export the BMC registry as JSON (no secrets)"
+msgstr ""
+
+#: lib/BmcsPage.php
+msgid "Reinstall the Redfish Templates"
+msgstr ""
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Add Redfish graphs for %s"
+msgstr ""
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Create a Cacti device for %s"
+msgstr ""
+
+#: lib/BmcsPage.php
+msgid "Everything is already in place. Confirming indexes the data queries again and adds graphs for new members only."
+msgstr ""
+
+#: lib/BmcsPage.php
+msgid "Confirming adds:"
+msgstr ""
+
+#: lib/BmcsPage.php
+msgid "Existing devices, graphs, and thresholds are not changed."
+msgstr ""
+
+#: lib/BmcsPage.php
+msgid "Confirm"
+msgstr ""
+
+#: lib/BmcsPage.php
+msgid "Cancel"
 msgstr ""
 
 #: lib/BmcsPage.php
@@ -270,7 +312,7 @@ msgid "Used only when the BMC offers no session service. Every request then carr
 msgstr ""
 
 #: lib/BmcsPage.php
-msgid "The Cacti device this BMC belongs to. This release creates no devices."
+msgid "The Cacti device of the server this BMC manages. Leave it at none to have the plugin create a device from the list."
 msgstr ""
 
 #: lib/BmcsPage.php lib/CredentialsPage.php
@@ -292,6 +334,10 @@ msgstr ""
 
 #: lib/BmcsPage.php
 msgid "Device: no Cacti device has this ID."
+msgstr ""
+
+#: lib/BmcsPage.php
+msgid "Device: another BMC is already mapped to this device."
 msgstr ""
 
 #: lib/CredentialsPage.php lib/Pages.php
@@ -346,6 +392,69 @@ msgstr ""
 
 #: lib/CredentialsPage.php
 msgid "Stored encrypted with the vault key."
+msgstr ""
+
+#: lib/DeviceProvisioner.php
+msgid "The Redfish templates are not installed. Reinstall them from the Redfish BMCs page."
+msgstr ""
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "A device \"%s\" from the %s device template, polled by poller %d, with availability checks off. Its host name is a reserved name that is never contacted."
+msgstr ""
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "The data query \"%s\", with a graph for each of the %d members known now."
+msgstr ""
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "The graph \"%s\", with its \"%s\" data source."
+msgstr ""
+
+#: lib/DeviceProvisioner.php
+msgid "The BMC is already mapped to a device."
+msgstr ""
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "Created by the Redfish plugin for BMC %s. Its values come from the plugin cache; the host name is a reserved name that is never contacted."
+msgstr ""
+
+#: lib/DeviceProvisioner.php
+msgid "Cacti refused to create the device. See the Cacti log."
+msgstr ""
+
+#: lib/DeviceProvisioner.php
+msgid "The new device would be hidden from you by your device permissions, so it was removed again. Ask an administrator to grant access, or map the BMC to a device you can see."
+msgstr ""
+
+#: lib/DeviceProvisioner.php
+msgid "The device could not be mapped to the BMC, so it was removed again."
+msgstr ""
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "The Redfish templates could not be installed: %s"
+msgstr ""
+
+#: lib/DeviceWarnings.php
+msgid "The Redfish templates are not installed or not current. Reinstall them from the Redfish BMCs page."
+msgstr ""
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "%s: its Cacti device was deleted. Map it to another device or create one from the BMCs page."
+msgstr ""
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "%s: its device is polled by poller %d but the BMC is read by poller %d. Move one of them so both use the same poller, or its graphs can read as unknown."
+msgstr ""
+
+#: lib/GraphLinks.php
+msgid "Redfish graphs of this device"
 msgstr ""
 
 #: lib/HealthPage.php
@@ -687,6 +796,35 @@ msgstr ""
 
 #: redfish_bmcs.php
 msgid "Backoff and held failures were cleared; the collector reads the BMC on its next run."
+msgstr ""
+
+#: redfish_bmcs.php
+msgid "Adding devices and graphs needs Cacti's device management permission."
+msgstr ""
+
+#: redfish_bmcs.php
+msgid "The device of this BMC was deleted. Choose another device, or none, on the BMC form first."
+msgstr ""
+
+#: redfish_bmcs.php
+#, php-format
+msgid "The data queries were indexed again and %d graphs were added."
+msgstr ""
+
+#: redfish_bmcs.php
+msgid "The device was created with its Redfish graphs."
+msgstr ""
+
+#: redfish_bmcs.php
+msgid "Installing the Redfish templates needs Cacti's Import Templates permission."
+msgstr ""
+
+#: redfish_bmcs.php
+msgid "The Redfish templates are installed."
+msgstr ""
+
+#: redfish_bmcs.php
+msgid "The Redfish templates could not be installed. The health page shows why."
 msgstr ""
 
 #: redfish_bmcs.php

@@ -37,9 +37,12 @@ final class Schema {
 	public const VERSION = 1;
 
 	public const HOOKS = [
+		'api_device_new'       => 'redfish_api_device_new',
 		'config_arrays'        => 'redfish_config_arrays',
 		'config_settings'      => 'redfish_config_settings',
+		'device_remove'        => 'redfish_device_remove',
 		'draw_navigation_text' => 'redfish_draw_navigation_text',
+		'graph_buttons'        => 'redfish_graph_buttons',
 		'poller_bottom'        => 'redfish_poller_bottom',
 	];
 
@@ -215,7 +218,8 @@ final class Schema {
 				],
 				'primary'     => 'id',
 				'unique_keys' => [['name' => 'name', 'columns' => ['name']], ['name' => 'address_port', 'columns' => ['address', 'port']]],
-				'keys'        => [['name' => 'poller_id', 'columns' => ['poller_id']], ['name' => 'credential_id', 'columns' => ['credential_id']]],
+				// host_id: the script server finds a device's BMC on every poll.
+				'keys'        => [['name' => 'poller_id', 'columns' => ['poller_id']], ['name' => 'credential_id', 'columns' => ['credential_id']], ['name' => 'host_id', 'columns' => ['host_id']]],
 			],
 			'plugin_redfish_credential' => $innodb + [
 				'comment' => 'BMC credentials; the password is in plugin_redfish_secret',

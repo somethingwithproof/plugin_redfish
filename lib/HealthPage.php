@@ -40,12 +40,13 @@ final class HealthPage {
 	}
 
 	/**
-	 * @param bool $admin whether the viewer has Redfish Admin, which alone
-	 *                    sees credential warnings
+	 * @param bool                                        $admin whether the viewer has Redfish Admin, which alone
+	 *                                                           sees credential and template warnings
+	 * @param list<array{admin: bool, message: string}> $extra warnings about Cacti objects, from DeviceWarnings
 	 */
-	public function render(Settings $settings, bool $admin): void {
+	public function render(Settings $settings, bool $admin, array $extra = []): void {
 		$now    = $this->clock->now();
-		$bmcs   = $this->scope->filter($this->bmcs->all());
+		$bmcs   = self::visible($this->scope->filter($this->bmcs->all()), $admin);
 		$health = [];
 		$has    = [];
 
@@ -60,7 +61,7 @@ final class HealthPage {
 
 		$shown = 0;
 
-		foreach (HealthWarnings::for($bmcs, $health, $has, $admin ? $this->credentials->keyProblem() : null, $runs, $settings, $now) as $warning) {
+		foreach (array_merge(HealthWarnings::for($bmcs, $health, $has, $admin ? $this->credentials->keyProblem() : null, $runs, $settings, $now), $extra) as $warning) {
 			if ($warning['admin'] && !$admin) {
 				continue;
 			}
@@ -108,6 +109,18 @@ final class HealthPage {
 		}
 
 		html_end_box();
+	}
+
+	/**
+	 * A BMC with no Cacti device has no device permission to follow, so only
+	 * Redfish administrators see it (REQ-DEV-005).
+	 *
+	 * @param list<Bmc> $bmcs
+	 *
+	 * @return list<Bmc>
+	 */
+	public static function visible(array $bmcs, bool $admin): array {
+		return $admin ? $bmcs : array_values(array_filter($bmcs, static fn (Bmc $bmc): bool => $bmc->hostId > 0));
 	}
 
 	/**
