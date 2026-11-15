@@ -1,6 +1,6 @@
 # Cacti 1.2 Redfish and IPMI Power and Thermal Plugin Plan
 
-Status: in development, plan revision 2 (2026-11-15). Revision 2 adds the documentation and source research for milestone 1; see [Milestone 1 research](#milestone-1-research). Milestone 2 (foundation) is merged on `main`: the lifecycle and PHP guard, realms and settings, the BMC registry, the encrypted credential store, the read-only Redfish client with its TLS trust modes, discovery and the reading model, the collector, and the health, BMC, and credential pages, tested only against a fake BMC. Decisions are recorded in ADRs 0009 to 0014, and divergences from this plan are stated in place. Milestone 3 and later are not done: no Cacti device, data source, graph, Thold or Maint integration exists, and there is no release. Statements about the Redfish standard, BMC firmware, ipmitool, Cacti core, and Cacti plugins describe upstream behavior as observed on the date and revision named in each source. Anything that was not verified is marked as an assumption and has a research issue; items that need real BMC hardware or a running Cacti are marked *live*. Owner is not assigned; size estimates are in [research/estimates.md](research/estimates.md), and calendar time is not estimated.
+Status: in development, plan revision 2 (2026-11-15). Revision 2 adds the documentation and source research for milestone 1; see [Milestone 1 research](#milestone-1-research). Milestone 2 (foundation) is merged on `main`: the lifecycle and PHP guard, realms and settings, the BMC registry, the encrypted credential store, the read-only Redfish client with its TLS trust modes, discovery and the reading model, the collector, and the health, BMC, and credential pages, tested only against a fake BMC. Decisions are recorded in ADRs 0009 to 0014, and divergences from this plan are stated in place. Milestone 3 (Cacti objects and alerting) is in review: shipped templates, device creation or mapping ([ADR 0015](decisions/0015-attach-to-the-server-device-or-create-one-per-bmc.md)), per-member and summary graphs, Thold and Maint replays against pinned releases, the device permission suite, and a scale harness; its divergences are stated under [Cacti objects](#cacti-objects), [Alerting and maintenance](#alerting-and-maintenance), and [Performance](#performance). Milestone 4 and later are not done, and there is no release. Statements about the Redfish standard, BMC firmware, ipmitool, Cacti core, and Cacti plugins describe upstream behavior as observed on the date and revision named in each source. Anything that was not verified is marked as an assumption and has a research issue; items that need real BMC hardware or a running Cacti are marked *live*. Owner is not assigned; size estimates are in [research/estimates.md](research/estimates.md), and calendar time is not estimated.
 
 `plugin_redfish` is a Cacti 1.2 plugin that reads power draw, temperatures, fan state, and power supply health from server baseboard management controllers (BMCs) over Redfish, with IPMI as an optional fallback, and presents them as ordinary Cacti devices, data sources, and graphs. Thold and Maint then work on them unchanged, and a later phase adds rack-level totals.
 
@@ -247,12 +247,21 @@ The collector runs outside Cacti's per-device polling threads. It reads BMCs on 
 | Object | Created from | Notes |
 |---|---|---|
 | Device | Existing server device (mapped) or a "Redfish BMC" device template; each device the plugin creates gets `availability_method` 0 (None) through `api_device_save()`, because a device template cannot carry availability | Decision #11 settles the default |
-| Per-index data query | "Redfish Sensors" script server data query | Indexes are fans, temperature sensors, and power supplies of the device |
-| Per-index data sources and graphs | Data templates per kind: fan, temperature, power supply | Created through Cacti's data query and graph APIs |
-| Summary data source | "Redfish Node Summary" data template, script server input | Polled; reaches Thold through `poller_output` |
+| Per-index data queries | "Redfish Fans", "Redfish Temperatures", "Redfish Power Supplies" script server data queries | Indexes are the device's fans, temperature sensors, and power supplies (milestone 3 divergence, below) |
+| Per-index data sources and graphs | Data templates per kind: fan speed in percent, fan speed in RPM, temperature, power supply | Created through Cacti's data query and graph APIs |
+| Summary data sources | "Redfish Node Summary" data template, script server input | Polled; reaches Thold through `poller_output`; one data source per summary graph (below) |
 | Rack objects (phase 3) | Plugin rack table; a template-marked device per rack for totals | Decision #15 settles the rack model |
 
 Templates ship as Cacti template XML in the plugin and are imported with `import_xml_data()` at install and upgrade, matched by hash so re-imports update. Per-index graphs follow the pattern used by plugin_cloudflare, where one data query supplies the indexes (its tunnels) and one device carries many indexed graphs ([plugin_cloudflare tree](https://github.com/somethingwithproof/plugin_cloudflare/tree/a26f78dc48473ff97f518fab3e7a37cf00538c43), `templates/resource/cloudflare_tunnels.xml`). Milestone 1 builds a spike for variable index counts ([#29](https://github.com/somethingwithproof/plugin_redfish/issues/29)).
+
+Milestone 3 divergences, as built:
+
+- **Three data queries, not one.** A Cacti data query has one set of output fields for every index, and fans, temperatures, and supplies report different values, so each kind has its own query, query file, and graph templates. The index is the member key from the cache, kept as is when it is short and plain and otherwise shortened with a hash suffix, sorted alphabetically.
+- **Fan speed has two graph templates.** The unit comes from the BMC (see [Upstream behavior](#upstream-behavior-the-design-depends-on)), so the plugin creates the percent or the RPM graph for each fan from the unit it cached; a fan whose unit is unknown gets no graph until a later **Add Graphs**. A value in the other unit is served as `U`.
+- **One summary data source per graph.** Cacti's RRD for a data source holds only the values its graph draws, so each of the four summary graphs (power, temperatures, component health, data age) has its own data source from the one template.
+- **Query files are copied into Cacti.** Cacti reads a script server query's XML from its own `resource/script_server/` directory, so the plugin copies its three files there with a recorded hash and refuses to replace a file it did not write.
+- **Data source profile.** The templates carry no data source profile; Cacti's default profile applies at import.
+- **Re-index.** Members that disappear keep their index, data source, and graph, which read `U`; **Add Graphs** indexes again and graphs new members. Nothing deletes graphs automatically.
 
 ## Normalized measurement model
 
@@ -314,10 +323,14 @@ The "Redfish Node Summary" data source returns, from the cache:
 | `power_watts` | Latest node power | `U` |
 | `inlet_celsius` | Latest inlet temperature | `U` |
 | `max_temp_celsius` | Highest temperature reading on the node | `U` |
-| `fans_bad` | Fans whose health is not OK, absent members counted separately | `U` |
+| `fans_bad` | Present fans whose health is not OK; a second rotor of the same fan is not counted again | `U` |
 | `psus_bad` | Power supplies whose health is not OK | `U` |
 | `health_code` | Worst node health | `U` |
 | `age` | Seconds since the last successful read | Always numeric, so Thold can alert on a BMC that stopped answering |
+
+Every value the plugin stores is a `GAUGE`. Thold 1.8.2 fails with a PHP TypeError when a thresholded `COUNTER` or `DERIVE` data source reads `U`, and Cacti then disables Thold for every user; the plugin has no counter today, and any later one will be computed in the plugin from consecutive reads, `U` on a reset or a missing read, and stored as a gauge. The alert replay checks that thresholded values reading `U` leave Thold enabled.
+
+Milestone 3 divergence: `fans_bad` and `psus_bad` count present members only, and are `U` while node health is not usable. A member that turns `Absent` is not counted as bad; its per-member graph shows a gap. Counting absent members is left open (decision needed on whether a pulled fan alerts as a failure).
 
 Thold thresholds and Maint schedules apply with no change to either plugin ([ADR 0002](decisions/0002-alert-through-cacti-data-sources.md)). Stated limits:
 
@@ -406,6 +419,19 @@ Engineering targets, to be measured, not yet demonstrated:
 
 The setup screen shows request rate and Cacti object count before a bulk import.
 
+### Milestone 3 measurements
+
+Measured on 2026-11-15 with `tests/bin/scale-replay.sh` on Cacti 1.2.31, PHP 8.2.35, and MariaDB 11.8.9 in Docker on an Apple M3 Max laptop (14 CPUs and about 16 GiB given to Docker). **These numbers describe that machine and the fake BMC, not a BMC network.** The collector ran in one process as one worker against one fake BMC on loopback, which serves one connection at a time from the Dell fixture; no real BMC, management network, or TLS handshake cost of embedded hardware is included.
+
+| BMCs | Added latency per answer | First run (discovery and readings) | Second run (readings) | Requests per BMC, first and second | Collector peak memory | Summary input, mean and p99 | Member query get, mean and p99 |
+|---|---|---|---|---|---|---|---|
+| 100 | none | 4.8 s (48 ms per BMC) | 2.0 s (20 ms per BMC) | 28, 11 | 10 MiB | 0.22 ms, 0.96 ms | 0.08 ms, 0.26 ms |
+| 100 | 20 ms | 70.0 s (700 ms per BMC) | 27.4 s (274 ms per BMC) | 28, 11 | 10 MiB | 0.14 ms, 0.21 ms | 0.06 ms, 0.16 ms |
+| 1,000 | none | 46.5 s (47 ms per BMC) | 20.6 s (21 ms per BMC) | 28, 11 | 12 MiB | 0.14 ms, 0.28 ms | 0.08 ms, 0.27 ms |
+
+What this shows: collector time grows linearly with the BMC count, memory stays flat, and the script server answers from the cache in well under a millisecond per call at 1,000 BMCs (26,000 reading rows), so Cacti's poll does not wait on BMCs. What it does not show: whether the collector finishes within `T` at 1,000 real BMCs. By the arithmetic above, at the 20 ms row's 274 ms per BMC one worker would need about 274 s for 1,000 BMCs; at the illustrative 0.5 s per request and 11 requests, about 5.5 s per BMC, or about 19 workers for `T = 300 s`. Real latency is *live*, as is the overview page target, which was not measured.
+
+
 ## Security
 
 | Boundary | Control |
@@ -456,7 +482,7 @@ Phase 2 needs a security review covering command construction, environment handl
 | Redfish resource model | **Decided:** new subsystem resources first with legacy fallback, chosen per reading ([ADR 0013](decisions/0013-choose-the-resource-source-per-reading.md)) | Milestone 2 | Milestone 1 vendor matrix |
 | Credential storage | **Decided:** plugin-owned AES-256-GCM vault with the key file outside the database, not plugin_credentials, which has no release ([ADR 0009](decisions/0009-plugin-owned-credential-vault.md)) | Milestone 2 | Research #28 |
 | TLS trust for BMC certificates | **Decided:** system store, CA bundle, or per-BMC SPKI SHA-256 pin, with an explicit, logged, per-BMC unverified opt-out shown on the health page ([ADR 0011](decisions/0011-tls-trust-modes.md)) | Milestone 2 | Plugin maintainer; pilots may revise |
-| BMC to Cacti device mapping | Map onto the existing server device, create a BMC device only when none exists (proposed); always a separate BMC device | Milestone 3 | Plugin maintainer and pilots |
+| BMC to Cacti device mapping | **Decided:** attach to the server's existing device when the operator maps one, otherwise create one device per BMC from the plugin device template after confirmation, through Cacti's API and only for users with device management ([ADR 0015](decisions/0015-attach-to-the-server-device-or-create-one-per-bmc.md)) | Milestone 3 | Plugin maintainer; pilots may revise |
 | Repository and name | Slug `redfish`, namespace `Somethingwithproof\Redfish` used provisionally ([ADR 0014](decisions/0014-plugin-name-namespace-and-provisional-harness.md)); still open | Before any code is published | Cacti maintainers |
 | Test harness | Pest from Cacti core's locked harness, used provisionally ([ADR 0014](decisions/0014-plugin-name-namespace-and-provisional-harness.md)); still open | Milestone 2 | Cacti maintainers |
 | IPMI client | `ipmitool`; FreeIPMI; a native implementation; ship no IPMI | Milestone 5 | Research and security review |
