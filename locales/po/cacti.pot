@@ -79,6 +79,16 @@ msgid "Line %d: no Cacti device has ID %d."
 msgstr ""
 
 #: lib/BmcImport.php
+#, php-format
+msgid "Line %d: device %d already has the BMC %s."
+msgstr ""
+
+#: lib/BmcImport.php
+#, php-format
+msgid "of line %d"
+msgstr ""
+
+#: lib/BmcImport.php
 msgid "The file has no BMC rows."
 msgstr ""
 
@@ -395,7 +405,7 @@ msgid "Stored encrypted with the vault key."
 msgstr ""
 
 #: lib/DeviceProvisioner.php
-msgid "The Redfish templates are not installed. Reinstall them from the Redfish BMCs page."
+msgid "The Redfish templates are not installed completely. Reinstall them from the Redfish BMCs page."
 msgstr ""
 
 #: lib/DeviceProvisioner.php
@@ -406,6 +416,11 @@ msgstr ""
 #: lib/DeviceProvisioner.php
 #, php-format
 msgid "The data query \"%s\", with a graph for each of the %d members known now."
+msgstr ""
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "%d fans or power supplies that were present are no longer reported. They count as failed until you confirm; confirming accepts the members the BMC reports now."
 msgstr ""
 
 #: lib/DeviceProvisioner.php
@@ -431,7 +446,7 @@ msgid "The new device would be hidden from you by your device permissions, so it
 msgstr ""
 
 #: lib/DeviceProvisioner.php
-msgid "The device could not be mapped to the BMC, so it was removed again."
+msgid "The BMC was mapped to a device by someone else meanwhile, or could not be mapped, so the new device was removed again. Reload the page and check its mapping."
 msgstr ""
 
 #: lib/DeviceWarnings.php

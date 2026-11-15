@@ -259,9 +259,11 @@ Milestone 3 divergences, as built:
 - **Three data queries, not one.** A Cacti data query has one set of output fields for every index, and fans, temperatures, and supplies report different values, so each kind has its own query, query file, and graph templates. The index is the member key from the cache, kept as is when it is short and plain and otherwise shortened with a hash suffix, sorted alphabetically.
 - **Fan speed has two graph templates.** The unit comes from the BMC (see [Upstream behavior](#upstream-behavior-the-design-depends-on)), so the plugin creates the percent or the RPM graph for each fan from the unit it cached; a fan whose unit is unknown gets no graph until a later **Add Graphs**. A value in the other unit is served as `U`.
 - **One summary data source per graph.** Cacti's RRD for a data source holds only the values its graph draws, so each of the four summary graphs (power, temperatures, component health, data age) has its own data source from the one template.
-- **Query files are copied into Cacti.** Cacti reads a script server query's XML from its own `resource/script_server/` directory, so the plugin copies its three files there with a recorded hash and refuses to replace a file it did not write.
+- **Query files are copied into Cacti.** Cacti reads a script server query's XML from its own `resource/script_server/` directory, so the plugin copies its three files there and records the hash of each file as it writes it. It claims only files it wrote, so uninstall leaves an identical file the site put there, refuses to replace a file it did not write, and refuses a link in place of a file; it writes a temporary file and renames it over the target.
 - **Data source profile.** The templates carry no data source profile; Cacti's default profile applies at import.
-- **Re-index.** Members that disappear keep their index, data source, and graph, which read `U`; **Add Graphs** indexes again and graphs new members. Nothing deletes graphs automatically.
+- **One BMC per device.** A Cacti device carries at most one BMC. The edit form, the CSV import (against the registry and within one file), and device creation check it, and a unique key in the database holds it when two writes race; any number of BMCs can stay unmapped. Schema version 2 adds the key and unmaps all but the lowest BMC id of a device that already carried several, with a log line for each.
+- **Provisioning needs every template.** Device creation is refused until the device template, the data input, every data template and graph template, every data query, each data query's graph association, and the query files are in place.
+- **Re-index.** Members that disappear keep their index, data source, and graph, which read `U`; **Add Graphs** indexes again, graphs new members, and accepts the members as reported, so a fan or supply that is gone stops counting as failed. Nothing deletes graphs automatically.
 
 ## Normalized measurement model
 
@@ -323,14 +325,14 @@ The "Redfish Node Summary" data source returns, from the cache:
 | `power_watts` | Latest node power | `U` |
 | `inlet_celsius` | Latest inlet temperature | `U` |
 | `max_temp_celsius` | Highest temperature reading on the node | `U` |
-| `fans_bad` | Present fans whose health is not OK; a second rotor of the same fan is not counted again | `U` |
-| `psus_bad` | Power supplies whose health is not OK | `U` |
+| `fans_bad` | Fans whose health is not OK, plus fans that were present and are now absent or gone until an administrator accepts the change; a second rotor of the same fan is not counted again | `U` |
+| `psus_bad` | Power supplies whose health is not OK, plus supplies that were present and are now absent or gone until accepted | `U` |
 | `health_code` | Worst node health | `U` |
 | `age` | Seconds since the last successful read | Always numeric, so Thold can alert on a BMC that stopped answering |
 
 Every value the plugin stores is a `GAUGE`. Thold 1.8.2 fails with a PHP TypeError when a thresholded `COUNTER` or `DERIVE` data source reads `U`, and Cacti then disables Thold for every user; the plugin has no counter today, and any later one will be computed in the plugin from consecutive reads, `U` on a reset or a missing read, and stored as a gauge. The alert replay checks that thresholded values reading `U` leave Thold enabled.
 
-Milestone 3 divergence: `fans_bad` and `psus_bad` count present members only, and are `U` while node health is not usable. A member that turns `Absent` is not counted as bad; its per-member graph shows a gap. Counting absent members is left open (decision needed on whether a pulled fan alerts as a failure).
+Absent members (decided in review of milestone 3): a slot the BMC has never reported present is not counted. A fan or supply seen present that the BMC then reports `Absent`, or drops from its tree, counts as bad, because losing one is the failure an operator needs to see. It keeps counting until an administrator chooses **Add Graphs**, which accepts the members the BMC reports at that moment; the confirmation page says how many would stop counting. Each member carries an `expected` flag (schema version 2) that collection sets while the member is present and acceptance clears when it is not. `fans_bad` and `psus_bad` are `U` while node health is not usable.
 
 Thold thresholds and Maint schedules apply with no change to either plugin ([ADR 0002](decisions/0002-alert-through-cacti-data-sources.md)). Stated limits:
 

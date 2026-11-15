@@ -109,17 +109,38 @@ final class BmcRepository {
 	}
 
 	/**
-	 * Map a BMC to a device the provisioner created or attached, with an
-	 * audit entry.
+	 * Map an unmapped BMC to the device the provisioner just created, with
+	 * an audit entry. Compare and set: false when the BMC was mapped in the
+	 * meantime or another BMC holds the device, and nothing changes then.
 	 */
 	public function mapHost(int $bmcId, int $hostId, int $userId): bool {
-		$ok = db_execute_prepared('UPDATE plugin_redfish_bmc SET host_id = ?, updated_at = ? WHERE id = ?', [$hostId, $this->clock->now(), $bmcId], true, $this->connection);
+		if ($hostId <= 0 || $this->findByHost($hostId, $bmcId) !== null) {
+			return false;
+		}
+
+		$ok = db_execute_prepared('UPDATE plugin_redfish_bmc SET host_id = ?, updated_at = ? WHERE id = ? AND host_id = 0', [$hostId, $this->clock->now(), $bmcId], true, $this->connection)
+			&& db_affected_rows($this->connection) === 1;
 
 		if ($ok) {
 			$this->audit($bmcId, $userId, 'update', ['host_id']);
 		}
 
-		return (bool) $ok && $this->find($bmcId)?->hostId === $hostId;
+		return $ok;
+	}
+
+	/**
+	 * Accept the BMC's members as they are now: members present stay
+	 * expected, and members no longer present stop counting as failed.
+	 * Audited, as an administrator's decision.
+	 */
+	public function acceptMembers(int $bmcId, int $userId): bool {
+		$ok = (bool) db_execute_prepared("UPDATE plugin_redfish_member SET expected = IF(presence = 'present', 'on', '') WHERE bmc_id = ?", [$bmcId], true, $this->connection);
+
+		if ($ok) {
+			$this->audit($bmcId, $userId, 'update', ['members']);
+		}
+
+		return $ok;
 	}
 
 	/**
@@ -135,14 +156,20 @@ final class BmcRepository {
 			return 0;
 		}
 
-		$ids = array_map(static fn (array $row): int => Row::int($row, 'id'), Row::rows(db_fetch_assoc_prepared('SELECT id FROM plugin_redfish_bmc WHERE host_id IN (' . implode(', ', array_fill(0, count($hostIds), '?')) . ')', $hostIds, true, $this->connection)));
+		$in  = implode(', ', array_fill(0, count($hostIds), '?'));
+		$ids = array_map(static fn (array $row): int => Row::int($row, 'id'), Row::rows(db_fetch_assoc_prepared("SELECT id FROM plugin_redfish_bmc WHERE host_id IN ($in)", $hostIds, true, $this->connection)));
+		$cleared = 0;
 
+		// Compare and set: a BMC moved to a surviving device since the
+		// SELECT keeps that mapping, and only cleared mappings are audited.
 		foreach ($ids as $id) {
-			db_execute_prepared('UPDATE plugin_redfish_bmc SET host_id = 0, updated_at = ? WHERE id = ?', [$this->clock->now(), $id], true, $this->connection);
-			$this->audit($id, 0, 'unmap', ['host_id']);
+			if (db_execute_prepared("UPDATE plugin_redfish_bmc SET host_id = 0, updated_at = ? WHERE id = ? AND host_id IN ($in)", array_merge([$this->clock->now(), $id], $hostIds), true, $this->connection) && db_affected_rows($this->connection) === 1) {
+				$this->audit($id, 0, 'unmap', ['host_id']);
+				$cleared++;
+			}
 		}
 
-		return count($ids);
+		return $cleared;
 	}
 
 	/**
@@ -338,6 +365,12 @@ final class BmcRepository {
 	private function write(Bmc $bmc, ?Bmc $before): int {
 		$row = $bmc->toRow();
 		$now = $this->clock->now();
+
+		// One BMC per device; the host_owner unique key backs this up when
+		// two writes race, and the write then fails instead of doubling up.
+		if ($bmc->hostId > 0 && $this->findByHost($bmc->hostId, $bmc->id) !== null) {
+			return 0;
+		}
 
 		if ($before === null) {
 			$columns = array_keys($row);

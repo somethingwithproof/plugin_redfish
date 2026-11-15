@@ -27,7 +27,7 @@ namespace Somethingwithproof\Redfish;
  */
 final readonly class NodeCache {
 	/**
-	 * @param list<array{key: string, kind: string, name: string, chassis: string, presence: string}> $members
+	 * @param list<array{key: string, kind: string, name: string, chassis: string, presence: string, expected: bool}> $members
 	 * @param array<string, array<string, array{value: ?float, unit: string, observed_at: int}>>       $readings member key => metric => reading
 	 */
 	public function __construct(
@@ -42,7 +42,7 @@ final readonly class NodeCache {
 	/**
 	 * Members of one kind, ordered by index so every listing agrees.
 	 *
-	 * @return list<array{key: string, kind: string, name: string, chassis: string, presence: string}>
+	 * @return list<array{key: string, kind: string, name: string, chassis: string, presence: string, expected: bool}>
 	 */
 	public function membersOf(string $kind): array {
 		$out = array_values(array_filter($this->members, static fn (array $m): bool => $m['kind'] === $kind));
@@ -52,7 +52,7 @@ final readonly class NodeCache {
 	}
 
 	/**
-	 * @return array{key: string, kind: string, name: string, chassis: string, presence: string}|null
+	 * @return array{key: string, kind: string, name: string, chassis: string, presence: string, expected: bool}|null
 	 */
 	public function memberAt(string $kind, string $index): ?array {
 		foreach ($this->members as $member) {
@@ -80,5 +80,28 @@ final readonly class NodeCache {
 	 */
 	public function reading(string $member, string $metric): ?array {
 		return $this->readings[$member][$metric] ?? null;
+	}
+
+	/**
+	 * A fan or supply that was present since its members were last accepted
+	 * and is not present now: pulled, failed so far that the BMC reports it
+	 * absent, or gone from the tree. A slot never seen present is not
+	 * missing. A second rotor follows its fan and is never counted.
+	 *
+	 * @param array{key: string, kind: string, name: string, chassis: string, presence: string, expected: bool} $member
+	 */
+	public static function missing(array $member): bool {
+		return in_array($member['kind'], ['fan', 'psu'], true) && $member['expected'] && $member['presence'] !== 'present' && !self::secondRotor($member);
+	}
+
+	/**
+	 * The second rotor of a fan, which the normalizer files under the fan's
+	 * key plus ":secondary". Only fans have one: a supply whose own id ends
+	 * that way is a supply like any other.
+	 *
+	 * @param array{key: string, kind: string, name: string, chassis: string, presence: string, expected: bool} $member
+	 */
+	public static function secondRotor(array $member): bool {
+		return $member['kind'] === 'fan' && str_ends_with($member['key'], ':secondary');
 	}
 }

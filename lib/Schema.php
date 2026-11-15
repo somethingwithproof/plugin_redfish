@@ -34,7 +34,7 @@ namespace Somethingwithproof\Redfish;
  * the next run (REQ-LIFE-001). No migration contacts a BMC.
  */
 final class Schema {
-	public const VERSION = 1;
+	public const VERSION = 2;
 
 	public const HOOKS = [
 		'api_device_new'       => 'redfish_api_device_new',
@@ -137,7 +137,67 @@ final class Schema {
 	private function migrations(): array {
 		return [
 			1 => fn (): bool => $this->createTables(self::tables()),
+			2 => fn (): bool => $this->addMemberBaseline(),
 		];
+	}
+
+	/**
+	 * Version 2: the host_id key on plugin_redfish_bmc, at most one BMC per
+	 * Cacti device, and the expected flag on plugin_redfish_member. A member
+	 * present today is expected, so an upgrade starts from the members the
+	 * BMC reports now. Each step checks first, so a repeated or interrupted
+	 * run is safe.
+	 */
+	private function addMemberBaseline(): bool {
+		if (!$this->indexExists('plugin_redfish_bmc', 'host_id') && !db_execute_prepared('ALTER TABLE plugin_redfish_bmc ADD KEY host_id (host_id)', [], true, $this->connection)) {
+			return false;
+		}
+
+		if (!$this->indexExists('plugin_redfish_bmc', 'host_owner') && !$this->addHostOwner()) {
+			return false;
+		}
+
+		if (!$this->columnExists('plugin_redfish_member', 'expected')) {
+			if (!db_execute_prepared("ALTER TABLE plugin_redfish_member ADD COLUMN expected varchar(3) NOT NULL DEFAULT '' AFTER presence", [], true, $this->connection)) {
+				return false;
+			}
+
+			if (!db_execute_prepared("UPDATE plugin_redfish_member SET expected = 'on' WHERE presence = 'present'", [], true, $this->connection)) {
+				return false;
+			}
+		}
+
+		return $this->indexExists('plugin_redfish_bmc', 'host_id') && $this->columnExists('plugin_redfish_member', 'expected');
+	}
+
+	/**
+	 * One BMC per device, held by the database: host_owner is host_id, or
+	 * NULL for an unmapped BMC, and NULLs do not collide in a unique key.
+	 * Before the key, a device that carries several BMCs keeps the lowest
+	 * BMC id; the others are unmapped and logged.
+	 */
+	private function addHostOwner(): bool {
+		foreach (Row::rows(db_fetch_assoc_prepared('SELECT DISTINCT b.id, b.host_id FROM plugin_redfish_bmc AS b INNER JOIN plugin_redfish_bmc AS f ON f.host_id = b.host_id AND f.id < b.id WHERE b.host_id > 0 ORDER BY b.id', [], true, $this->connection)) as $row) {
+			if (!db_execute_prepared('UPDATE plugin_redfish_bmc SET host_id = 0 WHERE id = ?', [Row::int($row, 'id')], true, $this->connection)) {
+				return false;
+			}
+
+			Log::warning(sprintf('BMC %d was unmapped from device %d, which another BMC already carries', Row::int($row, 'id'), Row::int($row, 'host_id')));
+		}
+
+		if (!$this->columnExists('plugin_redfish_bmc', 'host_owner') && !db_execute_prepared('ALTER TABLE plugin_redfish_bmc ADD COLUMN host_owner int(10) unsigned AS (NULLIF(host_id, 0)) STORED', [], true, $this->connection)) {
+			return false;
+		}
+
+		return (bool) db_execute_prepared('ALTER TABLE plugin_redfish_bmc ADD UNIQUE KEY host_owner (host_owner)', [], true, $this->connection);
+	}
+
+	private function columnExists(string $table, string $column): bool {
+		return db_fetch_cell_prepared('SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?', [$table, $column], '', true, $this->connection) > 0;
+	}
+
+	private function indexExists(string $table, string $index): bool {
+		return db_fetch_cell_prepared('SELECT COUNT(*) FROM information_schema.STATISTICS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND INDEX_NAME = ?', [$table, $index], '', true, $this->connection) > 0;
 	}
 
 	/**
@@ -283,6 +343,10 @@ final class Schema {
 					$text('name', 255),
 					$text('source', 32),
 					$text('presence', 16, 'present'),
+					// 'on' once seen present, until an administrator accepts
+					// the BMC's members again with Add Graphs; an expected
+					// member that is not present counts as failed.
+					$text('expected', 3),
 					$count('first_seen'),
 					$count('last_seen'),
 				],

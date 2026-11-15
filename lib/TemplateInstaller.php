@@ -137,7 +137,7 @@ final class TemplateInstaller {
 		foreach ($written as $file => $hash) {
 			$target = $this->queryTarget($file);
 
-			if ($target !== null && is_file($target) && hash_file('sha256', $target) === $hash) {
+			if ($target !== null && !is_link($target) && is_file($target) && hash_file('sha256', $target) === $hash) {
 				@unlink($target);
 			}
 		}
@@ -178,6 +178,14 @@ final class TemplateInstaller {
 			}
 		}
 
+		foreach (self::QUERY_GRAPHS as $query => $graphs) {
+			foreach (array_keys($graphs) as $graph) {
+				if ($this->objects->queryGraphId($query, $graph) === 0) {
+					return false;
+				}
+			}
+		}
+
 		return true;
 	}
 
@@ -207,7 +215,6 @@ final class TemplateInstaller {
 	 */
 	private function installQueryFiles(): ?string {
 		$written = $this->written();
-		$changed = false;
 
 		foreach (self::QUERIES as [, $file]) {
 			$source = $this->querySource($file);
@@ -217,35 +224,64 @@ final class TemplateInstaller {
 				return sprintf('The data query file %s cannot be installed: the source or the Cacti resource directory is missing', $file);
 			}
 
+			// A link could point the write anywhere; the plugin never follows one.
+			if (is_link($target)) {
+				return sprintf('%s is a symbolic link; it was left as it is. Replace it with a copy of plugins/redfish/resource/script_server/%s', $target, $file);
+			}
+
 			$want = (string) hash_file('sha256', $source);
 
-			if (is_file($target)) {
-				$have = (string) hash_file('sha256', $target);
+			if (file_exists($target)) {
+				$have = is_file($target) ? (string) hash_file('sha256', $target) : '';
 
+				// Matching contents the plugin did not write stay the site's:
+				// no ownership is claimed, so uninstall leaves them.
 				if ($have === $want) {
-					$written[$file] ??= $want;
-
 					continue;
 				}
 
-				if (($written[$file] ?? null) !== $have) {
+				if (!isset($written[$file]) || $written[$file] !== $have) {
 					return sprintf('%s exists and was not written by this plugin, or was changed after; it was left as it is. Compare it with plugins/redfish/resource/script_server/%s', $target, $file);
 				}
 			}
 
-			if (!is_writable(dirname($target)) || @copy($source, $target) === false || hash_file('sha256', $target) !== $want) {
+			if (!$this->writeQueryFile($source, $target, $want)) {
 				return sprintf('Could not write %s. Copy plugins/redfish/resource/script_server/%s there as the web server user, then reinstall the templates from the Redfish BMCs page', $target, $file);
 			}
 
+			// Recorded at once, so a later file that fails cannot lose it.
 			$written[$file] = $want;
-			$changed        = true;
-		}
-
-		if ($changed || $written !== $this->written()) {
 			set_config_option(self::FILES_SETTING, (string) json_encode($written));
 		}
 
 		return null;
+	}
+
+	/**
+	 * Write through a temporary file in the same directory and rename it
+	 * over the target, so the target is never half written and a link put
+	 * there after the check is replaced, not followed.
+	 */
+	private function writeQueryFile(string $source, string $target, string $want): bool {
+		$dir = dirname($target);
+
+		if (!is_writable($dir)) {
+			return false;
+		}
+
+		$temp = @tempnam($dir, '.redfish-');
+
+		if ($temp === false) {
+			return false;
+		}
+
+		if (@copy($source, $temp) === false || hash_file('sha256', $temp) !== $want || !@chmod($temp, 0644) || !@rename($temp, $target)) {
+			@unlink($temp);
+
+			return false;
+		}
+
+		return !is_link($target) && hash_file('sha256', $target) === $want;
 	}
 
 	/**

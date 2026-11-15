@@ -24,7 +24,7 @@ A Cacti 1.2 plugin that brings server power draw, inlet temperature, fan state, 
 - The script server answers only from the plugin's cache and never contacts a BMC. A value that is missing, stale, of another unit, or from a member that is gone is `U`, so graphs show a gap, never zero; `age` always has a value, so a threshold on it catches a BMC that stopped answering.
 - A graph link from each Redfish graph to the device's Redfish graphs, shown only to users Cacti lets see the device.
 
-**When a BMC's members change** (a fan replaced, a firmware update renaming sensors), choose **Add Graphs** again. Cacti indexes the queries again; a member that is gone keeps its data source and graph, which read `U` from then on, and a new member gets a graph. Delete the graphs of members that are gone by hand once their history is no longer needed.
+**When a BMC's members change** (a fan replaced, a firmware update renaming sensors), choose **Add Graphs** again. A fan or power supply that was present and is now absent or gone counts in `fans_bad` or `psus_bad` until you do, so a pulled fan alerts; a slot that was never filled does not. Add Graphs accepts the members the BMC reports now, and Cacti indexes the queries again; a member that is gone keeps its data source and graph, which read `U` from then on, and a new member gets a graph. Delete the graphs of members that are gone by hand once their history is no longer needed.
 
 Deleting a device unmaps its BMC and keeps the BMC and its cache. Deleting a BMC, or uninstalling the plugin, keeps its device and graphs.
 
@@ -57,6 +57,7 @@ Out of scope: setting power caps or any other BMC configuration, power control, 
 | Component | Target |
 |---|---|
 | Cacti | 1.2.31 or later, no core patches |
+| Database | MariaDB 10.2 or MySQL 5.7 or later: one BMC per device is held by a unique key on a generated column |
 | PHP | 8.2 or later; `setup.php` stays parseable on 8.0 so an unsupported runtime gets a refusal instead of a broken Cacti UI |
 | BMCs | Dell iDRAC, HPE iLO, Lenovo XCC, and OpenBMC, by firmware range; see [the vendor matrix](docs/research/vendor-matrix.md) |
 | Redfish | New subsystem and sensor resources first, deprecated `Power` and `Thermal` as fallback |

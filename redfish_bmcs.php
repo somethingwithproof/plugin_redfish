@@ -141,7 +141,7 @@ switch ((string) get_nfilter_request_var('action')) {
 		}
 
 		if ($redfish_bmc->hostId > 0) {
-			$redfish_graphs = $redfish_provisioner->attach($redfish_bmc->id, $redfish_bmc->hostId);
+			$redfish_graphs = $redfish_provisioner->attach($redfish_bmc->id, $redfish_bmc->hostId, $redfish_user);
 			raise_message('redfish_provisioned', __('The data queries were indexed again and %d graphs were added.', $redfish_graphs, 'redfish'), MESSAGE_LEVEL_INFO);
 		} else {
 			$redfish_error = null;
@@ -182,6 +182,9 @@ switch ((string) get_nfilter_request_var('action')) {
 			},
 			function (int $host) use ($redfish_scope): bool {
 				return $redfish_scope->allowsNew($host);
+			},
+			function (int $host) use ($redfish_bmcs): ?string {
+				return $redfish_bmcs->findByHost($host)?->name;
 			}
 		);
 

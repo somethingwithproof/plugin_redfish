@@ -42,20 +42,37 @@ final class DeviceProvisioner {
 	public function __construct(
 		private readonly BmcRepository $bmcs,
 		private readonly CactiObjectRepository $objects,
+		private readonly TemplateInstaller $templates,
 		private readonly string $cactiPath,
 		private readonly \Closure $visible,
 	) {
 	}
 
 	/**
-	 * Why the plugin cannot provision now, or null when it can.
+	 * Why the plugin cannot provision now, or null when it can: every
+	 * shipped template, data query, and query graph, and the query files.
 	 */
 	public function refusal(): ?string {
-		if ($this->objects->deviceTemplateId() === 0) {
-			return __('The Redfish templates are not installed. Reinstall them from the Redfish BMCs page.', 'redfish');
+		if (!$this->templates->present() || $this->templates->queryFileProblems() !== []) {
+			return __('The Redfish templates are not installed completely. Reinstall them from the Redfish BMCs page.', 'redfish');
 		}
 
 		return null;
+	}
+
+	/**
+	 * The Cacti libraries device creation, data queries, and graph creation
+	 * use, the set Cacti's own cli/add_graphs.php loads, so that no caller
+	 * has to have loaded them first.
+	 */
+	private function requireCacti(): void {
+		// The files expect file scope: lib/snmp.php reads $config and sets
+		// $banned_snmp_strings, which its functions read as a global.
+		global $config, $banned_snmp_strings;
+
+		foreach (['api_automation_tools', 'api_automation', 'api_data_source', 'api_graph', 'api_device', 'api_tree', 'data_query', 'poller', 'snmp', 'sort', 'template', 'utility'] as $library) {
+			require_once($this->cactiPath . '/lib/' . $library . '.php');
+		}
 	}
 
 	/**
@@ -78,6 +95,10 @@ final class DeviceProvisioner {
 			}
 		}
 
+		if (($members['missing'] ?? 0) > 0) {
+			$lines[] = __('%d fans or power supplies that were present are no longer reported. They count as failed until you confirm; confirming accepts the members the BMC reports now.', $members['missing'], 'redfish');
+		}
+
 		foreach (TemplateInstaller::SUMMARY_GRAPHS as $name) {
 			if ($bmc->hostId === 0 || $this->objects->graphCount($bmc->hostId, $this->objects->graphTemplateId($name)) === 0) {
 				$lines[] = __('The graph "%s", with its "%s" data source.', $name, TemplateInstaller::SUMMARY, 'redfish');
@@ -95,14 +116,15 @@ final class DeviceProvisioner {
 	 */
 	public function create(Bmc $bmc, int $userId, ?string &$error = null): int {
 		$templateId = $this->objects->deviceTemplateId();
+		$refusal    = $this->refusal();
 
-		if ($templateId === 0 || $bmc->hostId > 0) {
-			$error = $this->refusal() ?? __('The BMC is already mapped to a device.', 'redfish');
+		if ($refusal !== null || $templateId === 0 || $bmc->hostId > 0) {
+			$error = $refusal ?? __('The BMC is already mapped to a device.', 'redfish');
 
 			return 0;
 		}
 
-		include_once($this->cactiPath . '/lib/api_device.php');
+		$this->requireCacti();
 
 		$hostId = (int) api_device_save(0, $templateId, $bmc->name, self::hostname($bmc), '', 0, '', '', 161, 500, '', AVAIL_NONE, 0, 23, 400, 1,
 			__('Created by the Redfish plugin for BMC %s. Its values come from the plugin cache; the host name is a reserved name that is never contacted.', $bmc->name, 'redfish'),
@@ -125,13 +147,13 @@ final class DeviceProvisioner {
 
 		if (!$this->bmcs->mapHost($bmc->id, $hostId, $userId)) {
 			api_device_remove($hostId);
-			Log::error(sprintf('Device %d was created for BMC %d but could not be mapped, so it was removed again', $hostId, $bmc->id));
-			$error = __('The device could not be mapped to the BMC, so it was removed again.', 'redfish');
+			Log::warning(sprintf('Device %d was created for BMC %d, which was mapped elsewhere meanwhile or could not be mapped, so the device was removed again', $hostId, $bmc->id));
+			$error = __('The BMC was mapped to a device by someone else meanwhile, or could not be mapped, so the new device was removed again. Reload the page and check its mapping.', 'redfish');
 
 			return 0;
 		}
 
-		$this->attach($bmc->id, $hostId);
+		$this->attach($bmc->id, $hostId, $userId);
 
 		return $hostId;
 	}
@@ -145,13 +167,15 @@ final class DeviceProvisioner {
 	 *
 	 * @return int graphs created
 	 */
-	public function attach(int $bmcId, int $hostId): int {
-		include_once($this->cactiPath . '/lib/api_device.php');
-		include_once($this->cactiPath . '/lib/data_query.php');
-		include_once($this->cactiPath . '/lib/template.php');
-		include_once($this->cactiPath . '/lib/utility.php');
+	public function attach(int $bmcId, int $hostId, int $userId): int {
+		$this->requireCacti();
 
 		$created = 0;
+
+		// Adding graphs accepts the members the BMC reports now.
+		if (!$this->bmcs->acceptMembers($bmcId, $userId)) {
+			Log::error(sprintf('The members of BMC %d could not be accepted', $bmcId));
+		}
 
 		foreach (TemplateInstaller::QUERIES as $name => [$kind]) {
 			$queryId = $this->objects->queryId($name);

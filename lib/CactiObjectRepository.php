@@ -91,8 +91,21 @@ final class CactiObjectRepository {
 	/**
 	 * The data query graph id of a graph name under a query, found by hash.
 	 */
+	/**
+	 * The query graph by hash, only while it still belongs to the shipped
+	 * data query and points at its shipped graph template.
+	 */
 	public function queryGraphId(string $queryName, string $graphName): int {
-		return (int) db_fetch_cell_prepared('SELECT id FROM snmp_query_graph WHERE hash = ?', [TemplateInstaller::hash('data_query_graph', $queryName . ':' . $graphName)], '', true, $this->connection);
+		$template = TemplateInstaller::QUERY_GRAPHS[$queryName][$graphName] ?? '';
+
+		return (int) db_fetch_cell_prepared('SELECT sqg.id FROM snmp_query_graph AS sqg
+			INNER JOIN snmp_query AS sq ON sq.id = sqg.snmp_query_id
+			INNER JOIN graph_templates AS gt ON gt.id = sqg.graph_template_id
+			WHERE sqg.hash = ? AND sq.hash = ? AND gt.hash = ?', [
+			TemplateInstaller::hash('data_query_graph', $queryName . ':' . $graphName),
+			TemplateInstaller::hash('data_query', $queryName),
+			TemplateInstaller::hash('graph_template', $template),
+		], '', true, $this->connection);
 	}
 
 	/**

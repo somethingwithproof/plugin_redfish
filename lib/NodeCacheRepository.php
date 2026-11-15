@@ -41,7 +41,9 @@ final class NodeCacheRepository {
 	}
 
 	/**
-	 * Members the cache holds for a BMC, by kind, for the provisioning plan.
+	 * Members the cache holds for a BMC, by kind, for the provisioning plan,
+	 * and under 'missing' the fans and supplies that were present and are not
+	 * now, which count as failed until they are accepted.
 	 *
 	 * @return array<string, int>
 	 */
@@ -50,6 +52,10 @@ final class NodeCacheRepository {
 
 		foreach ($this->forBmc($bmcId)->members ?? [] as $member) {
 			$counts[$member['kind']] = ($counts[$member['kind']] ?? 0) + 1;
+
+			if (NodeCache::missing($member)) {
+				$counts['missing'] = ($counts['missing'] ?? 0) + 1;
+			}
 		}
 
 		return $counts;
@@ -59,6 +65,26 @@ final class NodeCacheRepository {
 	 * @param 'b.host_id = ?'|'b.id = ?' $where
 	 */
 	private function load(string $where, int $id): ?NodeCache {
+		// The three reads share one snapshot (InnoDB's default repeatable
+		// read), so a collection committing in between cannot pair new
+		// members with old readings. Inside a caller's transaction PDO
+		// refuses a second one; the reads then share the caller's.
+		try {
+			$snapshot = db_begin_transaction($this->connection);
+		} catch (\PDOException) {
+			$snapshot = false;
+		}
+
+		try {
+			return $this->read($where, $id);
+		} finally {
+			if ($snapshot) {
+				db_commit_transaction($this->connection);
+			}
+		}
+	}
+
+	private function read(string $where, int $id): ?NodeCache {
 		$row = db_fetch_row_prepared("SELECT b.id, b.created_at, COALESCE(h.last_success, 0) AS last_success FROM plugin_redfish_bmc AS b LEFT JOIN plugin_redfish_health AS h ON h.bmc_id = b.id WHERE $where ORDER BY b.id LIMIT 1", [$id], true, $this->connection);
 
 		if (!is_array($row) || Row::int($row, 'id', 0, 1) === 0) {
@@ -68,8 +94,8 @@ final class NodeCacheRepository {
 		$bmcId   = Row::int($row, 'id', 0, 1);
 		$members = [];
 
-		foreach (Row::rows(db_fetch_assoc_prepared('SELECT member_key, kind, name, chassis_id, presence FROM plugin_redfish_member WHERE bmc_id = ?', [$bmcId], true, $this->connection)) as $m) {
-			$members[] = ['key' => Row::string($m, 'member_key'), 'kind' => Row::string($m, 'kind'), 'name' => Row::string($m, 'name'), 'chassis' => Row::string($m, 'chassis_id'), 'presence' => Row::string($m, 'presence')];
+		foreach (Row::rows(db_fetch_assoc_prepared('SELECT member_key, kind, name, chassis_id, presence, expected FROM plugin_redfish_member WHERE bmc_id = ?', [$bmcId], true, $this->connection)) as $m) {
+			$members[] = ['key' => Row::string($m, 'member_key'), 'kind' => Row::string($m, 'kind'), 'name' => Row::string($m, 'name'), 'chassis' => Row::string($m, 'chassis_id'), 'presence' => Row::string($m, 'presence'), 'expected' => Row::string($m, 'expected') === 'on'];
 		}
 
 		$readings = [];

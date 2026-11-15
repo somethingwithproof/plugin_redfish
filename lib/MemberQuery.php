@@ -89,7 +89,7 @@ final class MemberQuery {
 	}
 
 	/**
-	 * @param list<array{key: string, kind: string, name: string, chassis: string, presence: string}> $members
+	 * @param list<array{key: string, kind: string, name: string, chassis: string, presence: string, expected: bool}> $members
 	 */
 	private function query(NodeCache $cache, string $kind, string $field, array $members): string {
 		if (!in_array($field, self::INPUTS, true) && !isset(self::OUTPUTS[$kind][$field])) {
@@ -116,7 +116,7 @@ final class MemberQuery {
 	}
 
 	/**
-	 * @param array{key: string, kind: string, name: string, chassis: string, presence: string} $member
+	 * @param array{key: string, kind: string, name: string, chassis: string, presence: string, expected: bool} $member
 	 */
 	private function field(NodeCache $cache, string $kind, string $field, array $member): string {
 		return match ($field) {
@@ -130,7 +130,7 @@ final class MemberQuery {
 
 	/**
 	 * @param array{0: string, 1: string}|null                                                $spec   metric and required unit of the field
-	 * @param array{key: string, kind: string, name: string, chassis: string, presence: string} $member
+	 * @param array{key: string, kind: string, name: string, chassis: string, presence: string, expected: bool} $member
 	 */
 	private function value(NodeCache $cache, ?array $spec, array $member): ?float {
 		if ($spec === null || $member['presence'] !== 'present') {

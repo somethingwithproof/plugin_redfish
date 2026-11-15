@@ -208,6 +208,7 @@ function redfish_provisioner(): \Somethingwithproof\Redfish\DeviceProvisioner {
 	return new \Somethingwithproof\Redfish\DeviceProvisioner(
 		redfish_bmcs(),
 		redfish_cacti_objects(),
+		redfish_template_installer(),
 		$config['base_path'],
 		static fn (int $hostId, int $userId): bool => (bool) is_device_allowed($hostId, $userId)
 	);

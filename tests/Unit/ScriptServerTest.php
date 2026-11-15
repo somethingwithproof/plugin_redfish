@@ -28,16 +28,19 @@ const REDFISH_NOW = 1_800_000_000;
 
 /**
  * Queue the cache of BMC 1 on device 10 for the DB stubs. Each member is
- * [key, kind, presence, readings as metric => [value, unit, age]].
+ * [key, kind, presence, readings as metric => [value, unit, age], expected].
  *
- * @param list<array{0: string, 1: string, 2: string, 3: array<string, array{0: ?float, 1: string, 2: int}>}> $members
+ * @param list<array{0: string, 1: string, 2: string, 3: array<string, array{0: ?float, 1: string, 2: int}>, 4?: bool}> $members
  */
 function redfish_cache(array $members, int $lastSuccessAge = 60, int $registeredAge = 86400): void {
 	$m = [];
 	$r = [];
 
-	foreach ($members as [$key, $kind, $presence, $readings]) {
-		$m[] = ['member_key' => $key, 'kind' => $kind, 'name' => 'Name of ' . $key, 'chassis_id' => '1', 'presence' => $presence];
+	foreach ($members as $member) {
+		[$key, $kind, $presence, $readings] = $member;
+		// Expected unless given: a member present now has been seen present.
+		$expected = $member[4] ?? ($presence === 'present');
+		$m[]      = ['member_key' => $key, 'kind' => $kind, 'name' => 'Name of ' . $key, 'chassis_id' => '1', 'presence' => $presence, 'expected' => $expected ? 'on' : ''];
 
 		foreach ($readings as $metric => [$value, $unit, $age]) {
 			$r[] = ['member_key' => $key, 'metric' => $metric, 'value' => $value === null ? null : (string) $value, 'unit' => $unit, 'observed_at' => (string) (REDFISH_NOW - $age)];
@@ -198,6 +201,67 @@ it('summarizes a current node', function () {
 	], redfish_fans(3)));
 
 	expect(redfish_summary())->toBe('power_watts:412 inlet_celsius:21.5 max_temp_celsius:71 fans_bad:1 psus_bad:1 health_code:1 age:60');
+});
+
+it('counts a fan or supply that was present and is now absent or gone as failed', function () {
+	$node = ['node', 'node', 'present', ['power_watts' => [412.0, 'W', 30], 'health_code' => [0.0, '', 30]]];
+
+	redfish_cache([
+		$node,
+		['1/fan/Fan1', 'fan', 'present', ['health_code' => [0.0, '', 30]]],
+		['1/fan/Fan2', 'fan', 'absent', [], true],
+		['1/fan/Fan3', 'fan', 'gone', ['health_code' => [0.0, '', 30]], true],
+		['1/fan/Fan3:secondary', 'fan', 'gone', [], true],
+		['1/psu/0', 'psu', 'present', ['health_code' => [0.0, '', 30]]],
+		['1/psu/1', 'psu', 'absent', [], true],
+		['1/temperature/A', 'temperature', 'gone', [], true],
+	]);
+
+	expect(redfish_summary())->toContain(' fans_bad:2 psus_bad:1 ');
+});
+
+it('does not count a slot that was never present, or one an administrator accepted', function () {
+	redfish_cache([
+		['node', 'node', 'present', ['health_code' => [0.0, '', 30]]],
+		['1/fan/Fan1', 'fan', 'present', ['health_code' => [0.0, '', 30]]],
+		['1/fan/Fan2', 'fan', 'absent', [], false],
+		['1/psu/0', 'psu', 'present', ['health_code' => [0.0, '', 30]]],
+		['1/psu/1', 'psu', 'gone', [], false],
+	]);
+
+	expect(redfish_summary())->toContain(' fans_bad:0 psus_bad:0 ');
+});
+
+it('skips only a fan\'s second rotor, never a supply whose id ends the same way', function () {
+	redfish_cache([
+		['node', 'node', 'present', ['health_code' => [0.0, '', 30]]],
+		['1/fan/Fan1', 'fan', 'present', ['health_code' => [2.0, '', 30]]],
+		['1/fan/Fan1:secondary', 'fan', 'present', ['health_code' => [2.0, '', 30]]],
+		['1/psu/PSU:secondary', 'psu', 'present', ['health_code' => [2.0, '', 30]]],
+		['1/psu/Backup:secondary', 'psu', 'absent', [], true],
+	]);
+
+	expect(redfish_summary())->toContain(' fans_bad:1 psus_bad:2 ');
+});
+
+it('reads a node cache inside one transaction', function () {
+	$GLOBALS['__redfish_db_exec'] = [];
+	redfish_cache([['node', 'node', 'present', ['health_code' => [0.0, '', 30]]]]);
+	redfish_summary();
+
+	expect(array_column($GLOBALS['__redfish_db_exec'], 'sql'))->toBe(['BEGIN', 'COMMIT']);
+});
+
+it('lists the missing members for the plan that accepts them', function () {
+	redfish_cache([
+		['1/fan/Fan1', 'fan', 'present', []],
+		['1/fan/Fan2', 'fan', 'absent', [], true],
+		['1/fan/Fan3', 'fan', 'absent', [], false],
+		['1/psu/1', 'psu', 'gone', [], true],
+		['1/temperature/A', 'temperature', 'gone', [], true],
+	]);
+
+	expect((new NodeCacheRepository(false))->memberCounts(1))->toBe(['fan' => 3, 'missing' => 2, 'psu' => 1, 'temperature' => 1]);
 });
 
 it('reads a stale node as unknown but keeps age growing', function () {

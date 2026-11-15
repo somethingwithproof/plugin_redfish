@@ -82,15 +82,22 @@ final class SummaryScript {
 	}
 
 	/**
-	 * Present members of a kind whose usable health is Warning or worse. A
-	 * second fan rotor shares its fan's health and is not counted twice;
-	 * absent members are counted by the node, not here.
+	 * Members of a kind that failed: present with usable health of Warning or
+	 * worse, or missing (NodeCache::missing) since they were last accepted.
+	 * A second fan rotor shares its fan's health and is not counted twice;
+	 * a slot never seen present is not counted.
 	 */
 	private function bad(NodeCache $cache, string $kind): int {
 		$bad = 0;
 
 		foreach ($cache->membersOf($kind) as $member) {
-			if ($member['presence'] !== 'present' || str_ends_with($member['key'], ':secondary')) {
+			if (NodeCache::missing($member)) {
+				$bad++;
+
+				continue;
+			}
+
+			if ($member['presence'] !== 'present' || NodeCache::secondRotor($member)) {
 				continue;
 			}
 
