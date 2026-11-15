@@ -1,6 +1,6 @@
 # Contributing
 
-This project is in the proposal stage. Most useful contributions right now are evidence for the research issues in milestone 1 and review of the requirements and open decisions. Evidence from real BMCs is welcome, but redact IP addresses, host names, serial numbers, MAC addresses, session tokens, and credentials from any capture before posting it.
+This project is in development, and plugin code is not published yet. Most useful contributions right now are evidence for the research issues in milestone 1 and review of the requirements and open decisions. Evidence from real BMCs is welcome, but redact IP addresses, host names, serial numbers, MAC addresses, session tokens, and credentials from any capture before posting it.
 
 ## Before you start
 
