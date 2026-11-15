@@ -193,7 +193,7 @@ Documentation and source research for issues #8 and #19 to #30, 2026-11-15. No B
 | [#30](https://github.com/somethingwithproof/plugin_redfish/issues/30) | [estimates.md](research/estimates.md) | Size ranges; calendar time not estimated |
 | (transport) | [transport.md](research/transport.md) | plugin_cloud's socket client choice carries over; four BMC-specific questions |
 
-Estimates (production lines, ranges from measured lines of plugin_cloudflare and plugin_smokeping): milestone 2 4,500 to 6,500; milestone 3 2,500 to 4,000; milestone 4 500 to 1,000; milestone 5 1,200 to 2,000; milestone 6 1,500 to 2,500; milestone 7 1,000 to 1,500.
+Estimates (production lines, ranges from measured lines of plugin_cloudflare and plugin_smokeping): milestone 2 4,500 to 6,500; milestone 3 2,500 to 4,000; milestone 4 100 to 300 (plus tests and documentation counted separately); milestone 5 1,200 to 2,000; milestone 6 1,500 to 2,500; milestone 7 1,000 to 1,500.
 
 ## Architecture
 
@@ -230,7 +230,7 @@ The collector runs outside Cacti's per-device polling threads. It reads BMCs on 
 |---|---|---|---|
 | Plugin pages | BMC registry, mapping, health, rack views | Cacti page framework, csrf-magic, realms | Show cached data with its age; never contact a BMC during a page request |
 | Collector (`poller_redfish.php`) | Walk the BMC list, call the clients, normalize, write the cache and health | `poller_bottom`, `exec_background()`, `register_process_start()` | One instance per poller; time budget per run; per-BMC concurrency of one; resumes next cycle |
-| Redfish client | Authenticate, discover, read, log out | HTTPS with verification, bounded timeouts, no redirects, response size cap | Any failure yields unknown values and a health record, never zero |
+| Redfish client | Authenticate, discover, read, log out | HTTPS with verification, bounded timeouts, bounded same-origin redirect handling (DSP0266 section 6.3), response size cap | Any failure yields unknown values and a health record, never zero |
 | IPMI client (phase 2) | Run an allowlisted read-only command set | `proc_open()` with an argument array, secrets in the environment | Non-zero exit, timeout, or unparsable output yields unknown |
 | Credential resolver | Return username and password at run time | Credential store API (decision #9) | Resolution failure fails closed and is logged without the secret |
 | Script server input | Return index lists and values from the cache | Cacti script server | `U` for missing or stale values; `age` always numeric |
@@ -261,7 +261,7 @@ The collector maps every source to one set of readings. Each reading has a value
 | Reading | Unit | Per | Preferred Redfish source | Fallbacks |
 |---|---|---|---|---|
 | `power_watts` | W | node | `EnvironmentMetrics.PowerWatts.Reading` | `Power.PowerControl[].PowerConsumedWatts`; a `Sensor` of type `Power` for the chassis; vendor OEM property if the matrix shows no other source; `dcmi power reading` over IPMI |
-| `inlet_celsius` | degrees C | node | `ThermalMetrics.TemperatureSummaryCelsius.Intake.Reading` | A `Sensor` with `ReadingType` `Temperature` and `PhysicalContext` `Intake`; `Thermal.Temperatures[]` with `PhysicalContext` `Intake`; a named vendor rule only where a fixture shows it (Dell `SystemBoardInletTemp`, whose `PhysicalContext` is `SystemBoard`; Lenovo `Ambient Temp`, unconfirmed as intake). `EnvironmentMetrics.TemperatureCelsius` is never used ([research/sensors.md](research/sensors.md)) |
+| `inlet_celsius` | degrees C | node | `ThermalMetrics.TemperatureSummaryCelsius.Intake.Reading`, accepted per family only after its air-intake meaning is confirmed (Dell and DMTF yes; Lenovo documents it as `Inlet Water Temp` or `Ambient Temp`, so it stays stored under its source name and `inlet_celsius` is `U` until a pilot confirms) | A `Sensor` with `ReadingType` `Temperature` and `PhysicalContext` `Intake`; `Thermal.Temperatures[]` with `PhysicalContext` `Intake`; a named vendor rule only where a fixture shows it (Dell `SystemBoardInletTemp`, whose `PhysicalContext` is `SystemBoard`; Lenovo `Ambient Temp`, unconfirmed as intake). `EnvironmentMetrics.TemperatureCelsius` is never used ([research/sensors.md](research/sensors.md)) |
 | `temperature_celsius` | degrees C | sensor | `Sensor` entries of type `Temperature` | `Thermal.Temperatures[]`; `ipmitool sdr type Temperature` |
 | `fan_speed` | percent or RPM, with the unit stored | fan | `ThermalSubsystem` `Fans` members: `SpeedPercent` and `SecondarySpeedPercent`, unit taken from `Reading` plus the referenced sensor, or `SpeedRPM` when only that is present | `EnvironmentMetrics.FanSpeedsPercent`; `Thermal.Fans[].Reading` with `ReadingUnits` |
 | `psu_input_watts`, `psu_output_watts` | W | supply | `PowerSupply` and its metrics | `Power.PowerSupplies[]` |
@@ -286,7 +286,7 @@ Rules:
 
 Per BMC and per run, the client:
 
-1. Opens a TLS connection with verification as configured for that BMC ([ADR 0006](decisions/0006-verify-tls-and-keep-credentials-off-command-lines-and-logs.md)). Redirects are not followed.
+1. Opens a TLS connection with verification as configured for that BMC ([ADR 0006](decisions/0006-verify-tls-and-keep-credentials-off-command-lines-and-logs.md)). Redirects are followed only within bounds: at most 3 hops, same host and port, https, a `/redfish/` path, credentials re-sent to that origin only ([research/transport.md](research/transport.md)).
 2. Reads the service root and `ProtocolFeaturesSupported`; records the Redfish version and vendor.
 3. Authenticates. Session login is the default and Basic is a per-BMC fallback; research #22 decides whether a token is cached between runs or a session is created and deleted each run.
 4. Enumerates `Chassis` members and, for each, checks for the `Sensors`, `EnvironmentMetrics`, `ThermalSubsystem`, `PowerSubsystem`, `Power`, and `Thermal` links, in that order of preference ([ADR 0004](decisions/0004-prefer-subsystem-resources-with-legacy-fallback.md)).

@@ -8,7 +8,7 @@ Research for [#24](https://github.com/somethingwithproof/plugin_redfish/issues/2
 
 `inlet_celsius`, in order, first present and non-null wins, with the rule name stored as the source:
 
-1. `ThermalMetrics.TemperatureSummaryCelsius.Intake.Reading` (rule `summary.intake`).
+1. `ThermalMetrics.TemperatureSummaryCelsius.Intake.Reading` (rule `summary.intake`), accepted per family only after the air-intake meaning is confirmed. Dell (both captures, source `SystemBoardInletTemp`) and DMTF's mockup (`IntakeTemp`, context `Intake`) qualify. Lenovo documents `Intake` as mapped to `Inlet Water Temp` or `Ambient Temp`, so a Lenovo `Intake` value is stored under its source name and does not fill `inlet_celsius` (it stays `U`) until a pilot shows which sensor feeds it and that it measures air intake. An unlisted family is treated like Lenovo.
 2. A `Sensor` with `ReadingType` `Temperature` and `PhysicalContext` `Intake` (rule `sensor.intake`); a legacy `Thermal.Temperatures[]` member with `PhysicalContext` `Intake` (rule `legacy.intake`).
 3. A vendor-name rule, per family, enabled only where a fixture shows the name: Dell sensor `Id` `SystemBoardInletTemp` (`PhysicalContext` `SystemBoard`) in both captures; Lenovo `ThermalMetrics` `Intake` documented as the `Ambient Temp` or `Inlet Water Temp` sensor (rule `vendor.dell_inlet`, `vendor.lenovo_ambient`).
 4. Otherwise `U`. `EnvironmentMetrics.TemperatureCelsius` is never used for inlet.
@@ -45,7 +45,7 @@ Research for [#24](https://github.com/somethingwithproof/plugin_redfish/issues/2
 | OpenBMC | `fan.hpp` fills `SpeedPercent` only from a sensor of `ReadingType` `Percent`; fan tach sensors are `Rotational` unless `redfish-allow-rotational-fans` is disabled; its default is still `enabled` at the 2026-11-13 head, though the option text says it defaults to disabled in June 2026 and the code is removed by June 2027 | confirmed (source) |
 | HPE iLO 6 | `Fan.v1_5_1` and legacy `Thermal.Fans[]`; units not read | unverified |
 
-**Rule.** Take the unit from the `Sensor` at `DataSourceUri` (`ReadingType` and `ReadingUnits`), or from legacy `ReadingUnits`. Never from the property name. A fan excerpt with only `SpeedRPM` is RPM. A fan whose unit cannot be established is stored as `U` for `fan_speed` with its health still recorded. Store the unit with the value, as the plan says. Dual-rotor fans store two indexes (primary and secondary) under one fan identity.
+**Rule.** Take the unit from the `Sensor` at `DataSourceUri` (`ReadingType` and `ReadingUnits`), or from legacy `ReadingUnits`; do not infer it from the property name alone when a source is available. When `DataSourceUri` is absent, a `SpeedPercent.Reading` is percent, as `Fan.v1_6_0` defines it, unless the same excerpt carries a `SpeedRPM` equal to `Reading` (the Lenovo shape, where the value is RPM) or the family is on the list of known deviations. A fan excerpt with only `SpeedRPM` is RPM. A fan whose unit cannot be established is stored as `U` for `fan_speed` with its health still recorded. Store the unit with the value, as the plan says. Dual-rotor fans store two indexes (primary and secondary) under one fan identity.
 
 ## Fixtures needed (exit criterion)
 
