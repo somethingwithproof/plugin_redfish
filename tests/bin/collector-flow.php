@@ -17,6 +17,11 @@
  * more details.
  */
 
+// Test code: refuse to run outside the command line.
+if (PHP_SAPI !== 'cli' && PHP_SAPI !== 'phpdbg') {
+	exit(1);
+}
+
 /*
  * Collector scenarios against the fake BMC (issues #40 and #42), included by
  * tests/bin/lifecycle.php, which sets $action and reads $result:

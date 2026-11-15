@@ -17,6 +17,11 @@
  * more details.
  */
 
+// Test code: refuse to run outside the command line.
+if (PHP_SAPI !== 'cli' && PHP_SAPI !== 'phpdbg') {
+	exit(1);
+}
+
 /*
  * Source rules from docs/PLAN.md "Code structure" and ADR 0004 that a parser
  * can check. The PHP 8.0 parse of the entry points themselves is proven by the
@@ -290,4 +295,30 @@ it('keeps TLS verification on except where the pin is checked or the BMC opted o
 	expect($source)->not->toMatch("/'verify_peer'\s*=>\s*false/")
 		->and($source)->toContain('$verify  = $mode === TlsMode::System || $mode === TlsMode::CaBundle;')
 		->and($source)->toContain('STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT | STREAM_CRYPTO_METHOD_TLSv1_3_CLIENT');
+});
+
+it('guards every test script outside tests/Unit against web requests', function () {
+	$missing  = [];
+	$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(redfish_root() . '/tests', FilesystemIterator::SKIP_DOTS));
+
+	foreach ($iterator as $file) {
+		$relative = substr($file->getPathname(), strlen(redfish_root()) + 1);
+
+		if ($file->getExtension() !== 'php' || str_starts_with($relative, 'tests/Unit/')) {
+			continue;
+		}
+
+		// The guard must come before any other statement runs.
+		$code   = (string) file_get_contents($file->getPathname());
+		$tokens = array_values(array_filter(token_get_all($code), fn ($t) => !is_array($t) || !in_array($t[0], [T_OPEN_TAG, T_WHITESPACE, T_COMMENT, T_DOC_COMMENT], true)));
+		$head   = implode('', array_map(fn ($t) => is_array($t) ? $t[1] : $t, array_slice($tokens, 0, 40)));
+
+		$head = (string) preg_replace('/^(?:(?:declare|namespace)\b[^;]*;)?/', '', $head);
+
+		if (!str_starts_with($head, "if(PHP_SAPI!=='cli'&&PHP_SAPI!=='phpdbg'){exit(1);}")) {
+			$missing[] = $relative;
+		}
+	}
+
+	expect($missing)->toBe([]);
 });

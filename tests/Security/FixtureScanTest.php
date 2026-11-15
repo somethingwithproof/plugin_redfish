@@ -17,6 +17,11 @@
  * more details.
  */
 
+// Test code: refuse to run outside the command line.
+if (PHP_SAPI !== 'cli' && PHP_SAPI !== 'phpdbg') {
+	exit(1);
+}
+
 /*
  * The Redfish fixtures are hand-written shapes, not captures (issue 42).
  * They must carry no credential, serial number, MAC address, or real host

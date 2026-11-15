@@ -17,6 +17,11 @@
  * more details.
  */
 
+// Test code: refuse to run outside the command line.
+if (PHP_SAPI !== 'cli' && PHP_SAPI !== 'phpdbg') {
+	exit(1);
+}
+
 /*
  * The transport and client against the fake BMC over real TLS (REQ-TEST-002,
  * issue #37). The name bmc.test resolves to 127.0.0.1 through a test

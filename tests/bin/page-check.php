@@ -17,6 +17,11 @@
  * more details.
  */
 
+// Test code: refuse to run outside the command line.
+if (PHP_SAPI !== 'cli' && PHP_SAPI !== 'phpdbg') {
+	exit(1);
+}
+
 /*
  * Log in as the Cacti admin user over HTTP and request a list of pages,
  * failing on any non-200 response, PHP error text, or missing Cacti footer.

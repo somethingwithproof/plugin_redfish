@@ -17,6 +17,11 @@
  * more details.
  */
 
+// Test code: refuse to run outside the command line.
+if (PHP_SAPI !== 'cli' && PHP_SAPI !== 'phpdbg') {
+	exit(1);
+}
+
 /*
  * Proves the PHP 8.2 guard against a real Cacti install, on whatever PHP runs
  * this script. Run from the Cacti root as the poller user:

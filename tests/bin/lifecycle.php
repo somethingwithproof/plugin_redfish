@@ -17,6 +17,11 @@
  * more details.
  */
 
+// Test code: refuse to run outside the command line.
+if (PHP_SAPI !== 'cli' && PHP_SAPI !== 'phpdbg') {
+	exit(1);
+}
+
 /*
  * Drive the plugin lifecycle through Cacti's own plugin API in a fresh PHP
  * process, the way plugins.php and cli/plugin_manage.php do, and print the

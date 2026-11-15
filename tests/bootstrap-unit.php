@@ -17,6 +17,11 @@
  * more details.
  */
 
+// Test code: refuse to run outside the command line.
+if (PHP_SAPI !== 'cli' && PHP_SAPI !== 'phpdbg') {
+	exit(1);
+}
+
 /*
  * Unit test bootstrap. Stubs the few Cacti helpers the plugin calls, so the
  * suite needs no database or Cacti checkout. Each stub records its calls in

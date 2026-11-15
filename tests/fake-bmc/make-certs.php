@@ -17,6 +17,11 @@
  * more details.
  */
 
+// Test code: refuse to run outside the command line.
+if (PHP_SAPI !== 'cli' && PHP_SAPI !== 'phpdbg') {
+	exit(1);
+}
+
 /*
  * Writes the fake BMC's certificates into <dir>, using ext-openssl only:
  *   ca.pem         test CA the client is given as a CA bundle

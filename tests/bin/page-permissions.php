@@ -17,6 +17,11 @@
  * more details.
  */
 
+// Test code: refuse to run outside the command line.
+if (PHP_SAPI !== 'cli' && PHP_SAPI !== 'phpdbg') {
+	exit(1);
+}
+
 /*
  * Page permissions and POST-only actions over HTTP (#28). Logs in to a
  * running Cacti as three users and checks each plugin page:

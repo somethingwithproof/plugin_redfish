@@ -17,6 +17,11 @@
  * more details.
  */
 
+// Test code: refuse to run outside the command line.
+if (PHP_SAPI !== 'cli' && PHP_SAPI !== 'phpdbg') {
+	exit(1);
+}
+
 // Constants core defines at runtime, so PHPStan can resolve them without a database.
 $cacti_root = rtrim((string) getenv('CACTI_PATH'), '/');
 

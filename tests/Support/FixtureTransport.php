@@ -17,6 +17,11 @@
  * more details.
  */
 
+// Test code: refuse to run outside the command line.
+if (PHP_SAPI !== 'cli' && PHP_SAPI !== 'phpdbg') {
+	exit(1);
+}
+
 use Somethingwithproof\Redfish\HttpRequest;
 use Somethingwithproof\Redfish\HttpResponse;
 use Somethingwithproof\Redfish\HttpTransport;

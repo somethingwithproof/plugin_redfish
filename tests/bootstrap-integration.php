@@ -17,6 +17,11 @@
  * more details.
  */
 
+// Test code: refuse to run outside the command line.
+if (PHP_SAPI !== 'cli' && PHP_SAPI !== 'phpdbg') {
+	exit(1);
+}
+
 /*
  * Integration bootstrap. The tests drive Cacti in separate PHP processes, as
  * plugins.php and the CLI tools do, so nothing from Cacti is loaded here.
