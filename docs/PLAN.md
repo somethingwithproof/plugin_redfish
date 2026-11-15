@@ -463,6 +463,7 @@ Phase 2 needs a security review covering command construction, environment handl
 | Rack model | Plugin rack table seeded from `location` (proposed); `location` text only; sites; tree branches | Milestone 6 | Plugin maintainer and pilots |
 | Rack totals | Plugin data source with coverage (proposed); aggregate graphs only | Milestone 6 | Research #21 |
 | Remote collector credentials | Replicate encrypted secrets; collector-local secrets; extend plugin_credentials | Milestone 7 | Cacti maintainers |
+| Remote collector connection | Milestone 2 collects only for BMCs on the main poller. A remote collector needs an explicit choice of whether it reads BMC records and writes readings through the main database connection or its local one, and where its key file lives; until then remote pollers are not collected (phase 4) | Milestone 7 | Owner |
 | Power-limit writes | Never (proposed); a separate opt-in plugin or phase | After phase 1 | Cacti maintainers and demand |
 
 Redirects are not an open decision but a divergence: [ADR 0012](decisions/0012-bounded-same-origin-redirects.md) follows at most three same-origin HTTPS redirects on `GET`, as DSP0266 6.3 requires, and supersedes the "MUST NOT follow redirects" clause of REQ-RF-001 in issue 37.
