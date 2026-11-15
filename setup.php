@@ -221,7 +221,7 @@ function redfish_provisioner(): \Somethingwithproof\Redfish\DeviceProvisioner {
 		redfish_bmcs(),
 		redfish_cacti_objects(),
 		redfish_template_installer(),
-		redfish_load_cacti(...),
+		\Closure::fromCallable('redfish_load_cacti'),
 		static fn (int $hostId, int $userId): bool => (bool) is_device_allowed($hostId, $userId)
 	);
 }
