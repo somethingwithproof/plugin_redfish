@@ -362,7 +362,9 @@ Plugin code is object-oriented where Cacti's plugin contract allows it. No maint
 - Page scripts, which include `include/auth.php`, read request variables with `get_filter_request_var()`, and call a page class.
 - The script server input function and the collector CLI entry point.
 
-**Layout.** Classes live in `lib/*.php` under `Cacti\Redfish`, one class per file, loaded by a small `spl_autoload_register()` loader registered only after the PHP version check. No Composer runtime dependency is added. Files stay at depth 2 or less because the gettext build scans only `find . -maxdepth 2`. Settings use `config_settings`, logging uses `cacti_log()` with a `REDFISH` tag, strings use the `redfish` text domain, and realms are "Redfish View" and "Redfish Admin". The slug and namespace are provisional until decision #12.
+**Layout.** Classes live in `lib/*.php` under `Somethingwithproof\Redfish` (milestone 2 diverged from the `Cacti\Redfish` named here and in issue 33; see [ADR 0014](decisions/0014-plugin-name-namespace-and-provisional-harness.md)), one class per file, loaded by a small `spl_autoload_register()` loader registered only after the PHP version check. No Composer runtime dependency is added. Files stay at depth 2 or less because the gettext build scans only `find . -maxdepth 2`. Settings use `config_settings`, logging uses `cacti_log()` with a `REDFISH` tag, strings use the `redfish` text domain, and realms are "Redfish View" and "Redfish Admin". The slug and namespace are provisional until decision #12.
+
+**As built in milestone 2.** The table above was a forecast. The shipped classes differ: normalization is one pure `Normalizer` with a rule per source instead of separate new and legacy normalizers; discovery is `Discoverer` producing a stored `DiscoveryPlan`; collection is `Collector` with `LeaseRepository`, `HealthRepository`, `DiscoveryRepository`, and `ReadingRepository`; credentials are `CredentialRepository`, `CredentialStore`, and `Vault`; HTTP is `SocketTransport` behind `GuardedTransport` and `OperationGuard`. `IpmiClient`, `Rack`, and `RackRepository` arrive with their phases.
 
 | Kind | Examples | Notes |
 |---|---|---|
@@ -449,17 +451,28 @@ Phase 2 needs a security review covering command construction, environment handl
 
 | Decision | Options | Needed before | Decided by |
 |---|---|---|---|
-| Redfish resource model | New subsystem resources first with legacy fallback (proposed); legacy only; new only | Milestone 2 | Milestone 1 vendor matrix |
-| Credential storage | plugin_credentials (proposed); plugin-owned encrypted store using core helpers; secret references only | Milestone 2 | Cacti maintainers and research #28 |
-| TLS trust for BMC certificates | CA bundle or per-BMC pin with an explicit unverified opt-out (proposed); CA bundle only | Milestone 2 | Plugin maintainer and pilots |
+| Redfish resource model | **Decided:** new subsystem resources first with legacy fallback, chosen per reading ([ADR 0013](decisions/0013-choose-the-resource-source-per-reading.md)) | Milestone 2 | Milestone 1 vendor matrix |
+| Credential storage | **Decided:** plugin-owned AES-256-GCM vault with the key file outside the database, not plugin_credentials, which has no release ([ADR 0009](decisions/0009-plugin-owned-credential-vault.md)) | Milestone 2 | Research #28 |
+| TLS trust for BMC certificates | **Decided:** system store, CA bundle, or per-BMC SPKI SHA-256 pin, with an explicit, logged, per-BMC unverified opt-out shown on the health page ([ADR 0011](decisions/0011-tls-trust-modes.md)) | Milestone 2 | Plugin maintainer; pilots may revise |
 | BMC to Cacti device mapping | Map onto the existing server device, create a BMC device only when none exists (proposed); always a separate BMC device | Milestone 3 | Plugin maintainer and pilots |
-| Repository and name | `Cacti/plugin_redfish`, or another name; slug `redfish` | Before any code is published | Cacti maintainers |
-| Test harness | Whatever maintained plugins use | Milestone 2 | Cacti maintainers |
+| Repository and name | Slug `redfish`, namespace `Somethingwithproof\Redfish` used provisionally ([ADR 0014](decisions/0014-plugin-name-namespace-and-provisional-harness.md)); still open | Before any code is published | Cacti maintainers |
+| Test harness | Pest from Cacti core's locked harness, used provisionally ([ADR 0014](decisions/0014-plugin-name-namespace-and-provisional-harness.md)); still open | Milestone 2 | Cacti maintainers |
 | IPMI client | `ipmitool`; FreeIPMI; a native implementation; ship no IPMI | Milestone 5 | Research and security review |
 | Rack model | Plugin rack table seeded from `location` (proposed); `location` text only; sites; tree branches | Milestone 6 | Plugin maintainer and pilots |
 | Rack totals | Plugin data source with coverage (proposed); aggregate graphs only | Milestone 6 | Research #21 |
 | Remote collector credentials | Replicate encrypted secrets; collector-local secrets; extend plugin_credentials | Milestone 7 | Cacti maintainers |
 | Power-limit writes | Never (proposed); a separate opt-in plugin or phase | After phase 1 | Cacti maintainers and demand |
+
+Redirects are not an open decision but a divergence: [ADR 0012](decisions/0012-bounded-same-origin-redirects.md) follows at most three same-origin HTTPS redirects on `GET`, as DSP0266 6.3 requires, and supersedes the "MUST NOT follow redirects" clause of REQ-RF-001 in issue 37.
+
+**Milestone 2 deferrals.** Left for later milestones, each with its reason:
+
+- The `Sensors` collection is not walked; readings come from the subsystem excerpts and the sensor each excerpt references (issue 24).
+- Inlet rules 2 and 3 (`PhysicalContext` `Intake` sensors, named vendor sensors) wait for issue 24; only the Dell intake summary is confirmed.
+- `$expand` and `$select` support is recorded at discovery but not used, since the operation guard refuses query strings.
+- Connections are not reused across requests; milestone 3 measures the cost.
+- `ReadingTime` is not stored; freshness uses the collector's observation time.
+- A throttled or unavailable BMC is not retried within a run; it backs off to a later run.
 
 ## Risks
 

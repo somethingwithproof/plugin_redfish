@@ -2,7 +2,17 @@
 
 A Cacti 1.2 plugin that brings server power draw, inlet temperature, fan state, and power supply health from baseboard management controllers (BMCs) into Cacti as ordinary devices, data sources, and graphs, using Redfish with an optional IPMI fallback. Thold and Maint then alert on and suppress them, and a later phase adds rack-level power totals.
 
-> **Status: in development.** Milestone 1 research is merged; milestone 2 (foundation) is in progress. Plugin code is not published here yet. Milestone 1 confirmed the design against documentation and upstream source (PR #67); the results, with sources, are in [docs/research/](docs/research/), and [docs/PLAN.md](docs/PLAN.md) is at revision 2. Checks that need real BMCs remain open in each research page's live-checks table. Nothing below describes shipped behavior.
+> **Status: in development, no release yet (0.1.0-dev).** Milestone 2 (foundation) is merged on `main`. This plugin is not affiliated with the Cacti project. It installs on Cacti 1.2.31 under PHP 8.2 or later, registers BMCs and credentials, reads power, temperatures, fans, and power supply health from each BMC over Redfish into its own cache, and shows collection health. It does not yet create Cacti devices, data sources, or graphs, and it does not alert; those arrive in milestone 3. It has been tested only against a fake BMC built from hand-written fixtures, never a real one. The design and research are in [docs/PLAN.md](docs/PLAN.md), [docs/research/](docs/research/), and [docs/decisions/](docs/decisions/).
+
+### What milestone 2 ships
+
+- Install, upgrade, disable, and uninstall through Cacti's plugin API, with tables kept on uninstall unless the setting is cleared. On PHP older than 8.2 the plugin refuses to install or enable and says why.
+- Realms "Redfish View" (health page) and "Redfish Admin" (BMCs and credentials pages), and settings under Configuration > Settings > Redfish.
+- A BMC registry with CSV import and JSON export. Import files must not contain passwords; credentials are referenced by name.
+- Credentials stored encrypted with AES-256-GCM. The key is a file outside the database, `/etc/cacti/redfish-vault.key` by default, holding 32 random bytes or 64 hex characters, owned by the poller user and not readable by other users. **Back up the key file with the database**; without it every stored password must be entered again.
+- TLS verification on by default, with a per-BMC CA bundle or SPKI SHA-256 pin. A logged, per-BMC unverified opt-out stays on the health page as a warning.
+- A read-only Redfish client: `GET` plus the session login and logout only, checked against an allowlist before any request is sent.
+- A collector started from `poller_bottom` for BMCs on the main poller, with per-BMC leases, backoff, and session cleanup after a crash.
 
 ## Why
 

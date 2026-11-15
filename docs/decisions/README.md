@@ -12,5 +12,11 @@ Each record captures one architecture decision: its context, the decision, its c
 | [0006](0006-verify-tls-and-keep-credentials-off-command-lines-and-logs.md) | Verify TLS by default and keep credentials off command lines and logs | Accepted |
 | [0007](0007-use-cacti-remote-collectors.md) | Reach isolated BMC networks through Cacti remote data collectors, not a custom bridge | Accepted |
 | [0008](0008-php-82-floor-with-80-parse-guard.md) | Require PHP 8.2, keep entry points parseable on PHP 8.0 | Accepted |
+| [0009](0009-plugin-owned-credential-vault.md) | Store BMC passwords in a plugin-owned vault with the key outside the database | Accepted |
+| [0010](0010-read-only-client-with-an-operation-allowlist.md) | Enforce a read-only Redfish client with an exact operation allowlist before any I/O | Accepted |
+| [0011](0011-tls-trust-modes.md) | Trust BMC certificates through the system store, a CA bundle, or an SPKI pin, with a logged per-BMC opt-out | Accepted |
+| [0012](0012-bounded-same-origin-redirects.md) | Follow at most three same-origin HTTPS redirects on GET | Accepted |
+| [0013](0013-choose-the-resource-source-per-reading.md) | Choose the subsystem or legacy source per reading, and take inlet only from a confirmed intake summary | Accepted |
+| [0014](0014-plugin-name-namespace-and-provisional-harness.md) | Name the plugin `redfish` under `Somethingwithproof\Redfish`, with a provisional Pest harness | Accepted, provisional |
 
 Open decisions are tracked as issues labelled `type: decision`.
