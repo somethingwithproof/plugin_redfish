@@ -165,10 +165,23 @@ scale_metric("$n latency_ms", $latency);
 
 // The budget is raised for the measurement only: a production run stops
 // starting BMCs at the budget and resumes the rest on its next run.
+$failed = 0;
+
 foreach (array('first' => 'discovery and readings', 'second' => 'readings') as $run => $what) {
-	$t0  = hrtime(true);
-	$res = scale_collect(3600);
-	$s   = (hrtime(true) - $t0) / 1e9;
+	$since = time();
+	$t0    = hrtime(true);
+	$res   = scale_collect(3600);
+	$s     = (hrtime(true) - $t0) / 1e9;
+
+	// Each run counts only when it finished and every BMC succeeded in it:
+	// collected counts attempts, and a failed run keeps the last readings.
+	$healthy = (int) db_fetch_cell_prepared('SELECT COUNT(*) FROM plugin_redfish_health WHERE last_success >= ? AND failures = 0', array($since));
+	scale_metric("$n collector_{$run}_healthy", $healthy);
+
+	if ($res['stopped_early'] || $res['collected'] !== $n || $healthy !== $n) {
+		fwrite(STDERR, "The $run collection ($what) did not succeed for every BMC: " . json_encode($res) . " healthy $healthy of $n\n");
+		$failed++;
+	}
 	scale_metric("$n collector_{$run}_s", sprintf('%.1f', $s));
 	scale_metric("$n collector_{$run}_collected", $res['collected']);
 	scale_metric("$n collector_{$run}_ms_per_bmc", sprintf('%.1f', 1000 * $s / max(1, $res['collected'])));
@@ -184,6 +197,13 @@ $calls   = min(2000, 2 * $n);
 $summary = array();
 $get     = array();
 $unknown = 0;
+$stale   = 0;
+
+// Production freshness applies. A serial run longer than the stale window
+// leaves the first BMCs' readings stale by the time they are asked for;
+// that is expected and counted apart, not as a failure.
+$settings = redfish_settings();
+$window   = $settings->staleAfter * max(1, $settings->collectInterval);
 
 for ($c = 0; $c < $calls; $c++) {
 	$host = SCALE_HOST_BASE + 1 + ($c * 7919) % $n;
@@ -191,7 +211,16 @@ for ($c = 0; $c < $calls; $c++) {
 	$t0        = hrtime(true);
 	$answer    = ss_redfish_summary($host);
 	$summary[] = (hrtime(true) - $t0) / 1e6;
-	$unknown  += strpos($answer, 'power_watts:U') === 0 ? 1 : 0;
+
+	if (strpos($answer, 'power_watts:U') === 0) {
+		$observed = (int) db_fetch_cell_prepared("SELECT r.observed_at FROM plugin_redfish_reading AS r INNER JOIN plugin_redfish_bmc AS b ON b.id = r.bmc_id WHERE b.host_id = ? AND r.member_key = 'node' AND r.metric = 'power_watts'", array($host));
+
+		if ($observed > 0 && time() - $observed > $window) {
+			$stale++;
+		} else {
+			$unknown++;
+		}
+	}
 
 	$t0    = hrtime(true);
 	ss_redfish_members($host, 'fan', 'get', 'fan_rpm', 'System.Embedded.1/fan/Fan.Embedded.1A');
@@ -201,9 +230,10 @@ for ($c = 0; $c < $calls; $c++) {
 scale_spread("$n summary", $summary);
 scale_spread("$n member_get", $get);
 scale_metric("$n summary_unknown_power", $unknown);
+scale_metric("$n summary_stale_power", $stale);
 
 foreach ($bmcs->all() as $old) {
 	$bmcs->delete($old->id, 1);
 }
 
-exit($unknown === 0 ? 0 : 1);
+exit($unknown === 0 && $failed === 0 ? 0 : 1);

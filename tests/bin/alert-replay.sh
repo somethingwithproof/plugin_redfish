@@ -32,7 +32,10 @@ php cli/plugin_manage.php --plugin=thold --plugin=maint --install --enable || ex
 
 fail=0
 
-for step in $(php plugins/redfish/tests/bin/alert-flow.php list); do
+steps=$(php plugins/redfish/tests/bin/alert-flow.php list) || { echo "FAIL: the alert flow could not list its steps"; exit 1; }
+[ -n "$steps" ] || { echo "FAIL: the alert flow listed no steps"; exit 1; }
+
+for step in $steps; do
 	echo "== step $step"
 	php plugins/redfish/tests/bin/alert-flow.php "$step" || fail=1
 	[ "$step" = final ] && break

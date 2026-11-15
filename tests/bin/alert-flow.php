@@ -59,7 +59,7 @@ require_once($config['base_path'] . '/lib/utility.php');
 require_once($config['base_path'] . '/lib/rrd.php');
 require_once($config['base_path'] . '/plugins/redfish/setup.php');
 
-const ALERT_STEPS = array('setup', 'warmup', 'baseline', 'hot', 'held', 'cool', 'inlet', 'inlet_ok', 'fan_failed', 'fan_ok', 'psu_failed', 'psu_ok', 'silent', 'answering', 'maint', 'maint2', 'unmaint', 'final');
+const ALERT_STEPS = array('setup', 'warmup', 'baseline', 'hot', 'held', 'cool', 'inlet', 'inlet_ok', 'fan_failed', 'fan_ok', 'fan_pulled', 'fan_accepted', 'psu_failed', 'psu_ok', 'silent', 'answering', 'maint', 'maint2', 'unmaint', 'final');
 
 // Thold's log statuses (plugins/thold/includes/settings.php), defined there
 // only while Thold's config hook runs.
@@ -145,9 +145,10 @@ function alert_key_file() {
 
 /**
  * The Dell fixture with the given node power and inlet and the health of
- * one fan and the second supply; every other member is healthy.
+ * one fan and the second supply, or that fan pulled; every other member
+ * is healthy.
  */
-function alert_fixture($power, $inlet, $fanHealth = 'OK', $psuHealth = 'OK') {
+function alert_fixture($power, $inlet, $fanHealth = 'OK', $psuHealth = 'OK', $fanPulled = false) {
 	$f      = json_decode((string) file_get_contents(dirname(__DIR__) . '/fixtures/dell-subsystem.json'), true);
 	$c      = '/redfish/v1/Chassis/System.Embedded.1';
 	$f[$c . '/EnvironmentMetrics']['PowerWatts']['Reading']                                            = $power;
@@ -156,6 +157,11 @@ function alert_fixture($power, $inlet, $fanHealth = 'OK', $psuHealth = 'OK') {
 	// The capture has a second fan in Warning; the replay starts healthy.
 	$f[$c . '/ThermalSubsystem/Fans/Fan.Embedded.3A']['Status']['Health']                              = 'OK';
 	$f[$c . '/PowerSubsystem/PowerSupplies/PSU.Slot.2']['Status']['Health']                            = $psuHealth;
+
+	// A pulled fan: the BMC still lists the slot, as Absent with no health.
+	if ($fanPulled) {
+		$f[$c . '/ThermalSubsystem/Fans/Fan.Embedded.1A']['Status'] = array('State' => 'Absent');
+	}
 
 	foreach ($f as $path => $resource) {
 		if (is_array($resource) && isset($resource['Id']) && $resource['Id'] === 'SystemBoardInletTemp') {
@@ -174,11 +180,11 @@ function alert_fixture($power, $inlet, $fanHealth = 'OK', $psuHealth = 'OK') {
  * only for it, so the collector the poller starts never finds a BMC whose
  * fake server has gone with this step.
  */
-function alert_collect($power, $inlet, $fanHealth = 'OK', $psuHealth = 'OK') {
-	$fake  = new FakeBmc(alert_fixture($power, $inlet, $fanHealth, $psuHealth));
+function alert_collect($power, $inlet, $fanHealth = 'OK', $psuHealth = 'OK', $fanPulled = false) {
+	$fake  = new FakeBmc(alert_fixture($power, $inlet, $fanHealth, $psuHealth, $fanPulled));
 	$clock = new SystemClock();
 	$id    = (int) alert_state('bmc');
-	$input = array('name' => 'alert-r660', 'address' => 'bmc.test', 'port' => (string) $fake->port, 'poller_id' => '1', 'host_id' => alert_state('host') === '' ? '0' : alert_state('host'), 'credential_id' => alert_state('credential'), 'tls_mode' => 'ca_bundle', 'ca_file' => FakeBmc::certs() . '/ca.pem', 'enabled' => 'on');
+	$input = array('name' => 'alert-r660', 'address' => 'bmc.test', 'port' => (string) $fake->port, 'poller_id' => '1', 'host_id' => (string) (int) alert_state('host'), 'credential_id' => alert_state('credential'), 'tls_mode' => 'ca_bundle', 'ca_file' => FakeBmc::certs() . '/ca.pem', 'enabled' => 'on');
 	$bmc   = BmcInput::parse($input, $id)->bmc;
 	$id    = redfish_bmcs()->save($bmc, 1);
 	alert_state('bmc', $id);
@@ -197,7 +203,7 @@ function alert_collect($power, $inlet, $fanHealth = 'OK', $psuHealth = 'OK') {
 	))->run(1, 240, true);
 
 	db_execute_prepared("UPDATE plugin_redfish_bmc SET admin_state = 'disabled' WHERE id = ?", array($id));
-	alert_expect($run['collected'] === 1, "the collector read the fake BMC (power $power W, inlet $inlet C, fan $fanHealth, supply $psuHealth)");
+	alert_expect($run['collected'] === 1, "the collector read the fake BMC (power $power W, inlet $inlet C, fan " . ($fanPulled ? 'pulled' : $fanHealth) . ", supply $psuHealth)");
 }
 
 function alert_thold($name) {
@@ -308,7 +314,10 @@ switch ($step) {
 		$credential  = $credentials->save(0, 'alert-' . bin2hex(random_bytes(3)), FakeBmc::USER, 1);
 		(new CredentialStore($credentials, alert_key_file()))->storePassword($credential, new Secret(FakeBmc::PASSWORD), 1);
 		alert_state('credential', $credential);
+		// A replay that stopped after creating its device must start over
+		// with no device, or the new BMC would claim the old one.
 		alert_state('bmc', 0);
+		alert_state('host', 0);
 		alert_state('log', 0);
 		alert_collect(312, 22);
 
@@ -374,6 +383,21 @@ switch ($step) {
 
 		break;
 	case 'fan_ok':
+		alert_check($step, 'fans_bad', false, array(ALERT_RESTORE));
+		alert_collect(312, 22, 'OK', 'OK', true);
+
+		break;
+	case 'fan_pulled':
+		// A fan that was present and is now reported Absent has failed.
+		alert_check($step, 'fans_bad', true, array(ALERT_NOTIFY));
+		alert_quiet($step, array('power_watts', 'inlet_celsius', 'psus_bad', 'age'));
+
+		// Add Graphs accepts the BMC's members as they are now.
+		alert_expect(redfish_bmcs()->acceptMembers((int) alert_state('bmc'), 1), 'fan_pulled: an administrator accepts the members without the pulled fan');
+		alert_collect(312, 22, 'OK', 'OK', true);
+
+		break;
+	case 'fan_accepted':
 		alert_check($step, 'fans_bad', false, array(ALERT_RESTORE));
 		alert_collect(312, 22, 'OK', 'Critical');
 

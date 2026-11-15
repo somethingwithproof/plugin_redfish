@@ -235,6 +235,38 @@ if ($argv[1] === 'setup') {
 		flow_expect(is_file($config['base_path'] . '/resource/script_server/' . $file[1]), 'the query file ' . $file[1] . ' is installed in Cacti\'s resource tree');
 	}
 
+	// The installer owns only the files it wrote, and never writes through
+	// a link. Each case is undone before the next.
+	$dir   = $config['base_path'] . '/resource/script_server';
+	$owned = json_decode((string) read_config_option(T::FILES_SETTING, true), true);
+	flow_expect(is_array($owned) && count($owned) === count(T::QUERIES), 'the installer recorded each query file it wrote: ' . json_encode($owned));
+
+	$first = T::QUERIES[array_key_first(T::QUERIES)][1];
+	set_config_option(T::FILES_SETTING, '');
+	flow_expect($installer->install() && (array) json_decode((string) read_config_option(T::FILES_SETTING, true), true) === array(), 'identical files it did not write are left unclaimed, so uninstall keeps them');
+	foreach (T::QUERIES as $file) {
+		unlink("$dir/{$file[1]}");
+	}
+
+	flow_expect($installer->install() && count((array) json_decode((string) read_config_option(T::FILES_SETTING, true), true)) === count(T::QUERIES), 'files it writes again are claimed again');
+
+	$decoy = tempnam(sys_get_temp_dir(), 'redfish-decoy-');
+	file_put_contents($decoy, 'decoy');
+	rename("$dir/$first", "$dir/$first.saved");
+	symlink($decoy, "$dir/$first");
+	$linked = !$installer->install() && strpos($installer->failure(), 'symbolic link') !== false && file_get_contents($decoy) === 'decoy';
+	unlink("$dir/$first");
+	rename("$dir/$first.saved", "$dir/$first");
+	unlink($decoy);
+	flow_expect($linked && $installer->install() && $installer->failure() === '', 'a query file replaced by a link is refused and not written through, and a reinstall recovers');
+
+	$queryGraph = (int) db_fetch_cell("SELECT id FROM snmp_query_graph WHERE name = 'Fan Speed RPM' AND snmp_query_id = " . $objects->queryId('Redfish Fans'));
+	$graphId    = (int) db_fetch_cell_prepared('SELECT graph_template_id FROM snmp_query_graph WHERE id = ?', array($queryGraph));
+	db_execute_prepared('UPDATE snmp_query_graph SET graph_template_id = 0 WHERE id = ?', array($queryGraph));
+	$broken = !$installer->present() && redfish_provisioner()->refusal() !== null;
+	db_execute_prepared('UPDATE snmp_query_graph SET graph_template_id = ? WHERE id = ?', array($graphId, $queryGraph));
+	flow_expect($queryGraph > 0 && $broken && $installer->present() && redfish_provisioner()->refusal() === null, 'a data query graph that lost its graph template stops provisioning until it is back');
+
 	// The Dell iDRAC and HPE iLO packages Cacti ships, imported beside the
 	// plugin's templates: no object of either shares a name with one of
 	// the plugin's, and the plugin's objects keep their hashes.
@@ -312,7 +344,7 @@ if ($argv[1] === 'setup') {
 	$psus  = $objects->cachedIndexes($host8, $objects->queryId('Redfish Power Supplies'));
 	flow_expect(count($temps) === 2 && count($psus) === 2, 'the temperature and supply queries index every member: ' . json_encode(array($temps, $psus)));
 
-	$again = $provisioner->attach($ids[8], $host8);
+	$again = $provisioner->attach($ids[8], $host8, 1);
 	flow_expect($again === 0, 'attaching again adds no graph');
 
 	// A fan whose RRD gets a short step, for the gap check in "later".
@@ -326,7 +358,7 @@ if ($argv[1] === 'setup') {
 	$fakes['x'] = new FakeBmc(flow_fixture('existing', flow_fans(2)));
 	$xId        = flow_bmc('rx', $fakes['x']->port, $credential, $existing);
 	flow_collect();
-	$added      = $provisioner->attach($xId, $existing);
+	$added      = $provisioner->attach($xId, $existing, 1);
 	$xState     = array('template' => (int) db_fetch_cell_prepared('SELECT host_template_id FROM host WHERE id = ?', array($existing)), 'hostname' => db_fetch_cell_prepared('SELECT hostname FROM host WHERE id = ?', array($existing)), 'queries' => (int) db_fetch_cell_prepared('SELECT COUNT(*) FROM host_snmp_query WHERE host_id = ?', array($existing)));
 	flow_expect($added === 2 + 2 + 2 + 4 && $xState === array('template' => 0, 'hostname' => 'existing.example.invalid', 'queries' => 3), 'attaching to an existing device adds queries and graphs and changes nothing else: ' . json_encode(array($added, $xState)));
 
@@ -396,8 +428,14 @@ if ($argv[1] === 'setup') {
 	db_execute("UPDATE plugin_redfish_bmc SET admin_state = 'disabled'");
 	flow_expect($run['collected'] === 1, 'the collector read the changed BMC');
 
+	// The removed fan was present, so it counts as failed until accepted.
+	$before = ss_redfish_summary($host8);
+	flow_expect(strpos($before, ' fans_bad:1 ') !== false, 'a fan that was present and is gone counts as failed: ' . $before);
+
 	$query   = $objects->queryId('Redfish Fans');
-	$graphs  = redfish_provisioner()->attach($bmc8, $host8);
+	$graphs  = redfish_provisioner()->attach($bmc8, $host8, 1);
+	$after   = redfish_summary_script()->answer($host8);
+	flow_expect(strpos($after, ' fans_bad:0 ') !== false, 'Add Graphs accepts the members, and the removed fan stops counting: ' . $after);
 	$indexes = $objects->cachedIndexes($host8, $query);
 	flow_expect($graphs === 1 && in_array('1/fan/Fan03', $indexes, true) && in_array('1/fan/Fan09', $indexes, true) && count($indexes) === 9, 'a reindex keeps the removed fan, adds the new one, and graphs only the new one: ' . json_encode(array($graphs, $indexes)));
 	flow_expect((int) db_fetch_cell_prepared('SELECT COUNT(*) FROM data_local WHERE id = ?', array($removed)) === 1, 'the removed fan keeps its data source and graph');
