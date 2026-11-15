@@ -8,7 +8,7 @@ BMC networks are often isolated from the main Cacti server. Cacti has remote dat
 
 ## Decision
 
-In phase 4, the collector, clients, and script server input run on the remote data collector that can reach the BMCs. Plugin configuration tables replicate through `replicate_out`, readings stay in the collector's local database and reach the main server through the normal poller output path, and the main server asks for health and discovery through read-only `remote_agent` actions that take identifiers only. Phases 1 to 3 do not use this. The plugin is Cacti 1.2.31 or later and requires no core patch.
+In phase 4, the collector, clients, and script server input run on the remote data collector that can reach the BMCs. Plugin configuration tables replicate through `replicate_out`, readings stay in the collector's local database and reach the main server through the normal poller output path, and the main server asks for health and discovery through read-only `remote_agent` actions that take identifiers only. Phases 1 to 3 do not use this. (Research 2026-11-15: with the planned `INFO` capabilities, hooks for devices on a remote poller do not run on that poller until phase 4 adds `remote_poller:1` and `remote_collect:1`, so phases 1 to 3 support BMC devices on the main poller only. See [Cacti core](../research/cacti-core.md).) The plugin is Cacti 1.2.31 or later and requires no core patch.
 
 ## Consequences
 
