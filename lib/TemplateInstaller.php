@@ -221,7 +221,7 @@ final class TemplateInstaller {
 			$target = $this->queryTarget($file);
 
 			if ($target === null || !is_file($source)) {
-				return sprintf('The data query file %s cannot be installed: the source or the Cacti resource directory is missing', $file);
+				return sprintf('The data query file %s cannot be installed: the source is missing, or %s/resource/script_server is missing, is a symbolic link, or lies outside the Cacti directory', $file, $this->cactiPath);
 			}
 
 			// A link could point the write anywhere; the plugin never follows one.
@@ -346,8 +346,28 @@ final class TemplateInstaller {
 	}
 
 	private function queryTarget(string $file): ?string {
-		$dir = $this->cactiPath . '/resource/script_server';
+		$dir = $this->queryDir();
 
-		return is_dir($dir) ? $dir . '/' . $file : null;
+		return $dir === null ? null : $dir . '/' . $file;
+	}
+
+	/**
+	 * Cacti's script server resource directory, or null when it is missing
+	 * or would lead outside the Cacti tree: resource and resource/script_server
+	 * must be real directories, and the directory must resolve inside
+	 * <cacti>/resource, so no write or delete follows a link elsewhere.
+	 */
+	private function queryDir(): ?string {
+		$resource = $this->cactiPath . '/resource';
+		$dir      = $resource . '/script_server';
+
+		if (is_link($resource) || is_link($dir) || !is_dir($dir)) {
+			return null;
+		}
+
+		$root = realpath($this->cactiPath);
+		$real = realpath($dir);
+
+		return $root !== false && $real === $root . '/resource/script_server' ? $dir : null;
 	}
 }
