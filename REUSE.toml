@@ -1,0 +1,31 @@
+version = 1
+
+# Files that cannot carry a comment header, or whose format makes one
+# awkward: documentation, repository metadata, GitHub templates, test
+# configuration, and translation catalogs, which gettext regenerates.
+[[annotations]]
+path = [
+    "README.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "docs/**",
+    ".github/**",
+    ".editorconfig",
+    ".gitattributes",
+    "REUSE.toml",
+    "phpunit.xml",
+    "phpunit-integration.xml",
+    "locales/po/**",
+    "tests/fixtures/**",
+    "locales/LC_MESSAGES/**",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Thomas Vincent <thomasvincent@gmail.com>"
+SPDX-License-Identifier = "GPL-2.0-or-later"
+
+# Contributor Covenant 2.0, adapted.
+[[annotations]]
+path = "CODE_OF_CONDUCT.md"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Contributor Covenant contributors <https://www.contributor-covenant.org>"
+SPDX-License-Identifier = "CC-BY-4.0"
