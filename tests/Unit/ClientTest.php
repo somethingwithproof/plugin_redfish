@@ -240,6 +240,27 @@ it('finds stale sessions of the same user and grants only those for deletion', f
 		->and(redfish_class(fn () => (new GuardedTransport($fake, $client->guard(), 5))->send(new HttpRequest('DELETE', REDFISH_SESSIONS . '/6'))))->toBe(FailureClass::OperationRefused);
 });
 
+it('starts no request at or after the deadline, but may still close its session', function () {
+	$fake  = new FixtureTransport('dell-subsystem');
+	$clock = new FixedClock(1000);
+	$guard = new OperationGuard();
+	$guard->allowSessions(REDFISH_SESSIONS);
+	$guard->grantDelete(REDFISH_SESSIONS . '/1');
+	$t = new GuardedTransport($fake, $guard, 50, $clock, 1010, 1020);
+
+	$t->send(new HttpRequest('GET', '/redfish/v1/'));
+	$clock->advance(10);
+
+	expect(redfish_class(fn () => $t->send(new HttpRequest('GET', '/redfish/v1/'))))->toBe(FailureClass::Deadline)
+		->and(redfish_class(fn () => $t->send(new HttpRequest('POST', REDFISH_SESSIONS, [], '{}'))))->toBe(FailureClass::Deadline)
+		->and(redfish_class(fn () => $t->send(new HttpRequest('DELETE', REDFISH_SESSIONS . '/1'))))->toBeNull();
+
+	$clock->advance(10);
+
+	expect(redfish_class(fn () => $t->send(new HttpRequest('DELETE', REDFISH_SESSIONS . '/1'))))->toBe(FailureClass::Deadline)
+		->and($fake->log())->toBe(['GET /redfish/v1/', 'DELETE ' . REDFISH_SESSIONS . '/1']);
+});
+
 it('follows only links on the same BMC', function () {
 	$e = new Endpoint('bmc.test', 443, TlsMode::System);
 

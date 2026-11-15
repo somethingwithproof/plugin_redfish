@@ -44,8 +44,11 @@ final class Collector {
 	private const STOP = [
 		FailureClass::Timeout, FailureClass::Throttled, FailureClass::ServiceUnavailable, FailureClass::ServerError,
 		FailureClass::AuthRejected, FailureClass::RequestBudget, FailureClass::ConnectRefused, FailureClass::DnsFailed,
-		FailureClass::AddressRefused, FailureClass::OperationRefused,
+		FailureClass::AddressRefused, FailureClass::OperationRefused, FailureClass::Deadline,
 	];
+
+	/** When the lease on the BMC being collected expires. */
+	private int $leaseExpires = 0;
 
 	public function __construct(
 		private readonly BmcRepository $bmcs,
@@ -118,11 +121,17 @@ final class Collector {
 
 			$notSince = $force ? $now : $now - self::dueAfter($this->settings->collectInterval);
 
-			if (!$this->leases->acquire($bmc->id, $this->holder, $budgetSeconds + 60, $notSince)) {
+			// The lease covers the budget plus room for the last read and
+			// the logout to finish (see collect()).
+			$leaseSeconds = $budgetSeconds + 2 * $this->requestReserve() + 10;
+
+			if (!$this->leases->acquire($bmc->id, $this->holder, $leaseSeconds, $notSince)) {
 				$skipped++;
 
 				continue;
 			}
+
+			$this->leaseExpires = $now + $leaseSeconds;
 
 			try {
 				$used = $this->collect($bmc, $previous);
@@ -147,6 +156,7 @@ final class Collector {
 	 */
 	public function collect(Bmc $bmc, BmcHealth $previous): ?int {
 		$started  = $this->clock->now();
+		$expires  = $this->leaseExpires > 0 ? $this->leaseExpires : $started + $this->settings->collectorBudget + 2 * $this->requestReserve() + 10;
 		$t0       = microtime(true);
 		$redactor = new Redactor();
 
@@ -177,7 +187,11 @@ final class Collector {
 		}
 
 		$endpoint   = Endpoint::forBmc($bmc);
-		$client     = $this->clients->client($bmc, $redactor, $this->clock);
+		// One full request fits between each deadline and the next: reads
+		// stop first, then the session DELETE, then the lease expires, so no
+		// request outlives the lease (GuardedTransport).
+		$reserve    = $this->requestReserve();
+		$client     = $this->clients->client($bmc, $redactor, $this->clock, $expires - 2 * $reserve, $expires - $reserve);
 		$discoverer = new Discoverer($client, $endpoint);
 		$stored     = $this->discovery->find($bmc->id);
 		$failure    = null;
@@ -296,6 +310,13 @@ final class Collector {
 		}
 
 		return $client->requests();
+	}
+
+	/**
+	 * Seconds one request may take, connection included, with a margin.
+	 */
+	private function requestReserve(): int {
+		return $this->settings->requestTimeout + 5;
 	}
 
 	/**

@@ -20,10 +20,16 @@
 namespace Somethingwithproof\Redfish;
 
 /**
- * Applies the operation guard and the request budget before the inner
- * transport sees a request, and lets one request through at a time
- * (REQ-RF-008): a re-entrant send, which no code path makes, is refused
- * instead of opening a second connection.
+ * Applies the operation guard, the request budget, and the per-BMC deadline
+ * before the inner transport sees a request, and lets one request through at
+ * a time (REQ-RF-008): a re-entrant send, which no code path makes, is
+ * refused instead of opening a second connection.
+ *
+ * The deadline comes from the collector's lease on the BMC. No request
+ * starts at or after $deadline, except the DELETE of the run's own session,
+ * which may start until $closeDeadline. Both leave room for one full request
+ * before the lease expires, so no request outlives the lease and another
+ * worker never holds a session on the BMC at the same time.
  */
 final class GuardedTransport implements HttpTransport {
 	private bool $busy = false;
@@ -34,11 +40,18 @@ final class GuardedTransport implements HttpTransport {
 		private readonly HttpTransport $inner,
 		private readonly OperationGuard $guard,
 		private readonly int $maxRequests,
+		private readonly ?Clock $clock = null,
+		private readonly int $deadline = PHP_INT_MAX,
+		private readonly int $closeDeadline = PHP_INT_MAX,
 	) {
 	}
 
 	public function send(HttpRequest $request): HttpResponse {
 		$this->guard->check($request);
+
+		if ($this->clock !== null && $this->clock->now() >= ($request->method === 'DELETE' ? $this->closeDeadline : $this->deadline)) {
+			throw new TransportError(FailureClass::Deadline);
+		}
 
 		if ($this->sent >= $this->maxRequests) {
 			throw new TransportError(FailureClass::RequestBudget);

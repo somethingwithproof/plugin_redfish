@@ -46,6 +46,7 @@ enum FailureClass: string {
 	case OperationRefused      = 'operation_refused';
 	case RedirectRefused       = 'redirect_refused';
 	case RequestBudget         = 'request_budget';
+	case Deadline              = 'deadline';
 	case Throttled             = 'throttled';
 	case ServiceUnavailable    = 'service_unavailable';
 	case ServerError           = 'server_error';
@@ -61,7 +62,7 @@ enum FailureClass: string {
 			self::CredentialUnavailable, self::AddressRefused, self::UrlRefused, self::OperationRefused, self::RedirectRefused, self::RequestBudget, self::TlsConfig => Reachability::Config,
 			self::SessionsUnavailable, self::NotRedfish, self::NoChassis => Reachability::Unsupported,
 			self::TlsChain, self::TlsName, self::TlsExpired, self::TlsPin, self::TlsProtocol => Reachability::TlsFailed,
-			self::Timeout, self::SessionLost, self::SessionBudget => Reachability::TimedOut,
+			self::Timeout, self::Deadline, self::SessionLost, self::SessionBudget => Reachability::TimedOut,
 			self::ConnectRefused, self::DnsFailed => Reachability::Unreachable,
 			self::Throttled, self::ServiceUnavailable, self::ServerError => Reachability::Unavailable,
 			self::UnexpectedStatus, self::NotFound, self::TooLarge, self::Malformed, self::JsonDepth => Reachability::Malformed,

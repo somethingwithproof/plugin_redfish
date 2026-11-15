@@ -40,7 +40,11 @@ final class ClientFactory {
 		return new self(new SystemResolver(), (float) $settings->connectTimeout, (float) $settings->requestTimeout, $settings->maxBodyBytes);
 	}
 
-	public function client(Bmc $bmc, Redactor $redactor, Clock $clock): RedfishClient {
+	/**
+	 * @param int $deadline      no request starts at or after this time
+	 * @param int $closeDeadline the session DELETE may start until this time
+	 */
+	public function client(Bmc $bmc, Redactor $redactor, Clock $clock, int $deadline = PHP_INT_MAX, int $closeDeadline = PHP_INT_MAX): RedfishClient {
 		$endpoint  = Endpoint::forBmc($bmc);
 		$transport = $this->transportFor === null ? new SocketTransport($endpoint, $this->resolver, $this->connectTimeout, $this->totalTimeout, $this->maxBytes, $this->allowLoopback) : ($this->transportFor)($endpoint);
 
@@ -48,6 +52,6 @@ final class ClientFactory {
 			throw new \LogicException('transport factory returned no transport');
 		}
 
-		return new RedfishClient(new GuardedTransport($transport, new OperationGuard(), self::MAX_REQUESTS), $endpoint, $redactor, $clock);
+		return new RedfishClient(new GuardedTransport($transport, new OperationGuard(), self::MAX_REQUESTS, $clock, $deadline, $closeDeadline), $endpoint, $redactor, $clock);
 	}
 }
