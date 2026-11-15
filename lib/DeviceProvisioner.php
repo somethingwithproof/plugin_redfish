@@ -37,13 +37,16 @@ final class DeviceProvisioner {
 	private const FAN_GRAPHS = ['%' => 'Fan Speed Percent', 'RPM' => 'Fan Speed RPM'];
 
 	/**
-	 * @param \Closure(int, int): bool $visible whether a user may see a device
+	 * @param \Closure(): void         $loadCacti loads the Cacti libraries that
+	 *                                            device and graph creation use, so
+	 *                                            no caller has to load them first
+	 * @param \Closure(int, int): bool $visible   whether a user may see a device
 	 */
 	public function __construct(
 		private readonly BmcRepository $bmcs,
 		private readonly CactiObjectRepository $objects,
 		private readonly TemplateInstaller $templates,
-		private readonly string $cactiPath,
+		private readonly \Closure $loadCacti,
 		private readonly \Closure $visible,
 	) {
 	}
@@ -58,21 +61,6 @@ final class DeviceProvisioner {
 		}
 
 		return null;
-	}
-
-	/**
-	 * The Cacti libraries device creation, data queries, and graph creation
-	 * use, the set Cacti's own cli/add_graphs.php loads, so that no caller
-	 * has to have loaded them first.
-	 */
-	private function requireCacti(): void {
-		// The files expect file scope: lib/snmp.php reads $config and sets
-		// $banned_snmp_strings, which its functions read as a global.
-		global $config, $banned_snmp_strings;
-
-		foreach (['api_automation_tools', 'api_automation', 'api_data_source', 'api_graph', 'api_device', 'api_tree', 'data_query', 'poller', 'snmp', 'sort', 'template', 'utility'] as $library) {
-			require_once($this->cactiPath . '/lib/' . $library . '.php');
-		}
 	}
 
 	/**
@@ -124,7 +112,7 @@ final class DeviceProvisioner {
 			return 0;
 		}
 
-		$this->requireCacti();
+		($this->loadCacti)();
 
 		$hostId = (int) api_device_save(0, $templateId, $bmc->name, self::hostname($bmc), '', 0, '', '', 161, 500, '', AVAIL_NONE, 0, 23, 400, 1,
 			__('Created by the Redfish plugin for BMC %s. Its values come from the plugin cache; the host name is a reserved name that is never contacted.', $bmc->name, 'redfish'),
@@ -168,7 +156,7 @@ final class DeviceProvisioner {
 	 * @return int graphs created
 	 */
 	public function attach(int $bmcId, int $hostId, int $userId): int {
-		$this->requireCacti();
+		($this->loadCacti)();
 
 		$created = 0;
 

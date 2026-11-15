@@ -202,14 +202,26 @@ function redfish_template_installer(): \Somethingwithproof\Redfish\TemplateInsta
 	return new \Somethingwithproof\Redfish\TemplateInstaller(__DIR__, $config['base_path'], redfish_cacti_objects());
 }
 
-function redfish_provisioner(): \Somethingwithproof\Redfish\DeviceProvisioner {
-	global $config;
+/**
+ * The Cacti libraries device creation, data queries, and graph creation use,
+ * the set Cacti's own cli/add_graphs.php loads.
+ */
+function redfish_load_cacti(): void {
+	// The files expect file scope: lib/snmp.php reads $config and sets
+	// $banned_snmp_strings, which its functions read as a global.
+	global $config, $banned_snmp_strings;
 
+	foreach (['api_automation_tools', 'api_automation', 'api_data_source', 'api_graph', 'api_device', 'api_tree', 'data_query', 'poller', 'snmp', 'sort', 'template', 'utility'] as $library) {
+		require_once($config['library_path'] . '/' . $library . '.php');
+	}
+}
+
+function redfish_provisioner(): \Somethingwithproof\Redfish\DeviceProvisioner {
 	return new \Somethingwithproof\Redfish\DeviceProvisioner(
 		redfish_bmcs(),
 		redfish_cacti_objects(),
 		redfish_template_installer(),
-		$config['base_path'],
+		redfish_load_cacti(...),
 		static fn (int $hostId, int $userId): bool => (bool) is_device_allowed($hostId, $userId)
 	);
 }
