@@ -1,6 +1,6 @@
 # Cacti 1.2 Redfish and IPMI Power and Thermal Plugin Plan
 
-Status: proposal, revision 1 (2026-11-14). Nothing described here as a plugin capability exists yet. Statements about the Redfish standard, BMC firmware, ipmitool, Cacti core, and Cacti plugins describe upstream behavior as observed on the date and revision named in each source. Anything that was not verified is marked as an assumption and has a research issue. Owner and estimates are not assigned; milestone 1 produces the estimates.
+Status: proposal, revision 2 (2026-11-15). Revision 2 adds the documentation and source research for milestone 1; see [Milestone 1 research](#milestone-1-research). Nothing described here as a plugin capability exists yet. Statements about the Redfish standard, BMC firmware, ipmitool, Cacti core, and Cacti plugins describe upstream behavior as observed on the date and revision named in each source. Anything that was not verified is marked as an assumption and has a research issue; items that need real BMC hardware or a running Cacti are marked *live*. Owner is not assigned; size estimates are in [research/estimates.md](research/estimates.md), and calendar time is not estimated.
 
 `plugin_redfish` is a proposed Cacti 1.2 plugin that reads power draw, temperatures, fan state, and power supply health from server baseboard management controllers (BMCs) over Redfish, with IPMI as an optional fallback, and presents them as ordinary Cacti devices, data sources, and graphs. Thold and Maint then work on them unchanged, and a later phase adds rack-level totals.
 
@@ -10,11 +10,11 @@ Operators who run servers need the same few answers from every machine: how much
 
 Cacti has partial answers today:
 
-1. **SNMP vendor packages.** The `1.2.x` branch ships `Dell_iDrac` and `HPE_iLO` template packages and lm-sensors script server queries ([install/templates](https://github.com/Cacti/cacti/tree/1.2.x/install/templates), [resource/script_server](https://github.com/Cacti/cacti/tree/1.2.x/resource/script_server)). They depend on the BMC or the OS running an SNMP agent and are vendor specific. Whether either reports node power draw in watts was not established, and milestone 1 checks it ([#27](https://github.com/somethingwithproof/plugin_redfish/issues/27)).
+1. **SNMP vendor packages.** The `1.2.x` branch ships `Dell_iDrac` and `HPE_iLO` template packages and lm-sensors script server queries ([install/templates](https://github.com/Cacti/cacti/tree/1.2.x/install/templates), [resource/script_server](https://github.com/Cacti/cacti/tree/1.2.x/resource/script_server)). They depend on the BMC or the OS running an SNMP agent and are vendor specific. Milestone 1 research found no watts-based data in either package ([#27](https://github.com/somethingwithproof/plugin_redfish/issues/27), [research/overlap.md](research/overlap.md)).
 2. **A credential type without a collector.** plugin_credentials defines a stored credential type named "IPMI / Redfish (BMC)" but does not read from any BMC ([plugin_credentials `includes/arrays.php`](https://github.com/Cacti/plugin_credentials/blob/ead895662c031872f92c7bdeb67f9a6df03f1b4d/includes/arrays.php)).
 3. **Adjacent plugins.** plugin_hmib reads the SNMP Host Resources MIB, which is operating-system data, and plugin_apcupsd reads UPS state. Neither reads a BMC ([plugin_hmib README](https://github.com/Cacti/plugin_hmib/blob/develop/README.md), [plugin_apcupsd README](https://github.com/Cacti/plugin_apcupsd/blob/develop/README.md)).
 
-The Cacti GitHub organization has no Redfish or IPMI collector plugin (repository list checked 2026-11-14).
+The Cacti GitHub organization has no Redfish or IPMI collector plugin (public repository list, 34 repositories, checked 2026-11-14 and again 2026-11-15).
 
 The plugin closes the gap by polling BMCs out of band from Cacti's poll cycle, caching normalized readings in its own tables, and exposing the cache to Cacti through a script server data query and summary data sources. It reuses Cacti's graphing, permissions, remote data collectors, Thold, Maint, and (by decision #9) its credential store, instead of building parallel versions of them.
 
@@ -56,10 +56,10 @@ Each phase ships to users. Later phases are re-estimated after the phase before 
 
 **Cacti.** Minimum Cacti release is 1.2.31, with no core patches. The plugin uses only APIs present in that release; milestone 1 confirms each signature at 1.2.31 and records differences on the current `1.2.x` branch ([#21](https://github.com/somethingwithproof/plugin_redfish/issues/21)):
 
-- Plugin lifecycle and hooks: `api_plugin_register_hook()`, `api_plugin_register_realm()`, `api_plugin_db_table_create()` ([lib/plugins.php](https://github.com/Cacti/cacti/blob/release/1.2.31/lib/plugins.php)).
+- Plugin lifecycle and hooks: `api_plugin_register_hook()`, `api_plugin_register_realm()`, `api_plugin_db_table_create()` ([lib/plugins.php](https://github.com/Cacti/cacti/blob/release/1.2.31/lib/plugins.php)). Research: hook and realm registration only works when the function that calls them has `install`, `upgrade` or `setup` in its name, so call them from `plugin_redfish_install()` and `plugin_redfish_upgrade()`, not from a class method; `api_plugin_db_table_create()` skips an existing table on 1.2.31 and refreshes its schema on `1.2.x`, so migrations must not depend on either ([research/cacti-core.md](research/cacti-core.md)).
 - Devices: `api_device_save()` ([lib/api_device.php](https://github.com/Cacti/cacti/blob/release/1.2.31/lib/api_device.php)).
 - Templates: `import_xml_data()` ([lib/import.php](https://github.com/Cacti/cacti/blob/release/1.2.31/lib/import.php)).
-- Background work: `exec_background()` and `register_process_start()` ([lib/poller.php](https://github.com/Cacti/cacti/blob/release/1.2.31/lib/poller.php)).
+- Background work: `exec_background()` and `register_process_start()` ([lib/poller.php](https://github.com/Cacti/cacti/blob/release/1.2.31/lib/poller.php)). `exec_background()` takes one executable path and an argument list (the path is shell-quoted on `1.2.x`); pass the PHP binary as the path and the script in the arguments. `exec_background_process()` exists only on `1.2.x` and is not used.
 - Script server input: functions of the form `ss_<name>($hostname, $host_id, $snmp_auth, $cmd, $arg1, $arg2)` with `index`, `query`, and `get` commands, as in [scripts/ss_host_cpu.php](https://github.com/Cacti/cacti/blob/release/1.2.31/scripts/ss_host_cpu.php).
 - Remote collectors: `call_remote_data_collector()` ([lib/functions.php](https://github.com/Cacti/cacti/blob/release/1.2.31/lib/functions.php)) and the `remote_agent` hook ([remote_agent.php](https://github.com/Cacti/cacti/blob/release/1.2.31/remote_agent.php)).
 
@@ -76,7 +76,7 @@ Code loaded after the check may use language features through PHP 8.2 and nothin
 
 **IPMI tooling.** The IPMI fallback needs a client. `ipmitool` is the common one and its upstream repository is archived (see below), so the tool choice is a decision ([#14](https://github.com/somethingwithproof/plugin_redfish/issues/14)).
 
-**Plugin metadata.** `INFO` declares `compat = 1.2.31`, `homepage` set to the repository, and `capabilities = online_view:1, online_mgmt:1, offline_view:0, offline_mgmt:0, remote_collect:0` in phases 1 to 3. Phase 4 changes `remote_collect` to 1 after its review. Milestone 1 confirms which capability names a collector plugin must declare, because `lib/plugins.php` gates `poller_bottom` on `remote_poller` and `poller_output` on `remote_collect`.
+**Plugin metadata.** `INFO` declares `compat = 1.2.31`, `homepage` set to the repository, and `capabilities = online_view:1, online_mgmt:1, offline_view:0, offline_mgmt:0, remote_collect:0` in phases 1 to 3. Phase 4 changes `remote_collect` to 1 after its review. Research confirmed the gating: on a remote poller (`poller_id` above 1) `lib/plugins.php` runs `poller_bottom` only for plugins declaring `remote_poller:1` and `poller_output` only for `remote_collect:1`. With these phase 1 to 3 capabilities, hooks do not run on remote pollers, so **phases 1 to 3 support BMC devices on the main poller only**; phase 4 adds `remote_poller:1` and `remote_collect:1` ([research/cacti-core.md](research/cacti-core.md)).
 
 ## Upstream behavior the design depends on
 
@@ -86,7 +86,7 @@ Each row is either verified by reading the cited source on the date given, or is
 
 | Fact | Consequence | Source |
 |---|---|---|
-| Services must support HTTP Basic authentication over HTTPS only, and must also provide session login. When multi-factor authentication is enabled, Basic is rejected for accounts not configured to bypass it. | Basic is a fallback. Sessions are preferred but add a login per use. | DSP0266 1.23.0, sections 13.3.3 and 13.3.4 |
+| Services must support HTTP Basic authentication over HTTPS only, and must also provide session login. When multi-factor authentication is enabled, Basic is rejected for accounts not configured to bypass it. Basic may be disabled through `AccountService.HTTPBasicAuth`. The standard `ReadOnly` role (`Login`, `ConfigureSelf`) can read every resource the plugin needs and delete its own session. | Basic is a fallback. Sessions are preferred but add a login per use. | DSP0266 1.23.0, sections 13.3.3 and 13.3.4 |
 | A session is created by POST to the URI in the service root `Links.Sessions` (`/redfish/v1/SessionService/Sessions` in the specification's example) with `UserName` and `Password`. The response carries an `X-Auth-Token` header and a `Location` header. The client sends the token on later requests and ends the session with DELETE on the `Location` URI. | The client holds a token, which is a secret, for the life of a session, and must log out. | DSP0266 1.23.0, section 13.3.4.2 and 13.3.4.4 |
 | Session timeout and the number of simultaneous sessions are implementation defined. | Session limits and idle timeouts differ per vendor; a collector that leaks sessions can lock out other users. | DSP0266 1.23.0, section 13.3.4 |
 | The specification defines no request rate limit. A search of the text for 429 and "Too Many Requests" found none; 503 Service Unavailable and `Retry-After` appear with other meanings. | Rate limits, if any, are vendor behavior and must be measured. | DSP0266 1.23.0, searched 2026-11-14 |
@@ -103,11 +103,12 @@ The specification is [DSP0266 1.23.0](https://www.dmtf.org/sites/default/files/s
 | `Power` and `Thermal` are deprecated from version 1.7.0 in favor of `PowerSubsystem` and `ThermalSubsystem`. The latest published versions are `Power.v1_7_3` and `Thermal.v1_7_3`. | Legacy resources still appear on many BMCs and must be supported as a fallback. | [Power.v1_7_3](https://redfish.dmtf.org/schemas/v1/Power.v1_7_3.json), [Thermal.v1_7_3](https://redfish.dmtf.org/schemas/v1/Thermal.v1_7_3.json) |
 | On `Chassis`, the `Power` and `Thermal` links are deprecated from `v1_15_0`, which also added the `PowerSubsystem`, `ThermalSubsystem`, and `EnvironmentMetrics` links. `Sensors` was added in `v1_9_0`. The latest published `Chassis` is `v1_29_0`. | Discovery starts at each Chassis and checks which links exist. | [Chassis.v1_29_0](https://redfish.dmtf.org/schemas/v1/Chassis.v1_29_0.json) |
 | Latest published versions: `PowerSubsystem.v1_2_0`, `ThermalSubsystem.v1_5_0`, `EnvironmentMetrics.v1_7_0`, `Sensor.v1_14_0`, `PowerSupply.v1_8_0`, `Fan.v1_6_0`. | The plugin reads a property when present and does not require a minimum version beyond what it needs. | [schema index](https://redfish.dmtf.org/schemas/v1/) |
-| `EnvironmentMetrics` has `PowerWatts`, `TemperatureCelsius`, `EnergykWh`, and `FanSpeedsPercent` from its first version, and `PowerLimitWatts` (a control, not a reading) from `v1_1_0`. Each reading is an excerpt of a `Sensor` with a `Reading` value. | One resource can give node power and one temperature. It does not say which temperature. | [EnvironmentMetrics.v1_7_0](https://redfish.dmtf.org/schemas/v1/EnvironmentMetrics.v1_7_0.json) |
+| `EnvironmentMetrics` has `PowerWatts`, `TemperatureCelsius`, `EnergykWh`, and `FanSpeedsPercent` from its first version, and `PowerLimitWatts` (a control, not a reading) from `v1_1_0`; `AmbientTemperatureCelsius` was added in `v1_4_0`. Each reading is an excerpt of a `Sensor` with a `Reading` value. | One resource can give node power. `TemperatureCelsius` is defined only as a temperature "for this resource" and DMTF's own mockup sources it from a CPU sensor, so it is never used for inlet or ambient (confirmed, [research/redfish-standard.md](research/redfish-standard.md)). | [EnvironmentMetrics.v1_7_0](https://redfish.dmtf.org/schemas/v1/EnvironmentMetrics.v1_7_0.json) |
 | `Sensor.ReadingType` includes `Temperature`, `Power`, `Rotational`, and `Percent`. `PhysicalContext` includes `Intake`, `Exhaust`, `PowerSupply`, and `Chassis`; `Intake` is described as "the air intake point or points or region of the chassis". | Inlet temperature can be identified by `PhysicalContext` of `Intake` where a BMC sets it. | [Sensor.v1_14_0](https://redfish.dmtf.org/schemas/v1/Sensor.v1_14_0.json), [PhysicalContext](https://redfish.dmtf.org/schemas/v1/PhysicalContext.json) |
-| `Fan` has `SpeedPercent` and a `Status`; legacy `Thermal.Fans[]` has `Reading` with `ReadingUnits` of `RPM` or `Percent`. | Fan speed has two units; the model stores the unit with the value. | [Fan.v1_6_0](https://redfish.dmtf.org/schemas/v1/Fan.v1_6_0.json), Thermal.v1_7_3 |
+| `Fan` has `SpeedPercent` (a `SensorFanExcerpt` with `Reading`, `SpeedRPM`, `DataSourceUri`) and `SecondarySpeedPercent` from `v1_5_0`, and a `Status`; legacy `Thermal.Fans[]` has `Reading` with `ReadingUnits` of `RPM` or `Percent`. | Fan speed has two units; the model stores the unit with the value. The unit comes from the referenced sensor or `ReadingUnits`, never the property name: Lenovo's documented example puts an RPM value in `SpeedPercent.Reading`, and Dell's excerpt carries only `SpeedRPM` ([research/sensors.md](research/sensors.md)). | [Fan.v1_6_0](https://redfish.dmtf.org/schemas/v1/Fan.v1_6_0.json), Thermal.v1_7_3 |
 | Legacy power draw is `Power.PowerControl[].PowerConsumedWatts`; legacy temperatures are `Thermal.Temperatures[].ReadingCelsius` with `PhysicalContext`; legacy supplies are `Power.PowerSupplies[]` with `PowerInputWatts` and `LastPowerOutputWatts`. | The normalized model maps both generations to the same fields. | Power.v1_7_3, Thermal.v1_7_3 |
-| `Status.Health` is one of `OK`, `Warning`, `Critical`, and may be null. `Status.State` has values including `Enabled`, `Absent`, `Degraded`, and `StandbyOffline`. | Health maps to a numeric code for Thold; null maps to unknown. | [Resource.json](https://redfish.dmtf.org/schemas/v1/Resource.json) |
+| `Status.Health` is one of `OK`, `Warning`, `Critical`, and may be null. `Status.State` has 13 values including `Enabled`, `Absent`, `Degraded`, and `StandbyOffline`. | Health maps to a numeric code for Thold; null maps to unknown. See the proposed mapping in [research/health-mapping.md](research/health-mapping.md); failure shapes are unverified on every vendor (*live*). |
+| `ThermalSubsystem/ThermalMetrics.TemperatureSummaryCelsius` has `Intake`, `Exhaust`, `Ambient` and `Internal`, each with a `Reading` and `DataSourceUri`. Dell iDRAC9 and iDRAC10 and DMTF's mockup fill `Intake`; HPE iLO 6 documents `Ambient` only. | The standard marker for inlet temperature, and the first source for `inlet_celsius`. | [ThermalMetrics.v1_3_3](https://redfish.dmtf.org/schemas/v1/ThermalMetrics.v1_3_3.json), [research/sensors.md](research/sensors.md) | [Resource.json](https://redfish.dmtf.org/schemas/v1/Resource.json) |
 
 **Vendor and implementation behavior**
 
@@ -117,6 +118,8 @@ The specification is [DSP0266 1.23.0](https://www.dmtf.org/sites/default/files/s
 | The same file notes that Redfish 2025.3 clarified fan sensors as `Percent` readings, and that `bmcweb` reports `Rotational` unless `redfish-allow-rotational-fans` is disabled. | Fan units differ between OpenBMC builds. | `meson.options`, option `redfish-allow-rotational-fans` |
 | Lenovo XCC2 documents `Power`, `Thermal`, `PowerSubsystem`, `ThermalSubsystem`, `ThermalMetrics`, and `Fan` resources, none marked deprecated, and documents `GET /redfish/v1/Chassis/1/EnvironmentMetrics` with `PowerWatts` sourced from the "Sys Power" sensor and `TemperatureCelsius` from the "Ambient Temp" sensor. | XCC2 offers both generations. Its temperature in `EnvironmentMetrics` is labeled ambient, which may or may not be the inlet. | [XCC2 power, thermal and redundancy](https://pubs.lenovo.com/xcc2-restapi/power_thermal_redundancy), [XCC2 EnvironmentMetrics](https://pubs.lenovo.com/xcc2-restapi/environmentmetrics_properties_get) |
 | HPE iLO 6 (v1.73 chassis definitions) documents `Chassis.v1_25_1` with links to `Power`, `Thermal`, `ThermalSubsystem`, and `EnvironmentMetrics`, and does not document `PowerSubsystem` on that page. It also documents HPE-specific `Oem.Hpe.ChassisPowerWatts`, `Oem.Hpe.NodePowerWatts`, and `Oem.Hpe.ChassisInputPowerWatts`. | iLO 6 needs the legacy or `EnvironmentMetrics` path; OEM properties are a possible source of node power. | [iLO 6 v1.73 Chassis](https://servermanagementportal.ext.hpe.com/docs/redfishservices/ilos/ilo6/ilo6_173/ilo6_chassis_resourcedefns173) |
+
+Research added Dell iDRAC9 7.20.10.05 and iDRAC10 1.10.17.00 (vendor mockups, both generations present; inlet and exhaust sensors are labelled `SystemBoard`, `EnvironmentMetrics` has `PowerWatts` only), HPE iLO 6 firmware gates (`ThermalSubsystem` and `Sensors` 1.64, `EnvironmentMetrics.PowerWatts` 1.68, `EnergykWh` 1.73, `PowerSubsystem` 1.79), Lenovo XCC2 session limits (16 open sessions, default idle timeout 300 s) and OpenBMC session defaults (1800 s). Details and sources: [research/vendor-matrix.md](research/vendor-matrix.md), [research/sessions.md](research/sessions.md).
 
 **IPMI**
 
@@ -142,12 +145,12 @@ The specification is [DSP0266 1.23.0](https://www.dmtf.org/sites/default/files/s
 |---|---|---|
 | The `host` table has `poller_id`, `site_id`, `location varchar(40)`, `external_id`, and SNMP credential columns as plain `varchar`. The device form describes `location` as "free form text" that "can be a room, rack location, etc." | A rack can be a device `location` string with no schema change, at the cost of free text. | `cacti.sql`; `include/global_form.php` |
 | The `sites` table has name, address, coordinates, timezone, and notes, and no rack column. `graph_tree_items` can reference a `host_id` or `site_id`. There is no rack object in core. | A rack is either a convention on existing fields or a plugin table. | `cacti.sql` |
-| `AVAIL_NONE` is 0, so a device can have no availability check. | Objects with no network address (a rack total) can live on a template-marked device. | `include/global_constants.php` |
-| Core ships aggregate graphs with `AGGREGATE_TOTAL_TYPE_SIMILAR` and `AGGREGATE_TOTAL_TYPE_ALL`. | A rack power graph can be an aggregate of node graphs. Whether aggregates can be thresholded is not verified. | `lib/aggregate.php`, `include/global_arrays.php` |
+| `AVAIL_NONE` is 0, so a device can have no availability check. A device template has no availability field (`host_template` holds `id`, `hash`, `name`, `class`); availability is `host.availability_method`. | The plugin sets `availability_method` 0 through `api_device_save()` on each device it creates. Objects with no network address (a rack total) are devices created that way. | `include/global_constants.php`, `cacti.sql`; [research/cacti-core.md](research/cacti-core.md) |
+| Core ships aggregate graphs with `AGGREGATE_TOTAL_TYPE_SIMILAR` and `AGGREGATE_TOTAL_TYPE_ALL`. | A rack power graph can be an aggregate of node graphs. Thold hides its "Create Threshold" button for aggregate graphs (plugin_thold `setup.php`, source read; not run), so alerting on a rack total needs a real data source. | `lib/aggregate.php`, `include/global_arrays.php` |
 | `poller_output` is applied through `api_plugin_hook_function('poller_output', $rrd_update_array)`. | Thold sees polled data sources only. | `lib/poller.php` |
 | `remote_agent.php` dispatches unknown actions to `api_plugin_hook_function('remote_agent', ...)` and authorizes callers by matching their address, or the reverse DNS name of their address, to an enabled poller's hostname. `call_remote_data_collector()` rejects URLs that contain `://`, `@`, or `../`, or do not begin with `/`. | Phase 4 actions rely on address-based authorization. | `remote_agent.php`, `lib/functions.php` |
 | Cacti 1.2.31 has no general secret-encryption helper: a search of `lib/` and `include/` for `openssl_encrypt`, `sodium`, and `*crypt` functions found only the rrdtool proxy RSA helpers. | The plugin cannot rely on a core secret store at the minimum Cacti version. | search of tag `release/1.2.31`, 2026-11-14 |
-| The `1.2.x` branch (commit `30010fc5`, `include/cacti_version` 1.2.32) defines `cacti_secret_key()`, `cacti_encrypt_secret()`, and `cacti_encrypt_secret_with_key()` in `lib/functions.php`. 1.2.32 had no release tag on 2026-11-14. | Encrypted secrets from core are available only in 1.2.32 and later. | [lib/functions.php](https://github.com/Cacti/cacti/blob/30010fc5ff3eb7000c29db93631330a8ee163d0a/lib/functions.php) |
+| The `1.2.x` branch (commit `e2d5c258`, re-read 2026-11-15; `30010fc5` earlier; `include/cacti_version` 1.2.32) defines `cacti_secret_key()`, `cacti_encrypt_secret()`, `cacti_encrypt_secret_with_key()` and the matching `cacti_decrypt_secret()` and `cacti_decrypt_secret_with_key()` in `lib/functions.php`. 1.2.32 had no release tag on 2026-11-14. | Encrypted secrets from core are available only in 1.2.32 and later. | [lib/functions.php](https://github.com/Cacti/cacti/blob/30010fc5ff3eb7000c29db93631330a8ee163d0a/lib/functions.php) |
 
 **Cacti organization plugins (checked 2026-11-14)**
 
@@ -157,18 +160,40 @@ The specification is [DSP0266 1.23.0](https://www.dmtf.org/sites/default/files/s
 | plugin_thold declares `remote_collect:1` and `compat = 1.2.29`; plugin_maint declares `remote_collect:0`. | Thold can evaluate on collectors; Maint's behavior with remote collectors is for phase 4 to confirm. | `INFO` files of each plugin, default branches |
 | The 1.2.x branch ships `Dell_iDrac.xml.gz` and `HPE_iLO.xml.gz` and lm-sensors script server queries. | Existing SNMP coverage overlaps in intent, not in transport. | [install/templates](https://github.com/Cacti/cacti/tree/1.2.x/install/templates) |
 
-**Assumptions to confirm.** These are plan inputs that were not verified. Each is a research issue, and none is described as fact elsewhere in this repository.
+**Assumptions to confirm.** These were plan inputs that were not verified in revision 1. Milestone 1 research (documentation and source, 2026-11-15) settled some and narrowed the rest; items needing real BMC hardware or a running Cacti stay open and are marked *live*. Nothing here is described as fact elsewhere in this repository unless confirmed.
 
-- Which resources and schema versions each Dell iDRAC generation and firmware exposes. Dell's Redfish API guides were not read for this revision ([#19](https://github.com/somethingwithproof/plugin_redfish/issues/19)).
-- That vendor-reported temperatures labelled ambient and inlet are the same measurement ([#24](https://github.com/somethingwithproof/plugin_redfish/issues/24)).
-- Session limits, idle timeouts, rate limits, and per-request latency of each BMC family ([#22](https://github.com/somethingwithproof/plugin_redfish/issues/22), [#23](https://github.com/somethingwithproof/plugin_redfish/issues/23)).
-- Whether leaving a session unclosed, or creating one per poll, is logged or limited on each BMC family ([#22](https://github.com/somethingwithproof/plugin_redfish/issues/22)).
-- How each vendor reports a missing or failed fan or supply: `Absent`, a null reading, or an omitted member ([#25](https://github.com/somethingwithproof/plugin_redfish/issues/25)).
-- Whether Redfish telemetry (`TelemetryService`) is a cheaper source than polling resources on the vendors in scope ([#26](https://github.com/somethingwithproof/plugin_redfish/issues/26)).
-- Whether the shipped SNMP packages report node power in watts, and what else overlaps ([#27](https://github.com/somethingwithproof/plugin_redfish/issues/27)).
-- plugin_credentials' stability, release status, and key handling as a dependency ([#28](https://github.com/somethingwithproof/plugin_redfish/issues/28)).
-- That a script server data query can present a variable number of fans, sensors, and supplies per device and keep stable indexes across firmware updates ([#29](https://github.com/somethingwithproof/plugin_redfish/issues/29)).
-- That Cacti aggregate graphs cannot be thresholded, and what other core limits apply ([#21](https://github.com/somethingwithproof/plugin_redfish/issues/21)).
+- Dell resources by generation: **confirmed from Dell's published iDRAC9 7.20.10.05 and iDRAC10 1.10.17.00 mockups** (both generations present). Older Dell generations, HPE iLO 5 and the other families were not read; Dell's API guide could not be fetched (HTTP 403). Fixtures from real BMCs are *live* ([research/vendor-matrix.md](research/vendor-matrix.md), [#19](https://github.com/somethingwithproof/plugin_redfish/issues/19)).
+- Ambient and inlet are the same measurement: **not equivalent by the schema**; the standard `Intake` summary is the source, and vendor ambient readings stay separate. Equivalence on Lenovo is *live* ([research/sensors.md](research/sensors.md), [#24](https://github.com/somethingwithproof/plugin_redfish/issues/24)).
+- Session limits, idle timeouts, rate limits and latency: **partly documented** (Lenovo XCC2: 16 sessions, 300 s default; OpenBMC: 1800 s default, no count limit found in source; HPE: limited, number not found; Dell: not found). Rate limits: none in the specification and none found in OpenBMC's server. Failure modes, latency and refresh interval are *live* ([research/sessions.md](research/sessions.md), [research/polling-cost.md](research/polling-cost.md), [#22](https://github.com/somethingwithproof/plugin_redfish/issues/22), [#23](https://github.com/somethingwithproof/plugin_redfish/issues/23)).
+- Whether an unclosed or per-poll session is logged or limited: *live*. Design decided from documentation: one session per run, always deleted, never cached.
+- How vendors report a missing or failed fan or supply: the standard and OpenBMC's source are read; every vendor capture shows healthy hardware only. *Live* ([research/health-mapping.md](research/health-mapping.md), [#25](https://github.com/somethingwithproof/plugin_redfish/issues/25)).
+- Whether telemetry is a cheaper source: **recommendation: not in phase 1** (reports need configuration or `ConfigureManager` to enable; Lenovo has no fan report; Dell iDRAC9 sensor reports are disabled in the capture). Cost per node is *live* ([research/telemetry.md](research/telemetry.md), [#26](https://github.com/somethingwithproof/plugin_redfish/issues/26)).
+- Whether the shipped SNMP packages report node power in watts: **they do not** (text search of both packages and their queries); runtime import and naming checks are *live* ([research/overlap.md](research/overlap.md), [#27](https://github.com/somethingwithproof/plugin_redfish/issues/27)).
+- plugin_credentials as a dependency: **source read; recommended with conditions**; no release or tag exists; installation and API stability questions are *live* or owner actions ([research/credentials.md](research/credentials.md), [#28](https://github.com/somethingwithproof/plugin_redfish/issues/28)).
+- Variable fans, sensors and supplies in one data query: **re-index behavior read from Cacti source; stable key rule proposed** (the vendor member identifier); the spike on a running Cacti is *live* ([research/data-query.md](research/data-query.md), [#29](https://github.com/somethingwithproof/plugin_redfish/issues/29)).
+- Aggregate graphs cannot be thresholded: **confirmed for Thold's graph button by source; not run**; other core limits recorded in [research/cacti-core.md](research/cacti-core.md) ([#21](https://github.com/somethingwithproof/plugin_redfish/issues/21)).
+
+## Milestone 1 research
+
+Documentation and source research for issues #8 and #19 to #30, 2026-11-15. No BMC was contacted and no Cacti instance was run. Details, sources pinned to commits or releases, and the *live* checks per issue are in the files below.
+
+| Issue | Document | Result |
+|---|---|---|
+| [#8](https://github.com/somethingwithproof/plugin_redfish/issues/8), [#19](https://github.com/somethingwithproof/plugin_redfish/issues/19) | [vendor-matrix.md](research/vendor-matrix.md) | Both generations on Dell captures; HPE gated by firmware; choose the source per reading. Decision #8 is the maintainer's |
+| [#20](https://github.com/somethingwithproof/plugin_redfish/issues/20) | [redfish-standard.md](research/redfish-standard.md) | Plan rows confirmed against DSP0266 1.23.0 and the schemas; additions on `Intake`, roles, tree stability. Live replay open |
+| [#21](https://github.com/somethingwithproof/plugin_redfish/issues/21) | [cacti-core.md](research/cacti-core.md) | Signatures and hooks confirmed at both refs; capability gating, entrypoint rule and availability corrections |
+| [#22](https://github.com/somethingwithproof/plugin_redfish/issues/22) | [sessions.md](research/sessions.md) | Session per run, no cached token; limits partly documented |
+| [#23](https://github.com/somethingwithproof/plugin_redfish/issues/23) | [polling-cost.md](research/polling-cost.md) | `R` derived (8 to 31 per node); `L` live |
+| [#24](https://github.com/somethingwithproof/plugin_redfish/issues/24) | [sensors.md](research/sensors.md) | Inlet rules and fan unit rules; no fixture-backed rule on OpenBMC |
+| [#25](https://github.com/somethingwithproof/plugin_redfish/issues/25) | [health-mapping.md](research/health-mapping.md) | Proposed mapping; failure shapes live |
+| [#26](https://github.com/somethingwithproof/plugin_redfish/issues/26) | [telemetry.md](research/telemetry.md) | Not adopted in phase 1 |
+| [#27](https://github.com/somethingwithproof/plugin_redfish/issues/27) | [overlap.md](research/overlap.md) | No watts in shipped packages; naming rules |
+| [#28](https://github.com/somethingwithproof/plugin_redfish/issues/28) | [credentials.md](research/credentials.md) | Use with conditions; no release exists |
+| [#29](https://github.com/somethingwithproof/plugin_redfish/issues/29) | [data-query.md](research/data-query.md) | Stable key rule from Cacti re-index source; spike live |
+| [#30](https://github.com/somethingwithproof/plugin_redfish/issues/30) | [estimates.md](research/estimates.md) | Size ranges; calendar time not estimated |
+| (transport) | [transport.md](research/transport.md) | plugin_cloud's socket client choice carries over; four BMC-specific questions |
+
+Estimates (production lines, ranges from measured lines of plugin_cloudflare and plugin_smokeping): milestone 2 4,500 to 6,500; milestone 3 2,500 to 4,000; milestone 4 500 to 1,000; milestone 5 1,200 to 2,000; milestone 6 1,500 to 2,500; milestone 7 1,000 to 1,500.
 
 ## Architecture
 
@@ -214,14 +239,14 @@ The collector runs outside Cacti's per-device polling threads. It reads BMCs on 
 
 ### Topologies
 
-1. **BMC network reachable from the Cacti poller** (phases 1 to 3). The collector runs on the poller that Cacti assigns to the device. This is the supported topology until phase 4.
+1. **BMC network reachable from the main Cacti poller** (phases 1 to 3). The collector runs on the main poller (`poller_id` 1). Devices assigned to a remote data collector are not collected until phase 4, because the plugin's hooks do not run there with the phase 1 to 3 capabilities.
 2. **BMC network isolated behind a Cacti remote data collector** (phase 4). The collector runs on the remote collector, reads the BMCs locally, and values reach the main server through the normal poller output path. Credentials must be available on the collector, which plugin_credentials does not support today ([#17](https://github.com/somethingwithproof/plugin_redfish/issues/17)).
 
 ## Cacti objects
 
 | Object | Created from | Notes |
 |---|---|---|
-| Device | Existing server device (mapped) or a "Redfish BMC" device template with availability None | Decision #11 settles the default |
+| Device | Existing server device (mapped) or a "Redfish BMC" device template; each device the plugin creates gets `availability_method` 0 (None) through `api_device_save()`, because a device template cannot carry availability | Decision #11 settles the default |
 | Per-index data query | "Redfish Sensors" script server data query | Indexes are fans, temperature sensors, and power supplies of the device |
 | Per-index data sources and graphs | Data templates per kind: fan, temperature, power supply | Created through Cacti's data query and graph APIs |
 | Summary data source | "Redfish Node Summary" data template, script server input | Polled; reaches Thold through `poller_output` |
@@ -236,18 +261,18 @@ The collector maps every source to one set of readings. Each reading has a value
 | Reading | Unit | Per | Preferred Redfish source | Fallbacks |
 |---|---|---|---|---|
 | `power_watts` | W | node | `EnvironmentMetrics.PowerWatts.Reading` | `Power.PowerControl[].PowerConsumedWatts`; a `Sensor` of type `Power` for the chassis; vendor OEM property if the matrix shows no other source; `dcmi power reading` over IPMI |
-| `inlet_celsius` | degrees C | node | `Sensor` with `ReadingType` `Temperature` and `PhysicalContext` `Intake` | `Thermal.Temperatures[]` with `PhysicalContext` `Intake`; `EnvironmentMetrics.TemperatureCelsius` marked "ambient, not confirmed inlet" |
+| `inlet_celsius` | degrees C | node | `ThermalMetrics.TemperatureSummaryCelsius.Intake.Reading` | A `Sensor` with `ReadingType` `Temperature` and `PhysicalContext` `Intake`; `Thermal.Temperatures[]` with `PhysicalContext` `Intake`; a named vendor rule only where a fixture shows it (Dell `SystemBoardInletTemp`, whose `PhysicalContext` is `SystemBoard`; Lenovo `Ambient Temp`, unconfirmed as intake). `EnvironmentMetrics.TemperatureCelsius` is never used ([research/sensors.md](research/sensors.md)) |
 | `temperature_celsius` | degrees C | sensor | `Sensor` entries of type `Temperature` | `Thermal.Temperatures[]`; `ipmitool sdr type Temperature` |
-| `fan_speed` | percent or RPM, with the unit stored | fan | `ThermalSubsystem` `Fans` members: `SpeedPercent` | `EnvironmentMetrics.FanSpeedsPercent`; `Thermal.Fans[].Reading` with `ReadingUnits` |
+| `fan_speed` | percent or RPM, with the unit stored | fan | `ThermalSubsystem` `Fans` members: `SpeedPercent` and `SecondarySpeedPercent`, unit taken from `Reading` plus the referenced sensor, or `SpeedRPM` when only that is present | `EnvironmentMetrics.FanSpeedsPercent`; `Thermal.Fans[].Reading` with `ReadingUnits` |
 | `psu_input_watts`, `psu_output_watts` | W | supply | `PowerSupply` and its metrics | `Power.PowerSupplies[]` |
-| `health_code` | 0 OK, 1 Warning, 2 Critical | node, fan, supply | `Status.Health` | `Status.State` of `Absent` or `Degraded` maps per research #25 |
+| `health_code` | 0 OK, 1 Warning, 2 Critical | node, fan, supply | `Status.Health` of each member; a subsystem rollup is not used alone (a Dell iDRAC10 capture shows `Warning` on `PowerSubsystem` with both supplies `OK`) | `Status.State` of `Absent` or `Degraded` maps per the proposed table in [research/health-mapping.md](research/health-mapping.md); unverified on failed hardware |
 | `age` | seconds | node | time since the last successful read of that node | |
 
 Rules:
 
 - A value the plugin cannot vouch for is unknown (`U`), never zero. RRDtool's unknown value `U` leaves a gap in graphs, where zero would draw a false reading.
 - Units are stored with values. A fan reported in percent is never presented as RPM.
-- Ambient and inlet are different names. `inlet_celsius` is filled only from a reading the BMC marks as intake, and a vendor ambient reading is stored under `ambient_celsius` until the matrix shows it is equivalent ([#24](https://github.com/somethingwithproof/plugin_redfish/issues/24)).
+- Ambient and inlet are different names. `inlet_celsius` is filled only from a reading the BMC marks as intake (the `Intake` summary or a sensor with `Intake` context) or a named, fixture-backed vendor rule, and a vendor ambient reading is stored under `ambient_celsius` until the matrix shows it is equivalent ([#24](https://github.com/somethingwithproof/plugin_redfish/issues/24)).
 - A fan or supply that the BMC lists as `Absent` is reported as absent, not as a failed zero reading.
 
 | Dimension | States | Evidence |
@@ -363,7 +388,7 @@ BMCs are small embedded systems. Per-request latency and tolerance for concurren
 
 Let `N` be the number of BMCs, `R` the requests per BMC per run, `L` the mean request latency, `W` the number of BMCs read in parallel, and `T` the collection interval.
 
-- A node with 8 fans and 2 power supplies read without `$expand` might need about 17 requests: one login, about 15 reads (one each for `EnvironmentMetrics`, `ThermalSubsystem`, `PowerSubsystem`, the two member collections, and each member), and one logout. This count is a hypothetical example, not a measurement.
+- A node with 8 fans and 2 power supplies read without `$expand` might need about 17 requests: one login, about 15 reads (one each for `EnvironmentMetrics`, `ThermalSubsystem`, `PowerSubsystem`, the two member collections, and each member), and one logout. This count is a hypothetical example, not a measurement. Research derived counts from vendor captures: a Dell iDRAC10 R770 new-model walk is 20 reads (22 with login and logout), an iDRAC9 R660xs 29 reads (31), and the legacy `Power` plus `Thermal` walk 6 and 7 reads (8 and 9), because of several `Chassis` members, `ThermalMetrics`, per-rotor fans and per-supply metrics ([research/polling-cost.md](research/polling-cost.md)). `L` is not measured (*live*).
 - Time per BMC is `R × L`. With `R = 17` and `L = 0.5 s`, that is 8.5 s.
 - Total work is `N × R × L`. At `N = 1,000` it is 8,500 s of request time, so finishing within `T = 300 s` needs `W` of at least 29 BMCs in parallel, with each BMC still read by one worker at a time.
 - Requests per second against the management network is about `N × R / T`, 57 per second at the same values.
@@ -452,7 +477,7 @@ Phase 2 needs a security review covering command construction, environment handl
 
 ## Research
 
-Not scheduled; revisited after phase 1:
+Not scheduled; revisited after phase 1 (telemetry as a source is evaluated in [research/telemetry.md](research/telemetry.md) and not adopted in phase 1):
 
 - Power-cap integration for HPC schedulers, including how a scheduler would read the data and whether any write path belongs in this project ([#64](https://github.com/somethingwithproof/plugin_redfish/issues/64)).
 - Energy accounting from `EnergykWh` counters and cost reports, including counter resets ([#65](https://github.com/somethingwithproof/plugin_redfish/issues/65)).
