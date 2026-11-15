@@ -125,7 +125,14 @@ switch ($action) {
 		redfish_boot();
 
 		$secret  = 'SENTINEL-' . bin2hex(random_bytes(16));
-		$keyFile = sys_get_temp_dir() . '/redfish-test-' . getmypid() . '.key';
+		// A key file must sit in a directory only its owner can write.
+		$keyDir = realpath(sys_get_temp_dir()) . '/redfish-test-keys';
+
+		if (!is_dir($keyDir)) {
+			mkdir($keyDir, 0700);
+		}
+
+		$keyFile = $keyDir . '/redfish-test-' . getmypid() . '.key';
 		file_put_contents($keyFile, bin2hex(random_bytes(32)));
 		chmod($keyFile, 0600);
 

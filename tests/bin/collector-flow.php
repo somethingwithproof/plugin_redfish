@@ -81,7 +81,14 @@ final class KillingTransport implements HttpTransport {
 }
 
 function flow_key_file(): string {
-	$file = sys_get_temp_dir() . '/redfish-flow.key';
+	// A key file must sit in a directory only its owner can write.
+	$dir = realpath(sys_get_temp_dir()) . '/redfish-test-keys';
+
+	if (!is_dir($dir)) {
+		mkdir($dir, 0700);
+	}
+
+	$file = $dir . '/redfish-flow.key';
 
 	if (!is_file($file)) {
 		file_put_contents($file, bin2hex(random_bytes(32)));

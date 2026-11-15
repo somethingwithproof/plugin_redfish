@@ -13,7 +13,7 @@ Each BMC has one TLS mode:
 | Mode | Verification | Use |
 |---|---|---|
 | `system` (default) | Chain and name against the system CA store | BMCs with publicly or enterprise-trusted certificates already in the store |
-| `ca_bundle` | Chain and name against a PEM file named on the BMC | A private CA that signs BMC certificates |
+| `ca_bundle` | Chain and name against a PEM file named on the BMC. The file passes the same checks as the vault key file, except that it may be readable by others and owned by root; it is read once through the checked handle, must hold a certificate, and is handed to OpenSSL as a private copy | A private CA that signs BMC certificates |
 | `pin` | The SHA-256 of the certificate's SubjectPublicKeyInfo, base64, must match | Self-signed certificates; survives reissue with the same key |
 | `unverified` | None | An explicit opt-out |
 

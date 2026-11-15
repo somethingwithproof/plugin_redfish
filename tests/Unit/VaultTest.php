@@ -27,21 +27,27 @@ use Somethingwithproof\Redfish\VaultKey;
 const REDFISH_TEST_SECRET = 'SENTINEL-bmc-password-0123456789abcdef';
 
 beforeEach(function () {
-	$this->dir = sys_get_temp_dir() . '/redfish-vault-' . bin2hex(random_bytes(4));
+	$this->dir = realpath(sys_get_temp_dir()) . '/redfish-vault-' . bin2hex(random_bytes(4));
 	mkdir($this->dir, 0700);
 });
 
 afterEach(function () {
-	foreach (glob($this->dir . '/{,.}*', GLOB_BRACE) ?: [] as $path) {
-		if (is_link($path) || is_file($path)) {
-			unlink($path);
-		} elseif (is_dir($path) && !in_array(basename($path), ['.', '..'], true)) {
-			rmdir($path);
+	redfish_remove_tree($this->dir);
+});
+
+function redfish_remove_tree(string $dir): void {
+	foreach (scandir($dir) ?: [] as $name) {
+		$path = $dir . '/' . $name;
+
+		if ($name === '.' || $name === '..') {
+			continue;
 		}
+
+		is_dir($path) && !is_link($path) ? redfish_remove_tree($path) : unlink($path);
 	}
 
-	rmdir($this->dir);
-});
+	rmdir($dir);
+}
 
 function redfish_file(string $dir, string $name, string $content, int $mode = 0600): string {
 	$path = $dir . '/' . $name;
@@ -118,6 +124,10 @@ it('refuses key files that fail a check, naming the check', function (string $ca
 		'short'      => redfish_file($dir, 'short', random_bytes(31)),
 		'long'       => redfish_file($dir, 'long', random_bytes(33)),
 		'not hex'    => redfish_file($dir, 'nothex', str_repeat('g', 64)),
+		'passphrase' => redfish_file($dir, 'phrase', str_repeat('correct horse ', 2) . 'batt'),
+		'group-write'=> redfish_file($dir, 'gw', bin2hex(random_bytes(32)), 0620),
+		'open dir'   => (function () use ($dir) { mkdir($dir . '/open', 0770); chmod($dir . '/open', 0770); return redfish_file($dir . '/open', 'k', bin2hex(random_bytes(32))); })(),
+		'link dir'   => (function () use ($dir) { mkdir($dir . '/real', 0700); symlink($dir . '/real', $dir . '/alias'); redfish_file($dir . '/real', 'k', bin2hex(random_bytes(32))); return $dir . '/alias/k'; })(),
 		'oversize'   => redfish_file($dir, 'big', str_repeat('a', 100)),
 	};
 
@@ -129,11 +139,26 @@ it('refuses key files that fail a check, naming the check', function (string $ca
 	['directory', 'not a regular file'],
 	['world-read', 'other users'],
 	['world-write', 'other users'],
-	['short', '32 bytes or 64 hexadecimal'],
-	['long', '32 bytes or 64 hexadecimal'],
-	['not hex', '32 bytes or 64 hexadecimal'],
+	['short', '64 hexadecimal characters or exactly 32 random bytes'],
+	['long', '64 hexadecimal characters or exactly 32 random bytes'],
+	['not hex', '64 hexadecimal characters or exactly 32 random bytes'],
+	['passphrase', 'look like a passphrase'],
+	['group-write', 'writable by its group'],
+	['open dir', 'not writable by group or others'],
+	['link dir', 'symbolic link'],
 	['oversize', 'larger than allowed'],
 ]);
+
+it('refuses a key file another user owns', function () {
+	if (!function_exists('posix_geteuid') || posix_geteuid() !== 0) {
+		$this->markTestSkipped('changing the owner needs root');
+	}
+
+	$path = redfish_file($this->dir, 'other', bin2hex(random_bytes(32)));
+	chown($path, 65534);
+
+	expect(redfish_refusal(fn () => VaultKey::fromFile($path)))->toContain('owned by the poller user');
+});
 
 it('never puts secret material in a refusal message', function () {
 	$path = redfish_file($this->dir, 'k', REDFISH_TEST_SECRET);

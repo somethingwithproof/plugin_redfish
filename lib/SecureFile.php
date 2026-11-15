@@ -20,11 +20,17 @@
 namespace Somethingwithproof\Redfish;
 
 /**
- * The checks made on the vault key file: an absolute
- * path to a regular file, not a symbolic link, not readable or writable by
- * others, and of bounded size (REQ-CRED-004). The file is
- * opened once and every check after the link test is made on that open
- * handle, so a file swapped between check and read is not read.
+ * Checks on files the plugin trusts: the vault key file and CA bundles.
+ *
+ * The path must be absolute and name a regular file, not a symbolic link,
+ * with no symbolic link among its parent directories. The directory holding
+ * it must be owned by the poller's effective user or root and not writable
+ * by group or others, so nobody else can swap the file. The file must not be
+ * writable by group or others. A secret file (the vault key) must also be
+ * owned by the poller's effective user and not readable by others. The file
+ * is opened once and every check after the link test is made on that open
+ * handle, so a file swapped between check and read is not read
+ * (REQ-CRED-004, REQ-TLS-002).
  */
 final class SecureFile {
 	public static function pathAcceptable(string $path): bool {
@@ -34,8 +40,8 @@ final class SecureFile {
 	/**
 	 * @throws CredentialError
 	 */
-	public static function read(string $path, int $maxBytes): string {
-		$handle = self::open($path, $maxBytes);
+	public static function read(string $path, int $maxBytes, bool $secret = true): string {
+		$handle = self::open($path, $maxBytes, $secret);
 
 		try {
 			$content = stream_get_contents($handle, $maxBytes + 1);
@@ -56,8 +62,8 @@ final class SecureFile {
 	 *
 	 * @throws CredentialError
 	 */
-	public static function check(string $path, int $maxBytes): void {
-		fclose(self::open($path, $maxBytes));
+	public static function check(string $path, int $maxBytes, bool $secret = true): void {
+		fclose(self::open($path, $maxBytes, $secret));
 	}
 
 	/**
@@ -65,9 +71,34 @@ final class SecureFile {
 	 *
 	 * @throws CredentialError
 	 */
-	private static function open(string $path, int $maxBytes) {
+	private static function open(string $path, int $maxBytes, bool $secret) {
 		if (!self::pathAcceptable($path)) {
 			throw CredentialError::because('the path is not an absolute path');
+		}
+
+		if (!function_exists('posix_geteuid')) {
+			throw CredentialError::because('ext-posix is needed to check who owns the file');
+		}
+
+		$euid = posix_geteuid();
+		$dir  = dirname($path);
+
+		clearstatcache(true, $dir);
+
+		// realpath() resolves every link on the way, so a difference means
+		// a parent directory is, or passes through, a symbolic link.
+		if (realpath($dir) !== $dir) {
+			throw CredentialError::because('a parent directory is a symbolic link or does not exist');
+		}
+
+		$parent = lstat($dir);
+
+		if ($parent === false || ($parent['mode'] & 0170000) !== 0040000) {
+			throw CredentialError::because('a parent directory is a symbolic link or does not exist');
+		}
+
+		if (($parent['uid'] !== $euid && $parent['uid'] !== 0) || ($parent['mode'] & 0022) !== 0) {
+			throw CredentialError::because('the directory holding the file must be owned by the poller user or root and not writable by group or others');
 		}
 
 		clearstatcache(true, $path);
@@ -105,8 +136,16 @@ final class SecureFile {
 				throw CredentialError::because('the file changed while it was checked');
 			}
 
-			if (($stat['mode'] & 0006) !== 0) {
+			if (($stat['mode'] & ($secret ? 0006 : 0002)) !== 0) {
 				throw CredentialError::because('the file is readable or writable by other users');
+			}
+
+			if (($stat['mode'] & 0020) !== 0) {
+				throw CredentialError::because('the file is writable by its group');
+			}
+
+			if ($secret ? $stat['uid'] !== $euid : ($stat['uid'] !== $euid && $stat['uid'] !== 0)) {
+				throw CredentialError::because($secret ? 'the file must be owned by the poller user' : 'the file must be owned by the poller user or root');
 			}
 
 			if ($stat['size'] > $maxBytes) {

@@ -284,7 +284,14 @@ db_execute_prepared('DELETE FROM user_auth_perms WHERE user_id = ?', array($scop
 
 // A password saved through the form must come back in no response, no
 // log line, and no plugin table.
-$keyFile = sys_get_temp_dir() . '/redfish-perm-' . bin2hex(random_bytes(4)) . '.key';
+// A key file must sit in a directory only its owner can write.
+$keyDir = realpath(sys_get_temp_dir()) . '/redfish-test-keys';
+
+if (!is_dir($keyDir)) {
+	mkdir($keyDir, 0700);
+}
+
+$keyFile = $keyDir . '/redfish-perm-' . bin2hex(random_bytes(4)) . '.key';
 file_put_contents($keyFile, bin2hex(random_bytes(32)));
 chmod($keyFile, 0600);
 db_execute_prepared("REPLACE INTO settings (name, value) VALUES ('redfish_vault_key_file', ?)", array($keyFile));

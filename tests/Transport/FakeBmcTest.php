@@ -193,3 +193,43 @@ it('classifies TLS failures as chain, name, expiry, pin, and protocol', function
 	'TLS 1.1 only'       => ['good', 'ca_bundle', true, true, FailureClass::TlsProtocol],
 	'opted out'          => ['selfsigned', 'unverified', true, false, null],
 ]);
+
+it('refuses a CA bundle that fails the trusted-file checks before any connection', function (string $case) {
+	$dir = realpath(sys_get_temp_dir()) . '/redfish-ca-' . bin2hex(random_bytes(4));
+	mkdir($dir, 0700);
+	mkdir($dir . '/real', 0700);
+	symlink($dir . '/real', $dir . '/alias');
+	$pem = (string) file_get_contents(FakeBmc::certs() . '/ca.pem');
+
+	$path = match ($case) {
+		'symlinked parent' => (function () use ($dir, $pem) { file_put_contents($dir . '/real/ca.pem', $pem); return $dir . '/alias/ca.pem'; })(),
+		'group writable'   => (function () use ($dir, $pem) { file_put_contents($dir . '/real/ca.pem', $pem); chmod($dir . '/real/ca.pem', 0664); return $dir . '/real/ca.pem'; })(),
+		'open directory'   => (function () use ($dir, $pem) { chmod($dir . '/real', 0777); file_put_contents($dir . '/real/ca.pem', $pem); chmod($dir . '/real/ca.pem', 0644); return $dir . '/real/ca.pem'; })(),
+		'no certificate'   => (function () use ($dir) { file_put_contents($dir . '/real/ca.pem', "not a certificate\n"); chmod($dir . '/real/ca.pem', 0644); return $dir . '/real/ca.pem'; })(),
+	};
+
+	// The resolver would fail the test if reached: the check comes first.
+	$resolver = new class () implements Resolver {
+		public function resolve(string $host): array {
+			throw new \LogicException('resolved before the CA bundle was checked');
+		}
+	};
+
+	try {
+		$class = null;
+
+		try {
+			(new SocketTransport(new Endpoint('bmc.test', 443, TlsMode::CaBundle, $path), $resolver, 1.0, 2.0, 1048576, true))->send(new \Somethingwithproof\Redfish\HttpRequest('GET', '/redfish/v1/'));
+		} catch (\Somethingwithproof\Redfish\TransportError $e) {
+			$class = $e->class;
+		}
+
+		expect($class)->toBe(FailureClass::TlsConfig);
+	} finally {
+		chmod($dir . '/real', 0700);
+		@unlink($dir . '/real/ca.pem');
+		unlink($dir . '/alias');
+		rmdir($dir . '/real');
+		rmdir($dir);
+	}
+})->with(['symlinked parent', 'group writable', 'open directory', 'no certificate']);

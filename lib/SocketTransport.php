@@ -42,6 +42,11 @@ namespace Somethingwithproof\Redfish;
 final class SocketTransport implements HttpTransport {
 	private const MAX_HEADER_BYTES = 65536;
 
+	private const MAX_CA_BYTES = 1048576;
+
+	/** A private copy of the checked CA bundle, which OpenSSL reads by path. */
+	private ?string $caCopy = null;
+
 	/** @var ?list<string> */
 	private ?array $addresses = null;
 
@@ -59,6 +64,12 @@ final class SocketTransport implements HttpTransport {
 		private readonly int $maxBytes = 2097152,
 		private readonly bool $allowLoopback = false,
 	) {
+	}
+
+	public function __destruct() {
+		if ($this->caCopy !== null) {
+			@unlink($this->caCopy);
+		}
 	}
 
 	public function send(HttpRequest $request): HttpResponse {
@@ -166,7 +177,7 @@ final class SocketTransport implements HttpTransport {
 		];
 
 		if ($verify && $this->endpoint->tlsMode === TlsMode::CaBundle) {
-			$ssl['cafile'] = $this->endpoint->caFile;
+			$ssl['cafile'] = $this->caBundle();
 		}
 
 		return $ssl;
@@ -178,8 +189,8 @@ final class SocketTransport implements HttpTransport {
 	private function connect(float $deadline) {
 		$mode = $this->endpoint->tlsMode;
 
-		if ($mode === TlsMode::CaBundle && !self::caFileUsable($this->endpoint->caFile)) {
-			throw new TransportError(FailureClass::TlsConfig, 'CA bundle file');
+		if ($mode === TlsMode::CaBundle) {
+			$this->caBundle();
 		}
 
 		if ($mode === TlsMode::Pin && Bmc::normalizePin($this->endpoint->pin) === null) {
@@ -284,17 +295,38 @@ final class SocketTransport implements HttpTransport {
 	}
 
 	/**
-	 * A CA bundle must be a regular file that others cannot write; one any
-	 * local user could replace would let them choose what the BMC may be.
+	 * A CA bundle must pass the trusted-file checks (SecureFile): one any
+	 * other local user could replace would let them choose what the BMC may
+	 * be. It is read once through the checked handle and handed to OpenSSL
+	 * as a private copy, so the file OpenSSL opens is the file that was
+	 * checked.
 	 */
-	public static function caFileUsable(string $path): bool {
-		if (!SecureFile::pathAcceptable($path) || is_link($path) || !is_file($path) || !is_readable($path)) {
-			return false;
+	private function caBundle(): string {
+		if ($this->caCopy !== null) {
+			return $this->caCopy;
 		}
 
-		$mode = @fileperms($path);
+		try {
+			$pem = SecureFile::read($this->endpoint->caFile, self::MAX_CA_BYTES, false);
+		} catch (CredentialError $e) {
+			throw new TransportError(FailureClass::TlsConfig, 'CA bundle file: ' . $e->getMessage());
+		}
 
-		return $mode !== false && ($mode & 0o002) === 0;
+		if (preg_match('/-----BEGIN CERTIFICATE-----.+?-----END CERTIFICATE-----/s', $pem, $first) !== 1 || @openssl_x509_read($first[0]) === false) {
+			throw new TransportError(FailureClass::TlsConfig, 'CA bundle file holds no certificate');
+		}
+
+		$copy = tempnam(sys_get_temp_dir(), 'redfish-ca-');
+
+		if ($copy === false || !chmod($copy, 0600) || file_put_contents($copy, $pem) !== strlen($pem)) {
+			if ($copy !== false) {
+				@unlink($copy);
+			}
+
+			throw new TransportError(FailureClass::TlsConfig, 'CA bundle copy');
+		}
+
+		return $this->caCopy = $copy;
 	}
 
 	/**

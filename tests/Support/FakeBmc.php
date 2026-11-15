@@ -43,7 +43,7 @@ final class FakeBmc {
 		static $dir = null;
 
 		if ($dir === null) {
-			$dir = sys_get_temp_dir() . '/redfish-fake-certs-' . getmypid();
+			$dir = realpath(sys_get_temp_dir()) . '/redfish-fake-certs-' . getmypid();
 
 			if (!is_dir($dir)) {
 				mkdir($dir, 0700);
