@@ -299,9 +299,11 @@ jobs:
           # The device flow, on purpose, makes the plugin remove a device its
           # creator cannot see (and checks that warning itself), and gives
           # one data source a 10 second step, which Cacti warns about, also
-          # trying to mail the warning to an admin with no address. Each
-          # exclusion matches that one whole line and nothing else.
-          if grep -E "FATAL:|ERROR:|WARNING:" cacti/log/cacti.log | grep -vE -e '^[^ ]+ [0-9:]+ - REDFISH WARNING: Device [0-9]+ for BMC [0-9]+ was removed again: user [0-9]+ may not see it$' -e '^[^ ]+ [0-9:]+ - POLLER: Poller\[1\] PID\[[0-9]+\] WARNING: The Poller Interval is 300 and you have a Data Source with a sampling interval of 10\.  Change your Poller Interval to 10 seconds, and repopulate your poller cache\.$' -e '^[^ ]+ [0-9:]+ - SYSTEM WARNING: Primary Admin account notifications disabled!  Unable to send administrative Email\.$'; then
+          # trying to mail the warning to an admin with no address. It also
+          # replaces the fan query file with a symbolic link and checks that
+          # the installer refuses it and logs so. Each exclusion matches that
+          # one whole line and nothing else.
+          if grep -E "FATAL:|ERROR:|WARNING:" cacti/log/cacti.log | grep -vE -e '^[^ ]+ [0-9:]+ - REDFISH WARNING: Device [0-9]+ for BMC [0-9]+ was removed again: user [0-9]+ may not see it$' -e '^[^ ]+ [0-9:]+ - REDFISH ERROR: /[^ ]+/resource/script_server/redfish_fans\.xml is a symbolic link; it was left as it is\. Replace it with a copy of plugins/redfish/resource/script_server/redfish_fans\.xml$' -e '^[^ ]+ [0-9:]+ - POLLER: Poller\[1\] PID\[[0-9]+\] WARNING: The Poller Interval is 300 and you have a Data Source with a sampling interval of 10\.  Change your Poller Interval to 10 seconds, and repopulate your poller cache\.$' -e '^[^ ]+ [0-9:]+ - SYSTEM WARNING: Primary Admin account notifications disabled!  Unable to send administrative Email\.$'; then
             exit 1
           fi
         fi
