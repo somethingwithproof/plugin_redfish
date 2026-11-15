@@ -250,7 +250,7 @@ switch ($action) {
 		// The pages render and never show the password.
 		ob_start();
 		$pageClock = new FixedClock($clock->now());
-		(new \Somethingwithproof\Redfish\HealthPage(new BmcRepository(false, $pageClock), new HealthRepository(false), new ReadingRepository(false), new DiscoveryRepository(false), redfish_credential_store(), \Somethingwithproof\Redfish\FreshnessEvaluator::fromSettings($pageClock, redfish_settings()), $pageClock))->render(redfish_settings(), true);
+		(new \Somethingwithproof\Redfish\HealthPage(new BmcRepository(false, $pageClock), new HealthRepository(false), new ReadingRepository(false), new DiscoveryRepository(false), redfish_credential_store(), \Somethingwithproof\Redfish\FreshnessEvaluator::fromSettings($pageClock, redfish_settings()), $pageClock, new \Somethingwithproof\Redfish\DeviceScope(static fn (int $h): bool => true, static fn (int $h): bool => true)))->render(redfish_settings(), true);
 		$page = (string) ob_get_clean();
 		$result['page_lists'] = strpos($page, 'r660') !== false;
 		$result['leaks']      = flow_leaks(array('health page' => $page));

@@ -76,6 +76,15 @@ final class BmcRepository {
 		return (int) db_fetch_cell_prepared('SELECT COUNT(*) FROM plugin_redfish_credential WHERE id = ?', [$credentialId], '', true, $this->connection) === 1;
 	}
 
+	/**
+	 * Device ids of the BMCs that use a credential, 0 for unmapped ones.
+	 *
+	 * @return list<int>
+	 */
+	public function credentialHosts(int $credentialId): array {
+		return array_map(static fn (array $row): int => Row::int($row, 'host_id'), Row::rows(db_fetch_assoc_prepared('SELECT host_id FROM plugin_redfish_bmc WHERE credential_id = ?', [$credentialId], true, $this->connection)));
+	}
+
 	public function hostExists(int $hostId): bool {
 		return (int) db_fetch_cell_prepared('SELECT COUNT(*) FROM host WHERE id = ?', [$hostId], '', true, $this->connection) === 1;
 	}
@@ -205,11 +214,12 @@ final class BmcRepository {
 
 	/**
 	 * Export rows: the registry as stored, with credential names instead of
-	 * ids and never a secret (REQ-LIFE-004).
+	 * ids and never a secret (REQ-LIFE-004), limited to the BMCs the scope
+	 * lets the user see.
 	 *
 	 * @return list<array<string, string|int>>
 	 */
-	public function export(): array {
+	public function export(DeviceScope $scope): array {
 		$out   = [];
 		$names = [];
 
@@ -217,7 +227,7 @@ final class BmcRepository {
 			$names[Row::int($row, 'id')] = Row::string($row, 'name');
 		}
 
-		foreach ($this->all() as $bmc) {
+		foreach ($scope->filter($this->all()) as $bmc) {
 			$row = $bmc->toRow();
 			unset($row['protocols']);
 			$row['credential'] = $names[$bmc->credentialId] ?? '';

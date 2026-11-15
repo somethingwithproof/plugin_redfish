@@ -29,6 +29,7 @@ final class BmcsPage {
 	public function __construct(
 		private readonly BmcRepository $bmcs,
 		private readonly CredentialRepository $credentials,
+		private readonly DeviceScope $scope,
 	) {
 	}
 
@@ -37,7 +38,7 @@ final class BmcsPage {
 
 		print Html::header([__('Name', 'redfish'), __('Address', 'redfish'), __('Port', 'redfish'), __('Credential', 'redfish'), __('TLS Verification', 'redfish'), __('Basic Fallback', 'redfish'), __('Device', 'redfish'), __('State', 'redfish'), __('Actions', 'redfish')]);
 
-		$bmcs  = $this->bmcs->all();
+		$bmcs  = $this->scope->filter($this->bmcs->all());
 		$names = [];
 
 		foreach ($this->credentials->all() as $credential) {
@@ -104,7 +105,7 @@ final class BmcsPage {
 			$credentials[$credential->id] = $credential->name;
 		}
 
-		$hosts   = [0 => __('None', 'redfish')] + $this->bmcs->hostChoices();
+		$hosts   = [0 => __('None', 'redfish')] + array_filter($this->bmcs->hostChoices(), fn (int $id): bool => $this->scope->allowsNew($id), ARRAY_FILTER_USE_KEY);
 		$hostId  = (int) $value('host_id', (string) ($bmc->hostId ?? 0));
 
 		// A device deleted since it was mapped stays selected, so saving the
@@ -170,8 +171,9 @@ final class BmcsPage {
 		$before = $bmc->id > 0 ? $this->bmcs->find($bmc->id) : null;
 
 		// A mapping to a device deleted since may stay; a new mapping must
-		// name an existing device.
-		if ($bmc->hostId > 0 && $before?->hostId !== $bmc->hostId && !$this->bmcs->hostExists($bmc->hostId)) {
+		// name an existing device the user may see. Both cases read the same,
+		// so the message does not tell whether a hidden device exists.
+		if ($bmc->hostId > 0 && $before?->hostId !== $bmc->hostId && !$this->scope->allowsNew($bmc->hostId)) {
 			$errors['host_id'] = __('Device: no Cacti device has this ID.', 'redfish');
 		}
 
@@ -182,6 +184,6 @@ final class BmcsPage {
 	 * The export document. JSON_HEX_* keeps it inert if opened as HTML.
 	 */
 	public function exportJson(): string {
-		return (string) json_encode(['plugin' => 'redfish', 'bmcs' => $this->bmcs->export()], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+		return (string) json_encode(['plugin' => 'redfish', 'bmcs' => $this->bmcs->export($this->scope)], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
 	}
 }

@@ -151,6 +151,77 @@ list(, $list) = perm_http($base . 'redfish_bmcs.php', $jar);
 perm_http($base . 'redfish_bmcs.php', $jar, array('__csrf_magic' => perm_token($list), 'action' => 'delete', 'id' => $probe));
 perm_expect(!$exists(), 'the same delete as a POST with the token removes the BMC');
 
+// Device permissions bind Redfish Admin too: a user with both realms whose
+// Cacti device policy hides one device can neither see nor change a BMC
+// mapped to it, nor move a BMC onto it, nor change a credential it uses.
+db_execute("INSERT INTO host (description, hostname, status) VALUES ('perm-visible', '192.0.2.40', 3)");
+$visibleHost = (int) db_fetch_insert_id();
+db_execute("INSERT INTO host (description, hostname, status) VALUES ('perm-hidden', '192.0.2.41', 3)");
+$hiddenHost = (int) db_fetch_insert_id();
+db_execute("INSERT INTO plugin_redfish_credential (name, username, revision) VALUES ('perm-hidden-cred', 'monitor', 1)");
+$hiddenCred = (int) db_fetch_insert_id();
+db_execute_prepared("INSERT INTO plugin_redfish_bmc (name, address, port, poller_id, host_id, credential_id, tls_mode, admin_state) VALUES ('perm-hidden-bmc', '192.0.2.42', 443, 1, ?, ?, 'system', 'enabled')", array($hiddenHost, $hiddenCred));
+$hiddenBmc = (int) db_fetch_insert_id();
+db_execute_prepared("INSERT INTO plugin_redfish_bmc (name, address, port, poller_id, host_id, credential_id, tls_mode, admin_state) VALUES ('perm-visible-bmc', '192.0.2.43', 443, 1, ?, ?, 'system', 'enabled')", array($visibleHost, $hiddenCred));
+$visibleBmc = (int) db_fetch_insert_id();
+db_execute_prepared("INSERT INTO plugin_redfish_health (bmc_id, backoff_until, failures) VALUES (?, 2000000000, 3), (?, 2000000000, 3)", array($hiddenBmc, $visibleBmc));
+
+db_execute("DELETE FROM user_auth WHERE username = 'scoped'");
+db_execute_prepared("INSERT INTO user_auth (username, password, realm, full_name, must_change_password, password_change, policy_graphs, policy_trees, policy_hosts, policy_graph_templates, enabled) VALUES ('scoped', ?, 0, 'scoped', '', '', 2, 1, 2, 2, 'on')", array(password_hash($password, PASSWORD_DEFAULT)));
+$scoped = (int) db_fetch_insert_id();
+
+foreach (array(8, $view, $admin) as $realm) {
+	db_execute_prepared('INSERT INTO user_auth_realm (realm_id, user_id) VALUES (?, ?)', array($realm, $scoped));
+}
+
+// Graph, device, and template policies deny (2) with one device grant
+// (type 3). Under Cacti's default permissive graph authorization a device
+// is visible when its graphs or templates are, so all three must deny.
+db_execute_prepared('INSERT INTO user_auth_perms (user_id, item_id, type) VALUES (?, ?, 3)', array($scoped, $visibleHost));
+
+$bmcRow = function ($id) {
+	return db_fetch_row_prepared('SELECT b.tls_mode, b.host_id, h.backoff_until FROM plugin_redfish_bmc AS b LEFT JOIN plugin_redfish_health AS h ON h.bmc_id = b.id WHERE b.id = ?', array($id));
+};
+$hiddenBefore = $bmcRow($hiddenBmc);
+$scopedJar    = perm_login('scoped');
+
+list(, $scopedList) = perm_http($base . 'redfish_bmcs.php', $scopedJar);
+perm_expect(strpos($scopedList, 'perm-visible-bmc') !== false && strpos($scopedList, 'perm-hidden-bmc') === false, 'a device-scoped admin sees only BMCs on visible devices');
+list(, $scopedExport) = perm_http($base . 'redfish_bmcs.php?action=export', $scopedJar);
+perm_expect(strpos($scopedExport, '192.0.2.43') !== false && strpos($scopedExport, '192.0.2.42') === false, 'the export leaves out BMCs on hidden devices');
+list(, $scopedHealth) = perm_http($base . 'redfish_health.php', $scopedJar);
+perm_expect(strpos($scopedHealth, 'perm-visible-bmc') !== false && strpos($scopedHealth, 'perm-hidden-bmc') === false, 'the health page leaves out BMCs on hidden devices');
+list(, $scopedEdit) = perm_http($base . 'redfish_bmcs.php?action=edit&id=' . $hiddenBmc, $scopedJar);
+perm_expect(strpos($scopedEdit, '192.0.2.42') === false, 'the edit form of a BMC on a hidden device does not open');
+list(, $newForm) = perm_http($base . 'redfish_bmcs.php?action=edit', $scopedJar);
+perm_expect(strpos($newForm, 'perm-visible (') !== false && strpos($newForm, 'perm-hidden (') === false, 'the device list offers only visible devices');
+
+$token = perm_token($scopedList);
+$hiddenSave = array('__csrf_magic' => $token, 'action' => 'save', 'id' => $hiddenBmc, 'name' => 'perm-hidden-bmc', 'address' => '192.0.2.42', 'port' => '443', 'poller_id' => 1, 'host_id' => $hiddenHost, 'credential_id' => $hiddenCred, 'tls_mode' => 'unverified', 'enabled' => 'on');
+perm_http($base . 'redfish_bmcs.php', $scopedJar, $hiddenSave);
+perm_http($base . 'redfish_bmcs.php', $scopedJar, array('__csrf_magic' => $token, 'action' => 'retry', 'id' => $hiddenBmc));
+perm_http($base . 'redfish_bmcs.php', $scopedJar, array('__csrf_magic' => $token, 'action' => 'delete', 'id' => $hiddenBmc));
+perm_expect($bmcRow($hiddenBmc) == $hiddenBefore, 'save, retry, and delete of a BMC on a hidden device change nothing');
+
+perm_http($base . 'redfish_bmcs.php', $scopedJar, array('__csrf_magic' => $token, 'action' => 'save', 'id' => $visibleBmc, 'name' => 'perm-visible-bmc', 'address' => '192.0.2.43', 'port' => '443', 'poller_id' => 1, 'host_id' => $hiddenHost, 'credential_id' => $hiddenCred, 'tls_mode' => 'system', 'enabled' => 'on'));
+perm_expect((int) $bmcRow($visibleBmc)['host_id'] === $visibleHost, 'a BMC cannot be moved onto a hidden device');
+
+$revision = (int) db_fetch_cell_prepared('SELECT revision FROM plugin_redfish_credential WHERE id = ?', array($hiddenCred));
+list(, $credForm) = perm_http($base . 'redfish_credentials.php', $scopedJar);
+perm_http($base . 'redfish_credentials.php', $scopedJar, array('__csrf_magic' => perm_token($credForm), 'action' => 'save', 'id' => $hiddenCred, 'name' => 'perm-hidden-cred', 'username' => 'changed', 'password' => ''));
+perm_expect((int) db_fetch_cell_prepared('SELECT revision FROM plugin_redfish_credential WHERE id = ?', array($hiddenCred)) === $revision, 'a credential used by a BMC on a hidden device cannot be changed');
+
+// Control: the same retry on the visible BMC works.
+perm_http($base . 'redfish_bmcs.php', $scopedJar, array('__csrf_magic' => $token, 'action' => 'retry', 'id' => $visibleBmc));
+perm_expect((int) $bmcRow($visibleBmc)['backoff_until'] === 0, 'the same retry on a BMC on a visible device clears its backoff');
+
+unlink($scopedJar);
+db_execute_prepared('DELETE FROM plugin_redfish_health WHERE bmc_id IN (?, ?)', array($hiddenBmc, $visibleBmc));
+db_execute_prepared('DELETE FROM plugin_redfish_bmc WHERE id IN (?, ?)', array($hiddenBmc, $visibleBmc));
+db_execute_prepared('DELETE FROM plugin_redfish_credential WHERE id = ?', array($hiddenCred));
+db_execute_prepared('DELETE FROM host WHERE id IN (?, ?)', array($visibleHost, $hiddenHost));
+db_execute_prepared('DELETE FROM user_auth_perms WHERE user_id = ?', array($scoped));
+
 // A password saved through the form must come back in no response, no
 // log line, and no plugin table.
 $keyFile = sys_get_temp_dir() . '/redfish-perm-' . bin2hex(random_bytes(4)) . '.key';

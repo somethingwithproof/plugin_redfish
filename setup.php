@@ -177,6 +177,13 @@ function redfish_bmcs(): \Somethingwithproof\Redfish\BmcRepository {
 	return new \Somethingwithproof\Redfish\BmcRepository(false, new \Somethingwithproof\Redfish\SystemClock());
 }
 
+/**
+ * The current user's device permissions over BMC records.
+ */
+function redfish_device_scope(): \Somethingwithproof\Redfish\DeviceScope {
+	return \Somethingwithproof\Redfish\DeviceScope::forUser(redfish_user_id(), redfish_bmcs());
+}
+
 function redfish_credentials(): \Somethingwithproof\Redfish\CredentialRepository {
 	return new \Somethingwithproof\Redfish\CredentialRepository(false, new \Somethingwithproof\Redfish\SystemClock());
 }

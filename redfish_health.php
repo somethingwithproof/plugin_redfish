@@ -40,7 +40,8 @@ $redfish_page     = new \Somethingwithproof\Redfish\HealthPage(
 	new \Somethingwithproof\Redfish\DiscoveryRepository(false),
 	redfish_credential_store(),
 	\Somethingwithproof\Redfish\FreshnessEvaluator::fromSettings($redfish_clock, $redfish_settings),
-	$redfish_clock
+	$redfish_clock,
+	redfish_device_scope()
 );
 
 top_header();

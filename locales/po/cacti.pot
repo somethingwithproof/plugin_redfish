@@ -662,6 +662,10 @@ msgid "Do not verify (unsafe)"
 msgstr ""
 
 #: redfish_bmcs.php
+msgid "You do not have access to the Cacti device of this BMC."
+msgstr ""
+
+#: redfish_bmcs.php
 msgid "The BMC could not be saved."
 msgstr ""
 
@@ -684,6 +688,10 @@ msgstr ""
 #: redfish_bmcs.php
 #, php-format
 msgid "%d BMCs were imported."
+msgstr ""
+
+#: redfish_credentials.php
+msgid "This credential is used by a BMC on a Cacti device you do not have access to, so it cannot be changed here."
 msgstr ""
 
 #: redfish_credentials.php

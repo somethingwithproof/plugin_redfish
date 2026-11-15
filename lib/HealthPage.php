@@ -35,6 +35,7 @@ final class HealthPage {
 		private readonly CredentialStore $credentials,
 		private readonly FreshnessEvaluator $freshness,
 		private readonly Clock $clock,
+		private readonly DeviceScope $scope,
 	) {
 	}
 
@@ -44,7 +45,7 @@ final class HealthPage {
 	 */
 	public function render(Settings $settings, bool $admin): void {
 		$now    = $this->clock->now();
-		$bmcs   = $this->bmcs->all();
+		$bmcs   = $this->scope->filter($this->bmcs->all());
 		$health = [];
 		$has    = [];
 

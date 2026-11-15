@@ -419,6 +419,8 @@ The setup screen shows request rate and Cacti object count before a bulk import.
 | BMC account privilege | Documentation requires a read-only Redfish role and an IPMI `USER` account; the plugin never needs a privilege that can change state |
 | Main server to remote collector (phase 4) | Cacti's `remote_agent` authorization and the configured https scheme; actions are read-only and take identifiers only |
 
+BMC records follow Cacti device permissions. A BMC mapped to a device is listed, exported, shown on the health page, edited, deleted, retried, or moved only by a user `is_device_allowed()` lets see that device, and a credential can be changed only by a user who may see every BMC that uses it. Unmapped BMCs and credential names are visible to every Redfish Admin. Under Cacti's permissive graph authorization a device is visible when its graphs or templates are, so the plugin inherits that rule.
+
 TLS verification is on by default. The per-BMC options are a CA bundle, a pinned public key, or an explicit, logged, per-BMC "do not verify" setting that appears as a health warning; there is no global switch ([#10](https://github.com/somethingwithproof/plugin_redfish/issues/10)). Credentials never appear in examples in this repository.
 
 Phase 2 needs a security review covering command construction, environment handling, and output parsing. Phase 4 needs a review of the `remote_agent` actions and collector credential handling.

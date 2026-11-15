@@ -33,9 +33,27 @@ if (!redfish_page_start()) {
 
 redfish_require_post('redfish_bmcs.php', array('save', 'delete', 'retry', 'import'));
 
-$redfish_bmcs = redfish_bmcs();
-$redfish_page = new \Somethingwithproof\Redfish\BmcsPage($redfish_bmcs, redfish_credentials());
-$redfish_user = redfish_user_id();
+$redfish_bmcs  = redfish_bmcs();
+$redfish_scope = redfish_device_scope();
+$redfish_page  = new \Somethingwithproof\Redfish\BmcsPage($redfish_bmcs, redfish_credentials(), $redfish_scope);
+$redfish_user  = redfish_user_id();
+
+/**
+ * The BMC named by the request, or null when it does not exist or sits on a
+ * Cacti device the user may not see. Every action on an existing BMC goes
+ * through here before it reads or writes anything else.
+ */
+function redfish_requested_bmc(\Somethingwithproof\Redfish\BmcRepository $bmcs, \Somethingwithproof\Redfish\DeviceScope $scope, int $id): ?\Somethingwithproof\Redfish\Bmc {
+	$bmc = $id > 0 ? $bmcs->find($id) : null;
+
+	if ($bmc !== null && !$scope->allowsBmc($bmc)) {
+		raise_message('redfish_denied', __('You do not have access to the Cacti device of this BMC.', 'redfish'), MESSAGE_LEVEL_ERROR);
+
+		return null;
+	}
+
+	return $bmc;
+}
 
 switch ((string) get_nfilter_request_var('action')) {
 	case 'save':
@@ -46,7 +64,7 @@ switch ((string) get_nfilter_request_var('action')) {
 			$redfish_input[$redfish_field] = (string) get_nfilter_request_var($redfish_field);
 		}
 
-		$redfish_existing = $redfish_id > 0 ? $redfish_bmcs->find($redfish_id) : null;
+		$redfish_existing = redfish_requested_bmc($redfish_bmcs, $redfish_scope, $redfish_id);
 
 		if ($redfish_id > 0 && $redfish_existing === null) {
 			header('Location: redfish_bmcs.php');
@@ -74,14 +92,16 @@ switch ((string) get_nfilter_request_var('action')) {
 		header('Location: redfish_bmcs.php');
 		exit;
 	case 'delete':
-		if ($redfish_bmcs->delete((int) get_filter_request_var('id'), $redfish_user)) {
+		$redfish_bmc = redfish_requested_bmc($redfish_bmcs, $redfish_scope, (int) get_filter_request_var('id'));
+
+		if ($redfish_bmc !== null && $redfish_bmcs->delete($redfish_bmc->id, $redfish_user)) {
 			raise_message('redfish_deleted', __('The BMC and its cached data were deleted. Its Cacti device was left in place.', 'redfish'), MESSAGE_LEVEL_INFO);
 		}
 
 		header('Location: redfish_bmcs.php');
 		exit;
 	case 'retry':
-		$redfish_bmc = $redfish_bmcs->find((int) get_filter_request_var('id'));
+		$redfish_bmc = redfish_requested_bmc($redfish_bmcs, $redfish_scope, (int) get_filter_request_var('id'));
 
 		if ($redfish_bmc !== null) {
 			(new \Somethingwithproof\Redfish\HealthRepository(false))->clearHolds($redfish_bmc->id);
@@ -106,8 +126,8 @@ switch ((string) get_nfilter_request_var('action')) {
 			function (string $name) use ($redfish_bmcs): bool {
 				return $redfish_bmcs->nameTaken($name, 0);
 			},
-			function (int $host) use ($redfish_bmcs): bool {
-				return $redfish_bmcs->hostExists($host);
+			function (int $host) use ($redfish_scope): bool {
+				return $redfish_scope->allowsNew($host);
 			}
 		);
 
@@ -133,8 +153,15 @@ switch ((string) get_nfilter_request_var('action')) {
 	case 'edit':
 		$redfish_id = (int) get_filter_request_var('id');
 
+		$redfish_bmc = redfish_requested_bmc($redfish_bmcs, $redfish_scope, $redfish_id);
+
+		if ($redfish_id > 0 && $redfish_bmc === null) {
+			header('Location: redfish_bmcs.php');
+			exit;
+		}
+
 		top_header();
-		$redfish_page->renderEdit($redfish_id > 0 ? $redfish_bmcs->find($redfish_id) : null);
+		$redfish_page->renderEdit($redfish_bmc);
 		bottom_footer();
 		exit;
 	default:
