@@ -2,7 +2,7 @@
 
 A proposed Cacti 1.2 plugin that brings server power draw, inlet temperature, fan state, and power supply health from baseboard management controllers (BMCs) into Cacti as ordinary devices, data sources, and graphs, using Redfish with an optional IPMI fallback. Thold and Maint then alert on and suppress them, and a later phase adds rack-level power totals.
 
-> **Status: proposal.** This repository contains no plugin code yet. It holds the design, its decision records, and the requirements tracked as issues and milestones. Nothing below describes shipped behavior.
+> **Status: proposal, milestone 1 research merged.** This repository contains no plugin code yet. Milestone 1 confirmed the design against documentation and upstream source (PR #67); the results, with sources, are in [docs/research/](docs/research/), and [docs/PLAN.md](docs/PLAN.md) is at revision 2. Checks that need real BMCs remain open in each research page's live-checks table. Nothing below describes shipped behavior.
 
 ## Why
 
