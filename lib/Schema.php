@@ -157,14 +157,15 @@ final class Schema {
 			return false;
 		}
 
-		if (!$this->columnExists('plugin_redfish_member', 'expected')) {
-			if (!db_execute_prepared("ALTER TABLE plugin_redfish_member ADD COLUMN expected varchar(3) NOT NULL DEFAULT '' AFTER presence", [], true, $this->connection)) {
-				return false;
-			}
+		if (!$this->columnExists('plugin_redfish_member', 'expected') && !db_execute_prepared("ALTER TABLE plugin_redfish_member ADD COLUMN expected varchar(3) NOT NULL DEFAULT '' AFTER presence", [], true, $this->connection)) {
+			return false;
+		}
 
-			if (!db_execute_prepared("UPDATE plugin_redfish_member SET expected = 'on' WHERE presence = 'present'", [], true, $this->connection)) {
-				return false;
-			}
+		// The column is committed on its own, so the baseline runs on every
+		// attempt until version 2 is recorded: an attempt stopped after the
+		// column was added still sets it. Setting it again changes nothing.
+		if (!db_execute_prepared("UPDATE plugin_redfish_member SET expected = 'on' WHERE presence = 'present'", [], true, $this->connection)) {
+			return false;
 		}
 
 		return $this->indexExists('plugin_redfish_bmc', 'host_id') && $this->columnExists('plugin_redfish_member', 'expected');
@@ -178,7 +179,7 @@ final class Schema {
 	 */
 	private function addHostOwner(): bool {
 		foreach (Row::rows(db_fetch_assoc_prepared('SELECT DISTINCT b.id, b.host_id FROM plugin_redfish_bmc AS b INNER JOIN plugin_redfish_bmc AS f ON f.host_id = b.host_id AND f.id < b.id WHERE b.host_id > 0 ORDER BY b.id', [], true, $this->connection)) as $row) {
-			if (!db_execute_prepared('UPDATE plugin_redfish_bmc SET host_id = 0 WHERE id = ?', [Row::int($row, 'id')], true, $this->connection)) {
+			if (!db_execute_prepared('UPDATE plugin_redfish_bmc SET host_id = 0 WHERE id = ? AND host_id = ?', [Row::int($row, 'id'), Row::int($row, 'host_id')], true, $this->connection)) {
 				return false;
 			}
 

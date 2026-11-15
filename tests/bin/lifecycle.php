@@ -117,6 +117,13 @@ switch ($action) {
 		db_execute("REPLACE INTO settings (name, value) VALUES ('redfish_schema_version', '1')");
 
 		break;
+	case 'schema_v1_column_only':
+		// An upgrade stopped after it added the expected column, before the
+		// baseline: version 1 is still recorded and no member is expected.
+		db_execute("UPDATE plugin_redfish_member SET expected = ''");
+		db_execute("REPLACE INTO settings (name, value) VALUES ('redfish_schema_version', '1')");
+
+		break;
 	case 'drop_registrations':
 		// What a failed hook registration on an earlier request leaves.
 		db_execute("DELETE FROM plugin_hooks WHERE name = 'redfish'");

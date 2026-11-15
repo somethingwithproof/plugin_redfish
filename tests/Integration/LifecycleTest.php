@@ -141,6 +141,18 @@ it('upgrades a milestone 2 schema, expecting the members present now', function 
 	expect(lifecycle('upgrade')['v2'])->toBe($state['v2']);
 });
 
+it('finishes the member baseline of an upgrade stopped after adding the column', function () {
+	lifecycle('install');
+	lifecycle('schema_v1');
+	lifecycle('upgrade');
+	lifecycle('schema_v1_column_only');
+
+	$state = lifecycle('upgrade');
+	expect($state['result'])->toBeTrue()
+		->and($state['schema'])->toEqual('2')
+		->and($state['v2']['expected'])->toBe(['1/fan/A' => 'on', '1/fan/B' => '']);
+});
+
 it('does not advance past a migration that did not run', function () {
 	lifecycle('install');
 	lifecycle('set_schema', '0');
