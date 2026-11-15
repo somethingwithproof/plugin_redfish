@@ -84,8 +84,14 @@ function perm_http($url, $jar, $post = null) {
 	curl_setopt_array($ch, array(CURLOPT_RETURNTRANSFER => true, CURLOPT_COOKIEJAR => $jar, CURLOPT_COOKIEFILE => $jar, CURLOPT_FOLLOWLOCATION => true, CURLOPT_TIMEOUT => 60));
 
 	if ($post !== null) {
+		$multipart = false;
+
+		foreach ($post as $value) {
+			$multipart = $multipart || $value instanceof CURLFile;
+		}
+
 		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $multipart ? $post : http_build_query($post));
 	}
 
 	$body = (string) curl_exec($ch);
@@ -163,8 +169,10 @@ db_execute("INSERT INTO host (description, hostname, status) VALUES ('perm-visib
 $visibleHost = (int) db_fetch_insert_id();
 db_execute("INSERT INTO host (description, hostname, status) VALUES ('perm-hidden', '192.0.2.41', 3)");
 $hiddenHost = (int) db_fetch_insert_id();
-db_execute("INSERT INTO plugin_redfish_credential (name, username, revision) VALUES ('perm-hidden-cred', 'monitor', 1)");
+db_execute("INSERT INTO plugin_redfish_credential (name, username, revision) VALUES ('perm-hidden-cred', 'perm-hidden-user', 1)");
 $hiddenCred = (int) db_fetch_insert_id();
+db_execute("INSERT INTO plugin_redfish_credential (name, username, revision) VALUES ('perm-free-cred', 'perm-free-user', 1)");
+$freeCred = (int) db_fetch_insert_id();
 db_execute_prepared("INSERT INTO plugin_redfish_bmc (name, address, port, poller_id, host_id, credential_id, tls_mode, admin_state) VALUES ('perm-hidden-bmc', '192.0.2.42', 443, 1, ?, ?, 'system', 'enabled')", array($hiddenHost, $hiddenCred));
 $hiddenBmc = (int) db_fetch_insert_id();
 db_execute_prepared("INSERT INTO plugin_redfish_bmc (name, address, port, poller_id, host_id, credential_id, tls_mode, admin_state) VALUES ('perm-visible-bmc', '192.0.2.43', 443, 1, ?, ?, 'system', 'enabled')", array($visibleHost, $hiddenCred));
@@ -220,10 +228,57 @@ perm_expect((int) db_fetch_cell_prepared('SELECT revision FROM plugin_redfish_cr
 perm_http($base . 'redfish_bmcs.php', $scopedJar, array('__csrf_magic' => $token, 'action' => 'retry', 'id' => $visibleBmc));
 perm_expect((int) $bmcRow($visibleBmc)['backoff_until'] === 0, 'the same retry on a BMC on a visible device clears its backoff');
 
+// Binding a credential sends it to the BMC's address, so a credential that
+// a BMC on a hidden device uses cannot be bound anywhere, nor seen.
+list(, $scopedCreds) = perm_http($base . 'redfish_credentials.php', $scopedJar);
+perm_expect(strpos($scopedCreds, 'perm-free-cred') !== false && strpos($scopedCreds, 'perm-hidden-cred') === false && strpos($scopedCreds, 'perm-hidden-user') === false, 'the credential list leaves out credentials used by BMCs on hidden devices');
+list(, $scopedCredEdit) = perm_http($base . 'redfish_credentials.php?action=edit&id=' . $hiddenCred, $scopedJar);
+perm_expect(strpos($scopedCredEdit, 'perm-hidden-user') === false && strpos($scopedCredEdit, 'name="username"') === false, 'the edit form of such a credential does not open');
+perm_expect(strpos($newForm, 'perm-free-cred') !== false && strpos($newForm, 'perm-hidden-cred') === false, 'the new BMC form offers only credentials the user may bind');
+
+$bmcCount = function ($name) {
+	return (int) db_fetch_cell_prepared('SELECT COUNT(*) FROM plugin_redfish_bmc WHERE name = ?', array($name));
+};
+$newBmc = array('__csrf_magic' => $token, 'action' => 'save', 'id' => 0, 'name' => 'perm-new-bmc', 'address' => '192.0.2.44', 'port' => '443', 'poller_id' => 1, 'host_id' => 0, 'credential_id' => $hiddenCred, 'tls_mode' => 'system', 'enabled' => 'on');
+perm_http($base . 'redfish_bmcs.php', $scopedJar, $newBmc);
+perm_expect($bmcCount('perm-new-bmc') === 0, 'a new unmapped BMC cannot be bound to such a credential');
+
+$visibleSave = array('__csrf_magic' => $token, 'action' => 'save', 'id' => $visibleBmc, 'name' => 'perm-visible-bmc', 'address' => '192.0.2.43', 'port' => '443', 'poller_id' => 1, 'host_id' => $visibleHost, 'credential_id' => $hiddenCred, 'tls_mode' => 'system', 'enabled' => 'on');
+perm_http($base . 'redfish_bmcs.php', $scopedJar, array('address' => '192.0.2.45') + $visibleSave);
+perm_http($base . 'redfish_bmcs.php', $scopedJar, array('port' => '8443') + $visibleSave);
+perm_http($base . 'redfish_bmcs.php', $scopedJar, array('tls_mode' => 'unverified') + $visibleSave);
+$visibleNow = db_fetch_row_prepared('SELECT address, port, tls_mode FROM plugin_redfish_bmc WHERE id = ?', array($visibleBmc));
+perm_expect($visibleNow['address'] === '192.0.2.43' && (int) $visibleNow['port'] === 443 && $visibleNow['tls_mode'] === 'system', 'a BMC holding such a credential cannot be pointed at another address, port, or TLS mode');
+
+perm_http($base . 'redfish_bmcs.php', $scopedJar, array('name' => 'perm-visible-renamed') + $visibleSave);
+perm_expect($bmcCount('perm-visible-renamed') === 1, 'a change that does not rebind the credential is still saved');
+$visibleSave['name'] = 'perm-visible-renamed';
+
+perm_http($base . 'redfish_bmcs.php', $scopedJar, array('credential_id' => $freeCred, 'address' => '192.0.2.45') + $visibleSave);
+$visibleNow = db_fetch_row_prepared('SELECT address, credential_id FROM plugin_redfish_bmc WHERE id = ?', array($visibleBmc));
+perm_expect($visibleNow['address'] === '192.0.2.45' && (int) $visibleNow['credential_id'] === $freeCred, 'the same change with a credential the user may bind is saved');
+
+list(, $taken) = perm_http($base . 'redfish_bmcs.php', $scopedJar, array('name' => 'perm-taken-bmc', 'address' => '192.0.2.42', 'credential_id' => $freeCred) + $newBmc);
+perm_expect(strpos($taken, 'already registered') !== false && strpos($taken, 'perm-hidden-bmc') === false && $bmcCount('perm-taken-bmc') === 0, 'the duplicate address message does not name a BMC on a hidden device');
+
+$csvFile = tempnam(sys_get_temp_dir(), 'redfishcsv');
+$importOf = function ($csv) use ($base, $scopedJar, $token, $csvFile) {
+	file_put_contents($csvFile, $csv);
+
+	return perm_http($base . 'redfish_bmcs.php', $scopedJar, array('__csrf_magic' => $token, 'action' => 'import', 'import_file' => new CURLFile($csvFile, 'text/csv', 'bmcs.csv')));
+};
+list(, $imported) = $importOf("name,address,credential\nperm-import-bmc,192.0.2.46,perm-hidden-cred\n");
+perm_expect($bmcCount('perm-import-bmc') === 0 && strpos($imported, 'perm-hidden-user') === false, 'an import row cannot bind such a credential');
+list(, $imported) = $importOf("name,address,credential\nperm-import-bmc,192.0.2.42,perm-free-cred\n");
+perm_expect($bmcCount('perm-import-bmc') === 0 && strpos($imported, 'already registered') !== false && strpos($imported, 'perm-hidden-bmc') === false, 'an import duplicate of a hidden BMC address does not name it');
+list(, $imported) = $importOf("name,address,credential\nperm-import-bmc,192.0.2.46,perm-free-cred\n");
+perm_expect($bmcCount('perm-import-bmc') === 1, 'the same import with a credential the user may bind is saved');
+unlink($csvFile);
+
 unlink($scopedJar);
-db_execute_prepared('DELETE FROM plugin_redfish_health WHERE bmc_id IN (?, ?)', array($hiddenBmc, $visibleBmc));
-db_execute_prepared('DELETE FROM plugin_redfish_bmc WHERE id IN (?, ?)', array($hiddenBmc, $visibleBmc));
-db_execute_prepared('DELETE FROM plugin_redfish_credential WHERE id = ?', array($hiddenCred));
+db_execute("DELETE FROM plugin_redfish_health WHERE bmc_id IN (SELECT id FROM plugin_redfish_bmc WHERE name LIKE 'perm-%')");
+db_execute("DELETE FROM plugin_redfish_bmc WHERE name LIKE 'perm-%'");
+db_execute_prepared('DELETE FROM plugin_redfish_credential WHERE id IN (?, ?)', array($hiddenCred, $freeCred));
 db_execute_prepared('DELETE FROM host WHERE id IN (?, ?)', array($visibleHost, $hiddenHost));
 db_execute_prepared('DELETE FROM user_auth_perms WHERE user_id = ?', array($scoped));
 

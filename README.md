@@ -13,6 +13,7 @@ A Cacti 1.2 plugin that brings server power draw, inlet temperature, fan state, 
 - TLS verification on by default, with a per-BMC CA bundle or SPKI SHA-256 pin. A logged, per-BMC unverified opt-out stays on the health page as a warning.
 - A read-only Redfish client: `GET` plus the session login and logout only, checked against an allowlist before any request is sent.
 - A collector started from `poller_bottom` for BMCs on the main poller, with per-BMC leases, backoff, and session cleanup after a crash.
+- BMC records and credentials follow Cacti device permissions: a Redfish Admin sees, changes, and binds only BMCs on devices they may see, and only credentials that no BMC on a hidden device uses.
 
 ## Why
 

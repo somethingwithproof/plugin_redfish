@@ -118,6 +118,10 @@ msgstr ""
 msgid "Public Key Pin: enter the base64 SHA-256 hash of the BMC public key, optionally prefixed with sha256//."
 msgstr ""
 
+#: lib/BmcRepository.php
+msgid "another BMC"
+msgstr ""
+
 #: lib/BmcsPage.php lib/Pages.php
 msgid "Redfish BMCs"
 msgstr ""
@@ -276,6 +280,10 @@ msgstr ""
 #: lib/BmcsPage.php
 #, php-format
 msgid "Address: %s port %d is already registered as %s."
+msgstr ""
+
+#: lib/BmcsPage.php
+msgid "Address: this address and port are already registered."
 msgstr ""
 
 #: lib/BmcsPage.php

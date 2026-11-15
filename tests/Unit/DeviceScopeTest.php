@@ -48,3 +48,11 @@ it('filters lists to the BMCs the user may see', function () {
 
 	expect($ids)->toBe([1, 2, 4]);
 });
+
+it('lets a user bind a credential only when every BMC using it is visible', function () {
+	$scope = redfish_scope();
+
+	expect($scope->allowsAll([]))->toBeTrue()
+		->and($scope->allowsAll([0, 5, 7]))->toBeTrue()
+		->and($scope->allowsAll([5, 6]))->toBeFalse();
+});

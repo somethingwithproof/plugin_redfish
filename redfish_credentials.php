@@ -35,7 +35,7 @@ redfish_require_post('redfish_credentials.php', array('save', 'delete'));
 
 $redfish_credentials = redfish_credentials();
 $redfish_store       = redfish_credential_store();
-$redfish_page        = new \Somethingwithproof\Redfish\CredentialsPage($redfish_credentials, $redfish_store);
+$redfish_page        = new \Somethingwithproof\Redfish\CredentialsPage($redfish_credentials, $redfish_store, redfish_bmcs(), redfish_device_scope());
 $redfish_user        = redfish_user_id();
 
 switch ((string) get_nfilter_request_var('action')) {
@@ -53,16 +53,10 @@ switch ((string) get_nfilter_request_var('action')) {
 
 		// A changed credential reaches every BMC that uses it, so each of
 		// those BMCs must be on a device the user may see.
-		if ($redfish_existing !== null) {
-			$redfish_scope = redfish_device_scope();
-
-			foreach (redfish_bmcs()->credentialHosts($redfish_existing->id) as $redfish_host) {
-				if (!$redfish_scope->allows($redfish_host)) {
-					raise_message('redfish_denied', __('This credential is used by a BMC on a Cacti device you do not have access to, so it cannot be changed here.', 'redfish'), MESSAGE_LEVEL_ERROR);
-					header('Location: redfish_credentials.php');
-					exit;
-				}
-			}
+		if ($redfish_existing !== null && !$redfish_page->visible($redfish_existing)) {
+			raise_message('redfish_denied', __('This credential is used by a BMC on a Cacti device you do not have access to, so it cannot be changed here.', 'redfish'), MESSAGE_LEVEL_ERROR);
+			header('Location: redfish_credentials.php');
+			exit;
 		}
 
 		if ($redfish_name === '' || mb_strlen($redfish_name) > 100 || preg_match('/[\x00-\x1f\x7f]/', $redfish_name) === 1) {
@@ -116,10 +110,17 @@ switch ((string) get_nfilter_request_var('action')) {
 		header('Location: redfish_credentials.php');
 		exit;
 	case 'edit':
-		$redfish_id = (int) get_filter_request_var('id');
+		$redfish_id       = (int) get_filter_request_var('id');
+		$redfish_existing = $redfish_id > 0 ? $redfish_credentials->find($redfish_id) : null;
+
+		if ($redfish_existing !== null && !$redfish_page->visible($redfish_existing)) {
+			raise_message('redfish_denied', __('This credential is used by a BMC on a Cacti device you do not have access to, so it cannot be changed here.', 'redfish'), MESSAGE_LEVEL_ERROR);
+			header('Location: redfish_credentials.php');
+			exit;
+		}
 
 		top_header();
-		$redfish_page->renderEdit($redfish_id > 0 ? $redfish_credentials->find($redfish_id) : null);
+		$redfish_page->renderEdit($redfish_existing);
 		bottom_footer();
 		exit;
 	default:

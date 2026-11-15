@@ -101,8 +101,12 @@ final class BmcsPage {
 
 		$credentials = [0 => __('Choose a credential', 'redfish')];
 
+		// The BMC's current credential stays listed so a save that changes
+		// nothing else keeps it; others only when the user may bind them.
 		foreach ($this->credentials->all() as $credential) {
-			$credentials[$credential->id] = $credential->name;
+			if ($credential->id === $bmc?->credentialId || $this->scope->allowsCredential($this->bmcs, $credential->id)) {
+				$credentials[$credential->id] = $credential->name;
+			}
 		}
 
 		$hosts   = [0 => __('None', 'redfish')] + array_filter($this->bmcs->hostChoices(), fn (int $id): bool => $this->scope->allowsNew($id), ARRAY_FILTER_USE_KEY);
@@ -154,21 +158,30 @@ final class BmcsPage {
 	 */
 	public function databaseErrors(Bmc $bmc): array {
 		$errors = [];
-		$taken  = $this->bmcs->addressTakenBy($bmc->address, $bmc->port, $bmc->id);
+		$holder = $this->bmcs->addressHolder($bmc->address, $bmc->port, $bmc->id);
 
-		if ($taken !== null) {
-			$errors['address'] = __('Address: %s port %d is already registered as %s.', $bmc->address, $bmc->port, $taken, 'redfish');
+		// A BMC on a hidden device is not named, nor its address confirmed
+		// beyond what the user typed.
+		if ($holder !== null) {
+			$errors['address'] = $this->scope->allowsBmc($holder)
+				? __('Address: %s port %d is already registered as %s.', $bmc->address, $bmc->port, $holder->name, 'redfish')
+				: __('Address: this address and port are already registered.', 'redfish');
 		}
 
 		if ($this->bmcs->nameTaken($bmc->name, $bmc->id)) {
 			$errors['name'] = __('Name: another BMC already uses this name.', 'redfish');
 		}
 
-		if (!$this->bmcs->credentialExists($bmc->credentialId)) {
+		$before = $bmc->id > 0 ? $this->bmcs->find($bmc->id) : null;
+
+		// The poller sends the credential to the address, so a new BMC, or a
+		// change to where or how it connects or to its credential, needs a
+		// credential the user may bind: every BMC already using it must be
+		// on a device the user may see. A hidden credential reads as
+		// missing.
+		if (!$this->bmcs->credentialExists($bmc->credentialId) || ($this->rebinds($before, $bmc) && !$this->scope->allowsCredential($this->bmcs, $bmc->credentialId))) {
 			$errors['credential_id'] = __('Credential: choose a stored credential.', 'redfish');
 		}
-
-		$before = $bmc->id > 0 ? $this->bmcs->find($bmc->id) : null;
 
 		// A mapping to a device deleted since may stay; a new mapping must
 		// name an existing device the user may see. Both cases read the same,
@@ -178,6 +191,16 @@ final class BmcsPage {
 		}
 
 		return $errors;
+	}
+
+	private function rebinds(?Bmc $before, Bmc $after): bool {
+		return $before === null
+			|| $before->address !== $after->address
+			|| $before->port !== $after->port
+			|| $before->tlsMode !== $after->tlsMode
+			|| $before->caFile !== $after->caFile
+			|| $before->pin !== $after->pin
+			|| $before->credentialId !== $after->credentialId;
 	}
 
 	/**

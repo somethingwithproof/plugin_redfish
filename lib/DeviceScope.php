@@ -28,6 +28,11 @@ namespace Somethingwithproof\Redfish;
  * A BMC mapped to no device is visible to every Redfish user. A mapping to a
  * device that no longer exists is allowed, so the record can still be fixed
  * or deleted; host ids are not reused.
+ *
+ * A stored credential is visible when every BMC that uses it is: binding a
+ * credential to a BMC sends it to that BMC's address, so only a user who
+ * may already act on every BMC holding it may choose it, edit it, or see
+ * its user name.
  */
 final class DeviceScope {
 	/**
@@ -59,6 +64,23 @@ final class DeviceScope {
 	 */
 	public function allowsNew(int $hostId): bool {
 		return $hostId <= 0 || (($this->exists)($hostId) && ($this->allowed)($hostId));
+	}
+
+	/**
+	 * @param list<int> $hostIds
+	 */
+	public function allowsAll(array $hostIds): bool {
+		foreach ($hostIds as $hostId) {
+			if (!$this->allows($hostId)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public function allowsCredential(BmcRepository $bmcs, int $credentialId): bool {
+		return $this->allowsAll($bmcs->credentialHosts($credentialId));
 	}
 
 	public function allowsBmc(Bmc $bmc): bool {

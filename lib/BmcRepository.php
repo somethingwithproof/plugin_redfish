@@ -56,20 +56,29 @@ final class BmcRepository {
 	}
 
 	/**
-	 * The name of another BMC registered at the same address and port, or
-	 * null (REQ-BMC-005). Addresses are stored normalized, so equal text is
-	 * an equal address.
+	 * Another BMC registered at the same address and port, or null
+	 * (REQ-BMC-005). Addresses are stored normalized, so equal text is an
+	 * equal address.
 	 */
-	public function addressTakenBy(string $address, int $port, int $exceptId): ?string {
-		$row = db_fetch_row_prepared('SELECT name FROM plugin_redfish_bmc WHERE address = ? AND port = ? AND id != ? LIMIT 1', [$address, $port, $exceptId], true, $this->connection);
+	public function addressHolder(string $address, int $port, int $exceptId): ?Bmc {
+		$id = (int) db_fetch_cell_prepared('SELECT id FROM plugin_redfish_bmc WHERE address = ? AND port = ? AND id != ? LIMIT 1', [$address, $port, $exceptId], '', true, $this->connection);
 
-		if (!is_array($row) || $row === []) {
+		return $id > 0 ? $this->find($id) : null;
+	}
+
+	/**
+	 * The name to show for another BMC at this address: its name when the
+	 * user may see it, otherwise a generic label, so a hidden BMC is never
+	 * named.
+	 */
+	public function addressTakenBy(string $address, int $port, int $exceptId, DeviceScope $scope): ?string {
+		$holder = $this->addressHolder($address, $port, $exceptId);
+
+		if ($holder === null) {
 			return null;
 		}
 
-		$name = Row::string($row, 'name');
-
-		return $name === '' ? '?' : $name;
+		return $scope->allowsBmc($holder) && $holder->name !== '' ? $holder->name : __('another BMC', 'redfish');
 	}
 
 	public function credentialExists(int $credentialId): bool {
@@ -243,11 +252,16 @@ final class BmcRepository {
 	 *
 	 * @return array<string, int>
 	 */
-	public function credentialIds(): array {
+	public function credentialIds(DeviceScope $scope): array {
 		$ids = [];
 
 		foreach (Row::rows(db_fetch_assoc_prepared('SELECT id, name FROM plugin_redfish_credential', [], true, $this->connection)) as $row) {
-			$ids[Row::string($row, 'name')] = Row::int($row, 'id');
+			$id = Row::int($row, 'id');
+
+			// A credential the user may not bind reads as unknown.
+			if ($scope->allowsCredential($this, $id)) {
+				$ids[Row::string($row, 'name')] = $id;
+			}
 		}
 
 		return $ids;

@@ -119,9 +119,9 @@ switch ((string) get_nfilter_request_var('action')) {
 
 		$redfish_import = \Somethingwithproof\Redfish\BmcImport::parse(
 			$redfish_csv,
-			$redfish_bmcs->credentialIds(),
-			function (string $address, int $port) use ($redfish_bmcs): ?string {
-				return $redfish_bmcs->addressTakenBy($address, $port, 0);
+			$redfish_bmcs->credentialIds($redfish_scope),
+			function (string $address, int $port) use ($redfish_bmcs, $redfish_scope): ?string {
+				return $redfish_bmcs->addressTakenBy($address, $port, 0, $redfish_scope);
 			},
 			function (string $name) use ($redfish_bmcs): bool {
 				return $redfish_bmcs->nameTaken($name, 0);

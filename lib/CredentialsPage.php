@@ -23,6 +23,9 @@ namespace Somethingwithproof\Redfish;
  * Redfish Credentials (Redfish Admin). The password is write-only: the field
  * is always empty, and leaving it empty keeps the stored value
  * (REQ-CRED-003). The page shows only whether a password is stored.
+ *
+ * Only credentials the user may bind are listed or opened: a credential used
+ * by a BMC on a device the user cannot see is left out (DeviceScope).
  */
 final class CredentialsPage {
 	public const FILE = 'redfish_credentials.php';
@@ -30,7 +33,13 @@ final class CredentialsPage {
 	public function __construct(
 		private readonly CredentialRepository $credentials,
 		private readonly CredentialStore $store,
+		private readonly BmcRepository $bmcs,
+		private readonly DeviceScope $scope,
 	) {
+	}
+
+	public function visible(Credential $credential): bool {
+		return $this->scope->allowsCredential($this->bmcs, $credential->id);
 	}
 
 	public function renderList(): void {
@@ -38,7 +47,7 @@ final class CredentialsPage {
 
 		print Html::header([__('Name', 'redfish'), __('User Name', 'redfish'), __('Password', 'redfish'), __('Used By', 'redfish'), __('Actions', 'redfish')]);
 
-		$credentials = $this->credentials->all();
+		$credentials = array_values(array_filter($this->credentials->all(), fn (Credential $c): bool => $this->visible($c)));
 
 		if ($credentials === []) {
 			print '<tr><td colspan="5"><em>' . html_escape(__('No credentials yet. Create one with a read-only BMC account.', 'redfish')) . '</em></td></tr>';
