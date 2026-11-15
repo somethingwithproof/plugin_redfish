@@ -235,6 +235,14 @@ jobs:
           exit 1
         fi
 
+    # Device creation from Cacti's CLI bootstrap and the plugin's setup.php
+    # alone: the provisioner loads the Cacti libraries it uses itself.
+    - name: Provision a device from a minimal bootstrap
+      working-directory: cacti
+      env:
+        REDFISH_TEST_DATABASE: disposable
+      run: php plugins/redfish/tests/bin/provision-bootstrap.php
+
     # Templates, device creation, data queries, and graphs end to end, around
     # real poller runs; the 11 second waits let the RRD with a 10 second step
     # record a gap. Three unknown updates after the change span a whole
@@ -291,8 +299,9 @@ jobs:
           # The device flow, on purpose, makes the plugin remove a device its
           # creator cannot see (and checks that warning itself), and gives
           # one data source a 10 second step, which Cacti warns about, also
-          # trying to mail the warning to an admin with no address.
-          if grep -E "FATAL:|ERROR:|WARNING:" cacti/log/cacti.log | grep -vE "REDFISH WARNING: Device [0-9]+ for BMC [0-9]+ was removed again: user [0-9]+ may not see it|POLLER: Poller\[1\] PID\[[0-9]+\] WARNING: The Poller Interval is 300 and you have a Data Source with a sampling interval of 10\.  Change|SYSTEM WARNING: Primary Admin account notifications disabled!  Unable to send administrative Email\."; then
+          # trying to mail the warning to an admin with no address. Each
+          # exclusion matches that one whole line and nothing else.
+          if grep -E "FATAL:|ERROR:|WARNING:" cacti/log/cacti.log | grep -vE -e '^[^ ]+ [0-9:]+ - REDFISH WARNING: Device [0-9]+ for BMC [0-9]+ was removed again: user [0-9]+ may not see it$' -e '^[^ ]+ [0-9:]+ - POLLER: Poller\[1\] PID\[[0-9]+\] WARNING: The Poller Interval is 300 and you have a Data Source with a sampling interval of 10\.  Change your Poller Interval to 10 seconds, and repopulate your poller cache\.$' -e '^[^ ]+ [0-9:]+ - SYSTEM WARNING: Primary Admin account notifications disabled!  Unable to send administrative Email\.$'; then
             exit 1
           fi
         fi
