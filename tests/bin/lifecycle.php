@@ -260,7 +260,7 @@ print json_encode(array(
 	'logged'  => $logged ?? '',
 	'v2'      => array(
 		'host_owner' => (int) db_fetch_cell("SELECT COUNT(*) FROM information_schema.STATISTICS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'plugin_redfish_bmc' AND INDEX_NAME = 'host_owner' AND NON_UNIQUE = 0") > 0,
-		'hosts'    => array_map('intval', array_column(db_fetch_assoc('SELECT id, host_id FROM plugin_redfish_bmc ORDER BY id'), 'host_id', 'id')),
+		'hosts'    => isset($tables['plugin_redfish_bmc']) ? array_map('intval', array_column(db_fetch_assoc('SELECT id, host_id FROM plugin_redfish_bmc ORDER BY id'), 'host_id', 'id')) : null,
 		'host_key' => (int) db_fetch_cell("SELECT COUNT(*) FROM information_schema.STATISTICS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'plugin_redfish_bmc' AND INDEX_NAME = 'host_id'") > 0,
 		'expected' => (int) db_fetch_cell("SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'plugin_redfish_member' AND COLUMN_NAME = 'expected'") > 0
 			? array_column(db_fetch_assoc("SELECT member_key, expected FROM plugin_redfish_member ORDER BY member_key"), 'expected', 'member_key') : null,
