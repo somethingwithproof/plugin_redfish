@@ -1,0 +1,149 @@
+{
+ "_fixture": {
+  "family": "hpe",
+  "shape_after": "legacy Power and Thermal resources per DSP8010 Thermal.v1_7 and Power.v1_7 (hand-written)",
+  "firmware": "n/a (shape only)",
+  "handwritten": true
+ },
+ "/redfish/v1/": {
+  "@odata.type": "#ServiceRoot.v1_5_0.ServiceRoot",
+  "Id": "RootService",
+  "RedfishVersion": "1.6.0",
+  "Vendor": "HPE",
+  "Product": "ProLiant",
+  "UUID": "00000000-0000-0000-0000-000000000002",
+  "Chassis": {
+   "@odata.id": "/redfish/v1/Chassis"
+  },
+  "Links": {
+   "Sessions": {
+    "@odata.id": "/redfish/v1/SessionService/Sessions"
+   }
+  }
+ },
+ "/redfish/v1/Chassis": {
+  "Members": [
+   {
+    "@odata.id": "/redfish/v1/Chassis/1"
+   },
+   {
+    "@odata.id": "https://elsewhere.test/redfish/v1/Chassis/2"
+   },
+   {
+    "@odata.id": "//elsewhere.test/redfish/v1/Chassis/3"
+   }
+  ]
+ },
+ "/redfish/v1/Chassis/1": {
+  "@odata.type": "#Chassis.v1_10_0.Chassis",
+  "Id": "1",
+  "Name": "Computer System Chassis",
+  "Links": {
+   "ComputerSystems": [
+    {
+     "@odata.id": "/redfish/v1/Systems/1"
+    }
+   ]
+  },
+  "Thermal": {
+   "@odata.id": "/redfish/v1/Chassis/1/Thermal"
+  },
+  "Power": {
+   "@odata.id": "/redfish/v1/Chassis/1/Power"
+  }
+ },
+ "/redfish/v1/Chassis/1/Thermal": {
+  "@odata.type": "#Thermal.v1_7_0.Thermal",
+  "Id": "Thermal",
+  "Temperatures": [
+   {
+    "@odata.id": "/redfish/v1/Chassis/1/Thermal#/Temperatures/0",
+    "MemberId": "0",
+    "Name": "01-Inlet Ambient",
+    "ReadingCelsius": 21,
+    "PhysicalContext": "Intake",
+    "Status": {
+     "State": "Enabled",
+     "Health": "OK"
+    }
+   },
+   {
+    "@odata.id": "/redfish/v1/Chassis/1/Thermal#/Temperatures/1",
+    "MemberId": "1",
+    "Name": "02-CPU 1",
+    "ReadingCelsius": 40,
+    "PhysicalContext": "CPU",
+    "Status": {
+     "State": "Enabled",
+     "Health": "OK"
+    }
+   },
+   {
+    "MemberId": "2",
+    "Name": "",
+    "ReadingCelsius": 38
+   }
+  ],
+  "Fans": [
+   {
+    "MemberId": "0",
+    "Name": "Fan 1",
+    "Reading": 35,
+    "ReadingUnits": "Percent",
+    "Status": {
+     "State": "Enabled",
+     "Health": "OK"
+    }
+   },
+   {
+    "MemberId": "1",
+    "Name": "Fan 2",
+    "Reading": 0,
+    "ReadingUnits": "Percent",
+    "Status": {
+     "State": "Absent"
+    }
+   },
+   {
+    "MemberId": "2",
+    "Name": "Fan 3",
+    "Reading": 4000,
+    "Status": {
+     "State": "Enabled",
+     "Health": "OK"
+    }
+   }
+  ]
+ },
+ "/redfish/v1/Chassis/1/Power": {
+  "@odata.type": "#Power.v1_7_0.Power",
+  "Id": "Power",
+  "PowerControl": [
+   {
+    "MemberId": "0",
+    "Name": "Server Power Control",
+    "PowerConsumedWatts": 250
+   }
+  ],
+  "PowerSupplies": [
+   {
+    "MemberId": "0",
+    "Name": "Power Supply 1",
+    "PowerInputWatts": 130,
+    "LastPowerOutputWatts": 120,
+    "Status": {
+     "State": "Enabled",
+     "Health": "OK"
+    }
+   },
+   {
+    "MemberId": "1",
+    "Name": "Power Supply 2",
+    "Status": {
+     "State": "StandbyOffline",
+     "Health": "OK"
+    }
+   }
+  ]
+ }
+}

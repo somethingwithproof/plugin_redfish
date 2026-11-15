@@ -1,2 +1,14 @@
 * text=auto eol=lf
 *.rrd binary
+
+# Keep test code and development tooling out of release archives, so an
+# install from an archive puts no test script under the web root. docs/
+# stays: it holds no code and the README links into it. REUSE.toml and
+# LICENSES/ stay so the archive keeps its licensing information.
+/tests/                   export-ignore
+/.github/                 export-ignore
+/.editorconfig            export-ignore
+/.gitattributes           export-ignore
+/phpstan.neon             export-ignore
+/phpunit.xml              export-ignore
+/phpunit-integration.xml  export-ignore

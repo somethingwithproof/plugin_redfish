@@ -1,6 +1,6 @@
 # Cacti 1.2 Redfish and IPMI Power and Thermal Plugin Plan
 
-Status: in development, plan revision 2 (2026-11-15). Revision 2 adds the documentation and source research for milestone 1; see [Milestone 1 research](#milestone-1-research). Nothing described here as a plugin capability is published yet. Statements about the Redfish standard, BMC firmware, ipmitool, Cacti core, and Cacti plugins describe upstream behavior as observed on the date and revision named in each source. Anything that was not verified is marked as an assumption and has a research issue; items that need real BMC hardware or a running Cacti are marked *live*. Owner is not assigned; size estimates are in [research/estimates.md](research/estimates.md), and calendar time is not estimated.
+Status: in development, plan revision 2 (2026-11-15). Revision 2 adds the documentation and source research for milestone 1; see [Milestone 1 research](#milestone-1-research). Milestone 2 (foundation) is merged on `main`: the lifecycle and PHP guard, realms and settings, the BMC registry, the encrypted credential store, the read-only Redfish client with its TLS trust modes, discovery and the reading model, the collector, and the health, BMC, and credential pages, tested only against a fake BMC. Decisions are recorded in ADRs 0009 to 0014, and divergences from this plan are stated in place. Milestone 3 and later are not done: no Cacti device, data source, graph, Thold or Maint integration exists, and there is no release. Statements about the Redfish standard, BMC firmware, ipmitool, Cacti core, and Cacti plugins describe upstream behavior as observed on the date and revision named in each source. Anything that was not verified is marked as an assumption and has a research issue; items that need real BMC hardware or a running Cacti are marked *live*. Owner is not assigned; size estimates are in [research/estimates.md](research/estimates.md), and calendar time is not estimated.
 
 `plugin_redfish` is a Cacti 1.2 plugin that reads power draw, temperatures, fan state, and power supply health from server baseboard management controllers (BMCs) over Redfish, with IPMI as an optional fallback, and presents them as ordinary Cacti devices, data sources, and graphs. Thold and Maint then work on them unchanged, and a later phase adds rack-level totals.
 
@@ -362,7 +362,9 @@ Plugin code is object-oriented where Cacti's plugin contract allows it. No maint
 - Page scripts, which include `include/auth.php`, read request variables with `get_filter_request_var()`, and call a page class.
 - The script server input function and the collector CLI entry point.
 
-**Layout.** Classes live in `lib/*.php` under `Cacti\Redfish`, one class per file, loaded by a small `spl_autoload_register()` loader registered only after the PHP version check. No Composer runtime dependency is added. Files stay at depth 2 or less because the gettext build scans only `find . -maxdepth 2`. Settings use `config_settings`, logging uses `cacti_log()` with a `REDFISH` tag, strings use the `redfish` text domain, and realms are "Redfish View" and "Redfish Admin". The slug and namespace are provisional until decision #12.
+**Layout.** Classes live in `lib/*.php` under `Somethingwithproof\Redfish` (milestone 2 diverged from the `Cacti\Redfish` named here and in issue 33; see [ADR 0014](decisions/0014-plugin-name-namespace-and-provisional-harness.md)), one class per file, loaded by a small `spl_autoload_register()` loader registered only after the PHP version check. No Composer runtime dependency is added. Files stay at depth 2 or less because the gettext build scans only `find . -maxdepth 2`. Settings use `config_settings`, logging uses `cacti_log()` with a `REDFISH` tag, strings use the `redfish` text domain, and realms are "Redfish View" and "Redfish Admin". The slug and namespace are provisional until decision #12.
+
+**As built in milestone 2.** The table above was a forecast. The shipped classes differ: normalization is one pure `Normalizer` with a rule per source instead of separate new and legacy normalizers; discovery is `Discoverer` producing a stored `DiscoveryPlan`; collection is `Collector` with `LeaseRepository`, `HealthRepository`, `DiscoveryRepository`, and `ReadingRepository`; credentials are `CredentialRepository`, `CredentialStore`, and `Vault`; HTTP is `SocketTransport` behind `GuardedTransport` and `OperationGuard`. `IpmiClient`, `Rack`, and `RackRepository` arrive with their phases.
 
 | Kind | Examples | Notes |
 |---|---|---|
@@ -417,6 +419,8 @@ The setup screen shows request rate and Cacti object count before a bulk import.
 | BMC account privilege | Documentation requires a read-only Redfish role and an IPMI `USER` account; the plugin never needs a privilege that can change state |
 | Main server to remote collector (phase 4) | Cacti's `remote_agent` authorization and the configured https scheme; actions are read-only and take identifiers only |
 
+BMC records follow Cacti device permissions. A BMC mapped to a device is listed, exported, shown on the health page, edited, deleted, retried, or moved only by a user `is_device_allowed()` lets see that device, and a credential can be changed, listed, or opened only by a user who may see every BMC that uses it. The same rule governs binding: a new BMC, a CSV import row, or a change to an existing BMC's address, port, TLS settings, or credential may use only such a credential, because the poller sends the credential to that address. The plugin requires device scope rather than re-entering the password on such changes: the scope check covers every path, the import included, without asking for a secret the user may not know, and matches the rule already applied to credential edits. Hidden credentials are left out of the lists rather than shown without their user name and BMC count, so not even their names leak; a BMC's current credential still shows on that BMC's own form. A duplicate address held by a BMC on a hidden device is reported without naming it. Unmapped BMCs and unused credentials are visible to every Redfish Admin. Under Cacti's permissive graph authorization a device is visible when its graphs or templates are, so the plugin inherits that rule.
+
 TLS verification is on by default. The per-BMC options are a CA bundle, a pinned public key, or an explicit, logged, per-BMC "do not verify" setting that appears as a health warning; there is no global switch ([#10](https://github.com/somethingwithproof/plugin_redfish/issues/10)). Credentials never appear in examples in this repository.
 
 Phase 2 needs a security review covering command construction, environment handling, and output parsing. Phase 4 needs a review of the `remote_agent` actions and collector credential handling.
@@ -449,17 +453,29 @@ Phase 2 needs a security review covering command construction, environment handl
 
 | Decision | Options | Needed before | Decided by |
 |---|---|---|---|
-| Redfish resource model | New subsystem resources first with legacy fallback (proposed); legacy only; new only | Milestone 2 | Milestone 1 vendor matrix |
-| Credential storage | plugin_credentials (proposed); plugin-owned encrypted store using core helpers; secret references only | Milestone 2 | Cacti maintainers and research #28 |
-| TLS trust for BMC certificates | CA bundle or per-BMC pin with an explicit unverified opt-out (proposed); CA bundle only | Milestone 2 | Plugin maintainer and pilots |
+| Redfish resource model | **Decided:** new subsystem resources first with legacy fallback, chosen per reading ([ADR 0013](decisions/0013-choose-the-resource-source-per-reading.md)) | Milestone 2 | Milestone 1 vendor matrix |
+| Credential storage | **Decided:** plugin-owned AES-256-GCM vault with the key file outside the database, not plugin_credentials, which has no release ([ADR 0009](decisions/0009-plugin-owned-credential-vault.md)) | Milestone 2 | Research #28 |
+| TLS trust for BMC certificates | **Decided:** system store, CA bundle, or per-BMC SPKI SHA-256 pin, with an explicit, logged, per-BMC unverified opt-out shown on the health page ([ADR 0011](decisions/0011-tls-trust-modes.md)) | Milestone 2 | Plugin maintainer; pilots may revise |
 | BMC to Cacti device mapping | Map onto the existing server device, create a BMC device only when none exists (proposed); always a separate BMC device | Milestone 3 | Plugin maintainer and pilots |
-| Repository and name | `Cacti/plugin_redfish`, or another name; slug `redfish` | Before any code is published | Cacti maintainers |
-| Test harness | Whatever maintained plugins use | Milestone 2 | Cacti maintainers |
+| Repository and name | Slug `redfish`, namespace `Somethingwithproof\Redfish` used provisionally ([ADR 0014](decisions/0014-plugin-name-namespace-and-provisional-harness.md)); still open | Before any code is published | Cacti maintainers |
+| Test harness | Pest from Cacti core's locked harness, used provisionally ([ADR 0014](decisions/0014-plugin-name-namespace-and-provisional-harness.md)); still open | Milestone 2 | Cacti maintainers |
 | IPMI client | `ipmitool`; FreeIPMI; a native implementation; ship no IPMI | Milestone 5 | Research and security review |
 | Rack model | Plugin rack table seeded from `location` (proposed); `location` text only; sites; tree branches | Milestone 6 | Plugin maintainer and pilots |
 | Rack totals | Plugin data source with coverage (proposed); aggregate graphs only | Milestone 6 | Research #21 |
 | Remote collector credentials | Replicate encrypted secrets; collector-local secrets; extend plugin_credentials | Milestone 7 | Cacti maintainers |
+| Remote collector connection | Milestone 2 collects only for BMCs on the main poller. A remote collector needs an explicit choice of whether it reads BMC records and writes readings through the main database connection or its local one, and where its key file lives; until then remote pollers are not collected (phase 4) | Milestone 7 | Owner |
 | Power-limit writes | Never (proposed); a separate opt-in plugin or phase | After phase 1 | Cacti maintainers and demand |
+
+Redirects are not an open decision but a divergence: [ADR 0012](decisions/0012-bounded-same-origin-redirects.md) follows at most three same-origin HTTPS redirects on `GET`, as DSP0266 6.3 requires, and supersedes the "MUST NOT follow redirects" clause of REQ-RF-001 in issue 37.
+
+**Milestone 2 deferrals.** Left for later milestones, each with its reason:
+
+- The `Sensors` collection is not walked; readings come from the subsystem excerpts and the sensor each excerpt references (issue 24).
+- Inlet rules 2 and 3 (`PhysicalContext` `Intake` sensors, named vendor sensors) wait for issue 24; only the Dell intake summary is confirmed.
+- `$expand` and `$select` support is recorded at discovery but not used, since the operation guard refuses query strings.
+- Connections are not reused across requests; milestone 3 measures the cost.
+- `ReadingTime` is not stored; freshness uses the collector's observation time.
+- A throttled or unavailable BMC is not retried within a run; it backs off to a later run.
 
 ## Risks
 
