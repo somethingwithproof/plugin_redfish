@@ -10,7 +10,7 @@ Every server has a BMC that reports power and thermal state independently of the
 
 Cacti covers part of this today:
 
-- **Vendor SNMP packages.** The 1.2.x branch ships Dell iDRAC and HPE iLO templates that need an SNMP agent and are vendor specific; whether they report node power draw is a milestone 1 question.
+- **Vendor SNMP packages.** The 1.2.x branch ships Dell iDRAC and HPE iLO templates that need an SNMP agent and are vendor specific; milestone 1 research found that neither reports power draw in watts ([docs/research/overlap.md](docs/research/overlap.md)).
 - **A credential type without a collector.** plugin_credentials defines an "IPMI / Redfish (BMC)" credential but reads no BMC.
 - **No rack-level view.** Cacti core has no rack object; a device has a free-text `location` field.
 
@@ -34,7 +34,7 @@ Out of scope: setting power caps or any other BMC configuration, power control, 
 |---|---|
 | Cacti | 1.2.31 or later, no core patches |
 | PHP | 8.2 or later; `setup.php` stays parseable on 8.0 so an unsupported runtime gets a refusal instead of a broken Cacti UI |
-| BMCs | Dell iDRAC, HPE iLO, Lenovo XCC, and OpenBMC, by firmware range set in milestone 1 |
+| BMCs | Dell iDRAC, HPE iLO, Lenovo XCC, and OpenBMC, by firmware range; see [the vendor matrix](docs/research/vendor-matrix.md) |
 | Redfish | New subsystem and sensor resources first, deprecated `Power` and `Thermal` as fallback |
 | Thold, Maint | No changes required |
 
