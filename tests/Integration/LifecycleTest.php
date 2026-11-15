@@ -191,7 +191,7 @@ it('stores the password only as ciphertext and audits every change', function ()
 		->and($r['audit'])->toBe(['credential:create', 'credential:secret', 'credential:update', 'bmc:create', 'bmc:update', 'bmc:delete', 'credential:delete']);
 });
 
-it('collects from the fake BMC, schedules, backs off, sweeps a lost session, and deletes cleanly', function () {
+it('collects from the fake BMC, schedules, backs off, leaves an unnamed lost session alone, and deletes cleanly', function () {
 	lifecycle('install');
 
 	$r = lifecycle('collector_flow')['result'];
@@ -213,8 +213,10 @@ it('collects from the fake BMC, schedules, backs off, sweeps a lost session, and
 		->and($r['readings_kept'])->toBeTrue()
 		->and($r['lost'])->toMatchArray(['session_pending' => 'on', 'sessions_lost' => '1', 'failure_class' => 'session_lost'])
 		->and($r['lost_sessions'])->toBe(1)
-		->and($r['swept'])->toMatchArray(['session_pending' => '', 'sessions_lost' => '0', 'reachability' => 'reachable'])
-		->and($r['swept_sessions'])->toBe(0)
+		->and($r['swept'])->toMatchArray(['session_pending' => '', 'session_uri' => '', 'sessions_lost' => '0', 'reachability' => 'reachable'])
+		// Only sessions the plugin recorded are deleted: the lost one stays
+		// for the BMC's timeout.
+		->and($r['swept_sessions'])->toBe(1)
 		->and($r['nowhere'])->toMatchArray(['reachability' => 'unreachable', 'failure_class' => 'dns_failed'])
 		->and($r['page_lists'])->toBeTrue()
 		->and($r['leaks'])->toBe([])
@@ -261,20 +263,21 @@ it('exits at once when a collector already runs on the poller', function () {
 		->and($r['config_failure'])->toBe('credential_unavailable');
 });
 
-it('leaves a consistent cache when a run is killed mid-BMC, and the next run sweeps its session', function () {
+it('leaves a consistent cache when a run is killed mid-BMC, and the next run deletes the session it recorded', function () {
 	lifecycle('install');
 
 	$r = lifecycle('collector_kill')['result'];
 
 	expect($r['victim_rc'])->not->toBe(0)
-		// The dead run still holds its lease, marked its session, and wrote no reading.
+		// The dead run still holds its lease, recorded its session, and wrote no reading.
 		->and($r['lease'])->toBe('victim')
-		->and($r['health']['session_pending'] ?? null)->toBe('on')
+		->and($r['health']['session_pending'] ?? null)->toBe('')
+		->and($r['health']['session_uri'] ?? '')->toStartWith('/redfish/v1/SessionService/Sessions/')
 		->and($r['readings'])->toBe(0)
 		->and($r['sessions'])->toBe(1)
 		->and($r['while_leased'])->toMatchArray(['collected' => 0, 'skipped' => 1])
 		->and($r['after_expiry'])->toMatchArray(['collected' => 1, 'skipped' => 0])
-		->and($r['final'])->toMatchArray(['reachability' => 'reachable', 'session_pending' => ''])
+		->and($r['final'])->toMatchArray(['reachability' => 'reachable', 'session_pending' => '', 'session_uri' => ''])
 		->and($r['final_count'])->toBeTrue()
 		->and($r['final_open'])->toBe(0);
 });

@@ -145,18 +145,21 @@ it('ignores links to another host and never resolves it', function () {
 	expect($client->logout())->toBeTrue();
 });
 
-it('deletes a session a crashed run left open, and its own at logout', function () {
-	$bmc    = new FakeBmc('dell-subsystem', 'good', ['sessions' => ['41' => ['token' => 'left-by-crash', 'user' => FakeBmc::USER]], 'next' => 42]);
-	$client = redfish_fake_client($bmc);
-	redfish_login($client);
+it('deletes the session a crashed run recorded, leaving other sessions of the user alone', function () {
+	$bmc     = new FakeBmc('dell-subsystem', 'good', ['sessions' => ['40' => ['token' => 'operator-console', 'user' => FakeBmc::USER]], 'next' => 41]);
+	$crashed = redfish_fake_client($bmc);
+	redfish_login($crashed);
+	$recorded = $crashed->session()?->path;
 
-	$stale = $client->staleSessions(FakeBmc::USER);
+	// The crashed run never logs out; the next run deletes what it recorded.
+	$next = redfish_fake_client($bmc);
+	redfish_login($next);
+	$next->guard()->grantDelete((string) $recorded);
 
-	expect($stale)->toBe(['/redfish/v1/SessionService/Sessions/41'])
-		->and($client->deleteSession($stale[0]))->toBeTrue()
-		->and(array_keys($bmc->state()['sessions']))->toBe([42])
-		->and($client->logout())->toBeTrue()
-		->and($bmc->state()['sessions'])->toBe([]);
+	expect($recorded)->toBe('/redfish/v1/SessionService/Sessions/41')
+		->and($next->deleteSession((string) $recorded))->toBeTrue()
+		->and($next->logout())->toBeTrue()
+		->and(array_keys($bmc->state()['sessions']))->toBe([40]);
 });
 
 it('reports a session POST that lost its response as possibly sent', function () {

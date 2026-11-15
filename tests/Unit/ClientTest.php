@@ -224,20 +224,18 @@ it('lets one request through at a time', function () {
 	expect($inner->nested)->toBe(FailureClass::OperationRefused);
 });
 
-it('finds stale sessions of the same user and grants only those for deletion', function () {
+it('deletes only a recorded session of its own, never others of the same user', function () {
 	$fake = new FixtureTransport('dell-subsystem');
-	$fake->sessions = [REDFISH_SESSIONS . '/5' => 'old', REDFISH_SESSIONS . '/6' => 'other'];
-	$fake->resources[REDFISH_SESSIONS . '/5'] = ['Id' => '5', 'UserName' => 'monitor'];
-	$fake->resources[REDFISH_SESSIONS . '/6'] = ['Id' => '6', 'UserName' => 'admin'];
+	$fake->sessions = [REDFISH_SESSIONS . '/5' => 'recorded', REDFISH_SESSIONS . '/6' => 'someone else'];
 	$client = redfish_client($fake);
 	$client->guard()->allowSessions(REDFISH_SESSIONS);
 	$client->login('monitor', new Secret('x'));
+	$client->guard()->grantDelete(REDFISH_SESSIONS . '/5');
 
-	$stale = $client->staleSessions('monitor');
-
-	expect($stale)->toBe([REDFISH_SESSIONS . '/5'])
-		->and($client->deleteSession(REDFISH_SESSIONS . '/5'))->toBeTrue()
-		->and(redfish_class(fn () => (new GuardedTransport($fake, $client->guard(), 5))->send(new HttpRequest('DELETE', REDFISH_SESSIONS . '/6'))))->toBe(FailureClass::OperationRefused);
+	expect($client->deleteSession(REDFISH_SESSIONS . '/5'))->toBeTrue()
+		->and(redfish_class(fn () => (new GuardedTransport($fake, $client->guard(), 5))->send(new HttpRequest('DELETE', REDFISH_SESSIONS . '/6'))))->toBe(FailureClass::OperationRefused)
+		->and(array_keys($fake->sessions))->toContain(REDFISH_SESSIONS . '/6')
+		->and(implode(' ', $fake->log()))->not->toContain('GET ' . REDFISH_SESSIONS);
 });
 
 it('starts no request at or after the deadline, but may still close its session', function () {

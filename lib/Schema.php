@@ -323,6 +323,11 @@ final class Schema {
 					// a session a crash or a lost response left open is swept
 					// on the next run.
 					$text('session_pending', 3),
+					// The path of the last session this plugin created and has
+					// not yet deleted. Only this session is ever swept; a
+					// session whose login response was lost cannot be named
+					// and is left to the BMC's session timeout.
+					$text('session_uri', 255),
 					$count('sessions_lost'),
 					$count('links_refused'),
 				],

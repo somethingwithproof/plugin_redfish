@@ -26,7 +26,7 @@ if (PHP_SAPI !== 'cli' && PHP_SAPI !== 'phpdbg') {
  * Collector scenarios against the fake BMC (issues #40 and #42), included by
  * tests/bin/lifecycle.php, which sets $action and reads $result:
  *
- *   collector_flow    collect, schedule, back off, sweep a lost session,
+ *   collector_flow    collect, schedule, back off, leave a lost session,
  *                     refuse an unresolvable name, scan for the password,
  *                     and delete a BMC without touching its Cacti device
  *   collector_victim  a run killed mid-BMC (started by collector_kill)
@@ -144,7 +144,7 @@ function flow_bmc(Clock $clock, string $name, string $address, int $port, int $c
 }
 
 function flow_health(int $bmc): array {
-	$row = db_fetch_row_prepared('SELECT reachability, failure_class, auth_mode, failures, backoff_until, session_pending, sessions_lost, generation FROM plugin_redfish_health WHERE bmc_id = ?', array($bmc));
+	$row = db_fetch_row_prepared('SELECT reachability, failure_class, auth_mode, failures, backoff_until, session_pending, session_uri, sessions_lost, generation FROM plugin_redfish_health WHERE bmc_id = ?', array($bmc));
 
 	return is_array($row) ? $row : array();
 }
@@ -240,8 +240,9 @@ switch ($action) {
 		$result['in_backoff'] = flow_collector($clock, 'flow')->run(1, FLOW_BUDGET);
 		$result['readings_kept'] = flow_reading($bmc, 'node', 'power_watts') !== null;
 
-		// A session POST whose response is lost leaves the marker; the
-		// next run deletes the session it may have made, then logs in.
+		// A session POST whose response is lost leaves the marker. The
+		// session cannot be named, so the next run leaves it, and every
+		// other session of the same user, to the BMC's session timeout.
 		$fake->flags(array('lose_login' => true));
 		$clock->advance(7200);
 		flow_collector($clock, 'flow')->run(1, FLOW_BUDGET, true);
@@ -300,7 +301,8 @@ switch ($action) {
 		$clock->advance(60);
 		$result['while_leased'] = flow_collector($clock, 'next')->run(1, FLOW_BUDGET);
 
-		// After the lease expires the next run sweeps the session and collects.
+		// After the lease expires the next run deletes the session the dead
+		// run recorded, and collects.
 		$clock->advance(FLOW_BUDGET + 120);
 		$result['after_expiry'] = flow_collector($clock, 'next')->run(1, FLOW_BUDGET);
 		$result['final']        = flow_health($bmc);

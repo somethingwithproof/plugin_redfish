@@ -42,6 +42,7 @@ final readonly class BmcHealth {
 		public bool $sessionPending = false,
 		public int $sessionsLost = 0,
 		public int $linksRefused = 0,
+		public string $sessionUri = '',
 	) {
 	}
 
@@ -70,6 +71,7 @@ final readonly class BmcHealth {
 			sessionPending: Row::bool($row, 'session_pending'),
 			sessionsLost: Row::int($row, 'sessions_lost', 0, 0),
 			linksRefused: Row::int($row, 'links_refused', 0, 0),
+			sessionUri: Row::string($row, 'session_uri'),
 		);
 	}
 
@@ -96,6 +98,7 @@ final readonly class BmcHealth {
 			'session_pending'    => $this->sessionPending ? 'on' : '',
 			'sessions_lost'      => $this->sessionsLost,
 			'links_refused'      => $this->linksRefused,
+			'session_uri'        => $this->sessionUri,
 		];
 	}
 }

@@ -203,6 +203,7 @@ final class Collector {
 		$markStale  = false;
 		$rejected   = false;
 		$oldPending = $previous->sessionPending;
+		$staleUri   = $previous->sessionUri;
 		$ownPending = false;
 		$lost       = $previous->sessionsLost;
 		$authMode   = '';
@@ -222,8 +223,8 @@ final class Collector {
 				$ownPending = true;
 
 				try {
-					$client->login($credential->username, $password);
-					$lost = 0;
+					$session = $client->login($credential->username, $password);
+					$lost    = 0;
 				} catch (ClientError $e) {
 					$ownPending = !self::definitive($e);
 
@@ -241,6 +242,15 @@ final class Collector {
 
 					$client->useBasic($credential->username, $password);
 				}
+
+				$ownPending = false;
+
+				if (isset($session) && !$this->health->recordSession($bmc->id, $this->holder, $session->path, $this->clock->now())) {
+					// The lease is gone; leave the BMC to its new holder.
+					$client->logout();
+
+					return null;
+				}
 			} elseif ($bmc->basicFallback) {
 				$client->useBasic($credential->username, $password);
 			} else {
@@ -249,16 +259,22 @@ final class Collector {
 
 			$authMode = $client->authMode();
 
-			// A previous run may have left a session open; close those of
-			// this user now that the run can authenticate.
-			if ($oldPending && $sessions !== '') {
-				$all = true;
-
-				foreach ($client->staleSessions($credential->username) as $path) {
-					$all = $client->deleteSession($path) && $all;
+			// A previous run that crashed or failed to log out left its
+			// session path; delete that session, and only that one. A login
+			// whose response was lost left no path, so its session cannot
+			// be told apart from others and is left to the BMC's timeout.
+			if ($staleUri !== '') {
+				if ($client->guard()->isSessionMember($staleUri)) {
+					$client->guard()->grantDelete($staleUri);
+					$staleUri = $client->deleteSession($staleUri) ? '' : $staleUri;
+				} else {
+					$staleUri = '';
 				}
+			}
 
-				$oldPending = !$all;
+			if ($oldPending) {
+				Log::info(sprintf('BMC %d (%s): an earlier login response was lost; its session, if any, closes on the BMC session timeout', $bmc->id, $bmc->name));
+				$oldPending = false;
 			}
 
 			$plan = $stored['plan'];
@@ -291,14 +307,17 @@ final class Collector {
 			$failure = $e->class;
 		} finally {
 			// Every session is deleted, on error paths too (REQ-RF-004).
-			if ($client->authMode() === 'session') {
-				$ownPending = !$client->logout();
+			$own = $client->authMode() === 'session' ? $client->session()?->path : null;
+
+			if ($own !== null && $client->logout()) {
+				$own = null;
 			}
 		}
 
 		$this->finish($bmc, $previous, $started, $t0, $failure, $retryAfter, $newPlan, $obs, $complete && $failure === null, $markStale, $client, [
 			'auth_mode'     => $authMode,
 			'pending'       => $oldPending || $ownPending,
+			'session_uri'   => $own ?? $staleUri,
 			'sessions_lost' => $lost,
 			'rejected'      => $rejected ? $credential->revision : -1,
 			'generation'    => $plan?->generation() ?? $previous->generation,
@@ -365,7 +384,7 @@ final class Collector {
 	}
 
 	/**
-	 * @param array{auth_mode?: string, pending?: bool, sessions_lost?: int, rejected?: int, generation?: string, links?: int} $state
+	 * @param array{auth_mode?: string, pending?: bool, session_uri?: string, sessions_lost?: int, rejected?: int, generation?: string, links?: int} $state
 	 */
 	private function finish(Bmc $bmc, BmcHealth $previous, int $started, float $t0, ?FailureClass $failure, int $retryAfter, ?DiscoveryPlan $plan, ?Observation $obs, bool $complete, bool $markStale, ?RedfishClient $client, array $state): void {
 		$now      = $this->clock->now();
@@ -395,6 +414,7 @@ final class Collector {
 			sessionPending: $state['pending'] ?? $previous->sessionPending,
 			sessionsLost: $state['sessions_lost'] ?? $previous->sessionsLost,
 			linksRefused: $state['links'] ?? $previous->linksRefused,
+			sessionUri: $state['session_uri'] ?? $previous->sessionUri,
 		);
 
 		if (!$this->readings->commit($bmc->id, $this->holder, $now, $health, $plan, $obs, $complete, $markStale)) {

@@ -55,6 +55,17 @@ final class HealthRepository {
 	}
 
 	/**
+	 * Record the session the run just created, while the run holds the
+	 * lease, so a crash before logout leaves its path for the next run to
+	 * delete. The pending marker is cleared: the session is now known.
+	 */
+	public function recordSession(int $bmcId, string $holder, string $path, int $now): bool {
+		db_execute_prepared("UPDATE plugin_redfish_health h INNER JOIN plugin_redfish_lease l ON l.bmc_id = h.bmc_id SET h.session_uri = ?, h.session_pending = '' WHERE h.bmc_id = ? AND l.holder = ? AND l.expires_at >= ?", [$path, $bmcId, $holder, $now], true, $this->connection);
+
+		return (int) db_fetch_cell_prepared('SELECT COUNT(*) FROM plugin_redfish_health WHERE bmc_id = ? AND session_uri = ?', [$bmcId, $path], '', true, $this->connection) === 1;
+	}
+
+	/**
 	 * Clear backoff, a held authentication failure, and the lost-session
 	 * budget: an administrator edited the BMC or asked for a retry.
 	 */

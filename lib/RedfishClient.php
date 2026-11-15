@@ -39,7 +39,6 @@ final class RedfishClient {
 	public const MAX_REDIRECTS   = 3;
 	public const RETRY_AFTER_CAP = 3600;
 	public const MAX_DEPTH       = 32;
-	public const MAX_SESSIONS    = 64;
 
 	private ?Session $session = null;
 
@@ -158,44 +157,10 @@ final class RedfishClient {
 	}
 
 	/**
-	 * Sessions of the same user other than the run's own, under the session
-	 * collection, each granted for deletion. Used after a run whose session
-	 * POST lost its response, so a session the BMC created then is closed
-	 * (docs/research/sessions.md item 3).
-	 *
-	 * @return list<string>
-	 * @throws ClientError
+	 * The session this client created and has not yet deleted.
 	 */
-	public function staleSessions(string $username): array {
-		$own        = $this->session?->path;
-		$collection = $this->get($this->guard()->sessionsPath());
-		$members    = is_array($collection['Members'] ?? null) ? array_slice($collection['Members'], 0, self::MAX_SESSIONS) : [];
-		$stale      = [];
-
-		foreach ($members as $member) {
-			$path = is_array($member) ? Link::path($member['@odata.id'] ?? null, $this->endpoint) : null;
-
-			if ($path === null || $path === $own || !$this->guard()->isSessionMember($path)) {
-				continue;
-			}
-
-			try {
-				$session = $this->get($path);
-			} catch (ClientError $e) {
-				if ($e->class === FailureClass::NotFound) {
-					continue;
-				}
-
-				throw $e;
-			}
-
-			if (($session['UserName'] ?? null) === $username) {
-				$this->guard()->grantDelete($path);
-				$stale[] = $path;
-			}
-		}
-
-		return $stale;
+	public function session(): ?Session {
+		return $this->session;
 	}
 
 	public function deleteSession(string $path): bool {

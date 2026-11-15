@@ -12,7 +12,7 @@ A Cacti 1.2 plugin that brings server power draw, inlet temperature, fan state, 
 - Credentials stored encrypted with AES-256-GCM. The key is a file outside the database, `/etc/cacti/redfish-vault.key` by default, holding 64 hexadecimal characters (`openssl rand -hex 32`) or exactly 32 random bytes, owned by the poller user, not readable by other users, in a directory only the poller user or root can write. A key of 32 printable characters is refused as a passphrase. **Back up the key file with the database**; without it every stored password must be entered again.
 - TLS verification on by default, with a per-BMC CA bundle or SPKI SHA-256 pin. A logged, per-BMC unverified opt-out stays on the health page as a warning.
 - A read-only Redfish client: `GET` plus the session login and logout only, checked against an allowlist before any request is sent.
-- A collector started from `poller_bottom` for BMCs on the main poller, with per-BMC leases, backoff, and session cleanup after a crash.
+- A collector started from `poller_bottom` for BMCs on the main poller, with per-BMC leases and deadlines, backoff, and cleanup after a crash of the one session the plugin recorded.
 - BMC records and credentials follow Cacti device permissions: a Redfish Admin sees, changes, and binds only BMCs on devices they may see, and only credentials that no BMC on a hidden device uses.
 
 ## Why
