@@ -35,6 +35,8 @@ namespace Somethingwithproof\Redfish;
  * headers; the Redactor knows both.
  */
 final class RedfishClient {
+	public const DECODE_FACTOR = 16;
+
 	public const SERVICE_ROOT    = '/redfish/v1/';
 	public const MAX_REDIRECTS   = 3;
 	public const RETRY_AFTER_CAP = 3600;
@@ -225,6 +227,40 @@ final class RedfishClient {
 	}
 
 	/**
+	 * Decoded JSON is assumed to need up to DECODE_FACTOR times the body
+	 * size; it must fit in half of the memory still free under
+	 * memory_limit. No limit (-1) leaves only the transport's body cap.
+	 */
+	public static function fitsInMemory(int $bytes, ?string $limit = null, ?int $used = null): bool {
+		$max = self::bytes($limit ?? (string) ini_get('memory_limit'));
+
+		if ($max <= 0) {
+			return true;
+		}
+
+		$free = $max - ($used ?? memory_get_usage());
+
+		return $bytes * self::DECODE_FACTOR <= intdiv(max(0, $free), 2);
+	}
+
+	private static function bytes(string $value): int {
+		$value = trim($value);
+
+		if (preg_match('/^(-?\d+)\s*([kKmMgG]?)$/', $value, $m) !== 1) {
+			return 0;
+		}
+
+		$n = (int) $m[1];
+
+		return match (strtolower($m[2])) {
+			'k'     => $n * 1024,
+			'm'     => $n * 1048576,
+			'g'     => $n * 1073741824,
+			default => $n,
+		};
+	}
+
+	/**
 	 * @return ?array<string, mixed> a JSON object, or null when the body is
 	 *                               empty and $optional is set
 	 * @throws ClientError
@@ -232,6 +268,13 @@ final class RedfishClient {
 	private function decode(string $body, bool $optional): ?array {
 		if (trim($body) === '' && $optional) {
 			return null;
+		}
+
+		// Decoding can take many times the body's size; refuse a body whose
+		// decoded form could exhaust memory_limit, which would end the run
+		// with a fatal error before logout and lease release.
+		if (!self::fitsInMemory(strlen($body))) {
+			throw new ClientError(FailureClass::TooLarge);
 		}
 
 		try {

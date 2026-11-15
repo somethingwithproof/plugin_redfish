@@ -305,6 +305,12 @@ final class Collector {
 			$rejected   = $rejected || ($e->class === FailureClass::AuthRejected && $client->authMode() === 'basic');
 		} catch (TransportError $e) {
 			$failure = $e->class;
+		} catch (\Throwable $e) {
+			// Never end the run here: the session must still be deleted and
+			// the lease released. The message may quote the BMC, so only the
+			// class is logged.
+			$failure = FailureClass::Malformed;
+			Log::error(sprintf('BMC %d (%s): unexpected %s while collecting', $bmc->id, $bmc->name, $e::class));
 		} finally {
 			// Every session is deleted, on error paths too (REQ-RF-004).
 			$own = $client->authMode() === 'session' ? $client->session()?->path : null;

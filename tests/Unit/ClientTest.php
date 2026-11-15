@@ -259,6 +259,15 @@ it('starts no request at or after the deadline, but may still close its session'
 		->and($fake->log())->toBe(['GET /redfish/v1/', 'DELETE ' . REDFISH_SESSIONS . '/1']);
 });
 
+it('refuses a body whose decoded form could exhaust memory_limit', function () {
+	expect(RedfishClient::fitsInMemory(1048576, '-1', 0))->toBeTrue()
+		->and(RedfishClient::fitsInMemory(1048576, '128M', 0))->toBeTrue()
+		->and(RedfishClient::fitsInMemory(1048576, '30M', 0))->toBeFalse()
+		->and(RedfishClient::fitsInMemory(1048576, '128M', 100 * 1048576))->toBeFalse()
+		->and(RedfishClient::fitsInMemory(1048576, '1G', 0))->toBeTrue()
+		->and(RedfishClient::fitsInMemory(1024, '524288', 0))->toBeTrue();
+});
+
 it('follows only links on the same BMC', function () {
 	$e = new Endpoint('bmc.test', 443, TlsMode::System);
 
