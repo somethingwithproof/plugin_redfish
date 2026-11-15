@@ -1,0 +1,113 @@
+{
+ "_fixture": {
+  "family": "lenovo",
+  "shape_after": "Lenovo XCC2 REST API documentation examples (hand-written)",
+  "firmware": "n/a (shape only)",
+  "handwritten": true
+ },
+ "/redfish/v1/": {
+  "@odata.type": "#ServiceRoot.v1_15_0.ServiceRoot",
+  "Id": "RootService",
+  "RedfishVersion": "1.17.0",
+  "Vendor": "Lenovo",
+  "Product": "XCC2",
+  "UUID": "00000000-0000-0000-0000-000000000003",
+  "Chassis": {
+   "@odata.id": "/redfish/v1/Chassis"
+  },
+  "Links": {
+   "Sessions": {
+    "@odata.id": "/redfish/v1/SessionService/Sessions"
+   }
+  }
+ },
+ "/redfish/v1/Chassis": {
+  "Members": [
+   {
+    "@odata.id": "/redfish/v1/Chassis/1"
+   }
+  ]
+ },
+ "/redfish/v1/Chassis/1": {
+  "@odata.type": "#Chassis.v1_22_0.Chassis",
+  "Id": "1",
+  "Links": {
+   "ComputerSystems": [
+    {
+     "@odata.id": "/redfish/v1/Systems/1"
+    }
+   ]
+  },
+  "EnvironmentMetrics": {
+   "@odata.id": "/redfish/v1/Chassis/1/EnvironmentMetrics"
+  },
+  "ThermalSubsystem": {
+   "@odata.id": "/redfish/v1/Chassis/1/ThermalSubsystem"
+  }
+ },
+ "/redfish/v1/Chassis/1/EnvironmentMetrics": {
+  "@odata.type": "#EnvironmentMetrics.v1_3_0.EnvironmentMetrics",
+  "Id": "EnvironmentMetrics",
+  "PowerWatts": {
+   "Reading": 410
+  },
+  "TemperatureCelsius": {
+   "Reading": 24
+  }
+ },
+ "/redfish/v1/Chassis/1/ThermalSubsystem": {
+  "@odata.type": "#ThermalSubsystem.v1_3_0.ThermalSubsystem",
+  "Id": "ThermalSubsystem",
+  "ThermalMetrics": {
+   "@odata.id": "/redfish/v1/Chassis/1/ThermalSubsystem/ThermalMetrics"
+  },
+  "Fans": {
+   "@odata.id": "/redfish/v1/Chassis/1/ThermalSubsystem/Fans"
+  }
+ },
+ "/redfish/v1/Chassis/1/ThermalSubsystem/ThermalMetrics": {
+  "@odata.type": "#ThermalMetrics.v1_0_0.ThermalMetrics",
+  "Id": "ThermalMetrics",
+  "TemperatureSummaryCelsius": {
+   "Intake": {
+    "DataSourceUri": "/redfish/v1/Chassis/1/Sensors/Ambient_Temp",
+    "Reading": 23
+   }
+  }
+ },
+ "/redfish/v1/Chassis/1/ThermalSubsystem/Fans": {
+  "Members": [
+   {
+    "@odata.id": "/redfish/v1/Chassis/1/ThermalSubsystem/Fans/Fan_1A_Tach"
+   },
+   {
+    "@odata.id": "/redfish/v1/Chassis/1/ThermalSubsystem/Fans/Fan_2A_Tach"
+   }
+  ]
+ },
+ "/redfish/v1/Chassis/1/ThermalSubsystem/Fans/Fan_1A_Tach": {
+  "@odata.type": "#Fan.v1_4_0.Fan",
+  "Id": "Fan_1A_Tach",
+  "Name": "Fan 1A Tach",
+  "Status": {
+   "State": "Enabled",
+   "Health": "OK"
+  },
+  "SpeedPercent": {
+   "Reading": 8611,
+   "SpeedRPM": 8611
+  }
+ },
+ "/redfish/v1/Chassis/1/ThermalSubsystem/Fans/Fan_2A_Tach": {
+  "@odata.type": "#Fan.v1_4_0.Fan",
+  "Id": "Fan_2A_Tach",
+  "Name": "Fan 2A Tach",
+  "Status": {
+   "State": "Enabled",
+   "Health": "OK"
+  },
+  "SpeedPercent": {
+   "Reading": 40
+  }
+ }
+}
