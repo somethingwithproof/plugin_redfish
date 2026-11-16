@@ -32,6 +32,24 @@ php cli/plugin_manage.php --plugin=thold --plugin=maint --install --enable || ex
 
 fail=0
 
+thold_idle() {
+	# A foreground run can lose the lock to the worker started by the
+	# poller. Wait after it too, and require two idle observations so the
+	# next fixture cannot race the background worker's state writes.
+	php -r '
+		include("./include/cli_check.php");
+		$idle = 0;
+		for ($wait = 0; $wait < 60; $wait++) {
+			$busy = db_fetch_cell("SELECT COUNT(*) FROM processes WHERE tasktype = \"thold\"");
+			if ($busy === false) { exit(1); }
+			$idle = (int) $busy === 0 ? $idle + 1 : 0;
+			if ($idle >= 2) { exit(0); }
+			sleep(1);
+		}
+		exit(1);
+	' || { echo "FAIL: the Thold worker did not become idle"; exit 1; }
+}
+
 steps=$(php plugins/redfish/tests/bin/alert-flow.php list) || { echo "FAIL: the alert flow could not list its steps"; exit 1; }
 [ -n "$steps" ] || { echo "FAIL: the alert flow listed no steps"; exit 1; }
 
@@ -48,12 +66,10 @@ for step in $steps; do
 	# poller_bottom starts poller_thold.php in the background. Wait for it,
 	# then run it in the foreground: a run that finds nothing new to check
 	# changes nothing, because Thold clears each threshold's check flag.
-	for _ in $(seq 1 60); do
-		[ "$(php -r 'include("./include/cli_check.php"); print db_fetch_cell("SELECT COUNT(*) FROM processes WHERE tasktype = \"thold\"");')" = 0 ] && break
-		sleep 1
-	done
+	thold_idle
 
 	php plugins/thold/poller_thold.php > /tmp/redfish-alert-thold.txt 2>&1 || { fail=1; cat /tmp/redfish-alert-thold.txt; }
+	thold_idle
 done
 
 echo "alert replay fail=$fail"

@@ -296,6 +296,14 @@ jobs:
         if [ -f cacti/log/cacti.log ]; then
           echo "== install and poller run"
           cat cacti/log/cacti.log
+          # Cacti 1.2.31 leaves incomplete rows after the replay serves U.
+          # Keep these core diagnostics visible; the replay still asserts
+          # the values and alerts. Do not allow them on newer core versions.
+          core_warnings='^$'
+          if [ "$(cat cacti/include/cacti_version)" = '1.2.31' ]; then
+            core_warnings="^[^ ]+ [0-9:]+ - POLLER: Poller\[1\] PID\[[0-9]+\] WARNING: (Poller Output Table not Empty\.  Issues: [0-9]+, DS\[[0-9, ]+\]|There are [0-9]+ Data Sources not returning all data leaving rows in the poller output table\.  Details to follow\.|Data Template 'Redfish - [^']+' is impacted by lack of complete information)\$"
+            grep -E "$core_warnings" cacti/log/cacti.log || true
+          fi
           # The device flow, on purpose, makes the plugin remove a device its
           # creator cannot see (and checks that warning itself), and gives
           # one data source a 10 second step, which Cacti warns about, also
@@ -303,7 +311,7 @@ jobs:
           # replaces the fan query file with a symbolic link and checks that
           # the installer refuses it and logs so. Each exclusion matches that
           # one whole line and nothing else.
-          if grep -E "FATAL:|ERROR:|WARNING:" cacti/log/cacti.log | grep -vE -e '^[^ ]+ [0-9:]+ - REDFISH WARNING: Device [0-9]+ for BMC [0-9]+ was removed again: user [0-9]+ may not see it$' -e '^[^ ]+ [0-9:]+ - REDFISH ERROR: /[^ ]+/resource/script_server/redfish_fans\.xml is a symbolic link; it was left as it is\. Replace it with a copy of plugins/redfish/resource/script_server/redfish_fans\.xml$' -e '^[^ ]+ [0-9:]+ - POLLER: Poller\[1\] PID\[[0-9]+\] WARNING: The Poller Interval is 300 and you have a Data Source with a sampling interval of 10\.  Change your Poller Interval to 10 seconds, and repopulate your poller cache\.$' -e '^[^ ]+ [0-9:]+ - SYSTEM WARNING: Primary Admin account notifications disabled!  Unable to send administrative Email\.$'; then
+          if grep -E "FATAL:|ERROR:|WARNING:" cacti/log/cacti.log | grep -vE "$core_warnings" | grep -vE -e '^[^ ]+ [0-9:]+ - REDFISH WARNING: Device [0-9]+ for BMC [0-9]+ was removed again: user [0-9]+ may not see it$' -e '^[^ ]+ [0-9:]+ - REDFISH ERROR: /[^ ]+/resource/script_server/redfish_fans\.xml is a symbolic link; it was left as it is\. Replace it with a copy of plugins/redfish/resource/script_server/redfish_fans\.xml$' -e '^[^ ]+ [0-9:]+ - POLLER: Poller\[1\] PID\[[0-9]+\] WARNING: The Poller Interval is 300 and you have a Data Source with a sampling interval of 10\.  Change your Poller Interval to 10 seconds, and repopulate your poller cache\.$' -e '^[^ ]+ [0-9:]+ - SYSTEM WARNING: Primary Admin account notifications disabled!  Unable to send administrative Email\.$'; then
             exit 1
           fi
         fi
