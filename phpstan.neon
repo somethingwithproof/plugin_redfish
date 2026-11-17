@@ -23,6 +23,7 @@ parameters:
     paths:
         - lib
         - setup.php
+        - include/operator.php
         - include/unbooted-uninstall.php
     scanDirectories:
         - %env.CACTI_PATH%/lib

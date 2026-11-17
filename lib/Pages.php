@@ -28,6 +28,7 @@ namespace Somethingwithproof\Redfish;
  * credentials are Redfish Admin pages (REQ-UI-005).
  */
 final class Pages {
+	public const OPERATOR = ['redfish_operator.php'];
 	public const VIEW  = ['redfish_health.php'];
 	public const ADMIN = ['redfish_bmcs.php', 'redfish_credentials.php'];
 
@@ -36,6 +37,7 @@ final class Pages {
 	 */
 	public static function realms(): array {
 		return [
+			['name' => __('Redfish Operator', 'redfish'), 'files' => self::OPERATOR],
 			['name' => __('Redfish View', 'redfish'), 'files' => self::VIEW],
 			['name' => __('Redfish Admin', 'redfish'), 'files' => self::ADMIN],
 		];
@@ -45,7 +47,7 @@ final class Pages {
 	 * @return list<string>
 	 */
 	public static function files(): array {
-		return array_merge(self::VIEW, self::ADMIN);
+		return array_merge(self::VIEW, self::ADMIN, self::OPERATOR);
 	}
 
 	/**
@@ -55,6 +57,7 @@ final class Pages {
 	 */
 	public static function menu(): array {
 		return [
+			'redfish_operator.php' => __('Redfish Operations', 'redfish'),
 			'redfish_bmcs.php'        => __('Redfish BMCs', 'redfish'),
 			'redfish_credentials.php' => __('Redfish Credentials', 'redfish'),
 			'redfish_health.php'      => __('Redfish Health', 'redfish'),

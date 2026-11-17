@@ -16,6 +16,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: include/operator.php
+msgid "Check collection freshness and the device graphs. Retry releases a collection hold for the next scheduled run; it does not contact the BMC now."
+msgstr ""
+
 #: lib/BmcImport.php
 msgid "The file is empty or larger than 1 MiB."
 msgstr ""
@@ -136,7 +140,7 @@ msgstr ""
 msgid "Redfish BMCs"
 msgstr ""
 
-#: lib/BmcsPage.php lib/CredentialsPage.php
+#: lib/BmcsPage.php lib/CredentialsPage.php lib/OperatorPage.php
 msgid "Actions"
 msgstr ""
 
@@ -164,7 +168,7 @@ msgstr ""
 msgid "Port"
 msgstr ""
 
-#: lib/BmcsPage.php
+#: lib/BmcsPage.php lib/OperatorPage.php
 msgid "State"
 msgstr ""
 
@@ -516,7 +520,7 @@ msgstr ""
 msgid "The collector has not run yet."
 msgstr ""
 
-#: lib/HealthPage.php
+#: lib/HealthPage.php lib/OperatorPage.php
 msgid "Never"
 msgstr ""
 
@@ -654,6 +658,46 @@ msgstr ""
 #: lib/Html.php
 #, php-format
 msgid "%d days ago"
+msgstr ""
+
+#: lib/OperatorPage.php
+msgid "Review the recorded observations below. Acknowledgments are personal to this session, expire when observations change, and never suppress alerts or change health."
+msgstr ""
+
+#: lib/OperatorPage.php lib/Pages.php
+msgid "Redfish Operations"
+msgstr ""
+
+#: lib/OperatorPage.php
+msgid "Investigation"
+msgstr ""
+
+#: lib/OperatorPage.php
+msgid "Object"
+msgstr ""
+
+#: lib/OperatorPage.php
+msgid "Observed (UTC)"
+msgstr ""
+
+#: lib/OperatorPage.php
+msgid "Unknown or stale"
+msgstr ""
+
+#: lib/OperatorPage.php
+msgid "Acknowledged; health unchanged."
+msgstr ""
+
+#: lib/OperatorPage.php
+msgid "Acknowledge"
+msgstr ""
+
+#: lib/OperatorPage.php
+msgid "No observations are available for devices you may access."
+msgstr ""
+
+#: lib/Pages.php
+msgid "Redfish Operator"
 msgstr ""
 
 #: lib/Pages.php
@@ -886,6 +930,18 @@ msgstr ""
 
 #: redfish_credentials.php
 msgid "The credential was not deleted. A credential in use by a BMC cannot be deleted."
+msgstr ""
+
+#: redfish_operator.php
+msgid "Retry collection"
+msgstr ""
+
+#: redfish_operator.php
+msgid "Monitoring view"
+msgstr ""
+
+#: redfish_operator.php
+msgid "Observations could not be read. Ask an administrator to check the plugin log."
 msgstr ""
 
 #: setup.php

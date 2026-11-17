@@ -69,8 +69,8 @@ final class HealthRepository {
 	 * Clear backoff, a held authentication failure, and the lost-session
 	 * budget: an administrator edited the BMC or asked for a retry.
 	 */
-	public function clearHolds(int $bmcId): void {
-		db_execute_prepared('UPDATE plugin_redfish_health SET failures = 0, backoff_until = 0, sessions_lost = 0, auth_credential_id = 0, auth_revision = 0 WHERE bmc_id = ?', [$bmcId], true, $this->connection);
+	public function clearHolds(int $bmcId): bool {
+		return db_execute_prepared('UPDATE plugin_redfish_health SET failures = 0, backoff_until = 0, sessions_lost = 0, auth_credential_id = 0, auth_revision = 0 WHERE bmc_id = ?', [$bmcId], true, $this->connection);
 	}
 
 	/**

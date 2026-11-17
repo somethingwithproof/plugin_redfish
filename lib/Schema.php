@@ -37,6 +37,7 @@ final class Schema {
 	public const VERSION = 2;
 
 	public const HOOKS = [
+		'auth_alternate_realms' => 'redfish_auth_alternate_realms',
 		'api_device_new'       => 'redfish_api_device_new',
 		'config_arrays'        => 'redfish_config_arrays',
 		'config_settings'      => 'redfish_config_settings',
