@@ -120,3 +120,17 @@ it('rejects unknown columns, a missing header, and empty files', function () {
 		->and(redfish_import('')->errors[0])->toContain('empty')
 		->and(redfish_import("name,address,credential\n")->errors[0])->toContain('no BMC rows');
 });
+
+it('imports at most one BMC per device, against the registry and within the file', function () {
+	$csv = "name,address,credential,host_id\na,10.0.0.1,ro-monitor,7\nb,10.0.0.2,ro-monitor,7\nc,10.0.0.3,ro-monitor,\nd,10.0.0.4,ro-monitor,\n";
+
+	// An import is all or nothing, so a conflict imports no row.
+	$inFile = redfish_import($csv);
+	expect($inFile->bmcs)->toBe([])
+		->and($inFile->errors)->toBe(['Line 3: device 7 already has the BMC of line 2.'])
+		->and(redfish_import(str_replace(',7', ',', $csv))->bmcs)->toHaveCount(4);
+
+	$registry = BmcImport::parse($csv, ['ro-monitor' => 3], fn (string $a, int $p) => null, fn (string $n) => false, fn (int $h) => $h === 7, fn (int $h) => $h === 7 ? 'r660' : null);
+	expect($registry->bmcs)->toBe([])
+		->and($registry->errors)->toBe(['Line 2: device 7 already has the BMC r660.', 'Line 3: device 7 already has the BMC r660.']);
+});

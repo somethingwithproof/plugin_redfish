@@ -25,7 +25,8 @@ if (PHP_SAPI !== 'cli' && PHP_SAPI !== 'phpdbg') {
 /*
  * Writes the fake BMC's certificates into <dir>, using ext-openssl only:
  *   ca.pem         test CA the client is given as a CA bundle
- *   good.pem       bmc.test, signed by the CA
+ *   good.pem       bmc.test and *.scale.test (the scale harness), signed
+ *                  by the CA
  *   wrongname.pem  other.test, signed by the CA
  *   expired.pem    bmc.test, signed by the CA, valid for zero days, so it
  *                  has expired by the time a test connects
@@ -50,7 +51,7 @@ basicConstraints = critical,CA:TRUE
 keyUsage = critical,keyCertSign,cRLSign
 [good]
 basicConstraints = CA:FALSE
-subjectAltName = DNS:bmc.test
+subjectAltName = DNS:bmc.test, DNS:*.scale.test
 [wrong]
 basicConstraints = CA:FALSE
 subjectAltName = DNS:other.test

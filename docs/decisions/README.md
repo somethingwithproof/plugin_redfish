@@ -18,5 +18,6 @@ Each record captures one architecture decision: its context, the decision, its c
 | [0012](0012-bounded-same-origin-redirects.md) | Follow at most three same-origin HTTPS redirects on GET | Accepted |
 | [0013](0013-choose-the-resource-source-per-reading.md) | Choose the subsystem or legacy source per reading, and take inlet only from a confirmed intake summary | Accepted |
 | [0014](0014-plugin-name-namespace-and-provisional-harness.md) | Name the plugin `redfish` under `Somethingwithproof\Redfish`, with a provisional Pest harness | Accepted, provisional |
+| [0015](0015-attach-to-the-server-device-or-create-one-per-bmc.md) | Attach BMC data to the server's Cacti device, or create one device per BMC | Accepted |
 
 Open decisions are tracked as issues labelled `type: decision`.

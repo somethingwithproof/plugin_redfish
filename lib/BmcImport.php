@@ -44,8 +44,9 @@ final class BmcImport {
 	 * @param callable(string, int): ?string $addressTaken name of a BMC already at the address and port
 	 * @param callable(string): bool $nameTaken
 	 * @param callable(int): bool $hostExists
+	 * @param callable(int): ?string $hostTaken name of a BMC already on the device
 	 */
-	public static function parse(string $csv, array $credentials, callable $addressTaken, callable $nameTaken, callable $hostExists): self {
+	public static function parse(string $csv, array $credentials, callable $addressTaken, callable $nameTaken, callable $hostExists, ?callable $hostTaken = null): self {
 		if ($csv === '' || strlen($csv) > self::MAX_BYTES) {
 			return new self([], [__('The file is empty or larger than 1 MiB.', 'redfish')]);
 		}
@@ -60,7 +61,7 @@ final class BmcImport {
 		rewind($handle);
 
 		try {
-			return self::rows($handle, $credentials, $addressTaken, $nameTaken, $hostExists);
+			return self::rows($handle, $credentials, $addressTaken, $nameTaken, $hostExists, $hostTaken ?? static fn (int $host): ?string => null);
 		} finally {
 			fclose($handle);
 		}
@@ -70,7 +71,7 @@ final class BmcImport {
 	 * @param resource           $handle
 	 * @param array<string, int> $credentials
 	 */
-	private static function rows($handle, array $credentials, callable $addressTaken, callable $nameTaken, callable $hostExists): self {
+	private static function rows($handle, array $credentials, callable $addressTaken, callable $nameTaken, callable $hostExists, callable $hostTaken): self {
 		$header = fgetcsv($handle, 0, ',', '"', '');
 
 		if (!is_array($header)) {
@@ -95,6 +96,7 @@ final class BmcImport {
 		$errors    = [];
 		$addresses = [];
 		$names     = [];
+		$hosts     = [];
 		$line      = 1;
 
 		while (($fields = fgetcsv($handle, 0, ',', '"', '')) !== false) {
@@ -163,6 +165,19 @@ final class BmcImport {
 				$errors[] = __('Line %d: no Cacti device has ID %d.', $line, $bmc->hostId, 'redfish');
 
 				continue;
+			}
+
+			// One BMC per device, against the registry and within the file.
+			if ($bmc->hostId > 0) {
+				$holder = $hostTaken($bmc->hostId);
+
+				if ($holder !== null || isset($hosts[$bmc->hostId])) {
+					$errors[] = __('Line %d: device %d already has the BMC %s.', $line, $bmc->hostId, $holder ?? __('of line %d', $hosts[$bmc->hostId], 'redfish'), 'redfish');
+
+					continue;
+				}
+
+				$hosts[$bmc->hostId] = $line;
 			}
 
 			$addresses[$where] = $line;

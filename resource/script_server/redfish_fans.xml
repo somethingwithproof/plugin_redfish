@@ -1,0 +1,54 @@
+<interface>
+	<name>Redfish Fans</name>
+	<description>Fans of a server, read over Redfish and answered from the plugin cache</description>
+	<script_path>|path_cacti|/plugins/redfish/scripts/ss_redfish_members.php</script_path>
+	<script_function>ss_redfish_members</script_function>
+	<script_server>php</script_server>
+	<arg_prepend>|host_id| fan</arg_prepend>
+	<arg_index>index</arg_index>
+	<arg_query>query</arg_query>
+	<arg_get>get</arg_get>
+	<arg_num_indexes>num_indexes</arg_num_indexes>
+	<output_delimiter>!</output_delimiter>
+	<index_order>redfishIndex</index_order>
+	<index_order_type>alphabetic</index_order_type>
+	<index_title_format>|chosen_order_field|</index_title_format>
+
+	<fields>
+		<redfishIndex>
+			<name>Member Key</name>
+			<direction>input</direction>
+			<query_name>index</query_name>
+		</redfishIndex>
+		<redfishName>
+			<name>Name</name>
+			<direction>input</direction>
+			<query_name>name</query_name>
+		</redfishName>
+		<redfishChassis>
+			<name>Chassis</name>
+			<direction>input</direction>
+			<query_name>chassis</query_name>
+		</redfishChassis>
+		<redfishUnit>
+			<name>Unit</name>
+			<direction>input</direction>
+			<query_name>unit</query_name>
+		</redfishUnit>
+		<fan_percent>
+			<name>Fan Speed (percent)</name>
+			<direction>output</direction>
+			<query_name>fan_percent</query_name>
+		</fan_percent>
+		<fan_rpm>
+			<name>Fan Speed (RPM)</name>
+			<direction>output</direction>
+			<query_name>fan_rpm</query_name>
+		</fan_rpm>
+		<fan_health>
+			<name>Fan Health (0 OK, 1 Warning, 2 Critical)</name>
+			<direction>output</direction>
+			<query_name>fan_health</query_name>
+		</fan_health>
+	</fields>
+</interface>

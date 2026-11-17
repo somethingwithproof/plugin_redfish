@@ -63,7 +63,7 @@ jobs:
       run: |
         set -euo pipefail
         php -v
-        for f in *.php include/*.php locales/*.php tests/bin/*.php; do
+        for f in *.php include/*.php locales/*.php scripts/*.php tests/bin/*.php; do
           php -l "$f"
         done
 
@@ -219,7 +219,7 @@ jobs:
       working-directory: cacti
       run: php plugins/redfish/poller_redfish.php --poller=1
 
-    - name: Check page permissions and POST-only actions
+    - name: Check page, device, and graph permissions and POST-only actions
       working-directory: cacti
       env:
         REDFISH_TEST_DATABASE: disposable
@@ -230,9 +230,61 @@ jobs:
           sleep 1
         done
         php plugins/redfish/tests/bin/page-permissions.php http://127.0.0.1:8080/cacti/
+        php plugins/redfish/tests/bin/device-permissions.php http://127.0.0.1:8080/cacti/
         if grep -E "Fatal error|Warning:|Uncaught" "$RUNNER_TEMP/php-server.log"; then
           exit 1
         fi
+
+    # Device creation from Cacti's CLI bootstrap and the plugin's setup.php
+    # alone: the provisioner loads the Cacti libraries it uses itself.
+    - name: Provision a device from a minimal bootstrap
+      working-directory: cacti
+      env:
+        REDFISH_TEST_DATABASE: disposable
+      run: php plugins/redfish/tests/bin/provision-bootstrap.php
+
+    # Templates, device creation, data queries, and graphs end to end, around
+    # real poller runs; the 11 second waits let the RRD with a 10 second step
+    # record a gap. Three unknown updates after the change span a whole
+    # step, which rrdtool then stores as unknown (tests/bin/device-flow.php).
+    - name: Run the device and graph flow
+      working-directory: cacti
+      env:
+        REDFISH_TEST_DATABASE: disposable
+      run: |
+        set -euo pipefail
+        flow=plugins/redfish/tests/bin/device-flow.php
+        poll() { php poller.php --poller=1 --force > /dev/null; sleep 11; php poller.php --poller=1 --force > /dev/null; }
+        php "$flow" setup
+        poll
+        php "$flow" check
+        poll
+        sleep 11
+        php poller.php --poller=1 --force > /dev/null
+        php "$flow" later
+
+    # Thold and Maint, unchanged, at their release tags.
+    - name: Checkout Thold v1.8.2
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
+        repository: Cacti/plugin_thold
+        ref: 1eb406bd0f81f3204358cce7bd43c8bb5adc8e4a # v1.8.2
+        path: cacti/plugins/thold
+
+    - name: Checkout Maint v1.3
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
+        repository: Cacti/plugin_maint
+        ref: cd62de9cc323a4f5a8ac80a8d9dda3c7fa16c470 # v1.3
+        path: cacti/plugins/maint
+
+    - name: Run Thold and Maint end to end
+      working-directory: cacti
+      env:
+        REDFISH_TEST_DATABASE: disposable
+      run: sh plugins/redfish/tests/bin/alert-replay.sh
 
     - name: Check Cacti log for errors
       if: always()
@@ -244,7 +296,22 @@ jobs:
         if [ -f cacti/log/cacti.log ]; then
           echo "== install and poller run"
           cat cacti/log/cacti.log
-          if grep -E "FATAL:|ERROR:|WARNING:" cacti/log/cacti.log; then
+          # Cacti 1.2.31 leaves incomplete rows after the replay serves U.
+          # Keep these core diagnostics visible; the replay still asserts
+          # the values and alerts. Do not allow them on newer core versions.
+          core_warnings='^$'
+          if [ "$(cat cacti/include/cacti_version)" = '1.2.31' ]; then
+            core_warnings="^[^ ]+ [0-9:]+ - POLLER: Poller\[1\] PID\[[0-9]+\] WARNING: (Poller Output Table not Empty\.  Issues: [0-9]+, DS\[[0-9, ]+\]|There are [0-9]+ Data Sources not returning all data leaving rows in the poller output table\.  Details to follow\.|Data Template 'Redfish - [^']+' is impacted by lack of complete information)\$"
+            grep -E "$core_warnings" cacti/log/cacti.log || true
+          fi
+          # The device flow, on purpose, makes the plugin remove a device its
+          # creator cannot see (and checks that warning itself), and gives
+          # one data source a 10 second step, which Cacti warns about, also
+          # trying to mail the warning to an admin with no address. It also
+          # replaces the fan query file with a symbolic link and checks that
+          # the installer refuses it and logs so. Each exclusion matches that
+          # one whole line and nothing else.
+          if grep -E "FATAL:|ERROR:|WARNING:" cacti/log/cacti.log | grep -vE "$core_warnings" | grep -vE -e '^[^ ]+ [0-9:]+ - REDFISH WARNING: Device [0-9]+ for BMC [0-9]+ was removed again: user [0-9]+ may not see it$' -e '^[^ ]+ [0-9:]+ - REDFISH ERROR: /[^ ]+/resource/script_server/redfish_fans\.xml is a symbolic link; it was left as it is\. Replace it with a copy of plugins/redfish/resource/script_server/redfish_fans\.xml$' -e '^[^ ]+ [0-9:]+ - POLLER: Poller\[1\] PID\[[0-9]+\] WARNING: The Poller Interval is 300 and you have a Data Source with a sampling interval of 10\.  Change your Poller Interval to 10 seconds, and repopulate your poller cache\.$' -e '^[^ ]+ [0-9:]+ - SYSTEM WARNING: Primary Admin account notifications disabled!  Unable to send administrative Email\.$'; then
             exit 1
           fi
         fi
@@ -402,6 +469,285 @@ jobs:
     - name: Lint licensing metadata
       run: pipx run --spec 'reuse[charset-normalizer]==6.3.0' reuse lint
 
+  # Runs the plugin's real collector, through Cacti's poller_redfish.php with the
+  # production client (TLS verified against a throwaway CA, no loopback
+  # allowance), against DMTF's Redfish Mockup Server. It asserts the sensor set a
+  # subsystem BMC yields, the fallback to the legacy Thermal and Power resources,
+  # and one real iLO capture that mixes both. The fake-BMC hostile-case suite
+  # (tests/fake-bmc) stays a separate, unit-level job: this one only proves the
+  # plugin works against a third-party Redfish implementation.
+  #
+  # Why a shim: the mock server answers a session POST with 204 and no body, and
+  # the plugin (correctly, DSP0266 section 12.4) accepts only 200 or 201. The
+  # server's --headers files apply to GET and HEAD only, so they cannot fix it.
+  # tests/redfish-mockup/session-201-shim.py changes that one status in the
+  # server's own process; the Location header and X-Auth-Token it already sends
+  # are what the plugin reads.
+  #
+  # The mock server does no authentication, so this job cannot test rejected
+  # credentials, lockout, or token checks.
+  #
+  # The plugin refuses loopback BMC addresses outside tests, so the servers are
+  # reached on the runner's primary address, and the test certificate names it.
+  # Keys exist only in $RUNNER_TEMP and are never uploaded.
+  mockup-bmc:
+    name: DMTF mockup BMC on Cacti ${{ matrix.cacti }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        cacti: ['release/1.2.31', '1.2.x']
+
+    env:
+      # dmtf/redfish-mockup-server 1.3.0 (BSD-3-Clause), by manifest digest.
+      MOCKUP_IMAGE: dmtf/redfish-mockup-server@sha256:4e33a3a6912e15bcc9ea9cd12151e24242f1ea7c52d2d374cd034de8265b2095
+      # HPE ilo-redfish-emulator (BSD-3-Clause), mockups/DL380a: a Gen11
+      # capture. Fetched at test time at this commit, not vendored.
+      HPE_EMULATOR_SHA: d668ab1580157961cad27ee7b5fa509bb9347d67
+
+    services:
+      mariadb:
+        image: mariadb:11.8@sha256:6422478cb8e159f080fb1d8ccf65101e26fe51385787fde7d16c3b165a331f15
+        env:
+          MYSQL_ROOT_PASSWORD: cactiroot
+          MYSQL_DATABASE: cacti
+          MYSQL_USER: cactiuser
+          MYSQL_PASSWORD: cactiuser
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mariadb-admin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+    - name: Checkout Cacti
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
+        repository: Cacti/cacti
+        ref: ${{ matrix.cacti }}
+        path: cacti
+
+    - name: Checkout redfish plugin
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
+        path: cacti/plugins/redfish
+
+    - name: Install PHP 8.3
+      uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+      with:
+        php-version: '8.3'
+        extensions: intl, mysql, gd, ldap, gmp, xml, json, mbstring, openssl, snmp
+        ini-values: "post_max_size=256M, max_execution_time=60, date.timezone=America/New_York"
+        coverage: none
+
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y rrdtool mariadb-client jq
+
+    - name: Initialize Cacti database
+      run: |
+        echo -e "[client]\nuser = root\npassword = cactiroot\nhost = 127.0.0.1\n" > ~/.my.cnf
+        chmod 600 ~/.my.cnf
+        mariadb -e "CREATE USER IF NOT EXISTS 'cactiuser'@'127.0.0.1' IDENTIFIED BY 'cactiuser';"
+        mariadb -e "GRANT ALL PRIVILEGES ON cacti.* TO 'cactiuser'@'127.0.0.1';"
+        mariadb -e "GRANT SELECT ON mysql.time_zone_name TO 'cactiuser'@'127.0.0.1';"
+        mariadb -e "FLUSH PRIVILEGES;"
+        mariadb cacti < cacti/cacti.sql
+        mariadb -e "INSERT INTO settings (name, value) VALUES ('path_php_binary', '$(command -v php)')" cacti
+        sed -r "s/localhost/127.0.0.1/g" cacti/include/config.php.dist > cacti/include/config.php
+
+    - name: Install Cacti via CLI
+      working-directory: cacti
+      run: php cli/install_cacti.php --accept-eula --install --force
+
+    - name: Install and enable the plugin
+      working-directory: cacti
+      run: php plugins/redfish/tests/bin/php-guard-check.php
+
+    # The plugin treats loopback as hostile, so the BMCs live on the runner's
+    # own non-loopback address, and the certificate carries it as an IP SAN.
+    - name: Create a throwaway CA and server certificate
+      run: |
+        set -euo pipefail
+        ip="$(ip -4 route get 1.1.1.1 | awk '{for (i = 1; i <= NF; i++) if ($i == "src") { print $(i + 1); exit }}')"
+        test -n "$ip"
+        case "$ip" in 127.*) echo "no non-loopback address" >&2; exit 1 ;; esac
+        echo "MOCKUP_IP=$ip" >> "$GITHUB_ENV"
+        pki="$RUNNER_TEMP/mockup-pki"
+        install -d -m 700 "$pki"
+        cd "$pki"
+        openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:prime256v1 -nodes \
+          -keyout ca.key -out ca.pem -days 2 -subj "/CN=plugin_redfish test CA" \
+          -addext "basicConstraints=critical,CA:TRUE" -addext "keyUsage=critical,keyCertSign,cRLSign"
+        openssl req -newkey ec -pkeyopt ec_paramgen_curve:prime256v1 -nodes \
+          -keyout server.key -out server.csr -subj "/CN=mockup-bmc"
+        printf 'subjectAltName=IP:%s\nbasicConstraints=CA:FALSE\nextendedKeyUsage=serverAuth\n' "$ip" > ext.cnf
+        openssl x509 -req -in server.csr -CA ca.pem -CAkey ca.key -CAcreateserial \
+          -out server.pem -days 2 -extfile ext.cnf
+        openssl verify -CAfile ca.pem -verify_ip "$ip" server.pem
+
+    - name: Prepare the mockups
+      run: |
+        set -euo pipefail
+        mk="$RUNNER_TEMP/mockups"
+        mkdir -p "$mk"
+        docker pull "$MOCKUP_IMAGE"
+
+        # public-rackmount1 is bundled in the image; the legacy-only variant
+        # is derived from it.
+        docker create --name mockup-src "$MOCKUP_IMAGE" > /dev/null
+        docker cp mockup-src:/usr/src/app/public-rackmount1 "$mk/rackmount1"
+        docker rm mockup-src > /dev/null
+        sh cacti/plugins/redfish/tests/redfish-mockup/make-legacy-only.sh "$mk/rackmount1" "$mk/legacy-only"
+
+        # One real iLO Gen11 capture, fetched at a pinned commit.
+        git init -q "$mk/hpe"
+        git -C "$mk/hpe" remote add origin https://github.com/HewlettPackard/ilo-redfish-emulator.git
+        git -C "$mk/hpe" sparse-checkout set mockups/DL380a
+        git -C "$mk/hpe" fetch -q --depth 1 --filter=blob:none origin "$HPE_EMULATOR_SHA"
+        git -C "$mk/hpe" -c advice.detachedHead=false checkout -q FETCH_HEAD
+
+    # All three servers run the pinned image under the shim, over HTTPS with
+    # the test certificate. --short-form is needed for any mockup that has no
+    # redfish/v1 directory, which is the case for all three.
+    - name: Start the mock BMCs
+      run: |
+        set -euo pipefail
+        pki="$RUNNER_TEMP/mockup-pki"
+        mk="$RUNNER_TEMP/mockups"
+        shim="$GITHUB_WORKSPACE/cacti/plugins/redfish/tests/redfish-mockup/session-201-shim.py"
+
+        start() {
+          name=$1; port=$2; dir=$3
+          docker run -d --name "$name" -p "$port:8443" \
+            -v "$pki:/pki:ro" -v "$shim:/shim/shim.py:ro" -v "$dir:/mockup:ro" \
+            --entrypoint python "$MOCKUP_IMAGE" /shim/shim.py \
+            -H 0.0.0.0 -p 8443 -D /mockup --short-form \
+            --ssl --cert /pki/server.pem --key /pki/server.key > /dev/null
+        }
+
+        start mockup-subsystem 8443 "$mk/rackmount1"
+        start mockup-legacy    8444 "$mk/legacy-only"
+        start mockup-hpe-gen11 8445 "$mk/hpe/mockups/DL380a"
+
+        for port in 8443 8444 8445; do
+          up=
+          for _ in $(seq 1 30); do
+            if curl -fsS --cacert "$pki/ca.pem" -o /dev/null "https://$MOCKUP_IP:$port/redfish/v1/"; then
+              up=1
+              break
+            fi
+            sleep 1
+          done
+          if [ -z "$up" ]; then
+            echo "mock BMC on $port did not come up" >&2
+            docker ps -a >&2
+            exit 1
+          fi
+          # The mockups ship with sessions already in their collection, so
+          # compare against the count at start, not against zero.
+          curl -sS --cacert "$pki/ca.pem" "https://$MOCKUP_IP:$port/redfish/v1/SessionService/Sessions" \
+            | jq '."Members@odata.count"' > "$RUNNER_TEMP/sessions-$port"
+        done
+
+    # What the server gives the plugin, checked with the test CA, so a change
+    # in the pinned image or the shim shows up here and not as a collector
+    # failure.
+    - name: Check the mock server contract
+      run: |
+        set -euo pipefail
+        pki="$RUNNER_TEMP/mockup-pki"
+        base="https://$MOCKUP_IP:8443"
+        c() { curl -sS --cacert "$pki/ca.pem" "$@"; }
+
+        c "$base/redfish/v1/" | jq -e '.Links.Sessions."@odata.id" == "/redfish/v1/SessionService/Sessions" and .Chassis."@odata.id" == "/redfish/v1/Chassis"' > /dev/null
+
+        headers="$(c -D - -o /dev/null -X POST -H 'Content-Type: application/json' \
+          -d '{"UserName":"probe","Password":"probe"}' "$base/redfish/v1/SessionService/Sessions")"
+        echo "$headers" | head -1 | grep -q ' 201 '
+        echo "$headers" | grep -qi '^x-auth-token: .'
+        location="$(echo "$headers" | tr -d '\r' | awk 'tolower($1) == "location:" { print $2 }')"
+        case "$location" in /redfish/v1/SessionService/Sessions/*) ;; *) echo "unexpected Location: $location" >&2; exit 1 ;; esac
+        test "$(c -o /dev/null -w '%{http_code}' -X DELETE "$base$location")" = 204
+        test "$(c "$base/redfish/v1/SessionService/Sessions" | jq '."Members@odata.count"')" = "$(cat "$RUNNER_TEMP/sessions-8443")"
+
+    - name: Register the mock BMCs
+      working-directory: cacti
+      env:
+        REDFISH_TEST_DATABASE: disposable
+      run: |
+        set -euo pipefail
+        ca="$RUNNER_TEMP/mockup-pki/ca.pem"
+        php plugins/redfish/tests/bin/mockup-check.php seed mock-subsystem "$MOCKUP_IP" 8443 "$ca"
+        php plugins/redfish/tests/bin/mockup-check.php seed mock-legacy    "$MOCKUP_IP" 8444 "$ca"
+        php plugins/redfish/tests/bin/mockup-check.php seed mock-hpe-gen11 "$MOCKUP_IP" 8445 "$ca"
+
+    - name: Discover and collect through the poller entry point
+      working-directory: cacti
+      run: php plugins/redfish/poller_redfish.php --poller=1 --force --debug
+
+    - name: Assert the sensor sets and the legacy fallback
+      working-directory: cacti
+      env:
+        REDFISH_TEST_DATABASE: disposable
+      run: |
+        set -euo pipefail
+        php plugins/redfish/tests/bin/mockup-check.php assert mock-subsystem subsystem
+        php plugins/redfish/tests/bin/mockup-check.php assert mock-legacy    legacy
+        php plugins/redfish/tests/bin/mockup-check.php assert mock-hpe-gen11 hpe-gen11
+
+    # The same BMCs on Cacti devices the plugin creates: the data queries
+    # index what the collector found, and the summary input serves it.
+    - name: Create the Cacti devices and read them through the script server
+      working-directory: cacti
+      env:
+        REDFISH_TEST_DATABASE: disposable
+      run: |
+        set -euo pipefail
+        php plugins/redfish/tests/bin/mockup-check.php cacti mock-subsystem
+        php plugins/redfish/tests/bin/mockup-check.php cacti mock-legacy
+        php plugins/redfish/tests/bin/mockup-check.php cacti mock-hpe-gen11
+
+    # REQ-RF-004: a run that logs in logs out, so no session stays behind. The
+    # shipped mockups already hold two sessions, so the count is compared with
+    # the one taken at start.
+    - name: Check that no session is left open
+      run: |
+        set -euo pipefail
+        for port in 8443 8444 8445; do
+          now="$(curl -sS --cacert "$RUNNER_TEMP/mockup-pki/ca.pem" "https://$MOCKUP_IP:$port/redfish/v1/SessionService/Sessions" | jq '."Members@odata.count"')"
+          test "$now" = "$(cat "$RUNNER_TEMP/sessions-$port")" || { echo "port $port: $now sessions, expected $(cat "$RUNNER_TEMP/sessions-$port")" >&2; exit 1; }
+        done
+
+    - name: Check Cacti log for errors
+      if: always()
+      run: |
+        if [ -f cacti/log/cacti.log ]; then
+          cat cacti/log/cacti.log
+          if grep -E "FATAL:|ERROR:|WARNING:" cacti/log/cacti.log; then
+            exit 1
+          fi
+        fi
+
+    - name: Mock server logs
+      if: failure()
+      run: |
+        for name in mockup-subsystem mockup-legacy mockup-hpe-gen11; do
+          echo "== $name"
+          docker logs "$name" 2>&1 | tail -n 60 || true
+        done
+
+    - name: Stop the mock BMCs
+      if: always()
+      run: docker rm -f mockup-subsystem mockup-legacy mockup-hpe-gen11 > /dev/null 2>&1 || true
+
   ci-ok:
     name: ci-ok
     if: ${{ always() }}
@@ -409,6 +755,7 @@ jobs:
       - entry-point-lint
       - integration-test
       - php-guard
+      - mockup-bmc
       - workflow-lint
       - reuse
     runs-on: ubuntu-latest

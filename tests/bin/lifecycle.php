@@ -78,7 +78,11 @@ switch ($action) {
 		break;
 	case 'upgrade':
 		include_once($config['base_path'] . '/plugins/redfish/setup.php');
+		$before = (int) @filesize(cacti_log_file());
 		$result = plugin_redfish_upgrade();
+		clearstatcache();
+		// What this upgrade added to the log, for tests that expect a line.
+		$logged = (string) @file_get_contents(cacti_log_file(), false, null, $before);
 
 		break;
 	case 'migrate_through':
@@ -99,6 +103,25 @@ switch ($action) {
 	case 'set_setting':
 		list($name, $value) = explode('=', $argument, 2);
 		db_execute_prepared('REPLACE INTO settings (name, value) VALUES (?, ?)', array($name, $value));
+
+		break;
+	case 'schema_v1':
+		// The milestone 2 schema: no expected column, no host_id key.
+		db_execute('ALTER TABLE plugin_redfish_member DROP COLUMN expected');
+		db_execute('ALTER TABLE plugin_redfish_bmc DROP KEY host_id');
+		db_execute('ALTER TABLE plugin_redfish_bmc DROP KEY host_owner');
+		db_execute('ALTER TABLE plugin_redfish_bmc DROP COLUMN host_owner');
+		db_execute("INSERT INTO plugin_redfish_member (bmc_id, member_key, kind, presence) VALUES (1, '1/fan/A', 'fan', 'present'), (1, '1/fan/B', 'fan', 'absent')");
+		// Two BMCs on one device, which the old schema allowed.
+		db_execute("INSERT INTO plugin_redfish_bmc (id, name, address, port, poller_id, host_id, credential_id, created_at, updated_at) VALUES (1, 'old-a', '192.0.2.1', 443, 1, 50, 0, 1, 1), (2, 'old-b', '192.0.2.2', 443, 1, 50, 0, 1, 1), (3, 'old-c', '192.0.2.3', 443, 1, 0, 0, 1, 1), (4, 'old-d', '192.0.2.4', 443, 1, 0, 0, 1, 1)");
+		db_execute("REPLACE INTO settings (name, value) VALUES ('redfish_schema_version', '1')");
+
+		break;
+	case 'schema_v1_column_only':
+		// An upgrade stopped after it added the expected column, before the
+		// baseline: version 1 is still recorded and no member is expected.
+		db_execute("UPDATE plugin_redfish_member SET expected = ''");
+		db_execute("REPLACE INTO settings (name, value) VALUES ('redfish_schema_version', '1')");
 
 		break;
 	case 'drop_registrations':
@@ -241,4 +264,12 @@ print json_encode(array(
 	'admin'   => (int) db_fetch_cell("SELECT COUNT(*) FROM user_auth_realm AS uar INNER JOIN plugin_realms AS pr ON pr.id + 100 = uar.realm_id WHERE pr.plugin = 'redfish' AND uar.user_id = 1"),
 	'tracked' => array_column(db_fetch_assoc("SELECT `table` FROM plugin_db_changes WHERE plugin = 'redfish' AND method = 'create' ORDER BY `table`"), 'table'),
 	'tables'  => $tables,
+	'logged'  => $logged ?? '',
+	'v2'      => array(
+		'host_owner' => (int) db_fetch_cell("SELECT COUNT(*) FROM information_schema.STATISTICS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'plugin_redfish_bmc' AND INDEX_NAME = 'host_owner' AND NON_UNIQUE = 0") > 0,
+		'hosts'    => isset($tables['plugin_redfish_bmc']) ? array_map('intval', array_column(db_fetch_assoc('SELECT id, host_id FROM plugin_redfish_bmc ORDER BY id'), 'host_id', 'id')) : null,
+		'host_key' => (int) db_fetch_cell("SELECT COUNT(*) FROM information_schema.STATISTICS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'plugin_redfish_bmc' AND INDEX_NAME = 'host_id'") > 0,
+		'expected' => (int) db_fetch_cell("SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'plugin_redfish_member' AND COLUMN_NAME = 'expected'") > 0
+			? array_column(db_fetch_assoc("SELECT member_key, expected FROM plugin_redfish_member ORDER BY member_key"), 'expected', 'member_key') : null,
+	),
 ), JSON_PRETTY_PRINT) . PHP_EOL;

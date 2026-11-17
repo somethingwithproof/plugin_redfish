@@ -80,6 +80,22 @@ function guard_call_shims() {
 		guard_expect(redfish_draw_navigation_text($nav) === $nav, 'draw_navigation_text returns the navigation unchanged');
 	}
 
+	// Device and graph hooks hand their argument back untouched.
+	$passed = array(
+		'redfish_device_remove'  => array(999999),
+		'redfish_api_device_new' => array('id' => 999999, 'poller_id' => 1),
+		'redfish_graph_buttons'  => array('graph_buttons', array('local_graph_id' => 999999)),
+	);
+
+	foreach ($passed as $function => $argument) {
+		if (function_exists($function)) {
+			ob_start();
+			$returned = $function($argument);
+			$printed  = ob_get_clean();
+			guard_expect($returned === $argument && $printed === '', $function . ' returns its argument and prints nothing');
+		}
+	}
+
 	// Core's own dispatch, as every page load does.
 	api_plugin_hook('config_arrays');
 	api_plugin_hook('config_settings');

@@ -2,7 +2,7 @@
 
 A Cacti 1.2 plugin that brings server power draw, inlet temperature, fan state, and power supply health from baseboard management controllers (BMCs) into Cacti as ordinary devices, data sources, and graphs, using Redfish with an optional IPMI fallback. Thold and Maint then alert on and suppress them, and a later phase adds rack-level power totals.
 
-> **Status: in development, no release yet (0.1.0-dev).** Milestone 2 (foundation) is merged on `main`. This plugin is not affiliated with the Cacti project. It installs on Cacti 1.2.31 under PHP 8.2 or later, registers BMCs and credentials, reads power, temperatures, fans, and power supply health from each BMC over Redfish into its own cache, and shows collection health. It does not yet create Cacti devices, data sources, or graphs, and it does not alert; those arrive in milestone 3. It has been tested only against a fake BMC built from hand-written fixtures, never a real one. The design and research are in [docs/PLAN.md](docs/PLAN.md), [docs/research/](docs/research/), and [docs/decisions/](docs/decisions/).
+> **Status: in development, no release yet (0.1.0-dev).** Milestone 2 (foundation) is merged on `main`; milestone 3 (Cacti objects and alerting) is in review. This plugin is not affiliated with the Cacti project. It installs on Cacti 1.2.31 under PHP 8.2 or later, registers BMCs and credentials, reads power, temperatures, fans, and power supply health from each BMC over Redfish into its own cache, and shows collection health. Milestone 3 adds Cacti devices, per-member and summary graphs, and Thold and Maint support through ordinary data sources. It has been tested only against a fake BMC built from hand-written fixtures and the DMTF Redfish mockup server, never a real BMC. The design and research are in [docs/PLAN.md](docs/PLAN.md), [docs/research/](docs/research/), and [docs/decisions/](docs/decisions/).
 
 ### What milestone 2 ships
 
@@ -14,6 +14,19 @@ A Cacti 1.2 plugin that brings server power draw, inlet temperature, fan state, 
 - A read-only Redfish client: `GET` plus the session login and logout only, checked against an allowlist before any request is sent.
 - A collector started from `poller_bottom` for BMCs on the main poller, with per-BMC leases and deadlines, backoff, and cleanup after a crash of the one session the plugin recorded. Remote collectors are not supported yet; they need an explicit choice of how the collector reaches the database and the key (phase 4).
 - BMC records and credentials follow Cacti device permissions: a Redfish Admin sees, changes, and binds only BMCs on devices they may see, and only credentials that no BMC on a hidden device uses.
+
+### What milestone 3 adds
+
+- Templates shipped as Cacti template XML in `templates/` and imported with Cacti's own importer at install and upgrade, matched by hash, so an import updates the plugin's objects and adds nothing twice. The three data query files are copied to `<cacti>/resource/script_server/` with a recorded hash; the plugin never replaces a file there that it did not write, and the health page warns administrators when the templates or a query file are not in place. **Reinstall the Redfish Templates** on the BMCs page imports them again; it needs Cacti's Import Templates permission.
+- **Create Device** or **Add Graphs** on each BMC ([ADR 0015](docs/decisions/0015-attach-to-the-server-device-or-create-one-per-bmc.md)). A BMC mapped to a server's existing device gets its data queries and graphs on that device. An unmapped BMC gets a new device from the "Redfish BMC" device template, with availability checks off and a host name under `.invalid`, so Cacti never contacts the BMC and never shows its address. Either way an administrator first confirms a plan listing what will be added. Both need Cacti's device management permission as well as Redfish Admin; a new device the creator could not see is removed again.
+- Three script server data queries, "Redfish Fans", "Redfish Temperatures", and "Redfish Power Supplies", indexed by the BMC's member key, with a graph per member: fan speed in percent or RPM (whichever unit the BMC reports), temperature, and power supply input and output watts, each with its health code.
+- A "Redfish Node Summary" input with power, inlet temperature, the highest temperature, fans and supplies not OK, node health, and the age of the last good read, drawn on four graphs: power, temperatures, component health, and data age. Thold thresholds on these data sources alert, and Maint suppresses them, with no change to either plugin.
+- The script server answers only from the plugin's cache and never contacts a BMC. A value that is missing, stale, of another unit, or from a member that is gone is `U`, so graphs show a gap, never zero; `age` always has a value, so a threshold on it catches a BMC that stopped answering.
+- A graph link from each Redfish graph to the device's Redfish graphs, shown only to users Cacti lets see the device.
+
+**When a BMC's members change** (a fan replaced, a firmware update renaming sensors), choose **Add Graphs** again. A fan or power supply that was present and is now absent or gone counts in `fans_bad` or `psus_bad` until you do, so a pulled fan alerts; a slot that was never filled does not. Add Graphs accepts the members the BMC reports now, and Cacti indexes the queries again; a member that is gone keeps its data source and graph, which read `U` from then on, and a new member gets a graph. Delete the graphs of members that are gone by hand once their history is no longer needed.
+
+Deleting a device unmaps its BMC and keeps the BMC and its cache. Deleting a BMC, or uninstalling the plugin, keeps its device and graphs.
 
 ## Why
 
@@ -44,6 +57,7 @@ Out of scope: setting power caps or any other BMC configuration, power control, 
 | Component | Target |
 |---|---|
 | Cacti | 1.2.31 or later, no core patches |
+| Database | MariaDB 10.2 or MySQL 5.7 or later: one BMC per device is held by a unique key on a generated column |
 | PHP | 8.2 or later; `setup.php` stays parseable on 8.0 so an unsupported runtime gets a refusal instead of a broken Cacti UI |
 | BMCs | Dell iDRAC, HPE iLO, Lenovo XCC, and OpenBMC, by firmware range; see [the vendor matrix](docs/research/vendor-matrix.md) |
 | Redfish | New subsystem and sensor resources first, deprecated `Power` and `Thermal` as fallback |

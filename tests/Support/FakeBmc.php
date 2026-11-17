@@ -59,17 +59,25 @@ final class FakeBmc {
 	}
 
 	/**
-	 * @param array<string, mixed> $state initial flags and sessions
+	 * @param array<string, mixed> $state    initial flags and sessions
+	 * @param int                  $lifetime seconds the server runs, 600 when 0
 	 */
-	public function __construct(string $fixture = 'dell-subsystem', string $cert = 'good', array $state = [], bool $old = false) {
+	public function __construct(string $fixture = 'dell-subsystem', string $cert = 'good', array $state = [], bool $old = false, int $lifetime = 0) {
 		$this->port  = self::freePort();
 		$this->state = tempnam(sys_get_temp_dir(), 'redfish-fake-state-');
 		file_put_contents($this->state, json_encode($state + ['flags' => [], 'sessions' => [], 'log' => [], 'next' => 1]));
 
-		$args = [PHP_BINARY, __DIR__ . '/../fake-bmc/server.php', (string) $this->port, self::certs() . '/' . $cert . '.pem', __DIR__ . '/../fixtures/' . $fixture . '.json', $this->state];
+		// A fixture name, or the absolute path of a fixture a test wrote.
+		$file = str_starts_with($fixture, '/') ? $fixture : __DIR__ . '/../fixtures/' . $fixture . '.json';
+		$args = [PHP_BINARY, __DIR__ . '/../fake-bmc/server.php', (string) $this->port, self::certs() . '/' . $cert . '.pem', $file, $this->state];
 
-		if ($old) {
-			$args[] = 'tls1.1';
+		if ($old || $lifetime > 0) {
+			$args[] = $old ? 'tls1.1' : 'tls';
+		}
+
+		// Seconds the server runs before it stops itself, past the default.
+		if ($lifetime > 0) {
+			$args[] = (string) $lifetime;
 		}
 
 		$env = getenv() + ['REDFISH_FAKE_USER' => self::USER, 'REDFISH_FAKE_PASSWORD' => self::PASSWORD];

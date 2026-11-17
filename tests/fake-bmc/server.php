@@ -33,7 +33,8 @@ if (PHP_SAPI !== 'cli' && PHP_SAPI !== 'phpdbg') {
  * never the command line. Tests steer it through flags in the state file,
  * which also records each request (method, path, whether it carried
  * credentials) and the open sessions. The 600 second cap only stops an
- * orphan left by a crashed run.
+ * orphan left by a crashed run; the scale harness passes a longer one as a
+ * sixth argument.
  */
 
 $port    = (int) ($argv[1] ?? 0);
@@ -98,7 +99,7 @@ function fake_json(array $value): string {
 	return (string) json_encode($value, JSON_UNESCAPED_SLASHES);
 }
 
-$deadline = time() + 600;
+$deadline = time() + max(600, min(7200, (int) ($argv[6] ?? 0)));
 
 while (time() < $deadline) {
 	// A client that refuses the certificate aborts the handshake and
@@ -159,7 +160,16 @@ while (time() < $deadline) {
 		$authed = true;
 	}
 
-	$s['log'][] = array('method' => $method, 'path' => $path, 'auth' => $token !== '' ? 'token' : (isset($headers['authorization']) ? 'basic' : ''));
+	// The scale harness serves thousands of requests: "quiet" keeps the log
+	// from growing with each, and "delay_ms" stands in for BMC latency.
+	if (empty($flags['quiet'])) {
+		$s['log'][] = array('method' => $method, 'path' => $path, 'auth' => $token !== '' ? 'token' : (isset($headers['authorization']) ? 'basic' : ''));
+	}
+
+	if (!empty($flags['delay_ms'])) {
+		usleep(1000 * min(5000, (int) $flags['delay_ms']));
+	}
+
 	$collection = '/redfish/v1/SessionService/Sessions';
 
 	// Fault routes.

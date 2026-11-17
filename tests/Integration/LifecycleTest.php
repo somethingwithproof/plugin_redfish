@@ -38,7 +38,7 @@ const REDFISH_TABLES = [
 	'plugin_redfish_secret',
 ];
 
-const REDFISH_HOOKS = ['config_arrays', 'config_settings', 'draw_navigation_text', 'poller_bottom'];
+const REDFISH_HOOKS = ['api_device_new', 'config_arrays', 'config_settings', 'device_remove', 'draw_navigation_text', 'graph_buttons', 'poller_bottom'];
 
 beforeEach(function () {
 	lifecycle('reset');
@@ -53,7 +53,8 @@ it('installs fresh with tracked tables, hooks, and both realms, leaving the plug
 
 	expect($state['plugin']['status'])->toEqual('4')
 		->and($state['plugin']['version'])->toEqual(REDFISH_VERSION)
-		->and($state['schema'])->toEqual('1')
+		->and($state['schema'])->toEqual('2')
+		->and($state['v2']['host_owner'])->toBeTrue()
 		->and(array_keys($state['tables']))->toBe(REDFISH_TABLES)
 		->and($state['tracked'])->toBe(REDFISH_TABLES)
 		->and(array_keys($state['hooks']))->toBe(REDFISH_HOOKS)
@@ -123,8 +124,33 @@ it('finishes an upgrade that was interrupted after creating only some tables', f
 	expect($state['result'])->toBeTrue()
 		->and(array_keys($state['tables']))->toBe(REDFISH_TABLES)
 		->and($state['tables']['plugin_redfish_credential'])->toBe(1)
-		->and($state['schema'])->toEqual('1')
+		->and($state['schema'])->toEqual('2')
 		->and($state['plugin']['version'])->toEqual(REDFISH_VERSION);
+});
+
+it('upgrades a milestone 2 schema, expecting the members present now', function () {
+	lifecycle('install');
+	lifecycle('schema_v1');
+
+	$state = lifecycle('upgrade');
+	expect($state['result'])->toBeTrue()
+		->and($state['schema'])->toEqual('2')
+		->and($state['v2'])->toBe(['host_owner' => true, 'hosts' => [1 => 50, 2 => 0, 3 => 0, 4 => 0], 'host_key' => true, 'expected' => ['1/fan/A' => 'on', '1/fan/B' => '']])
+		->and($state['logged'])->toContain('BMC 2 was unmapped from device 50, which another BMC already carries');
+
+	expect(lifecycle('upgrade')['v2'])->toBe($state['v2']);
+});
+
+it('finishes the member baseline of an upgrade stopped after adding the column', function () {
+	lifecycle('install');
+	lifecycle('schema_v1');
+	lifecycle('upgrade');
+	lifecycle('schema_v1_column_only');
+
+	$state = lifecycle('upgrade');
+	expect($state['result'])->toBeTrue()
+		->and($state['schema'])->toEqual('2')
+		->and($state['v2']['expected'])->toBe(['1/fan/A' => 'on', '1/fan/B' => '']);
 });
 
 it('does not advance past a migration that did not run', function () {
@@ -136,7 +162,7 @@ it('does not advance past a migration that did not run', function () {
 		->and($stopped['schema'])->toEqual('0');
 
 	$finished = lifecycle('upgrade');
-	expect($finished['schema'])->toEqual('1');
+	expect($finished['schema'])->toEqual('2');
 });
 
 it('refuses a schema newer than the code and leaves the recorded version alone', function () {
@@ -148,7 +174,8 @@ it('refuses a schema newer than the code and leaves the recorded version alone',
 
 	expect($state['result'])->toBeFalse()
 		->and($state['plugin']['version'])->toEqual('0.0')
-		->and($state['schema'])->toEqual('99');
+		->and($state['schema'])->toEqual('99')
+		->and($state['logged'])->toContain('REDFISH ERROR: Schema version 99 is newer than this code (2); refusing to downgrade');
 });
 
 it('keeps tables on uninstall by default, and drops them only when the box was cleared', function () {

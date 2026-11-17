@@ -55,9 +55,10 @@ final class ReadingRepository {
 		}
 
 		foreach ($ok && $observation !== null ? $observation->members : [] as $member) {
-			$ok = $ok && db_execute_prepared('INSERT INTO plugin_redfish_member (bmc_id, member_key, kind, chassis_id, name, source, presence, first_seen, last_seen) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-				ON DUPLICATE KEY UPDATE kind = VALUES(kind), chassis_id = VALUES(chassis_id), name = VALUES(name), source = VALUES(source), presence = VALUES(presence), last_seen = VALUES(last_seen)', [
-				$bmcId, $member->key, $member->kind, substr($member->chassis, 0, 64), $member->name, $member->source, $member->absent ? 'absent' : 'present', $now, $now,
+			// A member seen present stays expected until it is accepted again.
+			$ok = $ok && db_execute_prepared("INSERT INTO plugin_redfish_member (bmc_id, member_key, kind, chassis_id, name, source, presence, expected, first_seen, last_seen) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+				ON DUPLICATE KEY UPDATE kind = VALUES(kind), chassis_id = VALUES(chassis_id), name = VALUES(name), source = VALUES(source), presence = VALUES(presence), expected = IF(VALUES(presence) = 'present', 'on', expected), last_seen = VALUES(last_seen)", [
+				$bmcId, $member->key, $member->kind, substr($member->chassis, 0, 64), $member->name, $member->source, $member->absent ? 'absent' : 'present', $member->absent ? '' : 'on', $now, $now,
 			], true, $this->connection);
 		}
 

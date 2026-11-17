@@ -75,6 +75,12 @@ if (!function_exists('read_config_option')) {
 	}
 }
 
+if (!function_exists('set_config_option')) {
+	function set_config_option($config_name, $value, $remote = false) {
+		$GLOBALS['__redfish_options'][$config_name] = $value;
+	}
+}
+
 // Repositories in unit tests talk to these stubs. A test reads the
 // statements from $GLOBALS['__redfish_db_exec'] and queues query results in
 // $GLOBALS['__redfish_db_rows'] (keyed by a substring of the SQL).

@@ -59,7 +59,9 @@ final class BmcsPage {
 				. '<td>' . html_escape($bmc->basicFallback ? __('Allowed', 'redfish') : __('Off', 'redfish')) . '</td>'
 				. '<td>' . html_escape($bmc->hostId > 0 ? (string) $bmc->hostId : '-') . '</td>'
 				. '<td>' . html_escape($bmc->enabled() ? __('Enabled', 'redfish') : __('Disabled', 'redfish')) . '</td>'
-				. '<td>' . Html::action(self::FILE, $bmc->id, 'retry', __('Retry Now', 'redfish')) . ' ' . Html::action(self::FILE, $bmc->id, 'delete', __('Delete', 'redfish')) . '</td>'
+				. '<td>' . Html::action(self::FILE, $bmc->id, 'retry', __('Retry Now', 'redfish'))
+				. ' ' . Html::action(self::FILE, $bmc->id, 'provision', $bmc->hostId > 0 ? __('Add Graphs', 'redfish') : __('Create Device', 'redfish'))
+				. ' ' . Html::action(self::FILE, $bmc->id, 'delete', __('Delete', 'redfish')) . '</td>'
 				. '</tr>';
 		}
 
@@ -68,6 +70,41 @@ final class BmcsPage {
 		$this->renderImport([]);
 
 		print '<p><a class="linkEditMain" href="' . html_escape(self::FILE . '?action=export') . '">' . html_escape(__('Export the BMC registry as JSON (no secrets)', 'redfish')) . '</a></p>';
+
+		print '<p>' . Html::action(self::FILE, 0, 'templates', __('Reinstall the Redfish Templates', 'redfish')) . '</p>';
+	}
+
+	/**
+	 * The confirmation page of a device creation or graph attach: what will
+	 * be added, and a form that does it (REQ-DEV-002). Names only the BMC,
+	 * never its address or credential.
+	 *
+	 * @param list<string> $plan
+	 */
+	public function renderProvision(Bmc $bmc, array $plan, ?string $refusal): void {
+		html_start_box($bmc->hostId > 0 ? __('Add Redfish graphs for %s', html_escape($bmc->name), 'redfish') : __('Create a Cacti device for %s', html_escape($bmc->name), 'redfish'), '100%', '', '3', 'center', '');
+
+		if ($refusal !== null) {
+			print '<tr><td class="textError">' . html_escape($refusal) . '</td></tr>';
+		} elseif ($plan === []) {
+			print '<tr><td>' . html_escape(__('Everything is already in place. Confirming indexes the data queries again and adds graphs for new members only.', 'redfish')) . '</td></tr>';
+		} else {
+			print '<tr><td>' . html_escape(__('Confirming adds:', 'redfish')) . '<ul>';
+
+			foreach ($plan as $line) {
+				print '<li>' . html_escape($line) . '</li>';
+			}
+
+			print '</ul>' . html_escape(__('Existing devices, graphs, and thresholds are not changed.', 'redfish')) . '</td></tr>';
+		}
+
+		html_end_box();
+
+		if ($refusal === null) {
+			print Html::action(self::FILE, $bmc->id, 'provision_confirm', __('Confirm', 'redfish'));
+		}
+
+		print ' <a class="ui-button" href="' . html_escape(self::FILE) . '">' . html_escape(__('Cancel', 'redfish')) . '</a>';
 	}
 
 	/**
@@ -139,7 +176,7 @@ final class BmcsPage {
 		print Html::text('ca_file', __('CA Bundle File', 'redfish'), $value('ca_file', $bmc->caFile ?? ''), 512, __('For the CA bundle mode: absolute path on the poller to a PEM file that others cannot write.', 'redfish'));
 		print Html::text('pin_sha256', __('Public Key Pin', 'redfish'), $value('pin_sha256', $bmc->pin ?? ''), 51, __('For the pinned mode: base64 SHA-256 of the BMC public key, as sha256//... or the bare hash. A changed key fails until this is updated.', 'redfish'));
 		print Html::checkbox('basic_fallback', __('Allow Basic Authentication Fallback', 'redfish'), $flag('basic_fallback', $bmc->basicFallback ?? false), __('Used only when the BMC offers no session service. Every request then carries the password; the health page warns while it is in use.', 'redfish'));
-		print Html::select('host_id', __('Device', 'redfish'), $hosts, (string) $hostId, __('The Cacti device this BMC belongs to. This release creates no devices.', 'redfish'));
+		print Html::select('host_id', __('Device', 'redfish'), $hosts, (string) $hostId, __('The Cacti device of the server this BMC manages. Leave it at none to have the plugin create a device from the list.', 'redfish'));
 		print Html::checkbox('enabled', __('Enabled', 'redfish'), $flag('enabled', $bmc?->enabled() ?? true));
 
 		html_end_box();
@@ -188,6 +225,11 @@ final class BmcsPage {
 		// so the message does not tell whether a hidden device exists.
 		if ($bmc->hostId > 0 && $before?->hostId !== $bmc->hostId && !$this->scope->allowsNew($bmc->hostId)) {
 			$errors['host_id'] = __('Device: no Cacti device has this ID.', 'redfish');
+		}
+
+		// The script server finds a BMC by its device (ADR 0015).
+		if (!isset($errors['host_id']) && $bmc->hostId > 0 && $this->bmcs->findByHost($bmc->hostId, $bmc->id) !== null) {
+			$errors['host_id'] = __('Device: another BMC is already mapped to this device.', 'redfish');
 		}
 
 		return $errors;

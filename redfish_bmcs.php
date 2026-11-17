@@ -31,7 +31,7 @@ if (!redfish_page_start()) {
 	exit;
 }
 
-redfish_require_post('redfish_bmcs.php', array('save', 'delete', 'retry', 'import'));
+redfish_require_post('redfish_bmcs.php', array('save', 'delete', 'retry', 'import', 'provision', 'provision_confirm', 'templates'));
 
 $redfish_bmcs  = redfish_bmcs();
 $redfish_scope = redfish_device_scope();
@@ -110,6 +110,60 @@ switch ((string) get_nfilter_request_var('action')) {
 
 		header('Location: redfish_bmcs.php');
 		exit;
+	case 'provision':
+	case 'provision_confirm':
+		$redfish_bmc = redfish_requested_bmc($redfish_bmcs, $redfish_scope, (int) get_filter_request_var('id'));
+
+		if ($redfish_bmc === null) {
+			header('Location: redfish_bmcs.php');
+			exit;
+		}
+
+		$redfish_provisioner = redfish_provisioner();
+		$redfish_objects     = redfish_cacti_objects();
+
+		// Adding a device, data queries, or graphs is device management in
+		// Cacti, so it needs that realm as well as Redfish Admin (ADR 0015).
+		// A mapping to a device deleted since cannot take graphs.
+		$redfish_refusal = $redfish_provisioner->refusal();
+
+		if (!is_realm_allowed(3)) {
+			$redfish_refusal = __('Adding devices and graphs needs Cacti\'s device management permission.', 'redfish');
+		} elseif ($redfish_bmc->hostId > 0 && $redfish_objects->device($redfish_bmc->hostId) === null) {
+			$redfish_refusal = __('The device of this BMC was deleted. Choose another device, or none, on the BMC form first.', 'redfish');
+		}
+
+		if (get_nfilter_request_var('action') === 'provision' || $redfish_refusal !== null) {
+			top_header();
+			$redfish_page->renderProvision($redfish_bmc, $redfish_refusal === null ? $redfish_provisioner->plan($redfish_bmc, (new \Somethingwithproof\Redfish\NodeCacheRepository(false))->memberCounts($redfish_bmc->id)) : array(), $redfish_refusal);
+			bottom_footer();
+			exit;
+		}
+
+		if ($redfish_bmc->hostId > 0) {
+			$redfish_graphs = $redfish_provisioner->attach($redfish_bmc->id, $redfish_bmc->hostId, $redfish_user);
+			raise_message('redfish_provisioned', __('The data queries were indexed again and %d graphs were added.', $redfish_graphs, 'redfish'), MESSAGE_LEVEL_INFO);
+		} else {
+			$redfish_error = null;
+			$redfish_host  = $redfish_provisioner->create($redfish_bmc, $redfish_user, $redfish_error);
+
+			raise_message('redfish_provisioned', $redfish_host > 0 ? __('The device was created with its Redfish graphs.', 'redfish') : (string) $redfish_error, $redfish_host > 0 ? MESSAGE_LEVEL_INFO : MESSAGE_LEVEL_ERROR);
+		}
+
+		header('Location: redfish_bmcs.php');
+		exit;
+	case 'templates':
+		// Import updates templates already in Cacti, so it needs Cacti's
+		// Import Templates permission as well as Redfish Admin.
+		if (!is_realm_allowed(17)) {
+			raise_message('redfish_templates', __('Installing the Redfish templates needs Cacti\'s Import Templates permission.', 'redfish'), MESSAGE_LEVEL_ERROR);
+		} else {
+			$redfish_installed = redfish_template_installer()->install();
+			raise_message('redfish_templates', $redfish_installed ? __('The Redfish templates are installed.', 'redfish') : __('The Redfish templates could not be installed. The health page shows why.', 'redfish'), $redfish_installed ? MESSAGE_LEVEL_INFO : MESSAGE_LEVEL_ERROR);
+		}
+
+		header('Location: redfish_bmcs.php');
+		exit;
 	case 'import':
 		$redfish_csv = '';
 
@@ -128,6 +182,9 @@ switch ((string) get_nfilter_request_var('action')) {
 			},
 			function (int $host) use ($redfish_scope): bool {
 				return $redfish_scope->allowsNew($host);
+			},
+			function (int $host) use ($redfish_bmcs): ?string {
+				return $redfish_bmcs->findByHost($host)?->name;
 			}
 		);
 
