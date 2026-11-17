@@ -76,3 +76,29 @@ it('ignores malformed session acknowledgments without hiding current health', fu
 	expect(OperatorPage::acknowledge($session, $row, OperatorPage::fingerprint($row), 2, 1000))->toBeTrue()
 		->and($row['state'])->toBe('failed');
 });
+
+it('excludes operator observations whose mapped device has been removed', function () {
+	require_once dirname(__DIR__, 2) . '/include/operator.php';
+	$original = $GLOBALS['__redfish_db_rows'];
+	$GLOBALS['__redfish_db_rows'] = [
+		'FROM plugin_redfish_bmc' => [['id' => 1, 'name' => 'Removed device', 'address' => '192.0.2.1', 'port' => 443, 'host_id' => 7, 'credential_id' => 1, 'admin_state' => 'enabled']],
+		'FROM host' => [['count' => 0]],
+	];
+	try {
+		expect(redfish_operator_rows())->toBe([]);
+	} finally {
+		$GLOBALS['__redfish_db_rows'] = $original;
+	}
+});
+
+it('reports a failed hold release instead of completing the operator action', function () {
+	require_once dirname(__DIR__, 2) . '/include/operator.php';
+	$GLOBALS['__redfish_db_fail'] = ['UPDATE plugin_redfish_health'];
+	try {
+		expect(fn () => redfish_operator_retry(7))->toThrow(RuntimeException::class, 'Collection hold could not be released');
+		$GLOBALS['__redfish_db_fail'] = [];
+		expect((new Somethingwithproof\Redfish\HealthRepository(false))->clearHolds(7))->toBeTrue();
+	} finally {
+		unset($GLOBALS['__redfish_db_fail']);
+	}
+});

@@ -362,7 +362,7 @@ msgstr "पासवर्ड"
 
 #: lib/CredentialsPage.php
 msgid "Used By"
-msgstr "उपयोगकर्ता"
+msgstr "उपयोग करने वाले"
 
 #: lib/CredentialsPage.php
 msgid "User Name"

@@ -1,4 +1,4 @@
-<!-- Source: README.md; SHA256: 28b5d1a5639bbabf1a01c48b3acd50363a9c25172ea9d43462a42a7a36398583 -->
+<!-- Source: README.md; SHA256: 7b4e83a58a1adc844cb0615ef30e95476cba2851f96bb454d2a816fb2774724d -->
 
 <!-- translations:start -->
 [English](../../../README.md) | [简体中文](README.md) | [हिन्दी](../hi-IN/README.md) | [Español (España)](../es-ES/README.md) | [Español (Latinoamérica)](../es-419/README.md) | [العربية](../ar-SA/README.md)
@@ -61,7 +61,7 @@ Cacti 目前已覆盖其中部分需求：
 - **有凭据类型但无采集器。** plugin_credentials 定义了“IPMI / Redfish (BMC)”凭据，但不读取 BMC。
 - **缺少机架视图。** Cacti 核心没有机架对象；设备只有自由文本 `location` 字段。
 
-插件独立于 Cacti 轮询周期带外轮询 BMC，缓存规范化读数，并通过脚本服务器数据查询及汇总数据源提供这些数据。它复用 Cacti 图表、权限、Thold、Maint 和远程数据采集器，不更改 BMC 状态。
+插件独立于 Cacti 轮询周期带外轮询 BMC，缓存规范化读数，并通过脚本服务器数据查询及汇总数据源提供这些数据。它复用 Cacti 图表、权限、Thold 和 Maint，不更改 BMC 状态。远程数据采集器支持计划在阶段 4 实现；当前仅在主轮询器上采集。
 
 <a id="planned-scope"></a>
 ## 计划范围

@@ -1,4 +1,4 @@
-<!-- Source: README.md; SHA256: 28b5d1a5639bbabf1a01c48b3acd50363a9c25172ea9d43462a42a7a36398583 -->
+<!-- Source: README.md; SHA256: 7b4e83a58a1adc844cb0615ef30e95476cba2851f96bb454d2a816fb2774724d -->
 
 <!-- translations:start -->
 [English](../../../README.md) | [简体中文](../zh-CN/README.md) | [हिन्दी](../hi-IN/README.md) | [Español (España)](../es-ES/README.md) | [Español (Latinoamérica)](README.md) | [العربية](../ar-SA/README.md)
@@ -61,7 +61,7 @@ Cacti ya cubre parte de estas necesidades:
 - **Un tipo de credencial sin recopilador.** plugin_credentials define una credencial «IPMI / Redfish (BMC)», pero no lee ningún BMC.
 - **Sin vista por rack.** El núcleo de Cacti no tiene un objeto rack; los dispositivos tienen un campo libre `location`.
 
-El complemento sondea los BMC fuera del ciclo de sondeo de Cacti, guarda lecturas normalizadas y las expone mediante consultas del servidor de scripts y fuentes de resumen. Reutiliza gráficos, permisos, Thold, Maint y recopiladores remotos de Cacti, sin cambiar el estado de los BMC.
+El complemento sondea los BMC fuera del ciclo de sondeo de Cacti, guarda lecturas normalizadas y las expone mediante consultas del servidor de scripts y fuentes de resumen. Reutiliza gráficos, permisos, Thold y Maint de Cacti, sin cambiar el estado de los BMC. La compatibilidad con recopiladores remotos está prevista para la fase 4; actualmente la recopilación se ejecuta solo en el sondeador principal.
 
 <a id="planned-scope"></a>
 ## Alcance previsto

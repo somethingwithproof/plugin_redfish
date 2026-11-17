@@ -18,15 +18,18 @@
  */
 
 use Somethingwithproof\Redfish\HealthRepository;
-use Somethingwithproof\Redfish\HealthPage;
 use Somethingwithproof\Redfish\BmcHealth;
 
 /** @return list<array{id: string, name: string, state: string, observed: int, interval: int, detail: string}> */
 function redfish_operator_rows(): array {
 	$rows   = [];
 	$health = new HealthRepository(false);
+	$scope  = redfish_device_scope();
 
-	foreach (HealthPage::visible(redfish_device_scope()->filter(redfish_bmcs()->all()), false) as $bmc) {
+	foreach (redfish_bmcs()->all() as $bmc) {
+		if ($bmc->hostId <= 0 || !$scope->allowsNew($bmc->hostId)) {
+			continue;
+		}
 		$h      = $health->find($bmc->id) ?? new BmcHealth($bmc->id);
 		$rows[] = [
 			'id' => (string) $bmc->id,
@@ -43,5 +46,7 @@ function redfish_operator_rows(): array {
 
 /** The caller has reloaded this BMC within the current device scope. */
 function redfish_operator_retry(int $id): void {
-	(new HealthRepository(false))->clearHolds($id);
+	if (!(new HealthRepository(false))->clearHolds($id)) {
+		throw new RuntimeException('Collection hold could not be released');
+	}
 }

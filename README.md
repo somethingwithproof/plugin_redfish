@@ -64,7 +64,7 @@ Cacti covers part of this today:
 - **A credential type without a collector.** plugin_credentials defines an "IPMI / Redfish (BMC)" credential but reads no BMC.
 - **No rack-level view.** Cacti core has no rack object; a device has a free-text `location` field.
 
-The plugin polls BMCs out of band from Cacti's poll cycle, caches normalized readings, and exposes them through a script server data query and summary data sources. It reuses Cacti's graphing, permissions, Thold, Maint, and remote data collectors, and does not change BMC state.
+The plugin polls BMCs out of band from Cacti's poll cycle, caches normalized readings, and exposes them through a script server data query and summary data sources. It reuses Cacti's graphing, permissions, Thold, and Maint, and does not change BMC state. Remote data collector support is planned for phase 4; current collection runs on the main poller only.
 
 ## Planned scope
 
