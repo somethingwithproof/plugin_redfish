@@ -151,6 +151,76 @@ it('ends discovery on a throttled BMC instead of mistaking it for one without re
 	expect($class)->toBe(FailureClass::Throttled);
 });
 
+it('combines subsystem power with legacy fans without replacing either source', function () {
+	[, $obs, $fake] = redfish_observe('dell-subsystem', function (FixtureTransport $fake) {
+		$chassis = '/redfish/v1/Chassis/System.Embedded.1';
+		unset($fake->resources[$chassis]['ThermalSubsystem']);
+		$legacy = new FixtureTransport('legacy');
+		$fake->resources[$chassis . '/Thermal'] = $legacy->resources['/redfish/v1/Chassis/1/Thermal'];
+	});
+
+	expect(redfish_value($obs, 'node', 'power_watts')[0])->toBe(312.0)
+		->and(redfish_value($obs, 'System.Embedded.1/fan/Fan 1', 'fan_speed'))->toBe([35.0, '%', 'redfish.legacy', 'legacy.fan'])
+		->and($fake->log())->toContain('GET /redfish/v1/Chassis/System.Embedded.1/Thermal')
+		->and($fake->log())->not->toContain('GET /redfish/v1/Chassis/System.Embedded.1/Power');
+});
+
+it('preserves member identity and readings when firmware reorders collections', function (string $fixture) {
+	[, $before] = redfish_observe($fixture);
+	[, $after] = redfish_observe($fixture, function (FixtureTransport $fake) {
+		foreach ($fake->resources as &$resource) {
+			foreach (['Members', 'Temperatures', 'Fans', 'PowerSupplies', 'TemperatureReadingsCelsius'] as $field) {
+				if (isset($resource[$field]) && is_array($resource[$field])) {
+					$resource[$field] = array_reverse($resource[$field]);
+				}
+			}
+		}
+		unset($resource);
+	});
+
+	ksort($before->members);
+	ksort($after->members);
+	ksort($before->readings);
+	ksort($after->readings);
+	expect($after->members)->toEqual($before->members)
+		->and($after->readings)->toEqual($before->readings);
+})->with(['dell-subsystem', 'legacy', 'lenovo']);
+
+it('keeps chassis readings separate and selects node power independently of collection order', function (bool $reverse) {
+	[$plan, $obs] = redfish_observe('legacy', function (FixtureTransport $fake) use ($reverse) {
+		$first = '/redfish/v1/Chassis/1';
+		$second = '/redfish/v1/Chassis/2';
+
+		foreach (['', '/Power', '/Thermal'] as $suffix) {
+			$json = json_encode($fake->resources[$first . $suffix], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
+			$fake->resources[$second . $suffix] = json_decode(str_replace($first, $second, $json), true, flags: JSON_THROW_ON_ERROR);
+		}
+
+		$fake->resources[$second]['Id'] = '2';
+		$fake->resources[$second . '/Power']['PowerControl'][0]['PowerConsumedWatts'] = 500;
+		$members = [['@odata.id' => $first], ['@odata.id' => $second]];
+		$fake->resources['/redfish/v1/Chassis']['Members'] = $reverse ? array_reverse($members) : $members;
+	});
+
+	expect($plan->primaryChassis)->toBe('1')
+		->and(redfish_value($obs, '1/chassis/1', 'power_watts')[0])->toBe(250.0)
+		->and(redfish_value($obs, '2/chassis/2', 'power_watts')[0])->toBe(500.0)
+		->and(redfish_value($obs, 'node', 'power_watts')[0])->toBe(250.0)
+		->and($obs->members)->toHaveKeys(['1/fan/Fan 1', '2/fan/Fan 1']);
+})->with([false, true]);
+
+it('does not manufacture measurements from missing resource fields', function (string $fixture) {
+	[$plan] = redfish_observe($fixture);
+
+	foreach ($plan->targets as $target) {
+		$observation = Normalizer::normalize($target, [], $plan->family);
+
+		foreach ($observation->readings as $reading) {
+			expect($reading->value)->toBeNull();
+		}
+	}
+})->with(['dell-subsystem', 'legacy', 'lenovo']);
+
 it('round-trips a plan through its stored row', function () {
 	[$plan] = redfish_observe('dell-subsystem');
 	$row    = ['fingerprint' => $plan->fingerprint, 'redfish_version' => $plan->redfishVersion, 'vendor' => $plan->vendor, 'product' => $plan->product, 'family' => $plan->family, 'features' => implode(',', $plan->features), 'sessions_path' => $plan->sessionsPath, 'plan' => $plan->planJson()];
