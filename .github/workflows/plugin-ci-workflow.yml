@@ -107,7 +107,16 @@ jobs:
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
         persist-credentials: false
-        path: cacti/plugins/redfish
+        path: redfish-source
+
+    - name: Install Redfish from release archive
+      run: |
+        set -euo pipefail
+        mkdir -p cacti/plugins/redfish
+        git -C redfish-source archive --format=tar HEAD | tar -xf - -C cacti/plugins/redfish
+        test ! -e cacti/plugins/redfish/tests
+        cp -a redfish-source/tests cacti/plugins/redfish/tests
+        cp redfish-source/phpunit.xml redfish-source/phpunit-integration.xml redfish-source/phpstan.neon cacti/plugins/redfish/
 
     - name: Install PHP ${{ matrix.php }}
       uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
@@ -353,7 +362,16 @@ jobs:
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
         persist-credentials: false
-        path: cacti/plugins/redfish
+        path: redfish-source
+
+    - name: Install Redfish from release archive
+      run: |
+        set -euo pipefail
+        mkdir -p cacti/plugins/redfish
+        git -C redfish-source archive --format=tar HEAD | tar -xf - -C cacti/plugins/redfish
+        test ! -e cacti/plugins/redfish/tests
+        cp -a redfish-source/tests cacti/plugins/redfish/tests
+        cp redfish-source/phpunit.xml redfish-source/phpunit-integration.xml redfish-source/phpstan.neon cacti/plugins/redfish/
 
     - name: Install system dependencies
       run: |

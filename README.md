@@ -2,7 +2,7 @@
 
 A Cacti 1.2 plugin that brings server power draw, inlet temperature, fan state, and power supply health from baseboard management controllers (BMCs) into Cacti as ordinary devices, data sources, and graphs, using Redfish with an optional IPMI fallback. Thold and Maint then alert on and suppress them, and a later phase adds rack-level power totals.
 
-> **Status: in development, no release yet (0.1.0-dev).** Milestone 2 (foundation) is merged on `main`; milestone 3 (Cacti objects and alerting) is in review. This plugin is not affiliated with the Cacti project. It installs on Cacti 1.2.31 under PHP 8.2 or later, registers BMCs and credentials, reads power, temperatures, fans, and power supply health from each BMC over Redfish into its own cache, and shows collection health. Milestone 3 adds Cacti devices, per-member and summary graphs, and Thold and Maint support through ordinary data sources. It has been tested only against a fake BMC built from hand-written fixtures and the DMTF Redfish mockup server, never a real BMC. The design and research are in [docs/PLAN.md](docs/PLAN.md), [docs/research/](docs/research/), and [docs/decisions/](docs/decisions/).
+> **Status: in development, no release yet (0.1.0-dev).** Milestones 2 (foundation) and 3 (Cacti objects and alerting) are merged on `main`. This plugin is not affiliated with the Cacti project. It installs on Cacti 1.2.31 under PHP 8.2 or later, registers BMCs and credentials, reads power, temperatures, fans, and power supply health from each BMC over Redfish into its own cache, and shows collection health. It adds Cacti devices, per-member and summary graphs, and Thold and Maint support through ordinary data sources. CI has exercised a fake BMC built from hand-written fixtures and the DMTF Redfish mockup server; no real BMC or pilot fleet has been qualified. The design and research are in [docs/PLAN.md](docs/PLAN.md), [docs/research/](docs/research/), and [docs/decisions/](docs/decisions/).
 
 ### What milestone 2 ships
 
@@ -82,6 +82,10 @@ flowchart LR
 ## Security
 
 BMC credentials control out-of-band management of servers. The design keeps them out of command lines, logs, and pages, verifies TLS by default, runs any external command from an argument array with allowlisted subcommands, and uses read-only BMC accounts. See [docs/PLAN.md](docs/PLAN.md#security) and [SECURITY.md](SECURITY.md).
+
+## Operator guide
+
+See [docs/operator-guide.md](docs/operator-guide.md) for installation prerequisites, vault and TLS setup, BMC registration, graph creation, alert intervals, backup, and failure handling. The guide does not declare a real vendor firmware line supported until a redacted capture from that firmware passes the suite.
 
 ## How work is tracked
 
