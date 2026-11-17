@@ -38,7 +38,7 @@ const REDFISH_TABLES = [
 	'plugin_redfish_secret',
 ];
 
-const REDFISH_HOOKS = ['api_device_new', 'config_arrays', 'config_settings', 'device_remove', 'draw_navigation_text', 'graph_buttons', 'poller_bottom'];
+const REDFISH_HOOKS = ['api_device_new', 'auth_alternate_realms', 'config_arrays', 'config_settings', 'device_remove', 'draw_navigation_text', 'graph_buttons', 'poller_bottom'];
 
 beforeEach(function () {
 	lifecycle('reset');
@@ -48,7 +48,7 @@ afterAll(function () {
 	lifecycle('reset');
 });
 
-it('installs fresh with tracked tables, hooks, and both realms, leaving the plugin disabled', function () {
+it('installs fresh with tracked tables, hooks, and three realms, leaving the plugin disabled', function () {
 	$state = lifecycle('install');
 
 	expect($state['plugin']['status'])->toEqual('4')
@@ -60,7 +60,8 @@ it('installs fresh with tracked tables, hooks, and both realms, leaving the plug
 		->and(array_keys($state['hooks']))->toBe(REDFISH_HOOKS)
 		->and($state['realms'])->toEqual([
 			'redfish_bmcs.php,redfish_credentials.php' => 'Redfish Admin',
-			'redfish_health.php'                       => 'Redfish View',
+			'redfish_health.php' => 'Redfish View',
+			'redfish_operator.php' => 'Redfish Operator',
 		])
 		->and($state['admin'])->toBe(2);
 });
@@ -108,7 +109,7 @@ it('re-registers hooks and realms that went missing', function () {
 
 	expect($state['result'])->toBeTrue()
 		->and(array_keys($state['hooks']))->toBe(REDFISH_HOOKS)
-		->and($state['realms'])->toHaveCount(2);
+		->and($state['realms'])->toHaveCount(3);
 });
 
 it('finishes an upgrade that was interrupted after creating only some tables', function () {
@@ -273,7 +274,7 @@ it('grants realms on install but never on a repair a viewer triggers', function 
 	expect(lifecycle('install')['admin'])->toBe(2);
 
 	$repair = lifecycle('repair_as_viewer');
-	expect($repair['realms'])->toHaveCount(2)
+	expect($repair['realms'])->toHaveCount(3)
 		->and($repair['result'])->toBe(['viewer_realms' => 0]);
 });
 
@@ -307,4 +308,24 @@ it('leaves a consistent cache when a run is killed mid-BMC, and the next run del
 		->and($r['final'])->toMatchArray(['reachability' => 'reachable', 'session_pending' => '', 'session_uri' => ''])
 		->and($r['final_count'])->toBeTrue()
 		->and($r['final_open'])->toBe(0);
+});
+
+it('preserves old grants and resolves the three roles through Cacti including groups', function () {
+	lifecycle('install');
+	lifecycle('enable');
+	$roles = lifecycle('operator_roles')['result'];
+	expect($roles['ids_preserved'])->toBeTrue()
+		->and($roles['viewer_grants'])->toBe([$roles['expected_view']])
+		->and($roles['hook_enabled'])->toBe(1)
+		->and($roles['viewer'])->toBe([true, false, false])
+		->and($roles['operator'])->toBe([true, true, false])
+		->and($roles['admin'])->toBe([true, true, true])
+		->and($roles['revoked'])->toBe([false, false, false])
+		->and($roles['group_operator'])->toBe([true, true, false])
+		->and($roles['disabled_group'])->toBe([false, false, false])
+		->and($roles['first_request']['viewer'])->toBe([[true, true, true], [true, false, true], [false, false, true]])
+		->and($roles['first_request']['operator'])->toBe([[true, true, true], [true, true, true], [false, false, true]])
+		->and($roles['first_request']['admin'])->toBe([[true, true, true], [true, true, true], [false, true, true]])
+		->and($roles['first_request']['revoked'])->toBe([false, false, false])
+		->and($roles['disabled_user'])->toBe([false, false, false]);
 });

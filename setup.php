@@ -128,13 +128,18 @@ function plugin_redfish_check_config(): bool {
 }
 
 /**
- * Common start of every page script, after include/auth.php has authorized
- * the realm. Refuses on an unsupported runtime or a disabled plugin, because
- * Cacti keeps plugin realms registered while a plugin is disabled.
+ * Common start after include/auth.php establishes the user. Recheck the
+ * realm here because cookie and Basic login restore the user after the
+ * alternate-realms hook. Disabled plugins and unsupported runtimes refuse.
  */
 function redfish_page_start(): bool {
 	if (redfish_boot() && api_plugin_is_enabled('redfish')) {
-		return true;
+		if (redfish_page_allowed()) {
+			return true;
+		}
+		http_response_code(403);
+
+		return false;
 	}
 
 	top_header();
@@ -317,7 +322,7 @@ function redfish_setup_hooks(bool $grant = false): void {
 	}
 
 	foreach (\Somethingwithproof\Redfish\Pages::realms() as $realm) {
-		api_plugin_register_realm('redfish', implode(',', $realm['files']), $realm['name'], $grant);
+		api_plugin_register_realm('redfish', implode(',', $realm['files']), $realm['name'], $grant && $realm['files'] !== \Somethingwithproof\Redfish\Pages::OPERATOR);
 	}
 }
 
@@ -383,6 +388,10 @@ function redfish_config_arrays(): void {
 
 function redfish_config_settings(): void {
 	global $tabs, $settings;
+
+	if (PHP_SAPI !== 'cli' && !api_plugin_user_realm_auth('redfish_bmcs.php')) {
+		return;
+	}
 
 	if (!redfish_boot()) {
 		return;
@@ -538,4 +547,64 @@ function redfish_collector(int $pollerId, int $worker): \Somethingwithproof\Redf
 		$clock,
 		'p' . $pollerId . 'w' . $worker . '-' . getmypid() . '-' . bin2hex(random_bytes(4))
 	);
+}
+
+/** Resolve role inheritance against Cacti's current user and group grants. */
+function redfish_auth_alternate_realms(): void {
+	global $user_auth_realm_filenames;
+
+	static $deferred = array();
+
+	foreach ($deferred as $file => $realm) {
+		$user_auth_realm_filenames[$file] = $realm;
+	}
+	$deferred = array();
+
+	if (!api_plugin_is_enabled('redfish')) {
+		return;
+	}
+
+	if (empty($_SESSION['sess_user_id'])) {
+		// Core restores cookie and Basic authentication after this hook. Only
+		// these entrypoints defer the realm check to their post-auth guard.
+		$page = get_current_page();
+
+		if (in_array($page, array('redfish_health.php', 'redfish_operator.php'), true) && isset($user_auth_realm_filenames[$page])) {
+			$deferred[$page]                  = $user_auth_realm_filenames[$page];
+			$user_auth_realm_filenames[$page] = -1;
+		}
+
+		return;
+	}
+	$operator = 'redfish_operator.php';
+	$admin = 'redfish_bmcs.php';
+	$files = array('redfish_health.php');
+	$realm = $user_auth_realm_filenames[$admin] ?? 0;
+	if ($realm > 0 && is_realm_allowed($realm)) {
+		$files[] = $operator;
+	} else {
+		$realm = $user_auth_realm_filenames[$operator] ?? 0;
+		if ($realm <= 0 || !is_realm_allowed($realm)) {
+			return;
+		}
+	}
+	foreach ($files as $file) {
+		$user_auth_realm_filenames[$file] = $realm;
+	}
+}
+
+/** Recheck the authenticated user before a plugin page reads data or acts. */
+function redfish_page_allowed(): bool {
+	global $current_user;
+
+	redfish_auth_alternate_realms();
+	$userId    = $current_user['id'] ?? null;
+	$sessionId = $_SESSION['sess_user_id'] ?? null;
+
+	return (is_int($userId) || (is_string($userId) && ctype_digit($userId)))
+		&& (is_int($sessionId) || (is_string($sessionId) && ctype_digit($sessionId)))
+		&& (int) $userId > 0 && (int) $userId === (int) $sessionId
+		&& api_plugin_is_enabled('redfish')
+		&& ($current_user['enabled'] ?? '') === 'on'
+		&& api_plugin_user_realm_auth(get_current_page());
 }

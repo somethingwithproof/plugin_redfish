@@ -1,3 +1,7 @@
+<!-- translations:start -->
+[English](README.md) | [简体中文](docs/i18n/zh-CN/README.md) | [हिन्दी](docs/i18n/hi-IN/README.md) | [Español (España)](docs/i18n/es-ES/README.md) | [Español (Latinoamérica)](docs/i18n/es-419/README.md) | [العربية](docs/i18n/ar-SA/README.md)
+<!-- translations:end -->
+
 # plugin_redfish
 
 A Cacti 1.2 plugin that brings server power draw, inlet temperature, fan state, and power supply health from baseboard management controllers (BMCs) into Cacti as ordinary devices, data sources, and graphs, using Redfish with an optional IPMI fallback. Thold and Maint then alert on and suppress them, and a later phase adds rack-level power totals.
@@ -7,7 +11,7 @@ A Cacti 1.2 plugin that brings server power draw, inlet temperature, fan state, 
 ### What milestone 2 ships
 
 - Install, upgrade, disable, and uninstall through Cacti's plugin API, with tables kept on uninstall unless the setting is cleared. On PHP older than 8.2 the plugin refuses to install or enable and says why.
-- Realms "Redfish View" (health page) and "Redfish Admin" (BMCs and credentials pages), and settings under Configuration > Settings > Redfish.
+- Realms "Redfish View" (health page), "Redfish Operator" (operations page), and "Redfish Admin" (BMCs and credentials pages), and settings under Configuration > Settings > Redfish.
 - A BMC registry with CSV import and JSON export. Import files must not contain passwords; credentials are referenced by name.
 - Credentials stored encrypted with AES-256-GCM. The key is a file outside the database, `/etc/cacti/redfish-vault.key` by default, holding 64 hexadecimal characters (`openssl rand -hex 32`) or exactly 32 random bytes, owned by the poller user, not readable by other users, in a directory only the poller user or root can write. A key of 32 printable characters is refused as a passphrase. **Back up the key file with the database**; without it every stored password must be entered again.
 - TLS verification on by default, with a per-BMC CA bundle or SPKI SHA-256 pin. A logged, per-BMC unverified opt-out stays on the health page as a warning.
@@ -27,6 +31,28 @@ A Cacti 1.2 plugin that brings server power draw, inlet temperature, fan state, 
 **When a BMC's members change** (a fan replaced, a firmware update renaming sensors), choose **Add Graphs** again. A fan or power supply that was present and is now absent or gone counts in `fans_bad` or `psus_bad` until you do, so a pulled fan alerts; a slot that was never filled does not. Add Graphs accepts the members the BMC reports now, and Cacti indexes the queries again; a member that is gone keeps its data source and graph, which read `U` from then on, and a new member gets a graph. Delete the graphs of members that are gone by hand once their history is no longer needed.
 
 Deleting a device unmaps its BMC and keeps the BMC and its cache. Deleting a BMC, or uninstalling the plugin, keeps its device and graphs.
+
+## Access roles
+
+| Realm | Access |
+| --- | --- |
+| Redfish View | Existing monitoring pages. |
+| Redfish Operator | Monitoring plus the Operations page and personal triage acknowledgments. |
+| Redfish Admin | Operator access plus the existing configuration and administrative actions. |
+
+After copying upgrade files, open the Plugins page as an administrator to register
+the new realm. Assign the Operator realm explicitly under **Configuration > Users** or user groups.
+Upgrades retain the existing View and Admin realm IDs and grants. Admin access
+inherits Operator access, and Operator access inherits View access on each request;
+this does not add stored grants to users or groups. Plugin settings also require
+Redfish Admin access in addition to Cacti's Settings permission.
+
+Cacti device permissions still limit the rows and actions available to each user; unmapped objects require an administrator. Operators can release a collection hold on a permitted BMC for the next scheduled run.
+Credentials, configuration, mapping, deletion and other administrative changes
+remain in the administrative pages. Acknowledgments last only in the current
+user's session, for at most one hour and only while the same observation remains
+fresh. New or changed observations invalidate them. They never mark a failed
+measurement healthy or suppress alerts.
 
 ## Why
 
