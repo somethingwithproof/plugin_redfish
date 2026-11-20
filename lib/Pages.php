@@ -65,16 +65,6 @@ final class Pages {
 	}
 
 	/**
-	 * Pages whose load re-checks the schema, matching how maintained plugins
-	 * apply upgrades in a core that never calls plugin_*_upgrade() itself.
-	 *
-	 * @return list<string>
-	 */
-	public static function upgradeTriggers(): array {
-		return array_merge(['plugins.php'], self::files());
-	}
-
-	/**
 	 * @return array<string, array{title: string, mapping: string, url: string, level: string}>
 	 */
 	public static function navigation(): array {

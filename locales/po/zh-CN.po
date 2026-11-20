@@ -816,8 +816,8 @@ msgid "Keep Plugin Tables on Uninstall"
 msgstr "卸载时保留插件表"
 
 #: lib/Settings.php
-msgid "When checked, uninstalling the plugin keeps its BMC registry, encrypted passwords, and reading cache. Clear it to have the uninstall drop them. This release creates no Cacti devices, and uninstall never touches devices, graphs, or BMCs."
-msgstr "选中时，卸载会保留 BMC 注册表、加密密码和读数缓存。取消选中则删除这些内容。此版本不创建 Cacti 设备，卸载也永远不会修改设备、图表或 BMC。"
+msgid "When checked, uninstalling the plugin keeps its BMC registry, encrypted passwords, and reading cache. Clear it to have the uninstall drop them. Uninstall never touches Cacti devices, graphs, or BMCs, including devices the plugin created."
+msgstr "选中时，卸载会保留 BMC 注册表、加密密码和读数缓存。取消选中则删除这些内容。卸载永远不会修改 Cacti 设备、图表或 BMC，包括插件创建的设备。"
 
 #: lib/TlsMode.php
 msgid "Verify against the system CA store"

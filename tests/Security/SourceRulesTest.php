@@ -322,3 +322,17 @@ it('guards every test script outside tests/Unit against web requests', function 
 
 	expect($missing)->toBe([]);
 });
+
+it('runs the schema repair only after a plugin page is authorized, never from config_arrays', function () {
+	$source = (string) file_get_contents(redfish_root() . '/setup.php');
+
+	// config_arrays fires while include/global.php loads, before the session
+	// check, so nothing it calls may migrate or import.
+	preg_match('/function redfish_config_arrays\(\): void \{.*?\n\}\n/s', $source, $arrays);
+	preg_match('/function redfish_page_start\(\): bool \{.*?\n\}\n/s', $source, $start);
+
+	expect($arrays)->not->toBeEmpty()
+		->and($arrays[0])->not->toContain('plugin_redfish_upgrade')
+		->and($start)->not->toBeEmpty()
+		->and(strpos($start[0], 'plugin_redfish_upgrade'))->toBeGreaterThan(strpos($start[0], 'redfish_page_allowed()'));
+});

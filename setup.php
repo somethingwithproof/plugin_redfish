@@ -135,6 +135,10 @@ function plugin_redfish_check_config(): bool {
 function redfish_page_start(): bool {
 	if (redfish_boot() && api_plugin_is_enabled('redfish')) {
 		if (redfish_page_allowed()) {
+			// The repair runs only for an authenticated, authorized request:
+			// config_arrays fires before Cacti checks the session.
+			plugin_redfish_upgrade();
+
 			return true;
 		}
 		http_response_code(403);
@@ -252,15 +256,15 @@ function redfish_summary_script(): \Somethingwithproof\Redfish\SummaryScript {
 /**
  * Bring the schema, hooks, and realms up to the code's version.
  *
- * Cacti 1.2.31 never calls this itself; check_config and the config_arrays
- * hook do. Fresh installs take the same path as upgrades. The version stored
+ * Cacti 1.2.31 never calls this itself; check_config and redfish_page_start()
+ * do. Fresh installs take the same path as upgrades. The version stored
  * in plugin_config changes only after every migration has succeeded, so an
  * interrupted run is finished by the next one (REQ-LIFE-001, REQ-LIFE-002).
  *
  * $grant gives newly registered realms to the current user. Only install and
  * check_config pass it: both run from the Plugins page, which needs plugin
- * management. A repair triggered from config_arrays can run for anyone who
- * opens a plugin page, so it must never grant anything.
+ * management. A repair triggered from redfish_page_start() can run for any
+ * user allowed on a plugin page, so it must never grant anything.
  */
 function plugin_redfish_upgrade(bool $grant = false): bool {
 	if (!redfish_boot()) {
@@ -379,10 +383,6 @@ function redfish_config_arrays(): void {
 
 	foreach (\Somethingwithproof\Redfish\Pages::menu() as $file => $title) {
 		$menu[__('Management')]['plugins/redfish/' . $file] = $title;
-	}
-
-	if (in_array(get_current_page(), \Somethingwithproof\Redfish\Pages::upgradeTriggers(), true)) {
-		plugin_redfish_upgrade();
 	}
 }
 
