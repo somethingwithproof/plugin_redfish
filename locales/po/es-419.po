@@ -817,7 +817,7 @@ msgstr "Conservar tablas al desinstalar"
 
 #: lib/Settings.php
 msgid "When checked, uninstalling the plugin keeps its BMC registry, encrypted passwords, and reading cache. Clear it to have the uninstall drop them. Uninstall never touches Cacti devices, graphs, or BMCs, including devices the plugin created."
-msgstr "Si está marcado, se conservan el registro BMC, las contraseñas cifradas y la caché de lecturas al desinstalar. Desmárquelo para eliminarlos. La desinstalación nunca toca dispositivos, gráficos ni BMC de Cacti, incluidos los dispositivos que creó el plugin."
+msgstr "Si está marcado, se conservan el registro BMC, las contraseñas cifradas y la caché de lecturas al desinstalar. Desmárquelo para eliminarlos. La desinstalación nunca toca dispositivos, gráficos ni BMC de Cacti, incluidos los dispositivos que creó el complemento."
 
 #: lib/TlsMode.php
 msgid "Verify against the system CA store"
