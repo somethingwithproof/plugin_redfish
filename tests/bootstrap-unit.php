@@ -101,6 +101,22 @@ if (!function_exists('db_execute_prepared')) {
 	function db_execute_prepared($sql, $params = [], $log = true, $db_conn = false, $log_function = null) {
 		$GLOBALS['__redfish_db_exec'][] = ['sql' => $sql, 'params' => $params];
 
+		if (str_starts_with($sql, 'SAVEPOINT ')) {
+			$GLOBALS['__redfish_savepoint'] = true;
+		} elseif (str_starts_with($sql, 'RELEASE SAVEPOINT ')) {
+			$alive                          = $GLOBALS['__redfish_savepoint'];
+			$GLOBALS['__redfish_savepoint'] = false;
+
+			return $alive;
+		}
+
+		foreach ($GLOBALS['__redfish_end_tx'] as $i => $needle) {
+			if (str_contains($sql, $needle)) {
+				unset($GLOBALS['__redfish_end_tx'][$i]);
+				$GLOBALS['__redfish_savepoint'] = false;
+			}
+		}
+
 		foreach ($GLOBALS['__redfish_db_fail'] ?? [] as $needle) {
 			if (str_contains($sql, $needle)) {
 				return false;
@@ -126,9 +142,12 @@ if (!function_exists('db_fetch_row_prepared')) {
 }
 
 // Transactions are recorded as BEGIN, COMMIT, and ROLLBACK statements.
-// @@in_transaction answers from $GLOBALS['__redfish_in_tx'] in order, then 1,
-// so a test can play InnoDB ending a transaction on a deadlock.
-$GLOBALS['__redfish_in_tx'] = [];
+// A savepoint lives as long as its transaction, so the stubs track whether one
+// is set. $GLOBALS['__redfish_end_tx'] lists SQL needles; the first statement
+// matching one (each fires once) ends the transaction after it runs, as InnoDB
+// does on a deadlock, so RELEASE SAVEPOINT then fails.
+$GLOBALS['__redfish_end_tx']    = [];
+$GLOBALS['__redfish_savepoint'] = false;
 
 if (!function_exists('db_begin_transaction')) {
 	function db_begin_transaction($db_conn = false) {
@@ -152,10 +171,6 @@ if (!function_exists('db_begin_transaction')) {
 
 if (!function_exists('db_fetch_cell_prepared')) {
 	function db_fetch_cell_prepared($sql, $params = [], $col_name = '', $log = true, $db_conn = false, $log_function = null) {
-		if (str_contains($sql, '@@in_transaction')) {
-			return $GLOBALS['__redfish_in_tx'] === [] ? 1 : array_shift($GLOBALS['__redfish_in_tx']);
-		}
-
 		$rows = redfish_test_rows($sql);
 
 		return is_array($rows) && isset($rows[0]) ? reset($rows[0]) : 0;

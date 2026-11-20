@@ -25,6 +25,7 @@ namespace Somethingwithproof\Redfish;
  */
 final class BmcRepository {
 	private const DELETE_ATTEMPTS = 3;
+	private const DELETE_SAVEPOINT = 'redfish_delete';
 
 	public function __construct(private readonly \PDO|false $connection, private readonly Clock $clock) {
 	}
@@ -271,6 +272,12 @@ final class BmcRepository {
 				return false;
 			}
 
+			if (!db_execute_prepared('SAVEPOINT ' . self::DELETE_SAVEPOINT, [], true, $this->connection)) {
+				db_rollback_transaction($this->connection);
+
+				return false;
+			}
+
 			$intact = true;
 
 			foreach ($statements as [$sql, $params]) {
@@ -409,8 +416,18 @@ final class BmcRepository {
 		}
 	}
 
+	/**
+	 * Whether the transaction begun by delete() is still open. A savepoint
+	 * lives only as long as its transaction, so releasing it succeeds only
+	 * while the transaction does, and it is set again for the next check.
+	 * This works on MariaDB and MySQL alike; @@in_transaction is MariaDB only.
+	 */
 	private function inTransaction(): bool {
-		return (int) db_fetch_cell_prepared('SELECT @@in_transaction', [], '', true, $this->connection) === 1;
+		if (!db_execute_prepared('RELEASE SAVEPOINT ' . self::DELETE_SAVEPOINT, [], false, $this->connection)) {
+			return false;
+		}
+
+		return (bool) db_execute_prepared('SAVEPOINT ' . self::DELETE_SAVEPOINT, [], true, $this->connection);
 	}
 
 	/**
