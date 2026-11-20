@@ -169,7 +169,7 @@ final readonly class Settings {
 			],
 			'redfish_uninstall_keep_tables' => [
 				'friendly_name' => __('Keep Plugin Tables on Uninstall', 'redfish'),
-				'description'   => __('When checked, uninstalling the plugin keeps its BMC registry, encrypted passwords, and reading cache. Clear it to have the uninstall drop them. This release creates no Cacti devices, and uninstall never touches devices, graphs, or BMCs.', 'redfish'),
+				'description'   => __('When checked, uninstalling the plugin keeps its BMC registry, encrypted passwords, and reading cache. Clear it to have the uninstall drop them. Uninstall never touches Cacti devices, graphs, or BMCs, including devices the plugin created.', 'redfish'),
 				'method'        => 'checkbox',
 				'default'       => 'on',
 			],
