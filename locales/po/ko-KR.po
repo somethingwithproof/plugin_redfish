@@ -1,0 +1,970 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: 2026 Thomas Vincent <thomasvincent@gmail.com>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: redfish 0.1.0-dev\n"
+"Report-Msgid-Bugs-To: https://github.com/somethingwithproof/plugin_redfish/issues\n"
+"PO-Revision-Date: 2026-11-26 00:00+0000\n"
+"Last-Translator: Thomas Vincent <thomasvincent@gmail.com>\n"
+"Language-Team: Thomas Vincent <thomasvincent@gmail.com>\n"
+"Language: ko-KR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: include/operator.php
+msgid "Check collection freshness and the device graphs. Retry releases a collection hold for the next scheduled run; it does not contact the BMC now."
+msgstr "수집 최신 상태와 장치 그래프를 확인하세요. 재시도를 수행하면 다음 예약 실행을 위해 수집 보류가 해제되며, 지금 BMC에 즉시 연결하지는 않습니다."
+
+#: lib/BmcImport.php
+msgid "The file is empty or larger than 1 MiB."
+msgstr "파일이 비어 있거나 1 MiB보다 큽니다."
+
+#: lib/BmcImport.php
+msgid "The file could not be read."
+msgstr "파일을 읽을 수 없습니다."
+
+#: lib/BmcImport.php
+msgid "The file has no header row."
+msgstr "파일에 헤더 행이 없습니다."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The file has a column named \"%s\". Import files must not carry secrets; name a stored credential in the credential column instead. Nothing was imported."
+msgstr "파일에 \"%s\" 이름의 열이 있습니다. 가져오기 파일에는 비밀 정보를 포함할 수 없으므로 대신 credential 열에 저장된 자격 증명 이름을 지정하세요. 아무것도 가져오지 않았습니다."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The header must name only these columns, each once, including name, address, and credential: %s."
+msgstr "헤더에는 name, address 및 credential을 포함하여 다음 열만 각각 한 번씩 지정해야 합니다: %s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The file has more than %d rows."
+msgstr "파일에 %d개보다 많은 행이 있습니다."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: expected %d fields, found %d."
+msgstr "%d번 줄: %d개 필드가 필요하지만 %d개가 발견되었습니다."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Credential: no stored credential is named \"%s\"."
+msgstr "자격 증명: \"%s\"(이)라는 이름의 저장된 자격 증명이 없습니다."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: %s"
+msgstr "%d번 줄: %s"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: the address %s port %d is already registered as %s."
+msgstr "%d번 줄: 주소 %s 포트 %d은(는) 이미 %s(으)로 등록되어 있습니다."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "line %d"
+msgstr "%d번 줄"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: the name %s is already used."
+msgstr "%d행: %s 이름은 이미 사용 중입니다."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: no Cacti device has ID %d."
+msgstr "%d행: ID가 %d인 Cacti 장치가 없습니다."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: device %d already has the BMC %s."
+msgstr "%d행: 장치 %d에 이미 BMC %s이(가) 있습니다."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "of line %d"
+msgstr "%d행의"
+
+#: lib/BmcImport.php
+msgid "The file has no BMC rows."
+msgstr "파일에 BMC 행이 없습니다."
+
+#: lib/BmcInput.php redfish_credentials.php
+msgid "Name: enter 1 to 100 characters without control characters."
+msgstr "이름: 제어 문자를 제외하고 1~100자를 입력하세요."
+
+#: lib/BmcInput.php
+msgid "Address: enter a host name or an IP address only, without a scheme, port, path, or user name. Loopback, link-local, multicast, and unspecified addresses are refused."
+msgstr "주소: 스킴, 포트, 경로 또는 사용자 이름 없이 호스트 이름 또는 IP 주소만 입력하세요. 루프백, 링크-로컬, 멀티캐스트 및 미지정 주소는 거부됩니다."
+
+#: lib/BmcInput.php
+msgid "Port: enter a TCP port from 1 to 65535."
+msgstr "포트: 1에서 65535 사이의 TCP 포트를 입력하세요."
+
+#: lib/BmcInput.php
+msgid "Poller: only the main poller can collect BMCs in this release."
+msgstr "폴러: 이 릴리스에서는 기본 폴러만 BMC를 수집할 수 있습니다."
+
+#: lib/BmcInput.php
+msgid "Device: choose a Cacti device or none."
+msgstr "장치: Cacti 장치를 선택하거나 없음으로 두세요."
+
+#: lib/BmcInput.php lib/BmcsPage.php
+msgid "Credential: choose a stored credential."
+msgstr "자격 증명: 저장된 자격 증명을 선택하세요."
+
+#: lib/BmcInput.php
+msgid "TLS Verification: choose one of the listed modes."
+msgstr "TLS 검증: 나열된 모드 중 하나를 선택하세요."
+
+#: lib/BmcInput.php
+msgid "CA Bundle File: enter an absolute path without control characters, at most 512 characters."
+msgstr "CA 번들 파일: 제어 문자 없이 최대 512자의 절대 경로를 입력하세요."
+
+#: lib/BmcInput.php
+msgid "Public Key Pin: enter the base64 SHA-256 hash of the BMC public key, optionally prefixed with sha256//."
+msgstr "공개 키 고정: BMC 공개 키의 base64 SHA-256 해시를 입력하세요(선택 사항으로 sha256// 접두사 사용 가능)."
+
+#: lib/BmcRepository.php
+msgid "another BMC"
+msgstr "다른 BMC"
+
+#: lib/BmcsPage.php lib/Pages.php
+msgid "Redfish BMCs"
+msgstr "Redfish BMC"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php lib/OperatorPage.php
+msgid "Actions"
+msgstr "작업"
+
+#: lib/BmcsPage.php
+msgid "Address"
+msgstr "주소"
+
+#: lib/BmcsPage.php
+msgid "Basic Fallback"
+msgstr "Basic 대체 인증"
+
+#: lib/BmcsPage.php
+msgid "Credential"
+msgstr "자격 증명"
+
+#: lib/BmcsPage.php
+msgid "Device"
+msgstr "장치"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Name"
+msgstr "이름"
+
+#: lib/BmcsPage.php
+msgid "Port"
+msgstr "포트"
+
+#: lib/BmcsPage.php lib/OperatorPage.php
+msgid "State"
+msgstr "상태"
+
+#: lib/BmcsPage.php
+msgid "TLS Verification"
+msgstr "TLS 검증"
+
+#: lib/BmcsPage.php lib/HealthPage.php
+msgid "No BMCs yet."
+msgstr "아직 BMC가 없습니다."
+
+#: lib/BmcsPage.php
+msgid "Missing"
+msgstr "누락됨"
+
+#: lib/BmcsPage.php
+msgid "Allowed"
+msgstr "허용됨"
+
+#: lib/BmcsPage.php
+msgid "Off"
+msgstr "꺼짐"
+
+#: lib/BmcsPage.php
+msgid "Disabled"
+msgstr "비활성화됨"
+
+#: lib/BmcsPage.php
+msgid "Enabled"
+msgstr "활성화됨"
+
+#: lib/BmcsPage.php
+msgid "Retry Now"
+msgstr "지금 다시 시도"
+
+#: lib/BmcsPage.php
+msgid "Add Graphs"
+msgstr "그래프 추가"
+
+#: lib/BmcsPage.php
+msgid "Create Device"
+msgstr "장치 생성"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Delete"
+msgstr "삭제"
+
+#: lib/BmcsPage.php
+msgid "Export the BMC registry as JSON (no secrets)"
+msgstr "BMC 레지스트리를 JSON으로 내보내기(비밀 정보 제외)"
+
+#: lib/BmcsPage.php
+msgid "Reinstall the Redfish Templates"
+msgstr "Redfish 템플릿 다시 설치"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Add Redfish graphs for %s"
+msgstr "%s에 대한 Redfish 그래프 추가"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Create a Cacti device for %s"
+msgstr "%s에 대한 Cacti 장치 생성"
+
+#: lib/BmcsPage.php
+msgid "Everything is already in place. Confirming indexes the data queries again and adds graphs for new members only."
+msgstr "모든 준비가 이미 완료되었습니다. 확인하면 데이터 쿼리를 다시 인덱싱하고 새 멤버에 대해서만 그래프를 추가합니다."
+
+#: lib/BmcsPage.php
+msgid "Confirming adds:"
+msgstr "확인 시 추가되는 항목:"
+
+#: lib/BmcsPage.php
+msgid "Existing devices, graphs, and thresholds are not changed."
+msgstr "기존 장치, 그래프 및 임계값은 변경되지 않습니다."
+
+#: lib/BmcsPage.php
+msgid "Confirm"
+msgstr "확인"
+
+#: lib/BmcsPage.php
+msgid "Cancel"
+msgstr "취소"
+
+#: lib/BmcsPage.php
+msgid "Import BMCs"
+msgstr "BMC 가져오기"
+
+#: lib/BmcsPage.php
+msgid "CSV File"
+msgstr "CSV 파일"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Header row with columns: %s. Name a stored credential; never put a password in the file. Every row must be valid or nothing is imported."
+msgstr "열이 포함된 헤더 행: %s. 저장된 자격 증명 이름을 지정하세요. 파일에 암호를 절대 넣지 마세요. 모든 행이 유효해야 하며, 그렇지 않으면 아무것도 가져오지 않습니다."
+
+#: lib/BmcsPage.php
+msgid "Import"
+msgstr "가져오기"
+
+#: lib/BmcsPage.php
+msgid "Choose a credential"
+msgstr "자격 증명 선택"
+
+#: lib/BmcsPage.php
+msgid "None"
+msgstr "없음"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Deleted device (ID %d)"
+msgstr "삭제된 장치 (ID %d)"
+
+#: lib/BmcsPage.php
+msgid "New Redfish BMC"
+msgstr "새 Redfish BMC"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Redfish BMC: %s"
+msgstr "Redfish BMC: %s"
+
+#: lib/BmcsPage.php
+msgid "Host name or IP address of the BMC, without https:// or a path."
+msgstr "https:// 또는 경로를 제외한 BMC의 호스트 이름 또는 IP 주소입니다."
+
+#: lib/BmcsPage.php
+msgid "Do not verify is logged when set and shown as a warning on the health page while it stays."
+msgstr "검증 안 함을 설정하면 로그에 기록되며, 해당 설정이 유지되는 동안 상태 페이지에 경고로 표시됩니다."
+
+#: lib/BmcsPage.php
+msgid "CA Bundle File"
+msgstr "CA 번들 파일"
+
+#: lib/BmcsPage.php
+msgid "For the CA bundle mode: absolute path on the poller to a PEM file that others cannot write."
+msgstr "CA 번들 모드의 경우: 다른 사용자가 쓸 수 없는, 폴러 상의 PEM 파일 절대 경로입니다."
+
+#: lib/BmcsPage.php
+msgid "For the pinned mode: base64 SHA-256 of the BMC public key, as sha256//... or the bare hash. A changed key fails until this is updated."
+msgstr "고정 모드의 경우: sha256//... 형식 또는 순수 해시 형식의 BMC 공개 키 base64 SHA-256 값입니다. 키가 변경되면 이 값을 업데이트할 때까지 실패합니다."
+
+#: lib/BmcsPage.php
+msgid "Public Key Pin"
+msgstr "공개 키 고정"
+
+#: lib/BmcsPage.php
+msgid "Allow Basic Authentication Fallback"
+msgstr "Basic 인증 대체 허용"
+
+#: lib/BmcsPage.php
+msgid "Used only when the BMC offers no session service. Every request then carries the password; the health page warns while it is in use."
+msgstr "BMC가 세션 서비스를 제공하지 않는 경우에만 사용됩니다. 이 경우 모든 요청에 암호가 포함되며, 사용 중에는 상태 페이지에 경고가 표시됩니다."
+
+#: lib/BmcsPage.php
+msgid "The Cacti device of the server this BMC manages. Leave it at none to have the plugin create a device from the list."
+msgstr "이 BMC가 관리하는 서버의 Cacti 장치입니다. 목록에서 플러그인이 장치를 생성하도록 하려면 없음으로 두세요."
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Save"
+msgstr "저장"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Address: %s port %d is already registered as %s."
+msgstr "주소: %s 포트 %d은(는) 이미 %s(으)로 등록되어 있습니다."
+
+#: lib/BmcsPage.php
+msgid "Address: this address and port are already registered."
+msgstr "주소: 이 주소와 포트는 이미 등록되어 있습니다."
+
+#: lib/BmcsPage.php
+msgid "Name: another BMC already uses this name."
+msgstr "이름: 다른 BMC가 이미 이 이름을 사용하고 있습니다."
+
+#: lib/BmcsPage.php
+msgid "Device: no Cacti device has this ID."
+msgstr "장치: 이 ID를 가진 Cacti 장치가 없습니다."
+
+#: lib/BmcsPage.php
+msgid "Device: another BMC is already mapped to this device."
+msgstr "장치: 다른 BMC가 이미 이 장치에 매핑되어 있습니다."
+
+#: lib/CredentialsPage.php lib/Pages.php
+msgid "Redfish Credentials"
+msgstr "Redfish 자격 증명"
+
+#: lib/CredentialsPage.php
+msgid "Password"
+msgstr "암호"
+
+#: lib/CredentialsPage.php
+msgid "Used By"
+msgstr "사용 대상"
+
+#: lib/CredentialsPage.php
+msgid "User Name"
+msgstr "사용자 이름"
+
+#: lib/CredentialsPage.php
+msgid "No credentials yet. Create one with a read-only BMC account."
+msgstr "아직 자격 증명이 없습니다. 읽기 전용 BMC 계정으로 하나 생성하세요."
+
+#: lib/CredentialsPage.php
+msgid "None stored"
+msgstr "저장된 항목 없음"
+
+#: lib/CredentialsPage.php
+msgid "Stored"
+msgstr "저장됨"
+
+#: lib/CredentialsPage.php
+#, php-format
+msgid "%d BMCs"
+msgstr "%d개 BMC"
+
+#: lib/CredentialsPage.php
+msgid "New Redfish Credential"
+msgstr "새 Redfish 자격 증명"
+
+#: lib/CredentialsPage.php
+#, php-format
+msgid "Redfish Credential: %s"
+msgstr "Redfish 자격 증명: %s"
+
+#: lib/CredentialsPage.php
+msgid "A BMC account with the ReadOnly role. The plugin never needs a role that can change BMC state."
+msgstr "ReadOnly 역할이 있는 BMC 계정입니다. 플러그인에는 BMC 상태를 변경할 수 있는 역할이 필요하지 않습니다."
+
+#: lib/CredentialsPage.php
+msgid "A password is stored. Leave blank to keep it."
+msgstr "암호가 저장되어 있습니다. 유지하려면 비워 두세요."
+
+#: lib/CredentialsPage.php
+msgid "Stored encrypted with the vault key."
+msgstr "볼트 키로 암호화되어 저장됩니다."
+
+#: lib/DeviceProvisioner.php
+msgid "The Redfish templates are not installed completely. Reinstall them from the Redfish BMCs page."
+msgstr "Redfish 템플릿이 완전히 설치되지 않았습니다. Redfish BMC 페이지에서 다시 설치하세요."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "A device \"%s\" from the %s device template, polled by poller %d, with availability checks off. Its host name is a reserved name that is never contacted."
+msgstr "장치 \"%s\"(%s 장치 템플릿 기반, 폴러 %d에서 폴링, 가용성 검사 꺼짐). 호스트 이름은 연결하지 않는 예약된 이름입니다."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "The data query \"%s\", with a graph for each of the %d members known now."
+msgstr "데이터 쿼리 \"%s\"(현재 알려진 %d개 멤버 각각에 대한 그래프 포함)."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "%d fans or power supplies that were present are no longer reported. They count as failed until you confirm; confirming accepts the members the BMC reports now."
+msgstr "이전에 있던 %d개의 팬 또는 전원 공급 장치가 더 이상 보고되지 않습니다. 확인하기 전까지는 실패로 간주되며, 확인하면 현재 BMC가 보고하는 멤버를 수락합니다."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "The graph \"%s\", with its \"%s\" data source."
+msgstr "그래프 \"%s\" 및 해당 \"%s\" 데이터 소스."
+
+#: lib/DeviceProvisioner.php
+msgid "The BMC is already mapped to a device."
+msgstr "BMC가 이미 장치에 매핑되어 있습니다."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "Created by the Redfish plugin for BMC %s. Its values come from the plugin cache; the host name is a reserved name that is never contacted."
+msgstr "BMC %s을(를) 위해 Redfish 플러그인이 생성했습니다. 값은 플러그인 캐시에서 가져오며, 호스트 이름은 연결하지 않는 예약된 이름입니다."
+
+#: lib/DeviceProvisioner.php
+msgid "Cacti refused to create the device. See the Cacti log."
+msgstr "Cacti가 장치 생성을 거부했습니다. Cacti 로그를 확인하세요."
+
+#: lib/DeviceProvisioner.php
+msgid "The new device would be hidden from you by your device permissions, so it was removed again. Ask an administrator to grant access, or map the BMC to a device you can see."
+msgstr "장치 권한으로 인해 새 장치가 숨겨지므로 다시 제거되었습니다. 관리자에게 액세스 권한을 요청하거나, 볼 수 있는 장치에 BMC를 매핑하세요."
+
+#: lib/DeviceProvisioner.php
+msgid "The BMC was mapped to a device by someone else meanwhile, or could not be mapped, so the new device was removed again. Reload the page and check its mapping."
+msgstr "그사이에 다른 사용자가 BMC를 장치에 매핑했거나 매핑할 수 없어 새 장치가 다시 제거되었습니다. 페이지를 새로 고치고 매핑을 확인하세요."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "The Redfish templates could not be installed: %s"
+msgstr "Redfish 템플릿을 설치할 수 없습니다: %s"
+
+#: lib/DeviceWarnings.php
+msgid "The Redfish templates are not installed or not current. Reinstall them from the Redfish BMCs page."
+msgstr "Redfish 템플릿이 설치되지 않았거나 최신 버전이 아닙니다. Redfish BMC 페이지에서 다시 설치하세요."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "%s: its Cacti device was deleted. Map it to another device or create one from the BMCs page."
+msgstr "%s: 해당 Cacti 장치가 삭제되었습니다. 다른 장치에 매핑하거나 BMC 페이지에서 새로 생성하세요."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "%s: its device is polled by poller %d but the BMC is read by poller %d. Move one of them so both use the same poller, or its graphs can read as unknown."
+msgstr "%s: 해당 장치는 폴러 %d에서 폴링되지만 BMC는 폴러 %d에서 읽습니다. 둘 다 동일한 폴러를 사용하도록 하나를 이동하세요. 그렇지 않으면 그래프가 알 수 없음으로 표시될 수 있습니다."
+
+#: lib/GraphLinks.php
+msgid "Redfish graphs of this device"
+msgstr "이 장치의 Redfish 그래프"
+
+#: lib/HealthPage.php
+msgid "Redfish Warnings"
+msgstr "Redfish 경고"
+
+#: lib/HealthPage.php
+msgid "No warnings."
+msgstr "경고가 없습니다."
+
+#: lib/HealthPage.php
+msgid "Redfish Collector"
+msgstr "Redfish 수집기"
+
+#: lib/HealthPage.php
+msgid "BMCs"
+msgstr "BMC"
+
+#: lib/HealthPage.php
+msgid "Duration / Interval"
+msgstr "소요 시간 / 간격"
+
+#: lib/HealthPage.php
+msgid "Last Run"
+msgstr "마지막 실행"
+
+#: lib/HealthPage.php
+msgid "Poller"
+msgstr "폴러"
+
+#: lib/HealthPage.php
+msgid "Read"
+msgstr "읽기"
+
+#: lib/HealthPage.php
+msgid "Requests per BMC"
+msgstr "BMC당 요청 수"
+
+#: lib/HealthPage.php
+msgid "Workers"
+msgstr "워커"
+
+#: lib/HealthPage.php
+msgid "The collector has not run yet."
+msgstr "수집기가 아직 실행되지 않았습니다."
+
+#: lib/HealthPage.php lib/OperatorPage.php
+msgid "Never"
+msgstr "없음"
+
+#: lib/HealthPage.php
+msgid "Redfish BMC Status"
+msgstr "Redfish BMC 상태"
+
+#: lib/HealthPage.php
+msgid "Authentication"
+msgstr "인증"
+
+#: lib/HealthPage.php
+msgid "BMC"
+msgstr "BMC"
+
+#: lib/HealthPage.php
+msgid "Data"
+msgstr "데이터"
+
+#: lib/HealthPage.php
+msgid "Discovery"
+msgstr "검색"
+
+#: lib/HealthPage.php
+msgid "Failure"
+msgstr "실패"
+
+#: lib/HealthPage.php
+msgid "Last Success"
+msgstr "마지막 성공"
+
+#: lib/HealthPage.php
+msgid "Mean Latency"
+msgstr "평균 지연 시간"
+
+#: lib/HealthPage.php
+msgid "Reachability"
+msgstr "연결 가능 여부"
+
+#: lib/HealthPage.php
+msgid "Requests"
+msgstr "요청"
+
+#: lib/HealthPage.php
+msgid "Source"
+msgstr "소스"
+
+#: lib/HealthPage.php
+#, php-format
+msgid "newest %s"
+msgstr "최신 %s"
+
+#: lib/HealthPage.php
+msgid "disabled"
+msgstr "비활성화됨"
+
+#: lib/HealthPage.php
+msgid "ok"
+msgstr "정상"
+
+#: lib/HealthPage.php
+msgid "stale"
+msgstr "오래됨"
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The vault key file cannot be used: %s. Stored passwords cannot be read or written until it is fixed."
+msgstr "볼트 키 파일을 사용할 수 없습니다: %s. 이 문제가 해결될 때까지 저장된 암호를 읽거나 쓸 수 없습니다."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d took %.0f seconds, more than its budget of %d seconds."
+msgstr "폴러 %d의 수집기가 %.0f초가 걸려 허용 시간인 %d초를 초과했습니다."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d ran out of time before every BMC was read; the rest resume on the next run. Add workers or raise the budget."
+msgstr "폴러 %d의 수집기가 모든 BMC를 읽기 전에 시간이 초과되었습니다. 나머지는 다음 실행에서 재개됩니다. 워커를 추가하거나 허용 시간을 늘리세요."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d last ran %s."
+msgstr "폴러 %d의 수집기 마지막 실행: %s."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: TLS verification is off. Anyone on the path can read its traffic, including the BMC password."
+msgstr "%s: TLS 검증이 꺼져 있습니다. 경로상의 누구나 BMC 암호를 포함한 트래픽을 읽을 수 있습니다."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: uses Basic authentication because the BMC offers no session service; every request carries the password."
+msgstr "%s: BMC가 세션 서비스를 제공하지 않으므로 Basic 인증을 사용합니다. 모든 요청에 암호가 포함됩니다."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: a session may have been left open on the BMC; the next run deletes it after logging in."
+msgstr "%s: BMC에 세션이 열린 채로 남아 있을 수 있습니다. 다음 실행 시 로그인 후 해당 세션을 삭제합니다."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: %d session logins in a row lost their response, so logins stopped. Check the BMC session list, then use Retry Now."
+msgstr "%s: 연속 %d번의 세션 로그인에서 응답이 유실되어 로그인이 중지되었습니다. BMC 세션 목록을 확인한 후 '지금 다시 시도'를 사용하세요."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: the BMC rejected the credential. It is not tried again until the credential changes."
+msgstr "%s: BMC가 자격 증명을 거부했습니다. 자격 증명이 변경될 때까지 다시 시도하지 않습니다."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: its credential is missing or has no stored password."
+msgstr "%s: 자격 증명이 없거나 저장된 암호가 없습니다."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: %d links in its responses pointed elsewhere and were ignored."
+msgstr "%s: 응답에 포함된 %d개의 링크가 다른 위치를 가리켜 무시되었습니다."
+
+#: lib/Html.php
+#, php-format
+msgid "%d seconds ago"
+msgstr "%d초 전"
+
+#: lib/Html.php
+#, php-format
+msgid "%d minutes ago"
+msgstr "%d분 전"
+
+#: lib/Html.php
+#, php-format
+msgid "%d hours ago"
+msgstr "%d시간 전"
+
+#: lib/Html.php
+#, php-format
+msgid "%d days ago"
+msgstr "%d일 전"
+
+#: lib/OperatorPage.php
+msgid "Review the recorded observations below. Acknowledgments are personal to this session, expire when observations change, and never suppress alerts or change health."
+msgstr "아래에 기록된 관측 결과를 검토하세요. 확인 처리는 이 세션에만 적용되며 관측 결과가 변경되면 만료되고, 경고를 억제하거나 상태를 변경하지 않습니다."
+
+#: lib/OperatorPage.php lib/Pages.php
+msgid "Redfish Operations"
+msgstr "Redfish 작업"
+
+#: lib/OperatorPage.php
+msgid "Investigation"
+msgstr "조사"
+
+#: lib/OperatorPage.php
+msgid "Object"
+msgstr "객체"
+
+#: lib/OperatorPage.php
+msgid "Observed (UTC)"
+msgstr "관측 시각 (UTC)"
+
+#: lib/OperatorPage.php
+msgid "Unknown or stale"
+msgstr "알 수 없거나 오래됨"
+
+#: lib/OperatorPage.php
+msgid "Acknowledged; health unchanged."
+msgstr "확인 처리됨. 상태는 변경되지 않았습니다."
+
+#: lib/OperatorPage.php
+msgid "Acknowledge"
+msgstr "확인 처리"
+
+#: lib/OperatorPage.php
+msgid "No observations are available for devices you may access."
+msgstr "접근할 수 있는 장치에 대한 관측 결과가 없습니다."
+
+#: lib/Pages.php
+msgid "Redfish Operator"
+msgstr "Redfish 운영자"
+
+#: lib/Pages.php
+msgid "Redfish View"
+msgstr "Redfish 보기"
+
+#: lib/Pages.php
+msgid "Redfish Admin"
+msgstr "Redfish 관리자"
+
+#: lib/Pages.php
+msgid "Redfish Health"
+msgstr "Redfish 상태"
+
+#: lib/Settings.php
+#, php-format
+msgid "%s Default %d, from %d to %d."
+msgstr "%s 기본값 %d(%d~%d)."
+
+#: lib/Settings.php
+msgid "Credential Vault"
+msgstr "자격 증명 보관함"
+
+#: lib/Settings.php
+msgid "Vault Key File"
+msgstr "보관함 키 파일"
+
+#: lib/Settings.php
+msgid "Absolute path to the 32-byte key that encrypts stored BMC passwords. Create it yourself, outside the web root, readable only by the web server and poller user, in a directory that only root and that user can write; the plugin never creates or writes it. Back it up with the database: without it, stored passwords must be entered again."
+msgstr "저장된 BMC 암호를 암호화하는 32바이트 키의 절대 경로입니다. 웹 루트 외부에 직접 생성해야 하며, 웹 서버와 폴러 사용자만 읽을 수 있고 root 및 해당 사용자만 쓸 수 있는 디렉터리에 위치해야 합니다. 플러그인은 이 파일을 생성하거나 쓰지 않습니다. 데이터베이스와 함께 백업하세요. 이 키가 없으면 저장된 암호를 다시 입력해야 합니다."
+
+#: lib/Settings.php
+msgid "Collector"
+msgstr "수집기"
+
+#: lib/Settings.php
+msgid "Collection Interval"
+msgstr "수집 간격"
+
+#: lib/Settings.php
+msgid "Seconds between reads of each BMC."
+msgstr "각 BMC 읽기 사이의 간격(초)입니다."
+
+#: lib/Settings.php
+msgid "Rediscovery Interval"
+msgstr "재검색 간격"
+
+#: lib/Settings.php
+msgid "Seconds between full resource discoveries of each BMC. A BMC is also rediscovered at once when a known resource disappears or changes type."
+msgstr "각 BMC의 전체 리소스 검색 사이의 간격(초)입니다. 알려진 리소스가 사라지거나 유형이 변경되면 BMC를 즉시 다시 검색합니다."
+
+#: lib/Settings.php
+msgid "Collector Time Budget"
+msgstr "수집기 허용 시간"
+
+#: lib/Settings.php
+msgid "Seconds one collector run may spend before it stops starting new BMCs. Keep it below the poller interval; unfinished BMCs resume on the next run."
+msgstr "한 번의 수집기 실행에서 새 BMC 시작을 중단하기 전까지 사용할 수 있는 시간(초)입니다. 폴러 간격보다 작게 유지하세요. 완료되지 않은 BMC는 다음 실행에서 재개됩니다."
+
+#: lib/Settings.php
+msgid "BMCs read in parallel. Each BMC is read by one worker at a time."
+msgstr "병렬로 읽을 BMC 수입니다. 각 BMC는 한 번에 하나의 워커가 읽습니다."
+
+#: lib/Settings.php
+msgid "Collector Workers"
+msgstr "수집기 워커"
+
+#: lib/Settings.php
+msgid "Connect Timeout"
+msgstr "연결 시간 초과"
+
+#: lib/Settings.php
+msgid "Seconds allowed for the TCP connection and TLS handshake to a BMC."
+msgstr "BMC에 대한 TCP 연결 및 TLS 핸드셰이크에 허용되는 시간(초)입니다."
+
+#: lib/Settings.php
+msgid "Request Timeout"
+msgstr "요청 시간 제한"
+
+#: lib/Settings.php
+msgid "Seconds allowed for one whole request to a BMC, including the connection."
+msgstr "연결을 포함하여 BMC에 대한 전체 단일 요청에 허용되는 시간(초)입니다."
+
+#: lib/Settings.php
+msgid "KiB accepted in one BMC response body; a larger response is refused."
+msgstr "단일 BMC 응답 본문에서 허용되는 KiB 크기입니다. 이보다 큰 응답은 거부됩니다."
+
+#: lib/Settings.php
+msgid "Maximum Response Size"
+msgstr "최대 응답 크기"
+
+#: lib/Settings.php
+msgid "Freshness"
+msgstr "최신 상태"
+
+#: lib/Settings.php
+msgid "Collection intervals after which a reading is shown as delayed."
+msgstr "측정값이 지연됨으로 표시되기까지의 수집 간격 수입니다."
+
+#: lib/Settings.php
+msgid "Delayed After"
+msgstr "지연 기준"
+
+#: lib/Settings.php
+msgid "Collection intervals after which a reading is stale and reads as unknown. Always at least one more than Delayed After."
+msgstr "측정값이 오래됨으로 처리되어 알 수 없음으로 읽히기까지의 수집 간격 수입니다. 항상 '지연 기준'보다 1 이상 커야 합니다."
+
+#: lib/Settings.php
+msgid "Stale After"
+msgstr "만료 기준 시간"
+
+#: lib/Settings.php
+msgid "Uninstall"
+msgstr "제거"
+
+#: lib/Settings.php
+msgid "Keep Plugin Tables on Uninstall"
+msgstr "제거 시 플러그인 테이블 유지"
+
+#: lib/Settings.php
+msgid "When checked, uninstalling the plugin keeps its BMC registry, encrypted passwords, and reading cache. Clear it to have the uninstall drop them. Uninstall never touches Cacti devices, graphs, or BMCs, including devices the plugin created."
+msgstr "선택하면 플러그인을 제거할 때 BMC 레지스트리, 암호화된 암호 및 측정값 캐시를 유지합니다. 제거 시 삭제하려면 선택을 해제하세요. 제거 작업은 플러그인이 생성한 장치를 포함해 Cacti 장치, 그래프 또는 BMC를 건드리지 않습니다."
+
+#: lib/TlsMode.php
+msgid "Verify against the system CA store"
+msgstr "시스템 CA 저장소를 기준으로 검증"
+
+#: lib/TlsMode.php
+msgid "Verify against a CA bundle file"
+msgstr "CA 번들 파일을 기준으로 검증"
+
+#: lib/TlsMode.php
+msgid "Pinned public key (SHA-256)"
+msgstr "고정된 공개 키 (SHA-256)"
+
+#: lib/TlsMode.php
+msgid "Do not verify (unsafe)"
+msgstr "검증 안 함 (안전하지 않음)"
+
+#: redfish_bmcs.php
+msgid "You do not have access to the Cacti device of this BMC."
+msgstr "이 BMC의 Cacti 장치에 대한 액세스 권한이 없습니다."
+
+#: redfish_bmcs.php
+msgid "The BMC could not be saved."
+msgstr "BMC를 저장할 수 없습니다."
+
+#: redfish_bmcs.php
+msgid "The BMC was saved."
+msgstr "BMC가 저장되었습니다."
+
+#: redfish_bmcs.php
+msgid "The BMC and its cached data were deleted. Its Cacti device was left in place."
+msgstr "BMC와 캐시된 데이터가 삭제되었습니다. Cacti 장치는 그대로 유지되었습니다."
+
+#: redfish_bmcs.php
+msgid "Backoff and held failures were cleared; the collector reads the BMC on its next run."
+msgstr "백오프 및 보류된 오류가 지워졌습니다. 수집기가 다음 실행 시 BMC를 읽습니다."
+
+#: redfish_bmcs.php
+msgid "Adding devices and graphs needs Cacti's device management permission."
+msgstr "장치 및 그래프를 추가하려면 Cacti의 장치 관리 권한이 필요합니다."
+
+#: redfish_bmcs.php
+msgid "The device of this BMC was deleted. Choose another device, or none, on the BMC form first."
+msgstr "이 BMC의 장치가 삭제되었습니다. 먼저 BMC 양식에서 다른 장치를 선택하거나 없음으로 지정하세요."
+
+#: redfish_bmcs.php
+#, php-format
+msgid "The data queries were indexed again and %d graphs were added."
+msgstr "데이터 쿼리를 다시 인덱싱했으며 %d개의 그래프가 추가되었습니다."
+
+#: redfish_bmcs.php
+msgid "The device was created with its Redfish graphs."
+msgstr "Redfish 그래프와 함께 장치가 생성되었습니다."
+
+#: redfish_bmcs.php
+msgid "Installing the Redfish templates needs Cacti's Import Templates permission."
+msgstr "Redfish 템플릿을 설치하려면 Cacti의 템플릿 가져오기 권한이 필요합니다."
+
+#: redfish_bmcs.php
+msgid "The Redfish templates are installed."
+msgstr "Redfish 템플릿이 설치되었습니다."
+
+#: redfish_bmcs.php
+msgid "The Redfish templates could not be installed. The health page shows why."
+msgstr "Redfish 템플릿을 설치할 수 없습니다. 상태 페이지에서 원인을 확인할 수 있습니다."
+
+#: redfish_bmcs.php
+msgid "The import could not be saved; nothing was imported."
+msgstr "가져온 내용을 저장할 수 없어 아무것도 가져오지 않았습니다."
+
+#: redfish_bmcs.php
+#, php-format
+msgid "%d BMCs were imported."
+msgstr "%d개의 BMC를 가져왔습니다."
+
+#: redfish_credentials.php
+msgid "This credential is used by a BMC on a Cacti device you do not have access to, so it cannot be changed here."
+msgstr "이 자격 증명은 액세스 권한이 없는 Cacti 장치의 BMC에서 사용 중이므로 여기에서 변경할 수 없습니다."
+
+#: redfish_credentials.php
+msgid "Name: another credential already uses this name."
+msgstr "이름: 다른 자격 증명이 이미 이 이름을 사용하고 있습니다."
+
+#: redfish_credentials.php
+msgid "User Name: enter 1 to 255 characters without control characters."
+msgstr "사용자 이름: 제어 문자 없이 1~255자를 입력하세요."
+
+#: redfish_credentials.php
+msgid "Password: enter the password of the BMC account."
+msgstr "암호: BMC 계정의 암호를 입력하세요."
+
+#: redfish_credentials.php
+#, php-format
+msgid "The credential was saved, but the password was not stored: %s"
+msgstr "자격 증명은 저장되었으나 암호는 저장되지 않았습니다: %s"
+
+#: redfish_credentials.php
+msgid "The credential could not be saved."
+msgstr "자격 증명을 저장할 수 없습니다."
+
+#: redfish_credentials.php
+msgid "The credential was saved."
+msgstr "자격 증명이 저장되었습니다."
+
+#: redfish_credentials.php
+msgid "The credential and its stored password were deleted."
+msgstr "자격 증명과 저장된 암호가 삭제되었습니다."
+
+#: redfish_credentials.php
+msgid "The credential was not deleted. A credential in use by a BMC cannot be deleted."
+msgstr "자격 증명이 삭제되지 않았습니다. BMC에서 사용 중인 자격 증명은 삭제할 수 없습니다."
+
+#: redfish_operator.php
+msgid "Retry collection"
+msgstr "수집 다시 시도"
+
+#: redfish_operator.php
+msgid "Monitoring view"
+msgstr "모니터링 보기"
+
+#: redfish_operator.php
+msgid "Observations could not be read. Ask an administrator to check the plugin log."
+msgstr "관측 결과를 읽을 수 없습니다. 관리자에게 플러그인 로그 확인을 요청하세요."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires PHP %s or later. This server runs PHP %s, so the plugin was not installed or enabled."
+msgstr "Redfish 플러그인에는 PHP %s 이상이 필요합니다. 이 서버는 PHP %s을(를) 실행 중이므로 플러그인이 설치되거나 활성화되지 않았습니다."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires the PHP extensions %s, which this server does not load, so the plugin was not installed or enabled."
+msgstr "Redfish 플러그인에는 이 서버에서 로드하지 않은 PHP 확장 %s이(가) 필요하므로 플러그인이 설치되거나 활성화되지 않았습니다."
+
+#: setup.php
+msgid "Redfish"
+msgstr "Redfish"
+
+#: setup.php
+msgid "The Redfish plugin is not enabled."
+msgstr "Redfish 플러그인이 활성화되지 않았습니다."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires PHP %s or later."
+msgstr "Redfish 플러그인에는 PHP %s 이상이 필요합니다."
+
+#: setup.php
+msgid "Management"
+msgstr "관리"

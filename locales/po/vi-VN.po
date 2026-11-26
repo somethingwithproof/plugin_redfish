@@ -1,0 +1,970 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: 2026 Thomas Vincent <thomasvincent@gmail.com>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: redfish 0.1.0-dev\n"
+"Report-Msgid-Bugs-To: https://github.com/somethingwithproof/plugin_redfish/issues\n"
+"PO-Revision-Date: 2026-11-26 00:00+0000\n"
+"Last-Translator: Thomas Vincent <thomasvincent@gmail.com>\n"
+"Language-Team: Thomas Vincent <thomasvincent@gmail.com>\n"
+"Language: vi-VN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: include/operator.php
+msgid "Check collection freshness and the device graphs. Retry releases a collection hold for the next scheduled run; it does not contact the BMC now."
+msgstr "Kiểm tra độ mới của dữ liệu thu thập và biểu đồ thiết bị. Thử lại sẽ giải phóng trạng thái tạm giữ thu thập cho lần chạy theo lịch tiếp theo; thao tác này không kết nối tới BMC ngay bây giờ."
+
+#: lib/BmcImport.php
+msgid "The file is empty or larger than 1 MiB."
+msgstr "Tệp trống hoặc lớn hơn 1 MiB."
+
+#: lib/BmcImport.php
+msgid "The file could not be read."
+msgstr "Không thể đọc tệp."
+
+#: lib/BmcImport.php
+msgid "The file has no header row."
+msgstr "Tệp không có hàng tiêu đề."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The file has a column named \"%s\". Import files must not carry secrets; name a stored credential in the credential column instead. Nothing was imported."
+msgstr "Tệp có cột tên là \"%s\". Tệp nhập không được chứa thông tin bí mật; hãy chỉ định tên thông tin xác thực đã lưu trong cột thông tin xác thực để thay thế. Không có gì được nhập."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The header must name only these columns, each once, including name, address, and credential: %s."
+msgstr "Tiêu đề chỉ được đặt tên các cột này, mỗi cột một lần, bao gồm name, address và credential: %s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The file has more than %d rows."
+msgstr "Tệp có nhiều hơn %d hàng."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: expected %d fields, found %d."
+msgstr "Dòng %d: dự kiến %d trường, tìm thấy %d."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Credential: no stored credential is named \"%s\"."
+msgstr "Thông tin xác thực: không có thông tin xác thực đã lưu nào có tên \"%s\"."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: %s"
+msgstr "Dòng %d: %s"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: the address %s port %d is already registered as %s."
+msgstr "Dòng %d: địa chỉ %s cổng %d đã được đăng ký với tên %s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "line %d"
+msgstr "dòng %d"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: the name %s is already used."
+msgstr "Dòng %d: tên %s đã được sử dụng."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: no Cacti device has ID %d."
+msgstr "Dòng %d: không có thiết bị Cacti nào có ID %d."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: device %d already has the BMC %s."
+msgstr "Dòng %d: thiết bị %d đã có BMC %s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "of line %d"
+msgstr "của dòng %d"
+
+#: lib/BmcImport.php
+msgid "The file has no BMC rows."
+msgstr "Tệp không có hàng BMC nào."
+
+#: lib/BmcInput.php redfish_credentials.php
+msgid "Name: enter 1 to 100 characters without control characters."
+msgstr "Tên: nhập từ 1 đến 100 ký tự không chứa ký tự điều khiển."
+
+#: lib/BmcInput.php
+msgid "Address: enter a host name or an IP address only, without a scheme, port, path, or user name. Loopback, link-local, multicast, and unspecified addresses are refused."
+msgstr "Địa chỉ: chỉ nhập tên máy chủ hoặc địa chỉ IP, không kèm giao thức, cổng, đường dẫn hoặc tên người dùng. Các địa chỉ loopback, link-local, multicast và địa chỉ không xác định sẽ bị từ chối."
+
+#: lib/BmcInput.php
+msgid "Port: enter a TCP port from 1 to 65535."
+msgstr "Cổng: nhập cổng TCP từ 1 đến 65535."
+
+#: lib/BmcInput.php
+msgid "Poller: only the main poller can collect BMCs in this release."
+msgstr "Poller: chỉ poller chính mới có thể thu thập dữ liệu BMC trong bản phát hành này."
+
+#: lib/BmcInput.php
+msgid "Device: choose a Cacti device or none."
+msgstr "Thiết bị: chọn một thiết bị Cacti hoặc không chọn."
+
+#: lib/BmcInput.php lib/BmcsPage.php
+msgid "Credential: choose a stored credential."
+msgstr "Thông tin xác thực: chọn một thông tin xác thực đã lưu."
+
+#: lib/BmcInput.php
+msgid "TLS Verification: choose one of the listed modes."
+msgstr "Xác minh TLS: chọn một trong các chế độ được liệt kê."
+
+#: lib/BmcInput.php
+msgid "CA Bundle File: enter an absolute path without control characters, at most 512 characters."
+msgstr "Tệp gói CA: nhập đường dẫn tuyệt đối không chứa ký tự điều khiển, tối đa 512 ký tự."
+
+#: lib/BmcInput.php
+msgid "Public Key Pin: enter the base64 SHA-256 hash of the BMC public key, optionally prefixed with sha256//."
+msgstr "Ghim khóa công khai: nhập mã băm SHA-256 dạng base64 của khóa công khai BMC, có thể có tiền tố sha256//."
+
+#: lib/BmcRepository.php
+msgid "another BMC"
+msgstr "một BMC khác"
+
+#: lib/BmcsPage.php lib/Pages.php
+msgid "Redfish BMCs"
+msgstr "Các BMC Redfish"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php lib/OperatorPage.php
+msgid "Actions"
+msgstr "Thao tác"
+
+#: lib/BmcsPage.php
+msgid "Address"
+msgstr "Địa chỉ"
+
+#: lib/BmcsPage.php
+msgid "Basic Fallback"
+msgstr "Dự phòng Basic"
+
+#: lib/BmcsPage.php
+msgid "Credential"
+msgstr "Thông tin xác thực"
+
+#: lib/BmcsPage.php
+msgid "Device"
+msgstr "Thiết bị"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Name"
+msgstr "Tên"
+
+#: lib/BmcsPage.php
+msgid "Port"
+msgstr "Cổng"
+
+#: lib/BmcsPage.php lib/OperatorPage.php
+msgid "State"
+msgstr "Trạng thái"
+
+#: lib/BmcsPage.php
+msgid "TLS Verification"
+msgstr "Xác minh TLS"
+
+#: lib/BmcsPage.php lib/HealthPage.php
+msgid "No BMCs yet."
+msgstr "Chưa có BMC nào."
+
+#: lib/BmcsPage.php
+msgid "Missing"
+msgstr "Thiếu"
+
+#: lib/BmcsPage.php
+msgid "Allowed"
+msgstr "Được phép"
+
+#: lib/BmcsPage.php
+msgid "Off"
+msgstr "Tắt"
+
+#: lib/BmcsPage.php
+msgid "Disabled"
+msgstr "Đã tắt"
+
+#: lib/BmcsPage.php
+msgid "Enabled"
+msgstr "Đã bật"
+
+#: lib/BmcsPage.php
+msgid "Retry Now"
+msgstr "Thử lại ngay"
+
+#: lib/BmcsPage.php
+msgid "Add Graphs"
+msgstr "Thêm biểu đồ"
+
+#: lib/BmcsPage.php
+msgid "Create Device"
+msgstr "Tạo thiết bị"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Delete"
+msgstr "Xóa"
+
+#: lib/BmcsPage.php
+msgid "Export the BMC registry as JSON (no secrets)"
+msgstr "Xuất sổ đăng ký BMC dưới dạng JSON (không có bí mật)"
+
+#: lib/BmcsPage.php
+msgid "Reinstall the Redfish Templates"
+msgstr "Cài đặt lại các mẫu Redfish"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Add Redfish graphs for %s"
+msgstr "Thêm biểu đồ Redfish cho %s"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Create a Cacti device for %s"
+msgstr "Tạo thiết bị Cacti cho %s"
+
+#: lib/BmcsPage.php
+msgid "Everything is already in place. Confirming indexes the data queries again and adds graphs for new members only."
+msgstr "Mọi thứ đã sẵn sàng. Việc xác nhận sẽ lập chỉ mục lại các truy vấn dữ liệu và chỉ thêm biểu đồ cho các thành phần mới."
+
+#: lib/BmcsPage.php
+msgid "Confirming adds:"
+msgstr "Việc xác nhận sẽ thêm:"
+
+#: lib/BmcsPage.php
+msgid "Existing devices, graphs, and thresholds are not changed."
+msgstr "Các thiết bị, biểu đồ và ngưỡng hiện có sẽ không bị thay đổi."
+
+#: lib/BmcsPage.php
+msgid "Confirm"
+msgstr "Xác nhận"
+
+#: lib/BmcsPage.php
+msgid "Cancel"
+msgstr "Hủy"
+
+#: lib/BmcsPage.php
+msgid "Import BMCs"
+msgstr "Nhập BMC"
+
+#: lib/BmcsPage.php
+msgid "CSV File"
+msgstr "Tệp CSV"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Header row with columns: %s. Name a stored credential; never put a password in the file. Every row must be valid or nothing is imported."
+msgstr "Hàng tiêu đề gồm các cột: %s. Chỉ định tên thông tin xác thực đã lưu; tuyệt đối không đưa mật khẩu vào tệp. Mọi hàng phải hợp lệ, nếu không sẽ không có gì được nhập."
+
+#: lib/BmcsPage.php
+msgid "Import"
+msgstr "Nhập"
+
+#: lib/BmcsPage.php
+msgid "Choose a credential"
+msgstr "Chọn thông tin xác thực"
+
+#: lib/BmcsPage.php
+msgid "None"
+msgstr "Không có"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Deleted device (ID %d)"
+msgstr "Thiết bị đã bị xóa (ID %d)"
+
+#: lib/BmcsPage.php
+msgid "New Redfish BMC"
+msgstr "BMC Redfish mới"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Redfish BMC: %s"
+msgstr "BMC Redfish: %s"
+
+#: lib/BmcsPage.php
+msgid "Host name or IP address of the BMC, without https:// or a path."
+msgstr "Tên máy chủ hoặc địa chỉ IP của BMC, không kèm https:// hoặc đường dẫn."
+
+#: lib/BmcsPage.php
+msgid "Do not verify is logged when set and shown as a warning on the health page while it stays."
+msgstr "Tùy chọn không xác minh sẽ được ghi nhật ký khi thiết lập và hiển thị dưới dạng cảnh báo trên trang tình trạng trong suốt thời gian được bật."
+
+#: lib/BmcsPage.php
+msgid "CA Bundle File"
+msgstr "Tệp gói CA"
+
+#: lib/BmcsPage.php
+msgid "For the CA bundle mode: absolute path on the poller to a PEM file that others cannot write."
+msgstr "Đối với chế độ gói CA: đường dẫn tuyệt đối trên poller tới tệp PEM mà người dùng khác không có quyền ghi."
+
+#: lib/BmcsPage.php
+msgid "For the pinned mode: base64 SHA-256 of the BMC public key, as sha256//... or the bare hash. A changed key fails until this is updated."
+msgstr "Đối với chế độ ghim khóa: mã băm SHA-256 dạng base64 của khóa công khai BMC, theo dạng sha256//... hoặc chỉ chuỗi băm. Nếu khóa thay đổi, kết nối sẽ thất bại cho đến khi giá trị này được cập nhật."
+
+#: lib/BmcsPage.php
+msgid "Public Key Pin"
+msgstr "Ghim khóa công khai"
+
+#: lib/BmcsPage.php
+msgid "Allow Basic Authentication Fallback"
+msgstr "Cho phép dự phòng xác thực Basic"
+
+#: lib/BmcsPage.php
+msgid "Used only when the BMC offers no session service. Every request then carries the password; the health page warns while it is in use."
+msgstr "Chỉ dùng khi BMC không cung cấp dịch vụ phiên. Khi đó mọi yêu cầu đều mang theo mật khẩu; trang tình trạng sẽ cảnh báo trong thời gian chế độ này được sử dụng."
+
+#: lib/BmcsPage.php
+msgid "The Cacti device of the server this BMC manages. Leave it at none to have the plugin create a device from the list."
+msgstr "Thiết bị Cacti của máy chủ mà BMC này quản lý. Để trống (không chọn) để plugin tạo thiết bị từ danh sách."
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Save"
+msgstr "Lưu"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Address: %s port %d is already registered as %s."
+msgstr "Địa chỉ: %s cổng %d đã được đăng ký với tên %s."
+
+#: lib/BmcsPage.php
+msgid "Address: this address and port are already registered."
+msgstr "Địa chỉ: địa chỉ và cổng này đã được đăng ký."
+
+#: lib/BmcsPage.php
+msgid "Name: another BMC already uses this name."
+msgstr "Tên: một BMC khác đã sử dụng tên này."
+
+#: lib/BmcsPage.php
+msgid "Device: no Cacti device has this ID."
+msgstr "Thiết bị: không có thiết bị Cacti nào có ID này."
+
+#: lib/BmcsPage.php
+msgid "Device: another BMC is already mapped to this device."
+msgstr "Thiết bị: một BMC khác đã được ánh xạ tới thiết bị này."
+
+#: lib/CredentialsPage.php lib/Pages.php
+msgid "Redfish Credentials"
+msgstr "Thông tin xác thực Redfish"
+
+#: lib/CredentialsPage.php
+msgid "Password"
+msgstr "Mật khẩu"
+
+#: lib/CredentialsPage.php
+msgid "Used By"
+msgstr "Được sử dụng bởi"
+
+#: lib/CredentialsPage.php
+msgid "User Name"
+msgstr "Tên người dùng"
+
+#: lib/CredentialsPage.php
+msgid "No credentials yet. Create one with a read-only BMC account."
+msgstr "Chưa có thông tin xác thực nào. Hãy tạo mới bằng một tài khoản BMC chỉ đọc."
+
+#: lib/CredentialsPage.php
+msgid "None stored"
+msgstr "Chưa lưu trữ"
+
+#: lib/CredentialsPage.php
+msgid "Stored"
+msgstr "Đã lưu"
+
+#: lib/CredentialsPage.php
+#, php-format
+msgid "%d BMCs"
+msgstr "%d BMC"
+
+#: lib/CredentialsPage.php
+msgid "New Redfish Credential"
+msgstr "Thông tin xác thực Redfish mới"
+
+#: lib/CredentialsPage.php
+#, php-format
+msgid "Redfish Credential: %s"
+msgstr "Thông tin xác thực Redfish: %s"
+
+#: lib/CredentialsPage.php
+msgid "A BMC account with the ReadOnly role. The plugin never needs a role that can change BMC state."
+msgstr "Một tài khoản BMC có vai trò ReadOnly. Plugin không bao giờ cần vai trò có thể thay đổi trạng thái BMC."
+
+#: lib/CredentialsPage.php
+msgid "A password is stored. Leave blank to keep it."
+msgstr "Mật khẩu đã được lưu. Để trống để giữ nguyên."
+
+#: lib/CredentialsPage.php
+msgid "Stored encrypted with the vault key."
+msgstr "Được lưu ở dạng mã hóa bằng khóa vault."
+
+#: lib/DeviceProvisioner.php
+msgid "The Redfish templates are not installed completely. Reinstall them from the Redfish BMCs page."
+msgstr "Các mẫu Redfish chưa được cài đặt đầy đủ. Hãy cài đặt lại từ trang Các BMC Redfish."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "A device \"%s\" from the %s device template, polled by poller %d, with availability checks off. Its host name is a reserved name that is never contacted."
+msgstr "Một thiết bị \"%s\" từ mẫu thiết bị %s, được poller %d thăm dò, với kiểm tra tính sẵn sàng đang tắt. Tên máy chủ của nó là tên dành riêng và không bao giờ được liên hệ."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "The data query \"%s\", with a graph for each of the %d members known now."
+msgstr "Truy vấn dữ liệu \"%s\", kèm một biểu đồ cho từng thành phần trong số %d thành phần đã biết hiện tại."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "%d fans or power supplies that were present are no longer reported. They count as failed until you confirm; confirming accepts the members the BMC reports now."
+msgstr "%d quạt hoặc bộ nguồn từng hiện diện không còn được báo cáo nữa. Chúng được tính là lỗi cho đến khi bạn xác nhận; việc xác nhận sẽ chấp nhận các thành phần mà BMC báo cáo hiện tại."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "The graph \"%s\", with its \"%s\" data source."
+msgstr "Biểu đồ \"%s\", cùng nguồn dữ liệu \"%s\" của nó."
+
+#: lib/DeviceProvisioner.php
+msgid "The BMC is already mapped to a device."
+msgstr "BMC đã được ánh xạ tới một thiết bị."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "Created by the Redfish plugin for BMC %s. Its values come from the plugin cache; the host name is a reserved name that is never contacted."
+msgstr "Được tạo bởi plugin Redfish cho BMC %s. Giá trị của thiết bị lấy từ bộ nhớ đệm của plugin; tên máy chủ là tên dành riêng và không bao giờ được liên hệ."
+
+#: lib/DeviceProvisioner.php
+msgid "Cacti refused to create the device. See the Cacti log."
+msgstr "Cacti đã từ chối tạo thiết bị. Xem nhật ký Cacti."
+
+#: lib/DeviceProvisioner.php
+msgid "The new device would be hidden from you by your device permissions, so it was removed again. Ask an administrator to grant access, or map the BMC to a device you can see."
+msgstr "Thiết bị mới sẽ bị ẩn khỏi bạn do quyền thiết bị của bạn, nên nó đã bị xóa lại. Hãy yêu cầu quản trị viên cấp quyền truy cập, hoặc ánh xạ BMC tới một thiết bị mà bạn có thể xem."
+
+#: lib/DeviceProvisioner.php
+msgid "The BMC was mapped to a device by someone else meanwhile, or could not be mapped, so the new device was removed again. Reload the page and check its mapping."
+msgstr "Trong lúc đó BMC đã được người khác ánh xạ tới một thiết bị, hoặc không thể ánh xạ, nên thiết bị mới đã bị xóa lại. Hãy tải lại trang và kiểm tra ánh xạ của nó."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "The Redfish templates could not be installed: %s"
+msgstr "Không thể cài đặt các mẫu Redfish: %s"
+
+#: lib/DeviceWarnings.php
+msgid "The Redfish templates are not installed or not current. Reinstall them from the Redfish BMCs page."
+msgstr "Các mẫu Redfish chưa được cài đặt hoặc không phải bản mới nhất. Hãy cài đặt lại từ trang Các BMC Redfish."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "%s: its Cacti device was deleted. Map it to another device or create one from the BMCs page."
+msgstr "%s: thiết bị Cacti của nó đã bị xóa. Hãy ánh xạ tới thiết bị khác hoặc tạo mới từ trang các BMC."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "%s: its device is polled by poller %d but the BMC is read by poller %d. Move one of them so both use the same poller, or its graphs can read as unknown."
+msgstr "%s: thiết bị của nó được thăm dò bởi poller %d nhưng BMC lại được đọc bởi poller %d. Hãy chuyển một trong hai để cả hai dùng cùng một poller, nếu không biểu đồ có thể hiển thị giá trị không xác định."
+
+#: lib/GraphLinks.php
+msgid "Redfish graphs of this device"
+msgstr "Biểu đồ Redfish của thiết bị này"
+
+#: lib/HealthPage.php
+msgid "Redfish Warnings"
+msgstr "Cảnh báo Redfish"
+
+#: lib/HealthPage.php
+msgid "No warnings."
+msgstr "Không có cảnh báo."
+
+#: lib/HealthPage.php
+msgid "Redfish Collector"
+msgstr "Bộ thu thập Redfish"
+
+#: lib/HealthPage.php
+msgid "BMCs"
+msgstr "Các BMC"
+
+#: lib/HealthPage.php
+msgid "Duration / Interval"
+msgstr "Thời lượng / Chu kỳ"
+
+#: lib/HealthPage.php
+msgid "Last Run"
+msgstr "Lần chạy cuối"
+
+#: lib/HealthPage.php
+msgid "Poller"
+msgstr "Poller"
+
+#: lib/HealthPage.php
+msgid "Read"
+msgstr "Đọc"
+
+#: lib/HealthPage.php
+msgid "Requests per BMC"
+msgstr "Số yêu cầu mỗi BMC"
+
+#: lib/HealthPage.php
+msgid "Workers"
+msgstr "Worker"
+
+#: lib/HealthPage.php
+msgid "The collector has not run yet."
+msgstr "Bộ thu thập chưa chạy lần nào."
+
+#: lib/HealthPage.php lib/OperatorPage.php
+msgid "Never"
+msgstr "Chưa bao giờ"
+
+#: lib/HealthPage.php
+msgid "Redfish BMC Status"
+msgstr "Trạng thái BMC Redfish"
+
+#: lib/HealthPage.php
+msgid "Authentication"
+msgstr "Xác thực"
+
+#: lib/HealthPage.php
+msgid "BMC"
+msgstr "BMC"
+
+#: lib/HealthPage.php
+msgid "Data"
+msgstr "Dữ liệu"
+
+#: lib/HealthPage.php
+msgid "Discovery"
+msgstr "Khám phá"
+
+#: lib/HealthPage.php
+msgid "Failure"
+msgstr "Lỗi"
+
+#: lib/HealthPage.php
+msgid "Last Success"
+msgstr "Lần thành công cuối"
+
+#: lib/HealthPage.php
+msgid "Mean Latency"
+msgstr "Độ trễ trung bình"
+
+#: lib/HealthPage.php
+msgid "Reachability"
+msgstr "Khả năng truy cập"
+
+#: lib/HealthPage.php
+msgid "Requests"
+msgstr "Yêu cầu"
+
+#: lib/HealthPage.php
+msgid "Source"
+msgstr "Nguồn"
+
+#: lib/HealthPage.php
+#, php-format
+msgid "newest %s"
+msgstr "mới nhất %s"
+
+#: lib/HealthPage.php
+msgid "disabled"
+msgstr "đã tắt"
+
+#: lib/HealthPage.php
+msgid "ok"
+msgstr "ổn"
+
+#: lib/HealthPage.php
+msgid "stale"
+msgstr "cũ"
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The vault key file cannot be used: %s. Stored passwords cannot be read or written until it is fixed."
+msgstr "Không thể sử dụng tệp khóa vault: %s. Không thể đọc hoặc ghi mật khẩu đã lưu cho đến khi lỗi này được khắc phục."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d took %.0f seconds, more than its budget of %d seconds."
+msgstr "Bộ thu thập trên poller %d mất %.0f giây, vượt quá mức giới hạn %d giây."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d ran out of time before every BMC was read; the rest resume on the next run. Add workers or raise the budget."
+msgstr "Bộ thu thập trên poller %d đã hết thời gian trước khi đọc hết mọi BMC; phần còn lại sẽ tiếp tục ở lần chạy sau. Hãy thêm worker hoặc tăng thời gian cho phép."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d last ran %s."
+msgstr "Bộ thu thập trên poller %d chạy lần cuối vào %s."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: TLS verification is off. Anyone on the path can read its traffic, including the BMC password."
+msgstr "%s: xác minh TLS đang tắt. Bất kỳ ai trên đường truyền đều có thể đọc lưu lượng của nó, bao gồm cả mật khẩu BMC."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: uses Basic authentication because the BMC offers no session service; every request carries the password."
+msgstr "%s: sử dụng xác thực Basic vì BMC không cung cấp dịch vụ phiên; mọi yêu cầu đều mang theo mật khẩu."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: a session may have been left open on the BMC; the next run deletes it after logging in."
+msgstr "%s: một phiên có thể vẫn đang mở trên BMC; lần chạy tiếp theo sẽ xóa phiên đó sau khi đăng nhập."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: %d session logins in a row lost their response, so logins stopped. Check the BMC session list, then use Retry Now."
+msgstr "%s: %d lần đăng nhập phiên liên tiếp bị mất phản hồi nên quá trình đăng nhập đã dừng. Hãy kiểm tra danh sách phiên trên BMC, sau đó dùng Thử lại ngay."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: the BMC rejected the credential. It is not tried again until the credential changes."
+msgstr "%s: BMC đã từ chối thông tin xác thực. Hệ thống sẽ không thử lại cho đến khi thông tin xác thực thay đổi."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: its credential is missing or has no stored password."
+msgstr "%s: thông tin xác thực bị thiếu hoặc chưa lưu mật khẩu."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: %d links in its responses pointed elsewhere and were ignored."
+msgstr "%s: %d liên kết trong phản hồi trỏ đến nơi khác và đã bị bỏ qua."
+
+#: lib/Html.php
+#, php-format
+msgid "%d seconds ago"
+msgstr "%d giây trước"
+
+#: lib/Html.php
+#, php-format
+msgid "%d minutes ago"
+msgstr "%d phút trước"
+
+#: lib/Html.php
+#, php-format
+msgid "%d hours ago"
+msgstr "%d giờ trước"
+
+#: lib/Html.php
+#, php-format
+msgid "%d days ago"
+msgstr "%d ngày trước"
+
+#: lib/OperatorPage.php
+msgid "Review the recorded observations below. Acknowledgments are personal to this session, expire when observations change, and never suppress alerts or change health."
+msgstr "Xem lại các quan sát đã ghi nhận bên dưới. Xác nhận chỉ áp dụng riêng cho phiên này, hết hạn khi các quan sát thay đổi và không bao giờ ẩn cảnh báo hay thay đổi tình trạng."
+
+#: lib/OperatorPage.php lib/Pages.php
+msgid "Redfish Operations"
+msgstr "Vận hành Redfish"
+
+#: lib/OperatorPage.php
+msgid "Investigation"
+msgstr "Điều tra"
+
+#: lib/OperatorPage.php
+msgid "Object"
+msgstr "Đối tượng"
+
+#: lib/OperatorPage.php
+msgid "Observed (UTC)"
+msgstr "Quan sát lúc (UTC)"
+
+#: lib/OperatorPage.php
+msgid "Unknown or stale"
+msgstr "Không xác định hoặc cũ"
+
+#: lib/OperatorPage.php
+msgid "Acknowledged; health unchanged."
+msgstr "Đã xác nhận; tình trạng không thay đổi."
+
+#: lib/OperatorPage.php
+msgid "Acknowledge"
+msgstr "Xác nhận"
+
+#: lib/OperatorPage.php
+msgid "No observations are available for devices you may access."
+msgstr "Không có quan sát nào cho các thiết bị bạn có quyền truy cập."
+
+#: lib/Pages.php
+msgid "Redfish Operator"
+msgstr "Người vận hành Redfish"
+
+#: lib/Pages.php
+msgid "Redfish View"
+msgstr "Xem Redfish"
+
+#: lib/Pages.php
+msgid "Redfish Admin"
+msgstr "Quản trị Redfish"
+
+#: lib/Pages.php
+msgid "Redfish Health"
+msgstr "Tình trạng Redfish"
+
+#: lib/Settings.php
+#, php-format
+msgid "%s Default %d, from %d to %d."
+msgstr "%s Mặc định %d, từ %d đến %d."
+
+#: lib/Settings.php
+msgid "Credential Vault"
+msgstr "Kho thông tin xác thực"
+
+#: lib/Settings.php
+msgid "Vault Key File"
+msgstr "Tệp khóa kho bảo mật"
+
+#: lib/Settings.php
+msgid "Absolute path to the 32-byte key that encrypts stored BMC passwords. Create it yourself, outside the web root, readable only by the web server and poller user, in a directory that only root and that user can write; the plugin never creates or writes it. Back it up with the database: without it, stored passwords must be entered again."
+msgstr "Đường dẫn tuyệt đối đến khóa 32 byte dùng để mã hóa mật khẩu BMC đã lưu. Hãy tự tạo khóa này bên ngoài thư mục gốc web, chỉ cho phép người dùng máy chủ web và poller đọc, trong thư mục mà chỉ root và người dùng đó có quyền ghi; plugin không bao giờ tạo hoặc ghi tệp này. Hãy sao lưu nó cùng cơ sở dữ liệu: nếu mất khóa, bạn sẽ phải nhập lại các mật khẩu đã lưu."
+
+#: lib/Settings.php
+msgid "Collector"
+msgstr "Trình thu thập"
+
+#: lib/Settings.php
+msgid "Collection Interval"
+msgstr "Khoảng thời gian thu thập"
+
+#: lib/Settings.php
+msgid "Seconds between reads of each BMC."
+msgstr "Số giây giữa các lần đọc của mỗi BMC."
+
+#: lib/Settings.php
+msgid "Rediscovery Interval"
+msgstr "Chu kỳ phát hiện lại"
+
+#: lib/Settings.php
+msgid "Seconds between full resource discoveries of each BMC. A BMC is also rediscovered at once when a known resource disappears or changes type."
+msgstr "Số giây giữa các lần phát hiện tài nguyên đầy đủ của mỗi BMC. BMC cũng được phát hiện lại ngay lập tức khi một tài nguyên đã biết biến mất hoặc thay đổi loại."
+
+#: lib/Settings.php
+msgid "Collector Time Budget"
+msgstr "Giới hạn thời gian trình thu thập"
+
+#: lib/Settings.php
+msgid "Seconds one collector run may spend before it stops starting new BMCs. Keep it below the poller interval; unfinished BMCs resume on the next run."
+msgstr "Số giây tối đa một lần chạy bộ thu thập được phép dùng trước khi ngừng bắt đầu đọc các BMC mới. Hãy giữ giá trị này thấp hơn chu kỳ poller; các BMC chưa hoàn tất sẽ tiếp tục ở lần chạy sau."
+
+#: lib/Settings.php
+msgid "BMCs read in parallel. Each BMC is read by one worker at a time."
+msgstr "Số BMC được đọc song song. Mỗi BMC được một worker đọc tại một thời điểm."
+
+#: lib/Settings.php
+msgid "Collector Workers"
+msgstr "Worker bộ thu thập"
+
+#: lib/Settings.php
+msgid "Connect Timeout"
+msgstr "Thời gian chờ kết nối"
+
+#: lib/Settings.php
+msgid "Seconds allowed for the TCP connection and TLS handshake to a BMC."
+msgstr "Số giây tối đa cho phép đối với kết nối TCP và bắt tay TLS tới một BMC."
+
+#: lib/Settings.php
+msgid "Request Timeout"
+msgstr "Thời gian chờ yêu cầu"
+
+#: lib/Settings.php
+msgid "Seconds allowed for one whole request to a BMC, including the connection."
+msgstr "Số giây tối đa cho phép đối với toàn bộ một yêu cầu tới BMC, bao gồm cả thời gian kết nối."
+
+#: lib/Settings.php
+msgid "KiB accepted in one BMC response body; a larger response is refused."
+msgstr "Số KiB được chấp nhận trong một phần thân phản hồi BMC; phản hồi lớn hơn sẽ bị từ chối."
+
+#: lib/Settings.php
+msgid "Maximum Response Size"
+msgstr "Kích thước phản hồi tối đa"
+
+#: lib/Settings.php
+msgid "Freshness"
+msgstr "Độ mới"
+
+#: lib/Settings.php
+msgid "Collection intervals after which a reading is shown as delayed."
+msgstr "Số chu kỳ thu thập mà sau đó giá trị đo được hiển thị là bị trễ."
+
+#: lib/Settings.php
+msgid "Delayed After"
+msgstr "Bị trễ sau"
+
+#: lib/Settings.php
+msgid "Collection intervals after which a reading is stale and reads as unknown. Always at least one more than Delayed After."
+msgstr "Số chu kỳ thu thập mà sau đó giá trị đo trở nên cũ và được đọc là không xác định. Luôn lớn hơn giá trị Bị trễ sau ít nhất 1."
+
+#: lib/Settings.php
+msgid "Stale After"
+msgstr "Cũ sau"
+
+#: lib/Settings.php
+msgid "Uninstall"
+msgstr "Gỡ cài đặt"
+
+#: lib/Settings.php
+msgid "Keep Plugin Tables on Uninstall"
+msgstr "Giữ các bảng của plugin khi gỡ cài đặt"
+
+#: lib/Settings.php
+msgid "When checked, uninstalling the plugin keeps its BMC registry, encrypted passwords, and reading cache. Clear it to have the uninstall drop them. Uninstall never touches Cacti devices, graphs, or BMCs, including devices the plugin created."
+msgstr "Khi được chọn, việc gỡ cài đặt plugin sẽ giữ lại sổ đăng ký BMC, mật khẩu đã mã hóa và bộ nhớ đệm giá trị đo. Bỏ chọn để quá trình gỡ cài đặt xóa chúng. Việc gỡ cài đặt không bao giờ chạm vào các thiết bị Cacti, biểu đồ hoặc BMC, bao gồm cả các thiết bị do plugin tạo."
+
+#: lib/TlsMode.php
+msgid "Verify against the system CA store"
+msgstr "Xác minh theo kho CA hệ thống"
+
+#: lib/TlsMode.php
+msgid "Verify against a CA bundle file"
+msgstr "Xác minh theo tệp gói CA"
+
+#: lib/TlsMode.php
+msgid "Pinned public key (SHA-256)"
+msgstr "Khóa công khai đã ghim (SHA-256)"
+
+#: lib/TlsMode.php
+msgid "Do not verify (unsafe)"
+msgstr "Không xác minh (không an toàn)"
+
+#: redfish_bmcs.php
+msgid "You do not have access to the Cacti device of this BMC."
+msgstr "Bạn không có quyền truy cập vào thiết bị Cacti của BMC này."
+
+#: redfish_bmcs.php
+msgid "The BMC could not be saved."
+msgstr "Không thể lưu BMC."
+
+#: redfish_bmcs.php
+msgid "The BMC was saved."
+msgstr "Đã lưu BMC."
+
+#: redfish_bmcs.php
+msgid "The BMC and its cached data were deleted. Its Cacti device was left in place."
+msgstr "Đã xóa BMC và dữ liệu đệm của nó. Thiết bị Cacti của nó vẫn được giữ nguyên."
+
+#: redfish_bmcs.php
+msgid "Backoff and held failures were cleared; the collector reads the BMC on its next run."
+msgstr "Đã xóa thời gian giãn thử lại và các lỗi đang giữ; bộ thu thập sẽ đọc BMC ở lần chạy tiếp theo."
+
+#: redfish_bmcs.php
+msgid "Adding devices and graphs needs Cacti's device management permission."
+msgstr "Việc thêm thiết bị và biểu đồ cần có quyền quản lý thiết bị của Cacti."
+
+#: redfish_bmcs.php
+msgid "The device of this BMC was deleted. Choose another device, or none, on the BMC form first."
+msgstr "Thiết bị của BMC này đã bị xóa. Trước tiên hãy chọn thiết bị khác hoặc không chọn thiết bị nào trên biểu mẫu BMC."
+
+#: redfish_bmcs.php
+#, php-format
+msgid "The data queries were indexed again and %d graphs were added."
+msgstr "Các truy vấn dữ liệu đã được lập chỉ mục lại và đã thêm %d biểu đồ."
+
+#: redfish_bmcs.php
+msgid "The device was created with its Redfish graphs."
+msgstr "Thiết bị đã được tạo cùng các biểu đồ Redfish của nó."
+
+#: redfish_bmcs.php
+msgid "Installing the Redfish templates needs Cacti's Import Templates permission."
+msgstr "Việc cài đặt các mẫu Redfish cần có quyền Nhập mẫu (Import Templates) của Cacti."
+
+#: redfish_bmcs.php
+msgid "The Redfish templates are installed."
+msgstr "Các mẫu Redfish đã được cài đặt."
+
+#: redfish_bmcs.php
+msgid "The Redfish templates could not be installed. The health page shows why."
+msgstr "Không thể cài đặt các mẫu Redfish. Trang tình trạng sẽ hiển thị lý do."
+
+#: redfish_bmcs.php
+msgid "The import could not be saved; nothing was imported."
+msgstr "Không thể lưu dữ liệu nhập; không có gì được nhập."
+
+#: redfish_bmcs.php
+#, php-format
+msgid "%d BMCs were imported."
+msgstr "Đã nhập %d BMC."
+
+#: redfish_credentials.php
+msgid "This credential is used by a BMC on a Cacti device you do not have access to, so it cannot be changed here."
+msgstr "Thông tin xác thực này được dùng bởi một BMC trên thiết bị Cacti mà bạn không có quyền truy cập, nên không thể thay đổi tại đây."
+
+#: redfish_credentials.php
+msgid "Name: another credential already uses this name."
+msgstr "Tên: một thông tin xác thực khác đã sử dụng tên này."
+
+#: redfish_credentials.php
+msgid "User Name: enter 1 to 255 characters without control characters."
+msgstr "Tên người dùng: nhập từ 1 đến 255 ký tự không chứa ký tự điều khiển."
+
+#: redfish_credentials.php
+msgid "Password: enter the password of the BMC account."
+msgstr "Mật khẩu: nhập mật khẩu của tài khoản BMC."
+
+#: redfish_credentials.php
+#, php-format
+msgid "The credential was saved, but the password was not stored: %s"
+msgstr "Đã lưu thông tin xác thực, nhưng chưa lưu được mật khẩu: %s"
+
+#: redfish_credentials.php
+msgid "The credential could not be saved."
+msgstr "Không thể lưu thông tin xác thực."
+
+#: redfish_credentials.php
+msgid "The credential was saved."
+msgstr "Đã lưu thông tin xác thực."
+
+#: redfish_credentials.php
+msgid "The credential and its stored password were deleted."
+msgstr "Đã xóa thông tin xác thực và mật khẩu đã lưu của nó."
+
+#: redfish_credentials.php
+msgid "The credential was not deleted. A credential in use by a BMC cannot be deleted."
+msgstr "Thông tin xác thực chưa được xóa. Không thể xóa thông tin xác thực đang được BMC sử dụng."
+
+#: redfish_operator.php
+msgid "Retry collection"
+msgstr "Thử thu thập lại"
+
+#: redfish_operator.php
+msgid "Monitoring view"
+msgstr "Chế độ xem giám sát"
+
+#: redfish_operator.php
+msgid "Observations could not be read. Ask an administrator to check the plugin log."
+msgstr "Không thể đọc các quan sát. Hãy yêu cầu quản trị viên kiểm tra nhật ký plugin."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires PHP %s or later. This server runs PHP %s, so the plugin was not installed or enabled."
+msgstr "Plugin Redfish yêu cầu PHP %s trở lên. Máy chủ này đang chạy PHP %s, nên plugin chưa được cài đặt hoặc bật."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires the PHP extensions %s, which this server does not load, so the plugin was not installed or enabled."
+msgstr "Plugin Redfish yêu cầu các phần mở rộng PHP %s mà máy chủ này chưa nạp, nên plugin chưa được cài đặt hoặc bật."
+
+#: setup.php
+msgid "Redfish"
+msgstr "Redfish"
+
+#: setup.php
+msgid "The Redfish plugin is not enabled."
+msgstr "Plugin Redfish chưa được bật."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires PHP %s or later."
+msgstr "Plugin Redfish yêu cầu PHP %s trở lên."
+
+#: setup.php
+msgid "Management"
+msgstr "Quản lý"

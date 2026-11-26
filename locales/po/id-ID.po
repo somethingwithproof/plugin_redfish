@@ -1,0 +1,970 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: 2026 Thomas Vincent <thomasvincent@gmail.com>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: redfish 0.1.0-dev\n"
+"Report-Msgid-Bugs-To: https://github.com/somethingwithproof/plugin_redfish/issues\n"
+"PO-Revision-Date: 2026-11-26 00:00+0000\n"
+"Last-Translator: Thomas Vincent <thomasvincent@gmail.com>\n"
+"Language-Team: Thomas Vincent <thomasvincent@gmail.com>\n"
+"Language: id-ID\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: include/operator.php
+msgid "Check collection freshness and the device graphs. Retry releases a collection hold for the next scheduled run; it does not contact the BMC now."
+msgstr "Periksa kesegaran pengumpulan data dan grafik perangkat. Coba ulang akan melepaskan penangguhan pengumpulan untuk eksekusi terjadwal berikutnya; tindakan ini tidak menghubungi BMC sekarang."
+
+#: lib/BmcImport.php
+msgid "The file is empty or larger than 1 MiB."
+msgstr "Berkas kosong atau lebih besar dari 1 MiB."
+
+#: lib/BmcImport.php
+msgid "The file could not be read."
+msgstr "Berkas tidak dapat dibaca."
+
+#: lib/BmcImport.php
+msgid "The file has no header row."
+msgstr "Berkas tidak memiliki baris tajuk."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The file has a column named \"%s\". Import files must not carry secrets; name a stored credential in the credential column instead. Nothing was imported."
+msgstr "Berkas memiliki kolom bernama \"%s\". Berkas impor tidak boleh membawa rahasia; sebutkan nama kredensial yang tersimpan di kolom credential sebagai gantinya. Tidak ada yang diimpor."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The header must name only these columns, each once, including name, address, and credential: %s."
+msgstr "Tajuk harus mencantumkan kolom-kolom ini saja, masing-masing satu kali, termasuk name, address, dan credential: %s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The file has more than %d rows."
+msgstr "Berkas memiliki lebih dari %d baris."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: expected %d fields, found %d."
+msgstr "Baris %d: diharapkan %d bidang, ditemukan %d."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Credential: no stored credential is named \"%s\"."
+msgstr "Kredensial: tidak ada kredensial tersimpan yang bernama \"%s\"."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: %s"
+msgstr "Baris %d: %s"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: the address %s port %d is already registered as %s."
+msgstr "Baris %d: alamat %s port %d sudah terdaftar sebagai %s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "line %d"
+msgstr "baris %d"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: the name %s is already used."
+msgstr "Baris %d: nama %s sudah digunakan."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: no Cacti device has ID %d."
+msgstr "Baris %d: tidak ada perangkat Cacti dengan ID %d."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: device %d already has the BMC %s."
+msgstr "Baris %d: perangkat %d sudah memiliki BMC %s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "of line %d"
+msgstr "dari baris %d"
+
+#: lib/BmcImport.php
+msgid "The file has no BMC rows."
+msgstr "Berkas tidak memiliki baris BMC."
+
+#: lib/BmcInput.php redfish_credentials.php
+msgid "Name: enter 1 to 100 characters without control characters."
+msgstr "Nama: masukkan 1 hingga 100 karakter tanpa karakter kontrol."
+
+#: lib/BmcInput.php
+msgid "Address: enter a host name or an IP address only, without a scheme, port, path, or user name. Loopback, link-local, multicast, and unspecified addresses are refused."
+msgstr "Alamat: masukkan hanya nama host atau alamat IP, tanpa skema, port, jalur, atau nama pengguna. Alamat loopback, link-local, multicast, dan tidak ditentukan ditolak."
+
+#: lib/BmcInput.php
+msgid "Port: enter a TCP port from 1 to 65535."
+msgstr "Port: masukkan port TCP dari 1 hingga 65535."
+
+#: lib/BmcInput.php
+msgid "Poller: only the main poller can collect BMCs in this release."
+msgstr "Poller: hanya poller utama yang dapat mengumpulkan BMC pada rilis ini."
+
+#: lib/BmcInput.php
+msgid "Device: choose a Cacti device or none."
+msgstr "Perangkat: pilih perangkat Cacti atau tidak ada."
+
+#: lib/BmcInput.php lib/BmcsPage.php
+msgid "Credential: choose a stored credential."
+msgstr "Kredensial: pilih kredensial yang tersimpan."
+
+#: lib/BmcInput.php
+msgid "TLS Verification: choose one of the listed modes."
+msgstr "Verifikasi TLS: pilih salah satu mode yang tercantum."
+
+#: lib/BmcInput.php
+msgid "CA Bundle File: enter an absolute path without control characters, at most 512 characters."
+msgstr "Berkas Bundel CA: masukkan jalur absolut tanpa karakter kontrol, maksimal 512 karakter."
+
+#: lib/BmcInput.php
+msgid "Public Key Pin: enter the base64 SHA-256 hash of the BMC public key, optionally prefixed with sha256//."
+msgstr "Pin Kunci Publik: masukkan hash SHA-256 base64 dari kunci publik BMC, secara opsional diawali dengan sha256//."
+
+#: lib/BmcRepository.php
+msgid "another BMC"
+msgstr "BMC lain"
+
+#: lib/BmcsPage.php lib/Pages.php
+msgid "Redfish BMCs"
+msgstr "BMC Redfish"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php lib/OperatorPage.php
+msgid "Actions"
+msgstr "Tindakan"
+
+#: lib/BmcsPage.php
+msgid "Address"
+msgstr "Alamat"
+
+#: lib/BmcsPage.php
+msgid "Basic Fallback"
+msgstr "Fallback Basic"
+
+#: lib/BmcsPage.php
+msgid "Credential"
+msgstr "Kredensial"
+
+#: lib/BmcsPage.php
+msgid "Device"
+msgstr "Perangkat"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Name"
+msgstr "Nama"
+
+#: lib/BmcsPage.php
+msgid "Port"
+msgstr "Port"
+
+#: lib/BmcsPage.php lib/OperatorPage.php
+msgid "State"
+msgstr "Status"
+
+#: lib/BmcsPage.php
+msgid "TLS Verification"
+msgstr "Verifikasi TLS"
+
+#: lib/BmcsPage.php lib/HealthPage.php
+msgid "No BMCs yet."
+msgstr "Belum ada BMC."
+
+#: lib/BmcsPage.php
+msgid "Missing"
+msgstr "Tidak Ada"
+
+#: lib/BmcsPage.php
+msgid "Allowed"
+msgstr "Diizinkan"
+
+#: lib/BmcsPage.php
+msgid "Off"
+msgstr "Nonaktif"
+
+#: lib/BmcsPage.php
+msgid "Disabled"
+msgstr "Dinonaktifkan"
+
+#: lib/BmcsPage.php
+msgid "Enabled"
+msgstr "Diaktifkan"
+
+#: lib/BmcsPage.php
+msgid "Retry Now"
+msgstr "Coba Lagi Sekarang"
+
+#: lib/BmcsPage.php
+msgid "Add Graphs"
+msgstr "Tambah Grafik"
+
+#: lib/BmcsPage.php
+msgid "Create Device"
+msgstr "Buat Perangkat"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Delete"
+msgstr "Hapus"
+
+#: lib/BmcsPage.php
+msgid "Export the BMC registry as JSON (no secrets)"
+msgstr "Ekspor registri BMC sebagai JSON (tanpa rahasia)"
+
+#: lib/BmcsPage.php
+msgid "Reinstall the Redfish Templates"
+msgstr "Instal Ulang Templat Redfish"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Add Redfish graphs for %s"
+msgstr "Tambah grafik Redfish untuk %s"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Create a Cacti device for %s"
+msgstr "Buat perangkat Cacti untuk %s"
+
+#: lib/BmcsPage.php
+msgid "Everything is already in place. Confirming indexes the data queries again and adds graphs for new members only."
+msgstr "Semuanya sudah siap. Mengonfirmasi akan mengindeks ulang kueri data dan hanya menambahkan grafik untuk anggota baru."
+
+#: lib/BmcsPage.php
+msgid "Confirming adds:"
+msgstr "Konfirmasi akan menambahkan:"
+
+#: lib/BmcsPage.php
+msgid "Existing devices, graphs, and thresholds are not changed."
+msgstr "Perangkat, grafik, dan ambang batas yang sudah ada tidak diubah."
+
+#: lib/BmcsPage.php
+msgid "Confirm"
+msgstr "Konfirmasi"
+
+#: lib/BmcsPage.php
+msgid "Cancel"
+msgstr "Batal"
+
+#: lib/BmcsPage.php
+msgid "Import BMCs"
+msgstr "Impor BMC"
+
+#: lib/BmcsPage.php
+msgid "CSV File"
+msgstr "Berkas CSV"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Header row with columns: %s. Name a stored credential; never put a password in the file. Every row must be valid or nothing is imported."
+msgstr "Baris header dengan kolom: %s. Sebutkan nama kredensial tersimpan; jangan pernah memasukkan kata sandi ke dalam berkas. Setiap baris harus valid atau tidak ada yang diimpor."
+
+#: lib/BmcsPage.php
+msgid "Import"
+msgstr "Impor"
+
+#: lib/BmcsPage.php
+msgid "Choose a credential"
+msgstr "Pilih kredensial"
+
+#: lib/BmcsPage.php
+msgid "None"
+msgstr "Tidak Ada"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Deleted device (ID %d)"
+msgstr "Perangkat yang dihapus (ID %d)"
+
+#: lib/BmcsPage.php
+msgid "New Redfish BMC"
+msgstr "BMC Redfish Baru"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Redfish BMC: %s"
+msgstr "BMC Redfish: %s"
+
+#: lib/BmcsPage.php
+msgid "Host name or IP address of the BMC, without https:// or a path."
+msgstr "Nama host atau alamat IP BMC, tanpa https:// atau jalur."
+
+#: lib/BmcsPage.php
+msgid "Do not verify is logged when set and shown as a warning on the health page while it stays."
+msgstr "Opsi Jangan verifikasi akan dicatat ke log saat diatur dan ditampilkan sebagai peringatan di halaman kesehatan selama tetap aktif."
+
+#: lib/BmcsPage.php
+msgid "CA Bundle File"
+msgstr "Berkas Bundel CA"
+
+#: lib/BmcsPage.php
+msgid "For the CA bundle mode: absolute path on the poller to a PEM file that others cannot write."
+msgstr "Untuk mode bundel CA: jalur absolut pada poller ke berkas PEM yang tidak dapat ditulis oleh pihak lain."
+
+#: lib/BmcsPage.php
+msgid "For the pinned mode: base64 SHA-256 of the BMC public key, as sha256//... or the bare hash. A changed key fails until this is updated."
+msgstr "Untuk mode tersemat: SHA-256 base64 dari kunci publik BMC, sebagai sha256//... atau hash mentah. Kunci yang berubah akan gagal hingga ini diperbarui."
+
+#: lib/BmcsPage.php
+msgid "Public Key Pin"
+msgstr "Pin Kunci Publik"
+
+#: lib/BmcsPage.php
+msgid "Allow Basic Authentication Fallback"
+msgstr "Izinkan Fallback Autentikasi Basic"
+
+#: lib/BmcsPage.php
+msgid "Used only when the BMC offers no session service. Every request then carries the password; the health page warns while it is in use."
+msgstr "Hanya digunakan jika BMC tidak menyediakan layanan sesi. Setiap permintaan akan membawa kata sandi; halaman kesehatan akan menampilkan peringatan selama digunakan."
+
+#: lib/BmcsPage.php
+msgid "The Cacti device of the server this BMC manages. Leave it at none to have the plugin create a device from the list."
+msgstr "Perangkat Cacti dari server yang dikelola BMC ini. Biarkan pada tidak ada agar plugin membuat perangkat dari daftar."
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Save"
+msgstr "Simpan"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Address: %s port %d is already registered as %s."
+msgstr "Alamat: %s port %d sudah terdaftar sebagai %s."
+
+#: lib/BmcsPage.php
+msgid "Address: this address and port are already registered."
+msgstr "Alamat: alamat dan port ini sudah terdaftar."
+
+#: lib/BmcsPage.php
+msgid "Name: another BMC already uses this name."
+msgstr "Nama: BMC lain sudah menggunakan nama ini."
+
+#: lib/BmcsPage.php
+msgid "Device: no Cacti device has this ID."
+msgstr "Perangkat: tidak ada perangkat Cacti dengan ID ini."
+
+#: lib/BmcsPage.php
+msgid "Device: another BMC is already mapped to this device."
+msgstr "Perangkat: BMC lain sudah dipetakan ke perangkat ini."
+
+#: lib/CredentialsPage.php lib/Pages.php
+msgid "Redfish Credentials"
+msgstr "Kredensial Redfish"
+
+#: lib/CredentialsPage.php
+msgid "Password"
+msgstr "Kata Sandi"
+
+#: lib/CredentialsPage.php
+msgid "Used By"
+msgstr "Digunakan Oleh"
+
+#: lib/CredentialsPage.php
+msgid "User Name"
+msgstr "Nama Pengguna"
+
+#: lib/CredentialsPage.php
+msgid "No credentials yet. Create one with a read-only BMC account."
+msgstr "Belum ada kredensial. Buat satu dengan akun BMC baca-saja."
+
+#: lib/CredentialsPage.php
+msgid "None stored"
+msgstr "Tidak ada yang tersimpan"
+
+#: lib/CredentialsPage.php
+msgid "Stored"
+msgstr "Tersimpan"
+
+#: lib/CredentialsPage.php
+#, php-format
+msgid "%d BMCs"
+msgstr "%d BMC"
+
+#: lib/CredentialsPage.php
+msgid "New Redfish Credential"
+msgstr "Kredensial Redfish Baru"
+
+#: lib/CredentialsPage.php
+#, php-format
+msgid "Redfish Credential: %s"
+msgstr "Kredensial Redfish: %s"
+
+#: lib/CredentialsPage.php
+msgid "A BMC account with the ReadOnly role. The plugin never needs a role that can change BMC state."
+msgstr "Akun BMC dengan peran ReadOnly. Plugin ini tidak pernah memerlukan peran yang dapat mengubah status BMC."
+
+#: lib/CredentialsPage.php
+msgid "A password is stored. Leave blank to keep it."
+msgstr "Kata sandi sudah tersimpan. Biarkan kosong untuk mempertahankannya."
+
+#: lib/CredentialsPage.php
+msgid "Stored encrypted with the vault key."
+msgstr "Disimpan terenkripsi dengan kunci brankas."
+
+#: lib/DeviceProvisioner.php
+msgid "The Redfish templates are not installed completely. Reinstall them from the Redfish BMCs page."
+msgstr "Templat Redfish belum terinstal sepenuhnya. Instal ulang dari halaman BMC Redfish."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "A device \"%s\" from the %s device template, polled by poller %d, with availability checks off. Its host name is a reserved name that is never contacted."
+msgstr "Perangkat \"%s\" dari templat perangkat %s, dilakukan polling oleh poller %d, dengan pemeriksaan ketersediaan nonaktif. Nama host-nya adalah nama khusus yang tidak pernah dihubungi."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "The data query \"%s\", with a graph for each of the %d members known now."
+msgstr "Kueri data \"%s\", dengan grafik untuk masing-masing dari %d anggota yang diketahui saat ini."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "%d fans or power supplies that were present are no longer reported. They count as failed until you confirm; confirming accepts the members the BMC reports now."
+msgstr "%d kipas atau catu daya yang sebelumnya ada kini tidak lagi dilaporkan. Komponen tersebut dihitung gagal hingga Anda mengonfirmasi; mengonfirmasi akan menerima anggota yang dilaporkan BMC saat ini."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "The graph \"%s\", with its \"%s\" data source."
+msgstr "Grafik \"%s\", dengan sumber data \"%s\"."
+
+#: lib/DeviceProvisioner.php
+msgid "The BMC is already mapped to a device."
+msgstr "BMC sudah dipetakan ke sebuah perangkat."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "Created by the Redfish plugin for BMC %s. Its values come from the plugin cache; the host name is a reserved name that is never contacted."
+msgstr "Dibuat oleh plugin Redfish untuk BMC %s. Nilainya berasal dari singgahan plugin; nama host-nya adalah nama khusus yang tidak pernah dihubungi."
+
+#: lib/DeviceProvisioner.php
+msgid "Cacti refused to create the device. See the Cacti log."
+msgstr "Cacti menolak membuat perangkat. Lihat log Cacti."
+
+#: lib/DeviceProvisioner.php
+msgid "The new device would be hidden from you by your device permissions, so it was removed again. Ask an administrator to grant access, or map the BMC to a device you can see."
+msgstr "Perangkat baru akan tersembunyi dari Anda karena izin perangkat Anda, sehingga perangkat tersebut dihapus kembali. Minta administrator untuk memberikan akses, atau petakan BMC ke perangkat yang dapat Anda lihat."
+
+#: lib/DeviceProvisioner.php
+msgid "The BMC was mapped to a device by someone else meanwhile, or could not be mapped, so the new device was removed again. Reload the page and check its mapping."
+msgstr "Sementara itu BMC dipetakan ke perangkat oleh orang lain, atau tidak dapat dipetakan, sehingga perangkat baru dihapus kembali. Muat ulang halaman dan periksa pemetaannya."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "The Redfish templates could not be installed: %s"
+msgstr "Templat Redfish tidak dapat diinstal: %s"
+
+#: lib/DeviceWarnings.php
+msgid "The Redfish templates are not installed or not current. Reinstall them from the Redfish BMCs page."
+msgstr "Templat Redfish belum terinstal atau bukan versi terbaru. Instal ulang dari halaman BMC Redfish."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "%s: its Cacti device was deleted. Map it to another device or create one from the BMCs page."
+msgstr "%s: perangkat Cacti-nya telah dihapus. Petakan ke perangkat lain atau buat perangkat baru dari halaman BMC."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "%s: its device is polled by poller %d but the BMC is read by poller %d. Move one of them so both use the same poller, or its graphs can read as unknown."
+msgstr "%s: perangkatnya dilakukan polling oleh poller %d, tetapi BMC dibaca oleh poller %d. Pindahkan salah satunya agar keduanya menggunakan poller yang sama, atau grafiknya dapat terbaca sebagai tidak diketahui."
+
+#: lib/GraphLinks.php
+msgid "Redfish graphs of this device"
+msgstr "Grafik Redfish perangkat ini"
+
+#: lib/HealthPage.php
+msgid "Redfish Warnings"
+msgstr "Peringatan Redfish"
+
+#: lib/HealthPage.php
+msgid "No warnings."
+msgstr "Tidak ada peringatan."
+
+#: lib/HealthPage.php
+msgid "Redfish Collector"
+msgstr "Kolektor Redfish"
+
+#: lib/HealthPage.php
+msgid "BMCs"
+msgstr "BMC"
+
+#: lib/HealthPage.php
+msgid "Duration / Interval"
+msgstr "Durasi / Interval"
+
+#: lib/HealthPage.php
+msgid "Last Run"
+msgstr "Terakhir Dijalankan"
+
+#: lib/HealthPage.php
+msgid "Poller"
+msgstr "Poller"
+
+#: lib/HealthPage.php
+msgid "Read"
+msgstr "Baca"
+
+#: lib/HealthPage.php
+msgid "Requests per BMC"
+msgstr "Permintaan per BMC"
+
+#: lib/HealthPage.php
+msgid "Workers"
+msgstr "Worker"
+
+#: lib/HealthPage.php
+msgid "The collector has not run yet."
+msgstr "Kolektor belum dijalankan."
+
+#: lib/HealthPage.php lib/OperatorPage.php
+msgid "Never"
+msgstr "Tidak pernah"
+
+#: lib/HealthPage.php
+msgid "Redfish BMC Status"
+msgstr "Status BMC Redfish"
+
+#: lib/HealthPage.php
+msgid "Authentication"
+msgstr "Autentikasi"
+
+#: lib/HealthPage.php
+msgid "BMC"
+msgstr "BMC"
+
+#: lib/HealthPage.php
+msgid "Data"
+msgstr "Data"
+
+#: lib/HealthPage.php
+msgid "Discovery"
+msgstr "Penemuan"
+
+#: lib/HealthPage.php
+msgid "Failure"
+msgstr "Kegagalan"
+
+#: lib/HealthPage.php
+msgid "Last Success"
+msgstr "Keberhasilan Terakhir"
+
+#: lib/HealthPage.php
+msgid "Mean Latency"
+msgstr "Latensi Rata-rata"
+
+#: lib/HealthPage.php
+msgid "Reachability"
+msgstr "Keterjangkauan"
+
+#: lib/HealthPage.php
+msgid "Requests"
+msgstr "Permintaan"
+
+#: lib/HealthPage.php
+msgid "Source"
+msgstr "Sumber"
+
+#: lib/HealthPage.php
+#, php-format
+msgid "newest %s"
+msgstr "terbaru %s"
+
+#: lib/HealthPage.php
+msgid "disabled"
+msgstr "dinonaktifkan"
+
+#: lib/HealthPage.php
+msgid "ok"
+msgstr "ok"
+
+#: lib/HealthPage.php
+msgid "stale"
+msgstr "usang"
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The vault key file cannot be used: %s. Stored passwords cannot be read or written until it is fixed."
+msgstr "Berkas kunci brankas tidak dapat digunakan: %s. Kata sandi tersimpan tidak dapat dibaca atau ditulis hingga masalah ini diperbaiki."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d took %.0f seconds, more than its budget of %d seconds."
+msgstr "Kolektor pada poller %d memerlukan waktu %.0f detik, melebihi batas waktunya sebesar %d detik."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d ran out of time before every BMC was read; the rest resume on the next run. Add workers or raise the budget."
+msgstr "Kolektor pada poller %d kehabisan waktu sebelum semua BMC selesai dibaca; sisanya akan dilanjutkan pada proses berikutnya. Tambahkan worker atau naikkan batas waktu."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d last ran %s."
+msgstr "Kolektor pada poller %d terakhir berjalan %s."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: TLS verification is off. Anyone on the path can read its traffic, including the BMC password."
+msgstr "%s: verifikasi TLS nonaktif. Siapa pun di jalur jaringan dapat membaca lalu lintasnya, termasuk kata sandi BMC."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: uses Basic authentication because the BMC offers no session service; every request carries the password."
+msgstr "%s: menggunakan autentikasi Basic karena BMC tidak menyediakan layanan sesi; setiap permintaan membawa kata sandi."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: a session may have been left open on the BMC; the next run deletes it after logging in."
+msgstr "%s: sesi mungkin masih terbuka pada BMC; proses berikutnya akan menghapusnya setelah masuk."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: %d session logins in a row lost their response, so logins stopped. Check the BMC session list, then use Retry Now."
+msgstr "%s: %d proses masuk sesi berturut-turut kehilangan responsnya, sehingga proses masuk dihentikan. Periksa daftar sesi BMC, lalu gunakan Coba Lagi Sekarang."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: the BMC rejected the credential. It is not tried again until the credential changes."
+msgstr "%s: BMC menolak kredensial tersebut. Kredensial tidak akan dicoba lagi hingga diubah."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: its credential is missing or has no stored password."
+msgstr "%s: kredensialnya tidak ada atau tidak memiliki kata sandi tersimpan."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: %d links in its responses pointed elsewhere and were ignored."
+msgstr "%s: %d tautan dalam responsnya mengarah ke tempat lain dan diabaikan."
+
+#: lib/Html.php
+#, php-format
+msgid "%d seconds ago"
+msgstr "%d detik yang lalu"
+
+#: lib/Html.php
+#, php-format
+msgid "%d minutes ago"
+msgstr "%d menit yang lalu"
+
+#: lib/Html.php
+#, php-format
+msgid "%d hours ago"
+msgstr "%d jam yang lalu"
+
+#: lib/Html.php
+#, php-format
+msgid "%d days ago"
+msgstr "%d hari yang lalu"
+
+#: lib/OperatorPage.php
+msgid "Review the recorded observations below. Acknowledgments are personal to this session, expire when observations change, and never suppress alerts or change health."
+msgstr "Tinjau observasi yang tercatat di bawah ini. Pengakuan bersifat pribadi untuk sesi ini, kedaluwarsa saat observasi berubah, dan tidak pernah menekan peringatan atau mengubah status kesehatan."
+
+#: lib/OperatorPage.php lib/Pages.php
+msgid "Redfish Operations"
+msgstr "Operasi Redfish"
+
+#: lib/OperatorPage.php
+msgid "Investigation"
+msgstr "Investigasi"
+
+#: lib/OperatorPage.php
+msgid "Object"
+msgstr "Objek"
+
+#: lib/OperatorPage.php
+msgid "Observed (UTC)"
+msgstr "Diamati (UTC)"
+
+#: lib/OperatorPage.php
+msgid "Unknown or stale"
+msgstr "Tidak diketahui atau usang"
+
+#: lib/OperatorPage.php
+msgid "Acknowledged; health unchanged."
+msgstr "Diakui; status kesehatan tidak berubah."
+
+#: lib/OperatorPage.php
+msgid "Acknowledge"
+msgstr "Akui"
+
+#: lib/OperatorPage.php
+msgid "No observations are available for devices you may access."
+msgstr "Tidak ada observasi yang tersedia untuk perangkat yang dapat Anda akses."
+
+#: lib/Pages.php
+msgid "Redfish Operator"
+msgstr "Operator Redfish"
+
+#: lib/Pages.php
+msgid "Redfish View"
+msgstr "Lihat Redfish"
+
+#: lib/Pages.php
+msgid "Redfish Admin"
+msgstr "Admin Redfish"
+
+#: lib/Pages.php
+msgid "Redfish Health"
+msgstr "Kesehatan Redfish"
+
+#: lib/Settings.php
+#, php-format
+msgid "%s Default %d, from %d to %d."
+msgstr "%s Default %d, dari %d hingga %d."
+
+#: lib/Settings.php
+msgid "Credential Vault"
+msgstr "Brankas Kredensial"
+
+#: lib/Settings.php
+msgid "Vault Key File"
+msgstr "Berkas Kunci Brankas"
+
+#: lib/Settings.php
+msgid "Absolute path to the 32-byte key that encrypts stored BMC passwords. Create it yourself, outside the web root, readable only by the web server and poller user, in a directory that only root and that user can write; the plugin never creates or writes it. Back it up with the database: without it, stored passwords must be entered again."
+msgstr "Jalur absolut ke kunci 32-byte yang mengenkripsi kata sandi BMC tersimpan. Buat kunci ini sendiri, di luar root web, hanya dapat dibaca oleh server web dan pengguna poller, di dalam direktori yang hanya dapat ditulis oleh root dan pengguna tersebut; plugin tidak pernah membuat atau menulisnya. Cadangkan bersama basis data: tanpanya, kata sandi tersimpan harus dimasukkan kembali."
+
+#: lib/Settings.php
+msgid "Collector"
+msgstr "Pengumpul"
+
+#: lib/Settings.php
+msgid "Collection Interval"
+msgstr "Interval Pengumpulan"
+
+#: lib/Settings.php
+msgid "Seconds between reads of each BMC."
+msgstr "Detik di antara pembacaan setiap BMC."
+
+#: lib/Settings.php
+msgid "Rediscovery Interval"
+msgstr "Interval Penemuan Ulang"
+
+#: lib/Settings.php
+msgid "Seconds between full resource discoveries of each BMC. A BMC is also rediscovered at once when a known resource disappears or changes type."
+msgstr "Detik di antara penemuan sumber daya penuh pada setiap BMC. BMC juga akan langsung ditemukan ulang ketika sumber daya yang diketahui menghilang atau berubah jenis."
+
+#: lib/Settings.php
+msgid "Collector Time Budget"
+msgstr "Anggaran Waktu Pengumpul"
+
+#: lib/Settings.php
+msgid "Seconds one collector run may spend before it stops starting new BMCs. Keep it below the poller interval; unfinished BMCs resume on the next run."
+msgstr "Detik yang boleh digunakan satu proses kolektor sebelum berhenti memulai BMC baru. Pertahankan di bawah interval poller; BMC yang belum selesai akan dilanjutkan pada proses berikutnya."
+
+#: lib/Settings.php
+msgid "BMCs read in parallel. Each BMC is read by one worker at a time."
+msgstr "BMC yang dibaca secara paralel. Setiap BMC dibaca oleh satu worker pada satu waktu."
+
+#: lib/Settings.php
+msgid "Collector Workers"
+msgstr "Worker Kolektor"
+
+#: lib/Settings.php
+msgid "Connect Timeout"
+msgstr "Batas Waktu Koneksi"
+
+#: lib/Settings.php
+msgid "Seconds allowed for the TCP connection and TLS handshake to a BMC."
+msgstr "Detik yang diizinkan untuk koneksi TCP dan jabat tangan TLS ke BMC."
+
+#: lib/Settings.php
+msgid "Request Timeout"
+msgstr "Batas Waktu Permintaan"
+
+#: lib/Settings.php
+msgid "Seconds allowed for one whole request to a BMC, including the connection."
+msgstr "Detik yang diizinkan untuk satu permintaan penuh ke BMC, termasuk koneksinya."
+
+#: lib/Settings.php
+msgid "KiB accepted in one BMC response body; a larger response is refused."
+msgstr "KiB yang diterima dalam satu isi respons BMC; respons yang lebih besar akan ditolak."
+
+#: lib/Settings.php
+msgid "Maximum Response Size"
+msgstr "Ukuran Respons Maksimum"
+
+#: lib/Settings.php
+msgid "Freshness"
+msgstr "Kesegaran"
+
+#: lib/Settings.php
+msgid "Collection intervals after which a reading is shown as delayed."
+msgstr "Interval pengumpulan yang setelahnya pembacaan ditampilkan sebagai tertunda."
+
+#: lib/Settings.php
+msgid "Delayed After"
+msgstr "Tertunda Setelah"
+
+#: lib/Settings.php
+msgid "Collection intervals after which a reading is stale and reads as unknown. Always at least one more than Delayed After."
+msgstr "Interval pengumpulan yang setelahnya pembacaan dianggap usang dan terbaca sebagai tidak diketahui. Selalu minimal satu lebih banyak daripada Tertunda Setelah."
+
+#: lib/Settings.php
+msgid "Stale After"
+msgstr "Kedaluwarsa Setelah"
+
+#: lib/Settings.php
+msgid "Uninstall"
+msgstr "Copot Pemasangan"
+
+#: lib/Settings.php
+msgid "Keep Plugin Tables on Uninstall"
+msgstr "Pertahankan Tabel Plugin saat Pencopotan"
+
+#: lib/Settings.php
+msgid "When checked, uninstalling the plugin keeps its BMC registry, encrypted passwords, and reading cache. Clear it to have the uninstall drop them. Uninstall never touches Cacti devices, graphs, or BMCs, including devices the plugin created."
+msgstr "Jika dicentang, menghapus instalasi plugin akan tetap menyimpan registri BMC, kata sandi terenkripsi, dan singgahan pembacaannya. Hapus centang agar penghapusan instalasi ikut menghapus data tersebut. Penghapusan instalasi tidak pernah menyentuh perangkat Cacti, grafik, atau BMC, termasuk perangkat yang dibuat oleh plugin."
+
+#: lib/TlsMode.php
+msgid "Verify against the system CA store"
+msgstr "Verifikasi terhadap penyimpanan CA sistem"
+
+#: lib/TlsMode.php
+msgid "Verify against a CA bundle file"
+msgstr "Verifikasi terhadap berkas bundel CA"
+
+#: lib/TlsMode.php
+msgid "Pinned public key (SHA-256)"
+msgstr "Kunci publik tersemat (SHA-256)"
+
+#: lib/TlsMode.php
+msgid "Do not verify (unsafe)"
+msgstr "Jangan verifikasi (tidak aman)"
+
+#: redfish_bmcs.php
+msgid "You do not have access to the Cacti device of this BMC."
+msgstr "Anda tidak memiliki akses ke perangkat Cacti dari BMC ini."
+
+#: redfish_bmcs.php
+msgid "The BMC could not be saved."
+msgstr "BMC tidak dapat disimpan."
+
+#: redfish_bmcs.php
+msgid "The BMC was saved."
+msgstr "BMC berhasil disimpan."
+
+#: redfish_bmcs.php
+msgid "The BMC and its cached data were deleted. Its Cacti device was left in place."
+msgstr "BMC dan data singgahannya telah dihapus. Perangkat Cacti-nya tetap dipertahankan."
+
+#: redfish_bmcs.php
+msgid "Backoff and held failures were cleared; the collector reads the BMC on its next run."
+msgstr "Backoff dan kegagalan yang ditahan telah dibersihkan; kolektor akan membaca BMC pada proses berikutnya."
+
+#: redfish_bmcs.php
+msgid "Adding devices and graphs needs Cacti's device management permission."
+msgstr "Menambahkan perangkat dan grafik memerlukan izin pengelolaan perangkat Cacti."
+
+#: redfish_bmcs.php
+msgid "The device of this BMC was deleted. Choose another device, or none, on the BMC form first."
+msgstr "Perangkat dari BMC ini telah dihapus. Pilih perangkat lain, atau tidak ada, pada formulir BMC terlebih dahulu."
+
+#: redfish_bmcs.php
+#, php-format
+msgid "The data queries were indexed again and %d graphs were added."
+msgstr "Kueri data telah diindeks ulang dan %d grafik ditambahkan."
+
+#: redfish_bmcs.php
+msgid "The device was created with its Redfish graphs."
+msgstr "Perangkat berhasil dibuat beserta grafik Redfish-nya."
+
+#: redfish_bmcs.php
+msgid "Installing the Redfish templates needs Cacti's Import Templates permission."
+msgstr "Menginstal templat Redfish memerlukan izin Impor Templat Cacti."
+
+#: redfish_bmcs.php
+msgid "The Redfish templates are installed."
+msgstr "Templat Redfish telah terinstal."
+
+#: redfish_bmcs.php
+msgid "The Redfish templates could not be installed. The health page shows why."
+msgstr "Templat Redfish tidak dapat diinstal. Halaman kesehatan menampilkan penyebabnya."
+
+#: redfish_bmcs.php
+msgid "The import could not be saved; nothing was imported."
+msgstr "Impor tidak dapat disimpan; tidak ada yang diimpor."
+
+#: redfish_bmcs.php
+#, php-format
+msgid "%d BMCs were imported."
+msgstr "%d BMC berhasil diimpor."
+
+#: redfish_credentials.php
+msgid "This credential is used by a BMC on a Cacti device you do not have access to, so it cannot be changed here."
+msgstr "Kredensial ini digunakan oleh BMC pada perangkat Cacti yang tidak dapat Anda akses, sehingga tidak dapat diubah di sini."
+
+#: redfish_credentials.php
+msgid "Name: another credential already uses this name."
+msgstr "Nama: kredensial lain sudah menggunakan nama ini."
+
+#: redfish_credentials.php
+msgid "User Name: enter 1 to 255 characters without control characters."
+msgstr "Nama Pengguna: masukkan 1 hingga 255 karakter tanpa karakter kontrol."
+
+#: redfish_credentials.php
+msgid "Password: enter the password of the BMC account."
+msgstr "Kata Sandi: masukkan kata sandi akun BMC."
+
+#: redfish_credentials.php
+#, php-format
+msgid "The credential was saved, but the password was not stored: %s"
+msgstr "Kredensial berhasil disimpan, tetapi kata sandi tidak disimpan: %s"
+
+#: redfish_credentials.php
+msgid "The credential could not be saved."
+msgstr "Kredensial tidak dapat disimpan."
+
+#: redfish_credentials.php
+msgid "The credential was saved."
+msgstr "Kredensial berhasil disimpan."
+
+#: redfish_credentials.php
+msgid "The credential and its stored password were deleted."
+msgstr "Kredensial beserta kata sandi tersimpannya telah dihapus."
+
+#: redfish_credentials.php
+msgid "The credential was not deleted. A credential in use by a BMC cannot be deleted."
+msgstr "Kredensial tidak dihapus. Kredensial yang sedang digunakan oleh BMC tidak dapat dihapus."
+
+#: redfish_operator.php
+msgid "Retry collection"
+msgstr "Coba ulang pengumpulan"
+
+#: redfish_operator.php
+msgid "Monitoring view"
+msgstr "Tampilan pemantauan"
+
+#: redfish_operator.php
+msgid "Observations could not be read. Ask an administrator to check the plugin log."
+msgstr "Observasi tidak dapat dibaca. Minta administrator untuk memeriksa log plugin."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires PHP %s or later. This server runs PHP %s, so the plugin was not installed or enabled."
+msgstr "Plugin Redfish memerlukan PHP %s atau yang lebih baru. Server ini menjalankan PHP %s, sehingga plugin tidak diinstal atau diaktifkan."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires the PHP extensions %s, which this server does not load, so the plugin was not installed or enabled."
+msgstr "Plugin Redfish memerlukan ekstensi PHP %s, yang tidak dimuat oleh server ini, sehingga plugin tidak diinstal atau diaktifkan."
+
+#: setup.php
+msgid "Redfish"
+msgstr "Redfish"
+
+#: setup.php
+msgid "The Redfish plugin is not enabled."
+msgstr "Plugin Redfish tidak diaktifkan."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires PHP %s or later."
+msgstr "Plugin Redfish memerlukan PHP %s atau yang lebih baru."
+
+#: setup.php
+msgid "Management"
+msgstr "Manajemen"
