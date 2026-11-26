@@ -1,0 +1,970 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: 2026 Thomas Vincent <thomasvincent@gmail.com>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: redfish 0.1.0-dev\n"
+"Report-Msgid-Bugs-To: https://github.com/somethingwithproof/plugin_redfish/issues\n"
+"PO-Revision-Date: 2026-11-26 00:00+0000\n"
+"Last-Translator: Thomas Vincent <thomasvincent@gmail.com>\n"
+"Language-Team: Thomas Vincent <thomasvincent@gmail.com>\n"
+"Language: ar-EG\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
+
+#: include/operator.php
+msgid "Check collection freshness and the device graphs. Retry releases a collection hold for the next scheduled run; it does not contact the BMC now."
+msgstr "تحقق من حداثة الجمع والرسوم البيانية للجهاز. يؤدي \"إعادة المحاولة\" إلى تحرير تعليق الجمع للتشغيل المجدول التالي؛ ولا يتصل بوحدة BMC الآن."
+
+#: lib/BmcImport.php
+msgid "The file is empty or larger than 1 MiB."
+msgstr "الملف فارغ أو أكبر من 1 MiB."
+
+#: lib/BmcImport.php
+msgid "The file could not be read."
+msgstr "تعذّر قراءة الملف."
+
+#: lib/BmcImport.php
+msgid "The file has no header row."
+msgstr "لا يحتوي الملف على صف عناوين."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The file has a column named \"%s\". Import files must not carry secrets; name a stored credential in the credential column instead. Nothing was imported."
+msgstr "يحتوي الملف على عمود باسم \"%s\". يجب ألا تحمل ملفات الاستيراد أي أسرار؛ اذكر اسم بيانات اعتماد محفوظة في عمود credential بدلاً من ذلك. لم يتم استيراد أي شيء."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The header must name only these columns, each once, including name, address, and credential: %s."
+msgstr "يجب أن يسمي صف العناوين هذه الأعمدة فقط، كل عمود مرة واحدة، بما في ذلك name وaddress وcredential: %s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The file has more than %d rows."
+msgstr "يحتوي الملف على أكثر من %d صف."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: expected %d fields, found %d."
+msgstr "السطر %d: المتوقع %d حقول، الموجود %d."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Credential: no stored credential is named \"%s\"."
+msgstr "بيانات الاعتماد: لا توجد بيانات اعتماد محفوظة باسم \"%s\"."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: %s"
+msgstr "السطر %d: %s"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: the address %s port %d is already registered as %s."
+msgstr "السطر %d: العنوان %s المنفذ %d مسجل بالفعل باسم %s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "line %d"
+msgstr "السطر %d"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: the name %s is already used."
+msgstr "السطر %d: الاسم %s مستخدم بالفعل."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: no Cacti device has ID %d."
+msgstr "السطر %d: لا يوجد جهاز Cacti بالمعرّف %d."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: device %d already has the BMC %s."
+msgstr "السطر %d: الجهاز %d لديه بالفعل وحدة BMC %s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "of line %d"
+msgstr "في السطر %d"
+
+#: lib/BmcImport.php
+msgid "The file has no BMC rows."
+msgstr "لا يحتوي الملف على أي صفوف BMC."
+
+#: lib/BmcInput.php redfish_credentials.php
+msgid "Name: enter 1 to 100 characters without control characters."
+msgstr "الاسم: أدخل من 1 إلى 100 حرف بدون أحرف تحكم."
+
+#: lib/BmcInput.php
+msgid "Address: enter a host name or an IP address only, without a scheme, port, path, or user name. Loopback, link-local, multicast, and unspecified addresses are refused."
+msgstr "العنوان: أدخل اسم مضيف أو عنوان IP فقط، بدون مخطط (scheme) أو منفذ أو مسار أو اسم مستخدم. يتم رفض عناوين loopback وlink-local وmulticast والعناوين غير المحددة."
+
+#: lib/BmcInput.php
+msgid "Port: enter a TCP port from 1 to 65535."
+msgstr "المنفذ: أدخل منفذ TCP من 1 إلى 65535."
+
+#: lib/BmcInput.php
+msgid "Poller: only the main poller can collect BMCs in this release."
+msgstr "Poller: وحدة التجميع الرئيسية (main poller) فقط هي التي يمكنها تجميع بيانات وحدات BMC في هذا الإصدار."
+
+#: lib/BmcInput.php
+msgid "Device: choose a Cacti device or none."
+msgstr "الجهاز: اختر جهاز Cacti أو بدون جهاز."
+
+#: lib/BmcInput.php lib/BmcsPage.php
+msgid "Credential: choose a stored credential."
+msgstr "بيانات الاعتماد: اختر بيانات اعتماد مخزّنة."
+
+#: lib/BmcInput.php
+msgid "TLS Verification: choose one of the listed modes."
+msgstr "التحقق من TLS: اختر أحد الأوضاع المدرجة."
+
+#: lib/BmcInput.php
+msgid "CA Bundle File: enter an absolute path without control characters, at most 512 characters."
+msgstr "ملف حزمة CA: أدخل مسارًا مطلقًا بدون أحرف تحكم، بحد أقصى 512 حرفًا."
+
+#: lib/BmcInput.php
+msgid "Public Key Pin: enter the base64 SHA-256 hash of the BMC public key, optionally prefixed with sha256//."
+msgstr "تثبيت المفتاح العام: أدخل تجزئة SHA-256 بصيغة base64 للمفتاح العام لوحدة BMC، مسبوقة اختياريًا بـ sha256//."
+
+#: lib/BmcRepository.php
+msgid "another BMC"
+msgstr "وحدة BMC أخرى"
+
+#: lib/BmcsPage.php lib/Pages.php
+msgid "Redfish BMCs"
+msgstr "وحدات Redfish BMC"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php lib/OperatorPage.php
+msgid "Actions"
+msgstr "الإجراءات"
+
+#: lib/BmcsPage.php
+msgid "Address"
+msgstr "العنوان"
+
+#: lib/BmcsPage.php
+msgid "Basic Fallback"
+msgstr "الرجوع إلى Basic"
+
+#: lib/BmcsPage.php
+msgid "Credential"
+msgstr "بيان الاعتماد"
+
+#: lib/BmcsPage.php
+msgid "Device"
+msgstr "الجهاز"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Name"
+msgstr "الاسم"
+
+#: lib/BmcsPage.php
+msgid "Port"
+msgstr "المنفذ"
+
+#: lib/BmcsPage.php lib/OperatorPage.php
+msgid "State"
+msgstr "الحالة"
+
+#: lib/BmcsPage.php
+msgid "TLS Verification"
+msgstr "التحقق من TLS"
+
+#: lib/BmcsPage.php lib/HealthPage.php
+msgid "No BMCs yet."
+msgstr "لا توجد وحدات BMC بعد."
+
+#: lib/BmcsPage.php
+msgid "Missing"
+msgstr "مفقودة"
+
+#: lib/BmcsPage.php
+msgid "Allowed"
+msgstr "مسموح"
+
+#: lib/BmcsPage.php
+msgid "Off"
+msgstr "متوقف"
+
+#: lib/BmcsPage.php
+msgid "Disabled"
+msgstr "معطّل"
+
+#: lib/BmcsPage.php
+msgid "Enabled"
+msgstr "مُفعّل"
+
+#: lib/BmcsPage.php
+msgid "Retry Now"
+msgstr "إعادة المحاولة الآن"
+
+#: lib/BmcsPage.php
+msgid "Add Graphs"
+msgstr "إضافة رسوم بيانية"
+
+#: lib/BmcsPage.php
+msgid "Create Device"
+msgstr "إنشاء جهاز"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Delete"
+msgstr "حذف"
+
+#: lib/BmcsPage.php
+msgid "Export the BMC registry as JSON (no secrets)"
+msgstr "تصدير سجل BMC بصيغة JSON (بدون أسرار)"
+
+#: lib/BmcsPage.php
+msgid "Reinstall the Redfish Templates"
+msgstr "إعادة تثبيت قوالب Redfish"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Add Redfish graphs for %s"
+msgstr "إضافة رسوم Redfish البيانية لـ %s"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Create a Cacti device for %s"
+msgstr "إنشاء جهاز Cacti لـ %s"
+
+#: lib/BmcsPage.php
+msgid "Everything is already in place. Confirming indexes the data queries again and adds graphs for new members only."
+msgstr "كل شيء جاهز بالفعل. سيؤدي التأكيد إلى إعادة فهرسة استعلامات البيانات وإضافة رسوم بيانية للأعضاء الجدد فقط."
+
+#: lib/BmcsPage.php
+msgid "Confirming adds:"
+msgstr "التأكيد يضيف:"
+
+#: lib/BmcsPage.php
+msgid "Existing devices, graphs, and thresholds are not changed."
+msgstr "لن يتم تغيير الأجهزة والرسوم البيانية والحدود الحالية."
+
+#: lib/BmcsPage.php
+msgid "Confirm"
+msgstr "تأكيد"
+
+#: lib/BmcsPage.php
+msgid "Cancel"
+msgstr "إلغاء"
+
+#: lib/BmcsPage.php
+msgid "Import BMCs"
+msgstr "استيراد وحدات BMC"
+
+#: lib/BmcsPage.php
+msgid "CSV File"
+msgstr "ملف CSV"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Header row with columns: %s. Name a stored credential; never put a password in the file. Every row must be valid or nothing is imported."
+msgstr "صف رأس يحتوي على الأعمدة: %s. حدد اسم بيانات اعتماد مخزّنة؛ لا تضع كلمة مرور في الملف أبدًا. يجب أن يكون كل صف صالحًا وإلا فلن يتم استيراد أي شيء."
+
+#: lib/BmcsPage.php
+msgid "Import"
+msgstr "استيراد"
+
+#: lib/BmcsPage.php
+msgid "Choose a credential"
+msgstr "اختر بيانات اعتماد"
+
+#: lib/BmcsPage.php
+msgid "None"
+msgstr "لا شيء"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Deleted device (ID %d)"
+msgstr "جهاز محذوف (المعرّف %d)"
+
+#: lib/BmcsPage.php
+msgid "New Redfish BMC"
+msgstr "وحدة Redfish BMC جديدة"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Redfish BMC: %s"
+msgstr "وحدة Redfish BMC: %s"
+
+#: lib/BmcsPage.php
+msgid "Host name or IP address of the BMC, without https:// or a path."
+msgstr "اسم المضيف أو عنوان IP لوحدة BMC، بدون https:// أو مسار."
+
+#: lib/BmcsPage.php
+msgid "Do not verify is logged when set and shown as a warning on the health page while it stays."
+msgstr "يتم تسجيل اختيار «عدم التحقق» عند تعيينه ويظهر كتحذير في صفحة الحالة الصحية طالما ظل مفعّلًا."
+
+#: lib/BmcsPage.php
+msgid "CA Bundle File"
+msgstr "ملف حزمة CA"
+
+#: lib/BmcsPage.php
+msgid "For the CA bundle mode: absolute path on the poller to a PEM file that others cannot write."
+msgstr "لوضع حزمة CA: مسار مطلق على poller إلى ملف PEM لا يمكن للآخرين الكتابة فيه."
+
+#: lib/BmcsPage.php
+msgid "For the pinned mode: base64 SHA-256 of the BMC public key, as sha256//... or the bare hash. A changed key fails until this is updated."
+msgstr "للوضع المثبّت: تجزئة SHA-256 بصيغة base64 للمفتاح العام لوحدة BMC، بصيغة sha256//... أو التجزئة المجردة. أي تغيير في المفتاح سيفشل حتى يتم تحديث هذه القيمة."
+
+#: lib/BmcsPage.php
+msgid "Public Key Pin"
+msgstr "تثبيت المفتاح العام"
+
+#: lib/BmcsPage.php
+msgid "Allow Basic Authentication Fallback"
+msgstr "السماح بالرجوع إلى مصادقة Basic"
+
+#: lib/BmcsPage.php
+msgid "Used only when the BMC offers no session service. Every request then carries the password; the health page warns while it is in use."
+msgstr "يُستخدم فقط عندما لا توفر وحدة BMC خدمة جلسات. حينها يحمل كل طلب كلمة المرور؛ وتعرض صفحة الحالة الصحية تحذيرًا أثناء استخدامه."
+
+#: lib/BmcsPage.php
+msgid "The Cacti device of the server this BMC manages. Leave it at none to have the plugin create a device from the list."
+msgstr "جهاز Cacti الخاص بالخادم الذي تديره وحدة BMC هذه. اتركه على «بدون» ليقوم الملحق بإنشاء جهاز من القائمة."
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Save"
+msgstr "حفظ"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Address: %s port %d is already registered as %s."
+msgstr "العنوان: %s المنفذ %d مسجل بالفعل باسم %s."
+
+#: lib/BmcsPage.php
+msgid "Address: this address and port are already registered."
+msgstr "العنوان: هذا العنوان والمنفذ مسجلان بالفعل."
+
+#: lib/BmcsPage.php
+msgid "Name: another BMC already uses this name."
+msgstr "الاسم: توجد وحدة BMC أخرى تستخدم هذا الاسم بالفعل."
+
+#: lib/BmcsPage.php
+msgid "Device: no Cacti device has this ID."
+msgstr "الجهاز: لا يوجد جهاز Cacti بهذا المعرّف."
+
+#: lib/BmcsPage.php
+msgid "Device: another BMC is already mapped to this device."
+msgstr "الجهاز: توجد وحدة BMC أخرى مرتبطة بهذا الجهاز بالفعل."
+
+#: lib/CredentialsPage.php lib/Pages.php
+msgid "Redfish Credentials"
+msgstr "بيانات اعتماد Redfish"
+
+#: lib/CredentialsPage.php
+msgid "Password"
+msgstr "كلمة المرور"
+
+#: lib/CredentialsPage.php
+msgid "Used By"
+msgstr "مستخدم بواسطة"
+
+#: lib/CredentialsPage.php
+msgid "User Name"
+msgstr "اسم المستخدم"
+
+#: lib/CredentialsPage.php
+msgid "No credentials yet. Create one with a read-only BMC account."
+msgstr "لا توجد بيانات اعتماد بعد. أنشئ بيانات اعتماد بحساب BMC للقراءة فقط."
+
+#: lib/CredentialsPage.php
+msgid "None stored"
+msgstr "لا يوجد شيء مخزن"
+
+#: lib/CredentialsPage.php
+msgid "Stored"
+msgstr "المخزّن"
+
+#: lib/CredentialsPage.php
+#, php-format
+msgid "%d BMCs"
+msgstr "%d وحدات BMC"
+
+#: lib/CredentialsPage.php
+msgid "New Redfish Credential"
+msgstr "بيانات اعتماد Redfish جديدة"
+
+#: lib/CredentialsPage.php
+#, php-format
+msgid "Redfish Credential: %s"
+msgstr "بيانات اعتماد Redfish: %s"
+
+#: lib/CredentialsPage.php
+msgid "A BMC account with the ReadOnly role. The plugin never needs a role that can change BMC state."
+msgstr "حساب BMC بدور ReadOnly. لا يحتاج الملحق أبدًا إلى دور يمكنه تغيير حالة BMC."
+
+#: lib/CredentialsPage.php
+msgid "A password is stored. Leave blank to keep it."
+msgstr "توجد كلمة مرور مخزّنة. اتركه فارغًا للاحتفاظ بها."
+
+#: lib/CredentialsPage.php
+msgid "Stored encrypted with the vault key."
+msgstr "مخزّنة مشفّرة باستخدام مفتاح الخزنة."
+
+#: lib/DeviceProvisioner.php
+msgid "The Redfish templates are not installed completely. Reinstall them from the Redfish BMCs page."
+msgstr "قوالب Redfish غير مثبتة بالكامل. أعد تثبيتها من صفحة وحدات Redfish BMC."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "A device \"%s\" from the %s device template, polled by poller %d, with availability checks off. Its host name is a reserved name that is never contacted."
+msgstr "جهاز \"%s\" من قالب الجهاز %s، يتم تجميعه بواسطة poller %d، مع إيقاف فحوصات التوافر. اسم المضيف الخاص به اسم محجوز لا يتم الاتصال به أبدًا."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "The data query \"%s\", with a graph for each of the %d members known now."
+msgstr "استعلام البيانات \"%s\"، مع رسم بياني لكل عضو من الأعضاء الـ %d المعروفين حاليًا."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "%d fans or power supplies that were present are no longer reported. They count as failed until you confirm; confirming accepts the members the BMC reports now."
+msgstr "لم يعد يتم الإبلاغ عن %d من المراوح أو مزودات الطاقة التي كانت موجودة سابقًا. تُحسب كمعطلة حتى تؤكد؛ التأكيد يعتمد الأعضاء التي تبلغ عنها وحدة BMC الآن."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "The graph \"%s\", with its \"%s\" data source."
+msgstr "الرسم البياني \"%s\"، مع مصدر البيانات \"%s\" الخاص به."
+
+#: lib/DeviceProvisioner.php
+msgid "The BMC is already mapped to a device."
+msgstr "وحدة BMC مرتبطة بالفعل بجهاز."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "Created by the Redfish plugin for BMC %s. Its values come from the plugin cache; the host name is a reserved name that is never contacted."
+msgstr "تم إنشاؤه بواسطة ملحق Redfish لوحدة BMC %s. تأتي قيمه من ذاكرة التخزين المؤقت للملحق؛ اسم المضيف اسم محجوز لا يتم الاتصال به أبدًا."
+
+#: lib/DeviceProvisioner.php
+msgid "Cacti refused to create the device. See the Cacti log."
+msgstr "رفض Cacti إنشاء الجهاز. راجع سجل Cacti."
+
+#: lib/DeviceProvisioner.php
+msgid "The new device would be hidden from you by your device permissions, so it was removed again. Ask an administrator to grant access, or map the BMC to a device you can see."
+msgstr "سيكون الجهاز الجديد مخفيًا عنك بسبب أذونات الأجهزة الخاصة بك، لذا تمت إزالته مرة أخرى. اطلب من المسؤول منحك صلاحية الوصول، أو اربط وحدة BMC بجهاز يمكنك رؤيته."
+
+#: lib/DeviceProvisioner.php
+msgid "The BMC was mapped to a device by someone else meanwhile, or could not be mapped, so the new device was removed again. Reload the page and check its mapping."
+msgstr "تم ربط وحدة BMC بجهاز بواسطة شخص آخر في هذه الأثناء، أو تعذر ربطها، لذا تمت إزالة الجهاز الجديد مرة أخرى. أعد تحميل الصفحة وتحقق من الربط."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "The Redfish templates could not be installed: %s"
+msgstr "تعذر تثبيت قوالب Redfish: %s"
+
+#: lib/DeviceWarnings.php
+msgid "The Redfish templates are not installed or not current. Reinstall them from the Redfish BMCs page."
+msgstr "قوالب Redfish غير مثبتة أو ليست محدثة. أعد تثبيتها من صفحة وحدات Redfish BMC."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "%s: its Cacti device was deleted. Map it to another device or create one from the BMCs page."
+msgstr "%s: تم حذف جهاز Cacti الخاص به. اربطه بجهاز آخر أو أنشئ جهازًا من صفحة وحدات BMC."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "%s: its device is polled by poller %d but the BMC is read by poller %d. Move one of them so both use the same poller, or its graphs can read as unknown."
+msgstr "%s: جهازه يتم تجميعه بواسطة poller %d ولكن وحدة BMC تُقرأ بواسطة poller %d. انقل أحدهما بحيث يستخدم كلاهما نفس poller، وإلا فقد تظهر رسومه البيانية كغير معروفة."
+
+#: lib/GraphLinks.php
+msgid "Redfish graphs of this device"
+msgstr "رسوم Redfish البيانية لهذا الجهاز"
+
+#: lib/HealthPage.php
+msgid "Redfish Warnings"
+msgstr "تحذيرات Redfish"
+
+#: lib/HealthPage.php
+msgid "No warnings."
+msgstr "لا توجد تحذيرات."
+
+#: lib/HealthPage.php
+msgid "Redfish Collector"
+msgstr "مجمّع Redfish"
+
+#: lib/HealthPage.php
+msgid "BMCs"
+msgstr "وحدات BMC"
+
+#: lib/HealthPage.php
+msgid "Duration / Interval"
+msgstr "المدة / الفاصل الزمني"
+
+#: lib/HealthPage.php
+msgid "Last Run"
+msgstr "آخر تشغيل"
+
+#: lib/HealthPage.php
+msgid "Poller"
+msgstr "المُستطلِع"
+
+#: lib/HealthPage.php
+msgid "Read"
+msgstr "قراءة"
+
+#: lib/HealthPage.php
+msgid "Requests per BMC"
+msgstr "الطلبات لكل BMC"
+
+#: lib/HealthPage.php
+msgid "Workers"
+msgstr "العمال"
+
+#: lib/HealthPage.php
+msgid "The collector has not run yet."
+msgstr "لم يعمل المجمّع بعد."
+
+#: lib/HealthPage.php lib/OperatorPage.php
+msgid "Never"
+msgstr "أبداً"
+
+#: lib/HealthPage.php
+msgid "Redfish BMC Status"
+msgstr "حالة Redfish BMC"
+
+#: lib/HealthPage.php
+msgid "Authentication"
+msgstr "المصادقة"
+
+#: lib/HealthPage.php
+msgid "BMC"
+msgstr "BMC"
+
+#: lib/HealthPage.php
+msgid "Data"
+msgstr "البيانات"
+
+#: lib/HealthPage.php
+msgid "Discovery"
+msgstr "الاكتشاف"
+
+#: lib/HealthPage.php
+msgid "Failure"
+msgstr "الفشل"
+
+#: lib/HealthPage.php
+msgid "Last Success"
+msgstr "آخر نجاح"
+
+#: lib/HealthPage.php
+msgid "Mean Latency"
+msgstr "متوسط زمن الاستجابة"
+
+#: lib/HealthPage.php
+msgid "Reachability"
+msgstr "إمكانية الوصول"
+
+#: lib/HealthPage.php
+msgid "Requests"
+msgstr "الطلبات"
+
+#: lib/HealthPage.php
+msgid "Source"
+msgstr "المصدر"
+
+#: lib/HealthPage.php
+#, php-format
+msgid "newest %s"
+msgstr "الأحدث %s"
+
+#: lib/HealthPage.php
+msgid "disabled"
+msgstr "معطّل"
+
+#: lib/HealthPage.php
+msgid "ok"
+msgstr "سليم"
+
+#: lib/HealthPage.php
+msgid "stale"
+msgstr "متقادم"
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The vault key file cannot be used: %s. Stored passwords cannot be read or written until it is fixed."
+msgstr "لا يمكن استخدام ملف مفتاح الخزنة: %s. لا يمكن قراءة كلمات المرور المخزّنة أو كتابتها حتى يتم إصلاحه."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d took %.0f seconds, more than its budget of %d seconds."
+msgstr "استغرق المجمّع على poller %d مدة %.0f ثانية، وهو أكثر من المدة المخصصة له البالغة %d ثانية."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d ran out of time before every BMC was read; the rest resume on the next run. Add workers or raise the budget."
+msgstr "نفد وقت المجمّع على poller %d قبل قراءة كل وحدات BMC؛ سيتم استئناف الباقي في التشغيل التالي. أضف عمالًا أو ارفع المدة المخصصة."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d last ran %s."
+msgstr "آخر تشغيل للمجمّع على poller %d كان %s."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: TLS verification is off. Anyone on the path can read its traffic, including the BMC password."
+msgstr "%s: التحقق من TLS متوقف. يمكن لأي شخص على المسار قراءة حركة البيانات الخاصة به، بما في ذلك كلمة مرور BMC."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: uses Basic authentication because the BMC offers no session service; every request carries the password."
+msgstr "%s: يستخدم مصادقة Basic لأن وحدة BMC لا توفر خدمة جلسات؛ كل طلب يحمل كلمة المرور."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: a session may have been left open on the BMC; the next run deletes it after logging in."
+msgstr "%s: ربما تُركت جلسة مفتوحة على وحدة BMC؛ سيقوم التشغيل التالي بحذفها بعد تسجيل الدخول."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: %d session logins in a row lost their response, so logins stopped. Check the BMC session list, then use Retry Now."
+msgstr "%s: فقدت %d عمليات تسجيل دخول للجلسة على التوالي استجابتها، لذلك توقفت عمليات تسجيل الدخول. تحقق من قائمة جلسات BMC، ثم استخدم إعادة المحاولة الآن."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: the BMC rejected the credential. It is not tried again until the credential changes."
+msgstr "%s: رفضت وحدة BMC بيانات الاعتماد. لن تتم تجربتها مرة أخرى حتى تتغير بيانات الاعتماد."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: its credential is missing or has no stored password."
+msgstr "%s: بيانات الاعتماد الخاصة بها مفقودة أو لا تحتوي على كلمة مرور مخزّنة."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: %d links in its responses pointed elsewhere and were ignored."
+msgstr "%s: أشارت %d روابط في استجاباتها إلى مكان آخر وتم تجاهلها."
+
+#: lib/Html.php
+#, php-format
+msgid "%d seconds ago"
+msgstr "منذ %d ثانية"
+
+#: lib/Html.php
+#, php-format
+msgid "%d minutes ago"
+msgstr "منذ %d دقيقة"
+
+#: lib/Html.php
+#, php-format
+msgid "%d hours ago"
+msgstr "منذ %d ساعة"
+
+#: lib/Html.php
+#, php-format
+msgid "%d days ago"
+msgstr "منذ %d يوم"
+
+#: lib/OperatorPage.php
+msgid "Review the recorded observations below. Acknowledgments are personal to this session, expire when observations change, and never suppress alerts or change health."
+msgstr "راجع الملاحظات المسجلة أدناه. الإقرارات خاصة بهذه الجلسة، وتنتهي صلاحيتها عند تغير الملاحظات، ولا توقف التنبيهات ولا تغير الحالة الصحية مطلقاً."
+
+#: lib/OperatorPage.php lib/Pages.php
+msgid "Redfish Operations"
+msgstr "عمليات Redfish"
+
+#: lib/OperatorPage.php
+msgid "Investigation"
+msgstr "التحقيق"
+
+#: lib/OperatorPage.php
+msgid "Object"
+msgstr "الكائن"
+
+#: lib/OperatorPage.php
+msgid "Observed (UTC)"
+msgstr "وقت الرصد (UTC)"
+
+#: lib/OperatorPage.php
+msgid "Unknown or stale"
+msgstr "غير معروف أو قديم"
+
+#: lib/OperatorPage.php
+msgid "Acknowledged; health unchanged."
+msgstr "تم الإقرار؛ الحالة الصحية لم تتغير."
+
+#: lib/OperatorPage.php
+msgid "Acknowledge"
+msgstr "إقرار"
+
+#: lib/OperatorPage.php
+msgid "No observations are available for devices you may access."
+msgstr "لا توجد ملاحظات متاحة للأجهزة التي يحق لك الوصول إليها."
+
+#: lib/Pages.php
+msgid "Redfish Operator"
+msgstr "مشغّل Redfish"
+
+#: lib/Pages.php
+msgid "Redfish View"
+msgstr "عرض Redfish"
+
+#: lib/Pages.php
+msgid "Redfish Admin"
+msgstr "مسؤول Redfish"
+
+#: lib/Pages.php
+msgid "Redfish Health"
+msgstr "الحالة الصحية لـ Redfish"
+
+#: lib/Settings.php
+#, php-format
+msgid "%s Default %d, from %d to %d."
+msgstr "%s الافتراضي %d، من %d إلى %d."
+
+#: lib/Settings.php
+msgid "Credential Vault"
+msgstr "خزنة بيانات الاعتماد"
+
+#: lib/Settings.php
+msgid "Vault Key File"
+msgstr "ملف مفتاح الخزنة"
+
+#: lib/Settings.php
+msgid "Absolute path to the 32-byte key that encrypts stored BMC passwords. Create it yourself, outside the web root, readable only by the web server and poller user, in a directory that only root and that user can write; the plugin never creates or writes it. Back it up with the database: without it, stored passwords must be entered again."
+msgstr "المسار المطلق للمفتاح المكون من 32 بايت الذي يشفر كلمات مرور BMC المخزّنة. أنشئه بنفسك خارج مجلد الويب الجذري، بحيث يكون قابلًا للقراءة فقط من قِبل خادم الويب ومستخدم poller، في مجلد لا يستطيع الكتابة فيه سوى root وذلك المستخدم؛ لا يقوم الملحق بإنشائه أو الكتابة فيه أبدًا. خذ نسخة احتياطية منه مع قاعدة البيانات: بدونه، يجب إدخال كلمات المرور المخزّنة مرة أخرى."
+
+#: lib/Settings.php
+msgid "Collector"
+msgstr "أداة التجميع"
+
+#: lib/Settings.php
+msgid "Collection Interval"
+msgstr "الفاصل الزمني للتجميع"
+
+#: lib/Settings.php
+msgid "Seconds between reads of each BMC."
+msgstr "الثواني بين كل عملية قراءة لكل وحدة BMC."
+
+#: lib/Settings.php
+msgid "Rediscovery Interval"
+msgstr "فاصل إعادة الاكتشاف"
+
+#: lib/Settings.php
+msgid "Seconds between full resource discoveries of each BMC. A BMC is also rediscovered at once when a known resource disappears or changes type."
+msgstr "الثواني بين عمليات الاكتشاف الكاملة للموارد لكل وحدة BMC. تتم أيضًا إعادة اكتشاف وحدة BMC فورًا عندما يختفي مورد معروف أو يتغير نوعه."
+
+#: lib/Settings.php
+msgid "Collector Time Budget"
+msgstr "الحد الزمني لأداة التجميع"
+
+#: lib/Settings.php
+msgid "Seconds one collector run may spend before it stops starting new BMCs. Keep it below the poller interval; unfinished BMCs resume on the next run."
+msgstr "الثواني التي يمكن أن يستغرقها تشغيل واحد للمجمّع قبل أن يتوقف عن بدء قراءة وحدات BMC جديدة. اجعلها أقل من الفاصل الزمني للمجمّع (poller)؛ وتستكمل وحدات BMC غير المكتملة في التشغيل التالي."
+
+#: lib/Settings.php
+msgid "BMCs read in parallel. Each BMC is read by one worker at a time."
+msgstr "تُقرأ وحدات BMC بالتوازي. تُقرأ كل وحدة BMC بواسطة عامل واحد في كل مرة."
+
+#: lib/Settings.php
+msgid "Collector Workers"
+msgstr "عمال المجمّع"
+
+#: lib/Settings.php
+msgid "Connect Timeout"
+msgstr "مهلة الاتصال"
+
+#: lib/Settings.php
+msgid "Seconds allowed for the TCP connection and TLS handshake to a BMC."
+msgstr "الثواني المسموح بها لاتصال TCP ومصافحة TLS مع وحدة BMC."
+
+#: lib/Settings.php
+msgid "Request Timeout"
+msgstr "مهلة الطلب"
+
+#: lib/Settings.php
+msgid "Seconds allowed for one whole request to a BMC, including the connection."
+msgstr "الثواني المسموح بها لطلب كامل واحد إلى وحدة BMC، بما في ذلك الاتصال."
+
+#: lib/Settings.php
+msgid "KiB accepted in one BMC response body; a larger response is refused."
+msgstr "حجم KiB المقبول في جسم استجابة BMC واحدة؛ يتم رفض أي استجابة أكبر."
+
+#: lib/Settings.php
+msgid "Maximum Response Size"
+msgstr "الحد الأقصى لحجم الاستجابة"
+
+#: lib/Settings.php
+msgid "Freshness"
+msgstr "حداثة البيانات"
+
+#: lib/Settings.php
+msgid "Collection intervals after which a reading is shown as delayed."
+msgstr "فترات التجميع التي تظهر بعدها القراءة كمتأخرة."
+
+#: lib/Settings.php
+msgid "Delayed After"
+msgstr "متأخر بعد"
+
+#: lib/Settings.php
+msgid "Collection intervals after which a reading is stale and reads as unknown. Always at least one more than Delayed After."
+msgstr "فترات التجميع التي تصبح القراءة بعدها متقادمة وتُقرأ كغير معروفة. دائمًا أكبر بواحد على الأقل من «متأخر بعد»."
+
+#: lib/Settings.php
+msgid "Stale After"
+msgstr "تقادم البيانات بعد"
+
+#: lib/Settings.php
+msgid "Uninstall"
+msgstr "إلغاء التثبيت"
+
+#: lib/Settings.php
+msgid "Keep Plugin Tables on Uninstall"
+msgstr "الاحتفاظ بجداول الإضافة عند إلغاء التثبيت"
+
+#: lib/Settings.php
+msgid "When checked, uninstalling the plugin keeps its BMC registry, encrypted passwords, and reading cache. Clear it to have the uninstall drop them. Uninstall never touches Cacti devices, graphs, or BMCs, including devices the plugin created."
+msgstr "عند التحديد، يحتفظ إلغاء تثبيت الملحق بسجل BMC وكلمات المرور المشفّرة وذاكرة التخزين المؤقت للقراءات. قم بإلغاء التحديد ليحذفها إلغاء التثبيت. لا يمس إلغاء التثبيت أبدًا أجهزة Cacti أو رسومها البيانية أو وحدات BMC، بما في ذلك الأجهزة التي أنشأها الملحق."
+
+#: lib/TlsMode.php
+msgid "Verify against the system CA store"
+msgstr "التحقق مقابل مخزن CA الخاص بالنظام"
+
+#: lib/TlsMode.php
+msgid "Verify against a CA bundle file"
+msgstr "التحقق مقابل ملف حزمة CA"
+
+#: lib/TlsMode.php
+msgid "Pinned public key (SHA-256)"
+msgstr "مفتاح عام مثبّت (SHA-256)"
+
+#: lib/TlsMode.php
+msgid "Do not verify (unsafe)"
+msgstr "عدم التحقق (غير آمن)"
+
+#: redfish_bmcs.php
+msgid "You do not have access to the Cacti device of this BMC."
+msgstr "ليس لديك صلاحية الوصول إلى جهاز Cacti الخاص بوحدة BMC هذه."
+
+#: redfish_bmcs.php
+msgid "The BMC could not be saved."
+msgstr "تعذر حفظ وحدة BMC."
+
+#: redfish_bmcs.php
+msgid "The BMC was saved."
+msgstr "تم حفظ وحدة BMC."
+
+#: redfish_bmcs.php
+msgid "The BMC and its cached data were deleted. Its Cacti device was left in place."
+msgstr "تم حذف وحدة BMC وبياناتها المخزّنة مؤقتًا. وتُرك جهاز Cacti الخاص بها في مكانه."
+
+#: redfish_bmcs.php
+msgid "Backoff and held failures were cleared; the collector reads the BMC on its next run."
+msgstr "تم مسح التراجع والأعطال المعلّقة؛ سيقرأ المجمّع وحدة BMC في تشغيله التالي."
+
+#: redfish_bmcs.php
+msgid "Adding devices and graphs needs Cacti's device management permission."
+msgstr "تتطلب إضافة الأجهزة والرسوم البيانية صلاحية إدارة الأجهزة في Cacti."
+
+#: redfish_bmcs.php
+msgid "The device of this BMC was deleted. Choose another device, or none, on the BMC form first."
+msgstr "تم حذف جهاز وحدة BMC هذه. اختر جهازًا آخر، أو بدون جهاز، في نموذج BMC أولًا."
+
+#: redfish_bmcs.php
+#, php-format
+msgid "The data queries were indexed again and %d graphs were added."
+msgstr "تمت إعادة فهرسة استعلامات البيانات وإضافة %d رسوم بيانية."
+
+#: redfish_bmcs.php
+msgid "The device was created with its Redfish graphs."
+msgstr "تم إنشاء الجهاز مع رسوم Redfish البيانية الخاصة به."
+
+#: redfish_bmcs.php
+msgid "Installing the Redfish templates needs Cacti's Import Templates permission."
+msgstr "يتطلب تثبيت قوالب Redfish صلاحية استيراد القوالب في Cacti."
+
+#: redfish_bmcs.php
+msgid "The Redfish templates are installed."
+msgstr "تم تثبيت قوالب Redfish."
+
+#: redfish_bmcs.php
+msgid "The Redfish templates could not be installed. The health page shows why."
+msgstr "تعذر تثبيت قوالب Redfish. توضح صفحة الحالة الصحية السبب."
+
+#: redfish_bmcs.php
+msgid "The import could not be saved; nothing was imported."
+msgstr "تعذر حفظ الاستيراد؛ لم يتم استيراد أي شيء."
+
+#: redfish_bmcs.php
+#, php-format
+msgid "%d BMCs were imported."
+msgstr "تم استيراد %d وحدات BMC."
+
+#: redfish_credentials.php
+msgid "This credential is used by a BMC on a Cacti device you do not have access to, so it cannot be changed here."
+msgstr "تُستخدم بيانات الاعتماد هذه بواسطة وحدة BMC على جهاز Cacti ليس لديك صلاحية الوصول إليه، لذلك لا يمكن تغييرها هنا."
+
+#: redfish_credentials.php
+msgid "Name: another credential already uses this name."
+msgstr "الاسم: توجد بيانات اعتماد أخرى تستخدم هذا الاسم بالفعل."
+
+#: redfish_credentials.php
+msgid "User Name: enter 1 to 255 characters without control characters."
+msgstr "اسم المستخدم: أدخل من 1 إلى 255 حرفًا بدون أحرف تحكم."
+
+#: redfish_credentials.php
+msgid "Password: enter the password of the BMC account."
+msgstr "كلمة المرور: أدخل كلمة مرور حساب BMC."
+
+#: redfish_credentials.php
+#, php-format
+msgid "The credential was saved, but the password was not stored: %s"
+msgstr "تم حفظ بيانات الاعتماد، ولكن لم يتم تخزين كلمة المرور: %s"
+
+#: redfish_credentials.php
+msgid "The credential could not be saved."
+msgstr "تعذر حفظ بيانات الاعتماد."
+
+#: redfish_credentials.php
+msgid "The credential was saved."
+msgstr "تم حفظ بيانات الاعتماد."
+
+#: redfish_credentials.php
+msgid "The credential and its stored password were deleted."
+msgstr "تم حذف بيانات الاعتماد وكلمة المرور المخزّنة الخاصة بها."
+
+#: redfish_credentials.php
+msgid "The credential was not deleted. A credential in use by a BMC cannot be deleted."
+msgstr "لم يتم حذف بيانات الاعتماد. لا يمكن حذف بيانات اعتماد قيد الاستخدام بواسطة وحدة BMC."
+
+#: redfish_operator.php
+msgid "Retry collection"
+msgstr "إعادة محاولة التجميع"
+
+#: redfish_operator.php
+msgid "Monitoring view"
+msgstr "عرض المراقبة"
+
+#: redfish_operator.php
+msgid "Observations could not be read. Ask an administrator to check the plugin log."
+msgstr "تعذرت قراءة الملاحظات. اطلب من المسؤول فحص سجل الإضافة."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires PHP %s or later. This server runs PHP %s, so the plugin was not installed or enabled."
+msgstr "يتطلب ملحق Redfish إصدار PHP %s أو أحدث. يشغّل هذا الخادم إصدار PHP %s، لذلك لم يتم تثبيت الملحق أو تفعيله."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires the PHP extensions %s, which this server does not load, so the plugin was not installed or enabled."
+msgstr "يتطلب ملحق Redfish إضافات PHP التالية: %s، والتي لا يحمّلها هذا الخادم، لذلك لم يتم تثبيت الملحق أو تفعيله."
+
+#: setup.php
+msgid "Redfish"
+msgstr "Redfish"
+
+#: setup.php
+msgid "The Redfish plugin is not enabled."
+msgstr "ملحق Redfish غير مفعّل."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires PHP %s or later."
+msgstr "يتطلب ملحق Redfish إصدار PHP %s أو أحدث."
+
+#: setup.php
+msgid "Management"
+msgstr "الإدارة"

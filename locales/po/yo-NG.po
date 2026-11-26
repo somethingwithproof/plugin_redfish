@@ -1,0 +1,970 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: 2026 Thomas Vincent <thomasvincent@gmail.com>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: redfish 0.1.0-dev\n"
+"Report-Msgid-Bugs-To: https://github.com/somethingwithproof/plugin_redfish/issues\n"
+"PO-Revision-Date: 2026-11-26 00:00+0000\n"
+"Last-Translator: Thomas Vincent <thomasvincent@gmail.com>\n"
+"Language-Team: Thomas Vincent <thomasvincent@gmail.com>\n"
+"Language: yo-NG\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: include/operator.php
+msgid "Check collection freshness and the device graphs. Retry releases a collection hold for the next scheduled run; it does not contact the BMC now."
+msgstr "Ṣàyẹ̀wò ìjẹ́-tuntun àkójọpọ̀ àti àwọn àwòrán ẹ̀rọ. Àtúngbìyànjú ń tú ìdádúró àkójọpọ̀ sílẹ̀ fún ìṣiṣẹ́ tí a ṣètò tókàn; kò kàn sí BMC báyìí."
+
+#: lib/BmcImport.php
+msgid "The file is empty or larger than 1 MiB."
+msgstr "Fáìlì náà ṣófo tàbí ó tóbi ju 1 MiB lọ."
+
+#: lib/BmcImport.php
+msgid "The file could not be read."
+msgstr "A kò lè ka fáìlì náà."
+
+#: lib/BmcImport.php
+msgid "The file has no header row."
+msgstr "Fáìlì náà kò ní ìlà àkọlé."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The file has a column named \"%s\". Import files must not carry secrets; name a stored credential in the credential column instead. Nothing was imported."
+msgstr "Fáìlì náà ní òpó tí a pè ní \"%s\". Àwọn fáìlì ìkówọlé kò gbọ́dọ̀ ní àṣírí; dárúkọ ìwé-ẹ̀rí tí a fi pamọ́ sínú òpó credential dípò rẹ̀. Kò sí ohun tí a kó wọlé."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The header must name only these columns, each once, including name, address, and credential: %s."
+msgstr "Àkọlé gbọ́dọ̀ dárúkọ àwọn òpó wọ̀nyí nìkan, ọ̀kọ̀ọ̀kan lẹ́ẹ̀kan, pẹ̀lú name, address, àti credential: %s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The file has more than %d rows."
+msgstr "Fáìlì náà ní ìlà tí ó pọ̀ ju %d lọ."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: expected %d fields, found %d."
+msgstr "Ìlà %d: a retí pápá %d, a rí %d."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Credential: no stored credential is named \"%s\"."
+msgstr "Ìwé-ẹ̀rí: kò sí ìwé-ẹ̀rí tí a fi pamọ́ tí a pè ní \"%s\"."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: %s"
+msgstr "Ìlà %d: %s"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: the address %s port %d is already registered as %s."
+msgstr "Ìlà %d: àdírẹ́sì %s èbúté %d ti wà ní ìforúkọsílẹ̀ tẹ́lẹ̀ bíi %s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "line %d"
+msgstr "ìlà %d"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: the name %s is already used."
+msgstr "Ìlà %d: orúkọ %s ti wà ní lílò tẹ́lẹ̀."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: no Cacti device has ID %d."
+msgstr "Ìlà %d: kò sí ẹ̀rọ Cacti kankan tí ó ní ID %d."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: device %d already has the BMC %s."
+msgstr "Ìlà %d: ẹ̀rọ %d ti ní BMC %s tẹ́lẹ̀."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "of line %d"
+msgstr "ti ìlà %d"
+
+#: lib/BmcImport.php
+msgid "The file has no BMC rows."
+msgstr "Fáìlì náà kò ní àwọn ìlà BMC kankan."
+
+#: lib/BmcInput.php redfish_credentials.php
+msgid "Name: enter 1 to 100 characters without control characters."
+msgstr "Orúkọ: tẹ àmì-ìkọ̀wé 1 sí 100 láìsí àwọn àmì ìdarí."
+
+#: lib/BmcInput.php
+msgid "Address: enter a host name or an IP address only, without a scheme, port, path, or user name. Loopback, link-local, multicast, and unspecified addresses are refused."
+msgstr "Àdírẹ́sì: tẹ orúkọ olùgbàlejò tàbí àdírẹ́sì IP nìkan sínú rẹ̀, láìsí ìlànà ìjápọ̀, póòtù, ọ̀nà, tàbí orúkọ olùmúlò. Àwọn àdírẹ́sì loopback, link-local, multicast, àti àwọn tí a kò pàtó ni a máa kọ̀."
+
+#: lib/BmcInput.php
+msgid "Port: enter a TCP port from 1 to 65535."
+msgstr "Póòtù: tẹ póòtù TCP kan láti 1 dé 65535."
+
+#: lib/BmcInput.php
+msgid "Poller: only the main poller can collect BMCs in this release."
+msgstr "Poller: poller àkọ́kọ́ nìkan ni ó lè kó àwọn BMC jọ nínú àtẹ̀jáde yìí."
+
+#: lib/BmcInput.php
+msgid "Device: choose a Cacti device or none."
+msgstr "Ẹ̀rọ: yan ẹ̀rọ Cacti kan tàbí kò sí."
+
+#: lib/BmcInput.php lib/BmcsPage.php
+msgid "Credential: choose a stored credential."
+msgstr "Ìwé-ẹ̀rí ìwọlé: yan ìwé-ẹ̀rí ìwọlé tí a fi pamọ́ kan."
+
+#: lib/BmcInput.php
+msgid "TLS Verification: choose one of the listed modes."
+msgstr "Ìfìdí-òdodo TLS: yan ọ̀kan nínú àwọn ìlànà tí a tò sílẹ̀."
+
+#: lib/BmcInput.php
+msgid "CA Bundle File: enter an absolute path without control characters, at most 512 characters."
+msgstr "Fáìlì Àkójọpọ̀ CA: tẹ ọ̀nà kíkún tí kò ní àwọn àmì ìṣàkóso sínú rẹ̀, tí kò ju àmì 512 lọ."
+
+#: lib/BmcInput.php
+msgid "Public Key Pin: enter the base64 SHA-256 hash of the BMC public key, optionally prefixed with sha256//."
+msgstr "Ìdènà Kọ́kọ́rọ́ Gbangba: tẹ hàṣì SHA-256 base64 ti kọ́kọ́rọ́ gbangba BMC náà, pẹ̀lú àṣàyàn àkọ́bẹ̀rẹ̀ sha256//."
+
+#: lib/BmcRepository.php
+msgid "another BMC"
+msgstr "BMC mìíràn"
+
+#: lib/BmcsPage.php lib/Pages.php
+msgid "Redfish BMCs"
+msgstr "Àwọn BMC Redfish"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php lib/OperatorPage.php
+msgid "Actions"
+msgstr "Àwọn Ìgbésẹ̀"
+
+#: lib/BmcsPage.php
+msgid "Address"
+msgstr "Àdírẹ́sì"
+
+#: lib/BmcsPage.php
+msgid "Basic Fallback"
+msgstr "Ìpadàsẹ́yìn Basic"
+
+#: lib/BmcsPage.php
+msgid "Credential"
+msgstr "Ìwé-ẹ̀rí"
+
+#: lib/BmcsPage.php
+msgid "Device"
+msgstr "Ẹ̀rọ"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Name"
+msgstr "Orúkọ"
+
+#: lib/BmcsPage.php
+msgid "Port"
+msgstr "Ibùdó"
+
+#: lib/BmcsPage.php lib/OperatorPage.php
+msgid "State"
+msgstr "Ipò"
+
+#: lib/BmcsPage.php
+msgid "TLS Verification"
+msgstr "Ìfìdí-òdodo TLS"
+
+#: lib/BmcsPage.php lib/HealthPage.php
+msgid "No BMCs yet."
+msgstr "Kò sí BMC kankan síbẹ̀."
+
+#: lib/BmcsPage.php
+msgid "Missing"
+msgstr "Sọnù"
+
+#: lib/BmcsPage.php
+msgid "Allowed"
+msgstr "A fọwọ́ sí"
+
+#: lib/BmcsPage.php
+msgid "Off"
+msgstr "Wà ní pípa"
+
+#: lib/BmcsPage.php
+msgid "Disabled"
+msgstr "Àìṣiṣẹ́"
+
+#: lib/BmcsPage.php
+msgid "Enabled"
+msgstr "Ṣíṣiṣẹ́"
+
+#: lib/BmcsPage.php
+msgid "Retry Now"
+msgstr "Gbìyànjú Lẹ́ẹ̀kan Sí i Nísinsìnyí"
+
+#: lib/BmcsPage.php
+msgid "Add Graphs"
+msgstr "Fi Àwọn Àwòrán-ìṣirò Kún"
+
+#: lib/BmcsPage.php
+msgid "Create Device"
+msgstr "Ṣẹ̀dá Ẹ̀rọ"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Delete"
+msgstr "Pa rẹ́"
+
+#: lib/BmcsPage.php
+msgid "Export the BMC registry as JSON (no secrets)"
+msgstr "Kó àkọsílẹ̀ ìforúkọsílẹ̀ BMC jáde gẹ́gẹ́ bí JSON (láìsí àwọn àṣírí)"
+
+#: lib/BmcsPage.php
+msgid "Reinstall the Redfish Templates"
+msgstr "Tún Àwọn Àdàkọ Redfish Gbé Sínú"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Add Redfish graphs for %s"
+msgstr "Fi àwọn àwòrán-ìṣirò Redfish kún fún %s"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Create a Cacti device for %s"
+msgstr "Ṣẹ̀dá ẹ̀rọ Cacti kan fún %s"
+
+#: lib/BmcsPage.php
+msgid "Everything is already in place. Confirming indexes the data queries again and adds graphs for new members only."
+msgstr "Ohun gbogbo ti wà ní ipò rẹ̀ tẹ́lẹ̀. Ìfìdí-múlẹ̀ yóò tún àwọn ìbéèrè dátà ṣe ìtọ́kasí, yóò sì fi àwọn àwòrán-ìṣirò kún fún àwọn ọmọ ẹgbẹ́ tuntun nìkan."
+
+#: lib/BmcsPage.php
+msgid "Confirming adds:"
+msgstr "Ìfìdí-múlẹ̀ yóò fi kún:"
+
+#: lib/BmcsPage.php
+msgid "Existing devices, graphs, and thresholds are not changed."
+msgstr "Àwọn ẹ̀rọ, àwòrán-ìṣirò, àti àwọn ààlà tí ó wà tẹ́lẹ̀ kò ní yí padà."
+
+#: lib/BmcsPage.php
+msgid "Confirm"
+msgstr "Fìdí Múlẹ̀"
+
+#: lib/BmcsPage.php
+msgid "Cancel"
+msgstr "Fagilé"
+
+#: lib/BmcsPage.php
+msgid "Import BMCs"
+msgstr "Kó Àwọn BMC Wọlé"
+
+#: lib/BmcsPage.php
+msgid "CSV File"
+msgstr "Fáìlì CSV"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Header row with columns: %s. Name a stored credential; never put a password in the file. Every row must be valid or nothing is imported."
+msgstr "Ìlà àkọlé pẹ̀lú àwọn òpó: %s. Dárúkọ ìwé-ẹ̀rí ìwọlé tí a fi pamọ́; má ṣe fi ọ̀rọ̀-ìpamọ́ sínú fáìlì náà láéláé. Gbogbo ìlà gbọ́dọ̀ jẹ́ òdodo tàbí kò sí ohun tí a óò kó wọlé."
+
+#: lib/BmcsPage.php
+msgid "Import"
+msgstr "Kó wọlé"
+
+#: lib/BmcsPage.php
+msgid "Choose a credential"
+msgstr "Yan ìwé-ẹ̀rí ìwọlé kan"
+
+#: lib/BmcsPage.php
+msgid "None"
+msgstr "Kò sí"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Deleted device (ID %d)"
+msgstr "Ẹ̀rọ tí a ti pa rẹ́ (ID %d)"
+
+#: lib/BmcsPage.php
+msgid "New Redfish BMC"
+msgstr "BMC Redfish Tuntun"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Redfish BMC: %s"
+msgstr "BMC Redfish: %s"
+
+#: lib/BmcsPage.php
+msgid "Host name or IP address of the BMC, without https:// or a path."
+msgstr "Orúkọ olùgbàlejò tàbí àdírẹ́sì IP ti BMC náà, láìsí https:// tàbí ọ̀nà."
+
+#: lib/BmcsPage.php
+msgid "Do not verify is logged when set and shown as a warning on the health page while it stays."
+msgstr "A máa ń kọ 'Má ṣe fìdí rẹ̀ múlẹ̀' sínú àkọsílẹ̀ nígbà tí a bá yàn án, a sì máa ń fi hàn gẹ́gẹ́ bí ìkìlọ̀ lórí ojú-ewé ìlera níwọ̀n ìgbà tí ó bá wà bẹ́ẹ̀."
+
+#: lib/BmcsPage.php
+msgid "CA Bundle File"
+msgstr "Fáìlì Àkójọpọ̀ CA"
+
+#: lib/BmcsPage.php
+msgid "For the CA bundle mode: absolute path on the poller to a PEM file that others cannot write."
+msgstr "Fún ìlànà àkójọpọ̀ CA: ọ̀nà kíkún lórí poller sí fáìlì PEM tí àwọn ẹlòmíràn kò lè kọ sí."
+
+#: lib/BmcsPage.php
+msgid "For the pinned mode: base64 SHA-256 of the BMC public key, as sha256//... or the bare hash. A changed key fails until this is updated."
+msgstr "Fún ìlànà tí a dènà: SHA-256 base64 ti kọ́kọ́rọ́ gbangba BMC náà, gẹ́gẹ́ bí sha256//... tàbí hàṣì lásán. Kọ́kọ́rọ́ tí ó yí padà yóò kùnà títí a óò fi ṣe àtúnṣe èyí."
+
+#: lib/BmcsPage.php
+msgid "Public Key Pin"
+msgstr "Ìdènà Kọ́kọ́rọ́ Gbangba"
+
+#: lib/BmcsPage.php
+msgid "Allow Basic Authentication Fallback"
+msgstr "Gba Ìpadàsẹ́yìn Ìfìdí-òdodo Basic Láàyè"
+
+#: lib/BmcsPage.php
+msgid "Used only when the BMC offers no session service. Every request then carries the password; the health page warns while it is in use."
+msgstr "A máa ń lò ó nìkan nígbà tí BMC kò bá pèsè iṣẹ́ ìgbà ìjókòó. Gbogbo ìbéèrè yóò máa gbé ọ̀rọ̀-ìpamọ́ rìn nígbà náà; ojú-ewé ìlera yóò máa kìlọ̀ níwọ̀n ìgbà tí ó bá wà ní lílò."
+
+#: lib/BmcsPage.php
+msgid "The Cacti device of the server this BMC manages. Leave it at none to have the plugin create a device from the list."
+msgstr "Ẹ̀rọ Cacti ti olùpèsè tí BMC yìí ń ṣàkóso. Fi sí kò sí kí àfikún náà lè ṣẹ̀dá ẹ̀rọ kan láti inú àtòjọ náà."
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Save"
+msgstr "Fi pamọ́"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Address: %s port %d is already registered as %s."
+msgstr "Àdírẹ́sì: %s póòtù %d ti wà ní ìforúkọsílẹ̀ tẹ́lẹ̀ gẹ́gẹ́ bí %s."
+
+#: lib/BmcsPage.php
+msgid "Address: this address and port are already registered."
+msgstr "Àdírẹ́sì: àdírẹ́sì àti póòtù yìí ti wà ní ìforúkọsílẹ̀ tẹ́lẹ̀."
+
+#: lib/BmcsPage.php
+msgid "Name: another BMC already uses this name."
+msgstr "Orúkọ: BMC mìíràn ti ń lo orúkọ yìí tẹ́lẹ̀."
+
+#: lib/BmcsPage.php
+msgid "Device: no Cacti device has this ID."
+msgstr "Ẹ̀rọ: kò sí ẹ̀rọ Cacti kankan tí ó ní ID yìí."
+
+#: lib/BmcsPage.php
+msgid "Device: another BMC is already mapped to this device."
+msgstr "Ẹ̀rọ: BMC mìíràn ti wà ní ìsopọ̀ mọ́ ẹ̀rọ yìí tẹ́lẹ̀."
+
+#: lib/CredentialsPage.php lib/Pages.php
+msgid "Redfish Credentials"
+msgstr "Àwọn Ìwé-ẹ̀rí Ìwọlé Redfish"
+
+#: lib/CredentialsPage.php
+msgid "Password"
+msgstr "Ọ̀rọ̀-ìpamọ́"
+
+#: lib/CredentialsPage.php
+msgid "Used By"
+msgstr "Ohun Tí Ó Ń Lò Ó"
+
+#: lib/CredentialsPage.php
+msgid "User Name"
+msgstr "Orúkọ Olùmúlò"
+
+#: lib/CredentialsPage.php
+msgid "No credentials yet. Create one with a read-only BMC account."
+msgstr "Kò sí ìwé-ẹ̀rí ìwọlé kankan síbẹ̀. Ṣẹ̀dá ọ̀kan pẹ̀lú àkáùntì BMC kíkà-nìkan."
+
+#: lib/CredentialsPage.php
+msgid "None stored"
+msgstr "Kò sí èyí tí a fi pamọ́"
+
+#: lib/CredentialsPage.php
+msgid "Stored"
+msgstr "Tí a tọ́jú"
+
+#: lib/CredentialsPage.php
+#, php-format
+msgid "%d BMCs"
+msgstr "Àwọn BMC %d"
+
+#: lib/CredentialsPage.php
+msgid "New Redfish Credential"
+msgstr "Ìwé-ẹ̀rí Ìwọlé Redfish Tuntun"
+
+#: lib/CredentialsPage.php
+#, php-format
+msgid "Redfish Credential: %s"
+msgstr "Ìwé-ẹ̀rí Ìwọlé Redfish: %s"
+
+#: lib/CredentialsPage.php
+msgid "A BMC account with the ReadOnly role. The plugin never needs a role that can change BMC state."
+msgstr "Àkáùntì BMC kan pẹ̀lú ipa ReadOnly. Àfikún náà kò nílò ipa tí ó lè yí ipò BMC padà láéláé."
+
+#: lib/CredentialsPage.php
+msgid "A password is stored. Leave blank to keep it."
+msgstr "A ti fi ọ̀rọ̀-ìpamọ́ kan pamọ́. Fi sí òfo láti pa á mọ́."
+
+#: lib/CredentialsPage.php
+msgid "Stored encrypted with the vault key."
+msgstr "A fi pamọ́ ní ìṣàṣírí pẹ̀lú kọ́kọ́rọ́ vault."
+
+#: lib/DeviceProvisioner.php
+msgid "The Redfish templates are not installed completely. Reinstall them from the Redfish BMCs page."
+msgstr "Àwọn àdàkọ Redfish kò tíì wà ní gbígbé sínú pátápátá. Tún wọn gbé sínú láti ojú-ewé Àwọn BMC Redfish."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "A device \"%s\" from the %s device template, polled by poller %d, with availability checks off. Its host name is a reserved name that is never contacted."
+msgstr "Ẹ̀rọ \"%s\" láti inú àdàkọ ẹ̀rọ %s, tí poller %d ń ṣe ìwádìí rẹ̀, pẹ̀lú àyẹ̀wò wíwà ní pípa. Orúkọ olùgbàlejò rẹ̀ jẹ́ orúkọ tí a yà sọ́tọ̀ tí a kì í kàn sí láéláé."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "The data query \"%s\", with a graph for each of the %d members known now."
+msgstr "Ìbéèrè dátà \"%s\", pẹ̀lú àwòrán-ìṣirò kan fún ọ̀kọ̀ọ̀kan àwọn ọmọ ẹgbẹ́ %d tí a mọ̀ báyìí."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "%d fans or power supplies that were present are no longer reported. They count as failed until you confirm; confirming accepts the members the BMC reports now."
+msgstr "Àwọn fáànù tàbí ohun èlò agbára %d tí ó wà tẹ́lẹ̀ kò sí nínú ìròyìn mọ́. A kà wọ́n sí èyí tí ó kùnà títí ìwọ yóò fi fìdí rẹ̀ múlẹ̀; ìfìdí-múlẹ̀ yóò gba àwọn ọmọ ẹgbẹ́ tí BMC ń ròyìn báyìí."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "The graph \"%s\", with its \"%s\" data source."
+msgstr "Àwòrán-ìṣirò \"%s\", pẹ̀lú orísun dátà rẹ̀ \"%s\"."
+
+#: lib/DeviceProvisioner.php
+msgid "The BMC is already mapped to a device."
+msgstr "BMC náà ti wà ní ìsopọ̀ mọ́ ẹ̀rọ kan tẹ́lẹ̀."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "Created by the Redfish plugin for BMC %s. Its values come from the plugin cache; the host name is a reserved name that is never contacted."
+msgstr "Àfikún Redfish ni ó ṣẹ̀dá rẹ̀ fún BMC %s. Àwọn ìwọ̀n rẹ̀ ń wá láti inú ibi ìpamọ́ àfikún náà; orúkọ olùgbàlejò jẹ́ orúkọ tí a yà sọ́tọ̀ tí a kì í kàn sí láéláé."
+
+#: lib/DeviceProvisioner.php
+msgid "Cacti refused to create the device. See the Cacti log."
+msgstr "Cacti kọ̀ láti ṣẹ̀dá ẹ̀rọ náà. Wo àkọsílẹ̀ Cacti."
+
+#: lib/DeviceProvisioner.php
+msgid "The new device would be hidden from you by your device permissions, so it was removed again. Ask an administrator to grant access, or map the BMC to a device you can see."
+msgstr "Ẹ̀rọ tuntun náà yóò farapamọ́ fún ọ nítorí àwọn àṣẹ ẹ̀rọ rẹ, nítorí náà a yọ ọ́ kúrò lẹ́ẹ̀kan sí i. Béèrè lọ́wọ́ alákòóso láti fún ọ ní ààyè, tàbí so BMC náà mọ́ ẹ̀rọ tí o lè rí."
+
+#: lib/DeviceProvisioner.php
+msgid "The BMC was mapped to a device by someone else meanwhile, or could not be mapped, so the new device was removed again. Reload the page and check its mapping."
+msgstr "Ẹlòmíràn ti so BMC náà mọ́ ẹ̀rọ kan ní àkókò náà, tàbí kò ṣeé so pọ̀, nítorí náà a yọ ẹ̀rọ tuntun náà kúrò lẹ́ẹ̀kan sí i. Tún ojú-ewé náà rù kí o sì ṣàyẹ̀wò ìsopọ̀ rẹ̀."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "The Redfish templates could not be installed: %s"
+msgstr "Àwọn àdàkọ Redfish kò ṣeé gbé sínú: %s"
+
+#: lib/DeviceWarnings.php
+msgid "The Redfish templates are not installed or not current. Reinstall them from the Redfish BMCs page."
+msgstr "Àwọn àdàkọ Redfish kò sí nínú rẹ̀ tàbí wọn kò jẹ́ tuntun. Tún wọn gbé sínú láti ojú-ewé Àwọn BMC Redfish."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "%s: its Cacti device was deleted. Map it to another device or create one from the BMCs page."
+msgstr "%s: a ti pa ẹ̀rọ Cacti rẹ̀ rẹ́. So ó mọ́ ẹ̀rọ mìíràn tàbí ṣẹ̀dá ọ̀kan láti ojú-ewé Àwọn BMC."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "%s: its device is polled by poller %d but the BMC is read by poller %d. Move one of them so both use the same poller, or its graphs can read as unknown."
+msgstr "%s: poller %d ni ó ń ṣe ìwádìí ẹ̀rọ rẹ̀ ṣùgbọ́n poller %d ni ó ń ka BMC náà. Gbé ọ̀kan nínú wọn kí àwọn méjèèjì lè lo poller kan náà, tàbí àwọn àwòrán-ìṣirò rẹ̀ lè kà bí àìmọ̀."
+
+#: lib/GraphLinks.php
+msgid "Redfish graphs of this device"
+msgstr "Àwọn àwòrán-ìṣirò Redfish ti ẹ̀rọ yìí"
+
+#: lib/HealthPage.php
+msgid "Redfish Warnings"
+msgstr "Àwọn Ìkìlọ̀ Redfish"
+
+#: lib/HealthPage.php
+msgid "No warnings."
+msgstr "Kò sí ìkìlọ̀ kankan."
+
+#: lib/HealthPage.php
+msgid "Redfish Collector"
+msgstr "Olùkójọ Redfish"
+
+#: lib/HealthPage.php
+msgid "BMCs"
+msgstr "Àwọn BMC"
+
+#: lib/HealthPage.php
+msgid "Duration / Interval"
+msgstr "Àkókò / Àlàfo"
+
+#: lib/HealthPage.php
+msgid "Last Run"
+msgstr "Ìṣiṣẹ́ Tí Ó Kẹ́yìn"
+
+#: lib/HealthPage.php
+msgid "Poller"
+msgstr "Poller"
+
+#: lib/HealthPage.php
+msgid "Read"
+msgstr "Kà"
+
+#: lib/HealthPage.php
+msgid "Requests per BMC"
+msgstr "Àwọn ìbéèrè fún BMC kọ̀ọ̀kan"
+
+#: lib/HealthPage.php
+msgid "Workers"
+msgstr "Àwọn Òṣìṣẹ́"
+
+#: lib/HealthPage.php
+msgid "The collector has not run yet."
+msgstr "Olùkójọ náà kò tíì ṣiṣẹ́ síbẹ̀."
+
+#: lib/HealthPage.php lib/OperatorPage.php
+msgid "Never"
+msgstr "Láéláé"
+
+#: lib/HealthPage.php
+msgid "Redfish BMC Status"
+msgstr "Ipò BMC Redfish"
+
+#: lib/HealthPage.php
+msgid "Authentication"
+msgstr "Ìfìdí-òdodo"
+
+#: lib/HealthPage.php
+msgid "BMC"
+msgstr "BMC"
+
+#: lib/HealthPage.php
+msgid "Data"
+msgstr "Dátà"
+
+#: lib/HealthPage.php
+msgid "Discovery"
+msgstr "Ìwárí"
+
+#: lib/HealthPage.php
+msgid "Failure"
+msgstr "Ìkùnà"
+
+#: lib/HealthPage.php
+msgid "Last Success"
+msgstr "Àṣeyọrí Tó Kẹ́yìn"
+
+#: lib/HealthPage.php
+msgid "Mean Latency"
+msgstr "Ìdádúró Àárín"
+
+#: lib/HealthPage.php
+msgid "Reachability"
+msgstr "Ìṣeé-kàn-sí"
+
+#: lib/HealthPage.php
+msgid "Requests"
+msgstr "Àwọn Ìbéèrè"
+
+#: lib/HealthPage.php
+msgid "Source"
+msgstr "Orísun"
+
+#: lib/HealthPage.php
+#, php-format
+msgid "newest %s"
+msgstr "tuntun jùlọ %s"
+
+#: lib/HealthPage.php
+msgid "disabled"
+msgstr "tí a pa tì"
+
+#: lib/HealthPage.php
+msgid "ok"
+msgstr "ó dára"
+
+#: lib/HealthPage.php
+msgid "stale"
+msgstr "ti kọjá àkókò"
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The vault key file cannot be used: %s. Stored passwords cannot be read or written until it is fixed."
+msgstr "Fáìlì kọ́kọ́rọ́ vault kò ṣeé lò: %s. Àwọn ọ̀rọ̀-ìpamọ́ tí a fi pamọ́ kò ṣeé kà tàbí kọ títí tí a óò fi tún un ṣe."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d took %.0f seconds, more than its budget of %d seconds."
+msgstr "Olùkójọ lórí poller %d gba ìṣẹ́jú-àáyá %.0f, èyí tí ó ju ìṣirò àkókò rẹ̀ ti ìṣẹ́jú-àáyá %d lọ."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d ran out of time before every BMC was read; the rest resume on the next run. Add workers or raise the budget."
+msgstr "Olùkójọ lórí poller %d parí àkókò rẹ̀ kí gbogbo BMC tó di kíkà; àwọn ìyókù yóò tẹ̀síwájú ní ìṣiṣẹ́ tó ń bọ̀. Fi àwọn òṣìṣẹ́ kún un tàbí gbé ìṣirò àkókò sókè."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d last ran %s."
+msgstr "Ìgbà ìkẹyìn tí olùkójọ lórí poller %d ṣiṣẹ́ ni %s."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: TLS verification is off. Anyone on the path can read its traffic, including the BMC password."
+msgstr "%s: ìfìdí-òdodo TLS wà ní pípa. Ẹnikẹ́ni lórí ọ̀nà ìjápọ̀ lè ka ìrìnàjò dátà rẹ̀, títí kan ọ̀rọ̀-ìpamọ́ BMC."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: uses Basic authentication because the BMC offers no session service; every request carries the password."
+msgstr "%s: ń lo ìfìdí-òdodo Basic nítorí pé BMC kò pèsè iṣẹ́ ìgbà ìjókòó; gbogbo ìbéèrè ni ó ń gbé ọ̀rọ̀-ìpamọ́ rìn."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: a session may have been left open on the BMC; the next run deletes it after logging in."
+msgstr "%s: ìgbà ìjókòó kan lè ti wà ní ṣíṣí sílẹ̀ lórí BMC náà; ìṣiṣẹ́ tó ń bọ̀ yóò pa á rẹ́ lẹ́yìn ìwọlé."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: %d session logins in a row lost their response, so logins stopped. Check the BMC session list, then use Retry Now."
+msgstr "%s: ìwọlé ìgbà ìjókòó %d ní ìtẹ̀léra pàdánù ìdáhùn wọn, nítorí náà àwọn ìwọlé dáwọ́ dúró. Ṣàyẹ̀wò àtòjọ ìgbà ìjókòó BMC, lẹ́yìn náà lo Gbìyànjú Lẹ́ẹ̀kan Sí i Nísinsìnyí."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: the BMC rejected the credential. It is not tried again until the credential changes."
+msgstr "%s: BMC náà kọ ìwé-ẹ̀rí ìwọlé náà. A kò ní gbìyànjú rẹ̀ mọ́ títí tí ìwé-ẹ̀rí ìwọlé yóò fi yí padà."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: its credential is missing or has no stored password."
+msgstr "%s: ìwé-ẹ̀rí ìwọlé rẹ̀ sọnù tàbí kò ní ọ̀rọ̀-ìpamọ́ tí a fi pamọ́."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: %d links in its responses pointed elsewhere and were ignored."
+msgstr "%s: àwọn ìjápọ̀ %d nínú àwọn ìdáhùn rẹ̀ tọ́ka sí ibòmíràn, a sì gbójú fò wọ́n."
+
+#: lib/Html.php
+#, php-format
+msgid "%d seconds ago"
+msgstr "ìṣẹ́jú-àáyá %d sẹ́yìn"
+
+#: lib/Html.php
+#, php-format
+msgid "%d minutes ago"
+msgstr "ìṣẹ́jú %d sẹ́yìn"
+
+#: lib/Html.php
+#, php-format
+msgid "%d hours ago"
+msgstr "wákàtí %d sẹ́yìn"
+
+#: lib/Html.php
+#, php-format
+msgid "%d days ago"
+msgstr "ọjọ́ %d sẹ́yìn"
+
+#: lib/OperatorPage.php
+msgid "Review the recorded observations below. Acknowledgments are personal to this session, expire when observations change, and never suppress alerts or change health."
+msgstr "Ṣàyẹ̀wò àwọn àkíyèsí tí a kọ sílẹ̀ ní ìsàlẹ̀ yìí. Àwọn ìjẹ́rìísí wà fún ìgbà ìpàdé yìí nìkan, wọ́n ń dópin nígbà tí àwọn àkíyèsí bá yí padà, wọn kì í sì í dín àwọn ìtanijí kù tàbí yí ìlera padà."
+
+#: lib/OperatorPage.php lib/Pages.php
+msgid "Redfish Operations"
+msgstr "Àwọn Iṣẹ́ Redfish"
+
+#: lib/OperatorPage.php
+msgid "Investigation"
+msgstr "Ìwádìí"
+
+#: lib/OperatorPage.php
+msgid "Object"
+msgstr "Ohun"
+
+#: lib/OperatorPage.php
+msgid "Observed (UTC)"
+msgstr "Àkíyèsí (UTC)"
+
+#: lib/OperatorPage.php
+msgid "Unknown or stale"
+msgstr "Àìmọ̀ tàbí ó ti pẹ́"
+
+#: lib/OperatorPage.php
+msgid "Acknowledged; health unchanged."
+msgstr "A ti jẹ́rìí sí i; ìlera kò yí padà."
+
+#: lib/OperatorPage.php
+msgid "Acknowledge"
+msgstr "Jẹ́rìí sí i"
+
+#: lib/OperatorPage.php
+msgid "No observations are available for devices you may access."
+msgstr "Kò sí àkíyèsí kankan fún àwọn ẹ̀rọ tí o ní ààyè sí."
+
+#: lib/Pages.php
+msgid "Redfish Operator"
+msgstr "Olùṣiṣẹ́ Redfish"
+
+#: lib/Pages.php
+msgid "Redfish View"
+msgstr "Ìwòye Redfish"
+
+#: lib/Pages.php
+msgid "Redfish Admin"
+msgstr "Alákòóso Redfish"
+
+#: lib/Pages.php
+msgid "Redfish Health"
+msgstr "Ìlera Redfish"
+
+#: lib/Settings.php
+#, php-format
+msgid "%s Default %d, from %d to %d."
+msgstr "%s Àìyípadà %d, láti %d dé %d."
+
+#: lib/Settings.php
+msgid "Credential Vault"
+msgstr "Àpótí Ìpamọ́ Ìwé-ẹ̀rí"
+
+#: lib/Settings.php
+msgid "Vault Key File"
+msgstr "Fáìlì Kọ́kọ́rọ́ Àpótí Ìpamọ́"
+
+#: lib/Settings.php
+msgid "Absolute path to the 32-byte key that encrypts stored BMC passwords. Create it yourself, outside the web root, readable only by the web server and poller user, in a directory that only root and that user can write; the plugin never creates or writes it. Back it up with the database: without it, stored passwords must be entered again."
+msgstr "Ọ̀nà kíkún sí kọ́kọ́rọ́ 32-byte tí ó ń ṣàṣírí àwọn ọ̀rọ̀-ìpamọ́ BMC tí a fi pamọ́. Ṣẹ̀dá rẹ̀ fúnra rẹ, níta gbòǹgbò wẹ́ẹ̀bù, tí olùpèsè wẹ́ẹ̀bù àti olùmúlò poller nìkan lè kà, nínú àkójọpọ̀ fáìlì tí root àti olùmúlò náà nìkan lè kọ sí; àfikún náà kì í ṣẹ̀dá tàbí kọ ọ́ láéláé. Ṣe àfipamọ́ rẹ̀ pẹ̀lú ibi ìpamọ́ dátà: láìsí rẹ̀, a gbọ́dọ̀ tún àwọn ọ̀rọ̀-ìpamọ́ tí a fi pamọ́ tẹ̀ sínú."
+
+#: lib/Settings.php
+msgid "Collector"
+msgstr "Olùkójọpọ̀"
+
+#: lib/Settings.php
+msgid "Collection Interval"
+msgstr "Àlàfo Àkókò Ìkójọpọ̀"
+
+#: lib/Settings.php
+msgid "Seconds between reads of each BMC."
+msgstr "Àwọn ìṣẹ́jú-àáyá láàárín kíkà BMC kọ̀ọ̀kan."
+
+#: lib/Settings.php
+msgid "Rediscovery Interval"
+msgstr "Àlàfo Àtúnṣàwárí"
+
+#: lib/Settings.php
+msgid "Seconds between full resource discoveries of each BMC. A BMC is also rediscovered at once when a known resource disappears or changes type."
+msgstr "Àwọn ìṣẹ́jú-àáyá láàárín àwọn àwárí ohun-ìní kíkún ti BMC kọ̀ọ̀kan. A tún máa ń ṣe àtúnṣàwárí BMC lẹ́sẹ̀kẹsẹ̀ nígbà tí ohun-ìní tí a mọ̀ bá pòórá tàbí yí irú rẹ̀ padà."
+
+#: lib/Settings.php
+msgid "Collector Time Budget"
+msgstr "Ìṣirò Àkókò Olùkójọpọ̀"
+
+#: lib/Settings.php
+msgid "Seconds one collector run may spend before it stops starting new BMCs. Keep it below the poller interval; unfinished BMCs resume on the next run."
+msgstr "Àwọn ìṣẹ́jú-àáyá tí ìṣiṣẹ́ olùkójọ kan lè lò kí ó tó dáwọ́ dúró láti bẹ̀rẹ̀ àwọn BMC tuntun. Jẹ́ kí ó wà ní ìsàlẹ̀ àlàfo poller; àwọn BMC tí kò parí yóò tẹ̀síwájú ní ìṣiṣẹ́ tó ń bọ̀."
+
+#: lib/Settings.php
+msgid "BMCs read in parallel. Each BMC is read by one worker at a time."
+msgstr "Àwọn BMC tí a ń kà ní ìbámu lẹ́ẹ̀kan náà. Òṣìṣẹ́ kan ní ìgbà kan ni ó ń ka BMC kọ̀ọ̀kan."
+
+#: lib/Settings.php
+msgid "Collector Workers"
+msgstr "Àwọn Òṣìṣẹ́ Olùkójọ"
+
+#: lib/Settings.php
+msgid "Connect Timeout"
+msgstr "Àkókò Ìdádúró Ìsopọ̀"
+
+#: lib/Settings.php
+msgid "Seconds allowed for the TCP connection and TLS handshake to a BMC."
+msgstr "Àwọn ìṣẹ́jú-àáyá tí a gbà láàyè fún ìsopọ̀ TCP àti ìbáṣepọ̀ ìbẹ̀rẹ̀ TLS sí BMC kan."
+
+#: lib/Settings.php
+msgid "Request Timeout"
+msgstr "Àkókò Ìparí Ìbéèrè"
+
+#: lib/Settings.php
+msgid "Seconds allowed for one whole request to a BMC, including the connection."
+msgstr "Àwọn ìṣẹ́jú-àáyá tí a gbà láàyè fún odidi ìbéèrè kan sí BMC kan, títí kan ìsopọ̀ náà."
+
+#: lib/Settings.php
+msgid "KiB accepted in one BMC response body; a larger response is refused."
+msgstr "KiB tí a gbà wọlé nínú ara ìdáhùn BMC kan; ìdáhùn tí ó tóbi jù bẹ́ẹ̀ lọ ni a máa kọ̀."
+
+#: lib/Settings.php
+msgid "Maximum Response Size"
+msgstr "Ìwọ̀n Ìdáhùn Púpọ̀ Jùlọ"
+
+#: lib/Settings.php
+msgid "Freshness"
+msgstr "Ìtuntun"
+
+#: lib/Settings.php
+msgid "Collection intervals after which a reading is shown as delayed."
+msgstr "Àwọn àlàfo ìkójọ lẹ́yìn èyí tí kíkà yóò fi hàn gẹ́gẹ́ bí èyí tí ó pẹ́."
+
+#: lib/Settings.php
+msgid "Delayed After"
+msgstr "Ó Pẹ́ Lẹ́yìn"
+
+#: lib/Settings.php
+msgid "Collection intervals after which a reading is stale and reads as unknown. Always at least one more than Delayed After."
+msgstr "Àwọn àlàfo ìkójọ lẹ́yìn èyí tí kíkà ti kọjá àkókò tí ó sì ń kà bí àìmọ̀. Máa jẹ́ o kéré jù ọ̀kan ju Ó Pẹ́ Lẹ́yìn lọ nígbà gbogbo."
+
+#: lib/Settings.php
+msgid "Stale After"
+msgstr "Di Àtijọ́ Lẹ́yìn"
+
+#: lib/Settings.php
+msgid "Uninstall"
+msgstr "Yọ kúrò"
+
+#: lib/Settings.php
+msgid "Keep Plugin Tables on Uninstall"
+msgstr "Pa Àwọn Tábìlì Àfikún Mọ́ Nígbà Yíyọ Kúrò"
+
+#: lib/Settings.php
+msgid "When checked, uninstalling the plugin keeps its BMC registry, encrypted passwords, and reading cache. Clear it to have the uninstall drop them. Uninstall never touches Cacti devices, graphs, or BMCs, including devices the plugin created."
+msgstr "Nígbà tí a bá fọwọ́ sí i, yíyọ àfikún náà kúrò yóò pa àkọsílẹ̀ ìforúkọsílẹ̀ BMC rẹ̀, àwọn ọ̀rọ̀-ìpamọ́ oníṣàṣírí, àti ibi ìpamọ́ kíkà mọ́. Yọ àmì rẹ̀ kúrò kí yíyọ-kúrò lè pa wọ́n rẹ́. Yíyọ-kúrò kì í fọwọ́ kan àwọn ẹ̀rọ Cacti, àwòrán-ìṣirò, tàbí BMC láéláé, títí kan àwọn ẹ̀rọ tí àfikún náà ṣẹ̀dá."
+
+#: lib/TlsMode.php
+msgid "Verify against the system CA store"
+msgstr "Fìdí rẹ̀ múlẹ̀ lòdì sí ibi ìpamọ́ CA ti ètò"
+
+#: lib/TlsMode.php
+msgid "Verify against a CA bundle file"
+msgstr "Fìdí rẹ̀ múlẹ̀ lòdì sí fáìlì àkójọpọ̀ CA kan"
+
+#: lib/TlsMode.php
+msgid "Pinned public key (SHA-256)"
+msgstr "Kọ́kọ́rọ́ gbangba tí a dènà (SHA-256)"
+
+#: lib/TlsMode.php
+msgid "Do not verify (unsafe)"
+msgstr "Má ṣe fìdí rẹ̀ múlẹ̀ (kò láàbò)"
+
+#: redfish_bmcs.php
+msgid "You do not have access to the Cacti device of this BMC."
+msgstr "O kò ní ààyè sí ẹ̀rọ Cacti ti BMC yìí."
+
+#: redfish_bmcs.php
+msgid "The BMC could not be saved."
+msgstr "BMC náà kò ṣeé fi pamọ́."
+
+#: redfish_bmcs.php
+msgid "The BMC was saved."
+msgstr "A ti fi BMC náà pamọ́."
+
+#: redfish_bmcs.php
+msgid "The BMC and its cached data were deleted. Its Cacti device was left in place."
+msgstr "A ti pa BMC náà àti dátà rẹ̀ tí a fi pamọ́ sí ibi ìpamọ́ rẹ́. A fi ẹ̀rọ Cacti rẹ̀ sípò rẹ̀."
+
+#: redfish_bmcs.php
+msgid "Backoff and held failures were cleared; the collector reads the BMC on its next run."
+msgstr "A ti pa ìdádúró àti àwọn ìkùnà tí a dì mú rẹ́; olùkójọ yóò ka BMC náà ní ìṣiṣẹ́ rẹ̀ tó ń bọ̀."
+
+#: redfish_bmcs.php
+msgid "Adding devices and graphs needs Cacti's device management permission."
+msgstr "Fífikún àwọn ẹ̀rọ àti àwòrán-ìṣirò nílò àṣẹ ìṣàkóso ẹ̀rọ ti Cacti."
+
+#: redfish_bmcs.php
+msgid "The device of this BMC was deleted. Choose another device, or none, on the BMC form first."
+msgstr "A ti pa ẹ̀rọ BMC yìí rẹ́. Yan ẹ̀rọ mìíràn, tàbí kò sí, lórí fọ́ọ̀mù BMC náà ní àkọ́kọ́."
+
+#: redfish_bmcs.php
+#, php-format
+msgid "The data queries were indexed again and %d graphs were added."
+msgstr "A tún àwọn ìbéèrè dátà ṣe ìtọ́kasí, a sì fi àwọn àwòrán-ìṣirò %d kún un."
+
+#: redfish_bmcs.php
+msgid "The device was created with its Redfish graphs."
+msgstr "A ti ṣẹ̀dá ẹ̀rọ náà pẹ̀lú àwọn àwòrán-ìṣirò Redfish rẹ̀."
+
+#: redfish_bmcs.php
+msgid "Installing the Redfish templates needs Cacti's Import Templates permission."
+msgstr "Gbígbé àwọn àdàkọ Redfish sínú nílò àṣẹ Kíkó Àwọn Àdàkọ Wọlé ti Cacti."
+
+#: redfish_bmcs.php
+msgid "The Redfish templates are installed."
+msgstr "A ti gbé àwọn àdàkọ Redfish sínú."
+
+#: redfish_bmcs.php
+msgid "The Redfish templates could not be installed. The health page shows why."
+msgstr "Àwọn àdàkọ Redfish kò ṣeé gbé sínú. Ojú-ewé ìlera ń fi ìdí rẹ̀ hàn."
+
+#: redfish_bmcs.php
+msgid "The import could not be saved; nothing was imported."
+msgstr "Ìkó-wọlé náà kò ṣeé fi pamọ́; kò sí ohun tí a kó wọlé."
+
+#: redfish_bmcs.php
+#, php-format
+msgid "%d BMCs were imported."
+msgstr "A ti kó àwọn BMC %d wọlé."
+
+#: redfish_credentials.php
+msgid "This credential is used by a BMC on a Cacti device you do not have access to, so it cannot be changed here."
+msgstr "BMC kan lórí ẹ̀rọ Cacti tí o kò ní ààyè sí ni ó ń lo ìwé-ẹ̀rí ìwọlé yìí, nítorí náà kò ṣeé yí padà níbí."
+
+#: redfish_credentials.php
+msgid "Name: another credential already uses this name."
+msgstr "Orúkọ: ìwé-ẹ̀rí ìwọlé mìíràn ti ń lo orúkọ yìí tẹ́lẹ̀."
+
+#: redfish_credentials.php
+msgid "User Name: enter 1 to 255 characters without control characters."
+msgstr "Orúkọ Olùmúlò: tẹ àmì 1 dé 255 sínú rẹ̀ láìsí àwọn àmì ìṣàkóso."
+
+#: redfish_credentials.php
+msgid "Password: enter the password of the BMC account."
+msgstr "Ọ̀rọ̀-ìpamọ́: tẹ ọ̀rọ̀-ìpamọ́ ti àkáùntì BMC náà."
+
+#: redfish_credentials.php
+#, php-format
+msgid "The credential was saved, but the password was not stored: %s"
+msgstr "A ti fi ìwé-ẹ̀rí ìwọlé náà pamọ́, ṣùgbọ́n a kò fi ọ̀rọ̀-ìpamọ́ náà pamọ́: %s"
+
+#: redfish_credentials.php
+msgid "The credential could not be saved."
+msgstr "Ìwé-ẹ̀rí ìwọlé náà kò ṣeé fi pamọ́."
+
+#: redfish_credentials.php
+msgid "The credential was saved."
+msgstr "A ti fi ìwé-ẹ̀rí ìwọlé náà pamọ́."
+
+#: redfish_credentials.php
+msgid "The credential and its stored password were deleted."
+msgstr "A ti pa ìwé-ẹ̀rí ìwọlé náà àti ọ̀rọ̀-ìpamọ́ rẹ̀ tí a fi pamọ́ rẹ́."
+
+#: redfish_credentials.php
+msgid "The credential was not deleted. A credential in use by a BMC cannot be deleted."
+msgstr "A kò pa ìwé-ẹ̀rí ìwọlé náà rẹ́. Ìwé-ẹ̀rí ìwọlé tí BMC kan ń lò kò ṣeé pa rẹ́."
+
+#: redfish_operator.php
+msgid "Retry collection"
+msgstr "Tún ìkójọ gbìyànjú"
+
+#: redfish_operator.php
+msgid "Monitoring view"
+msgstr "Ìwòran àbójútó"
+
+#: redfish_operator.php
+msgid "Observations could not be read. Ask an administrator to check the plugin log."
+msgstr "A kò le ka àwọn àkíyèsí. Béèrè lọ́wọ́ alákòóso láti ṣàyẹ̀wò àkọsílẹ̀ àfikún náà."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires PHP %s or later. This server runs PHP %s, so the plugin was not installed or enabled."
+msgstr "Àfikún Redfish nílò PHP %s tàbí tuntun jù bẹ́ẹ̀ lọ. Olùpèsè yìí ń lo PHP %s, nítorí náà a kò gbé àfikún náà sínú tàbí mu ṣiṣẹ́."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires the PHP extensions %s, which this server does not load, so the plugin was not installed or enabled."
+msgstr "Àfikún Redfish nílò àwọn àfikún PHP %s, èyí tí olùpèsè yìí kò rù sínú, nítorí náà a kò gbé àfikún náà sínú tàbí mu ṣiṣẹ́."
+
+#: setup.php
+msgid "Redfish"
+msgstr "Redfish"
+
+#: setup.php
+msgid "The Redfish plugin is not enabled."
+msgstr "Àfikún Redfish kò sí ní ṣíṣiṣẹ́."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires PHP %s or later."
+msgstr "Àfikún Redfish nílò PHP %s tàbí tuntun jù bẹ́ẹ̀ lọ."
+
+#: setup.php
+msgid "Management"
+msgstr "Ìṣàkóso"

@@ -1,0 +1,970 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: 2026 Thomas Vincent <thomasvincent@gmail.com>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: redfish 0.1.0-dev\n"
+"Report-Msgid-Bugs-To: https://github.com/somethingwithproof/plugin_redfish/issues\n"
+"PO-Revision-Date: 2026-11-26 00:00+0000\n"
+"Last-Translator: Thomas Vincent <thomasvincent@gmail.com>\n"
+"Language-Team: Thomas Vincent <thomasvincent@gmail.com>\n"
+"Language: xh-ZA\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: include/operator.php
+msgid "Check collection freshness and the device graphs. Retry releases a collection hold for the next scheduled run; it does not contact the BMC now."
+msgstr "Khangela ukutsha koqokelelo kunye neegrafu zesixhobo. Ukuzama kwakhona kukhulula ukubanjwa koqokelelo kuqhuba olulandelayo olucwangcisiweyo; akuyiqhagamsheli i-BMC ngoku."
+
+#: lib/BmcImport.php
+msgid "The file is empty or larger than 1 MiB."
+msgstr "Ifayile ayinanto okanye inkulu kune-1 MiB."
+
+#: lib/BmcImport.php
+msgid "The file could not be read."
+msgstr "Ifayile ayikwazanga ukufundwa."
+
+#: lib/BmcImport.php
+msgid "The file has no header row."
+msgstr "Ifayile ayinamqolo wesihloko."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The file has a column named \"%s\". Import files must not carry secrets; name a stored credential in the credential column instead. Nothing was imported."
+msgstr "Ifayile inekholam ebizwa ngokuba yi-\"%s\". Iifayile zokungenisa akufuneki ziphathe izinto ezifihlakeleyo; endaweni yoko xela isiqinisekiso esigciniweyo kwikholam yesiqinisekiso. Akukho nto ingenisiweyo."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The header must name only these columns, each once, including name, address, and credential: %s."
+msgstr "Isihloko kufuneka sixele ezi kholam kuphela, nganye kanye, kuquka name, address, kunye ne-credential: %s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The file has more than %d rows."
+msgstr "Ifayile inemiqolo engaphezu kwe-%d."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: expected %d fields, found %d."
+msgstr "Umgca %d: kulindelwe imihlaba eyi-%d, kufunyenwe eyi-%d."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Credential: no stored credential is named \"%s\"."
+msgstr "Isiqinisekiso: akukho siqinisekiso sigciniweyo sibizwa ngokuba yi-\"%s\"."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: %s"
+msgstr "Umgca %d: %s"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: the address %s port %d is already registered as %s."
+msgstr "Umgca %d: idilesi %s iphothi %d sele ibhalisiwe njenge-%s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "line %d"
+msgstr "umgca %d"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: the name %s is already used."
+msgstr "Umgca %d: igama elithi %s selisetyenzisiwe."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: no Cacti device has ID %d."
+msgstr "Umgca %d: akukho sixhobo seCacti esine-ID engu-%d."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: device %d already has the BMC %s."
+msgstr "Umgca %d: isixhobo %d sele sine-BMC engu-%s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "of line %d"
+msgstr "yomgca %d"
+
+#: lib/BmcImport.php
+msgid "The file has no BMC rows."
+msgstr "Ifayile ayinayo imiqolo ye-BMC."
+
+#: lib/BmcInput.php redfish_credentials.php
+msgid "Name: enter 1 to 100 characters without control characters."
+msgstr "Igama: faka oonobumba abayi-1 ukuya kwabayi-100 ngaphandle koonobumba bolawulo."
+
+#: lib/BmcInput.php
+msgid "Address: enter a host name or an IP address only, without a scheme, port, path, or user name. Loopback, link-local, multicast, and unspecified addresses are refused."
+msgstr "Idilesi: faka igama lomamkeli okanye idilesi ye-IP kuphela, ngaphandle kwe-scheme, izibuko, indlela, okanye igama lomsebenzisi. Iidilesi ze-loopback, i-link-local, i-multicast, kunye neengachazwanga ziyaliwa."
+
+#: lib/BmcInput.php
+msgid "Port: enter a TCP port from 1 to 65535."
+msgstr "Izibuko: faka izibuko le-TCP ukusuka ku-1 ukuya ku-65535."
+
+#: lib/BmcInput.php
+msgid "Poller: only the main poller can collect BMCs in this release."
+msgstr "I-Poller: kuphela yi-poller ephambili enokuqokelela ii-BMC kolu khupho."
+
+#: lib/BmcInput.php
+msgid "Device: choose a Cacti device or none."
+msgstr "Isixhobo: khetha isixhobo seCacti okanye akukho nasinye."
+
+#: lib/BmcInput.php lib/BmcsPage.php
+msgid "Credential: choose a stored credential."
+msgstr "Isiqinisekiso: khetha isiqinisekiso esigciniweyo."
+
+#: lib/BmcInput.php
+msgid "TLS Verification: choose one of the listed modes."
+msgstr "Uqinisekiso lwe-TLS: khetha enye yeendlela ezidwelisiweyo."
+
+#: lib/BmcInput.php
+msgid "CA Bundle File: enter an absolute path without control characters, at most 512 characters."
+msgstr "Ifayile ye-CA Bundle: faka indlela epheleleyo engenazo iimpawu zokulawula, ubuninzi beempawu ezingama-512."
+
+#: lib/BmcInput.php
+msgid "Public Key Pin: enter the base64 SHA-256 hash of the BMC public key, optionally prefixed with sha256//."
+msgstr "IPhini yeQhosha loLuntu: faka i-hash ye-SHA-256 ye-base64 yeqhosha loluntu le-BMC, ngokuzikhethela iqaliswe nge-sha256//."
+
+#: lib/BmcRepository.php
+msgid "another BMC"
+msgstr "enye i-BMC"
+
+#: lib/BmcsPage.php lib/Pages.php
+msgid "Redfish BMCs"
+msgstr "Ii-BMC zeRedfish"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php lib/OperatorPage.php
+msgid "Actions"
+msgstr "Iintshukumo"
+
+#: lib/BmcsPage.php
+msgid "Address"
+msgstr "Idilesi"
+
+#: lib/BmcsPage.php
+msgid "Basic Fallback"
+msgstr "Ukubuyela kwi-Basic"
+
+#: lib/BmcsPage.php
+msgid "Credential"
+msgstr "Isiqinisekiso"
+
+#: lib/BmcsPage.php
+msgid "Device"
+msgstr "Isixhobo"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Name"
+msgstr "Igama"
+
+#: lib/BmcsPage.php
+msgid "Port"
+msgstr "Iport"
+
+#: lib/BmcsPage.php lib/OperatorPage.php
+msgid "State"
+msgstr "Imeko"
+
+#: lib/BmcsPage.php
+msgid "TLS Verification"
+msgstr "Uqinisekiso lwe-TLS"
+
+#: lib/BmcsPage.php lib/HealthPage.php
+msgid "No BMCs yet."
+msgstr "Azikho ii-BMC okwangoku."
+
+#: lib/BmcsPage.php
+msgid "Missing"
+msgstr "Ayikho"
+
+#: lib/BmcsPage.php
+msgid "Allowed"
+msgstr "Ivumelekile"
+
+#: lib/BmcsPage.php
+msgid "Off"
+msgstr "Icinyiwe"
+
+#: lib/BmcsPage.php
+msgid "Disabled"
+msgstr "Ikhubaziwe"
+
+#: lib/BmcsPage.php
+msgid "Enabled"
+msgstr "Ivuliwe"
+
+#: lib/BmcsPage.php
+msgid "Retry Now"
+msgstr "Zama kwakhona ngoku"
+
+#: lib/BmcsPage.php
+msgid "Add Graphs"
+msgstr "Yongeza iigrafu"
+
+#: lib/BmcsPage.php
+msgid "Create Device"
+msgstr "Yenza Isixhobo"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Delete"
+msgstr "Cima"
+
+#: lib/BmcsPage.php
+msgid "Export the BMC registry as JSON (no secrets)"
+msgstr "Thumela ngaphandle irejistri ye-BMC njenge-JSON (akukho mfihlo)"
+
+#: lib/BmcsPage.php
+msgid "Reinstall the Redfish Templates"
+msgstr "Fakela kwakhona iitempleyithi zeRedfish"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Add Redfish graphs for %s"
+msgstr "Yongeza iigrafu zeRedfish ze-%s"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Create a Cacti device for %s"
+msgstr "Yila isixhobo seCacti se-%s"
+
+#: lib/BmcsPage.php
+msgid "Everything is already in place. Confirming indexes the data queries again and adds graphs for new members only."
+msgstr "Yonke into sele ikhona. Ukuqinisekisa kwenza isalathiso seemibuzo yedatha kwakhona kwaye kongeza iigrafu kumalungu amatsha kuphela."
+
+#: lib/BmcsPage.php
+msgid "Confirming adds:"
+msgstr "Ukuqinisekisa kongeza:"
+
+#: lib/BmcsPage.php
+msgid "Existing devices, graphs, and thresholds are not changed."
+msgstr "Izixhobo ezikhoyo, iigrafu, kunye nemida azitshintshwa."
+
+#: lib/BmcsPage.php
+msgid "Confirm"
+msgstr "Qinisekisa"
+
+#: lib/BmcsPage.php
+msgid "Cancel"
+msgstr "Rhoxisa"
+
+#: lib/BmcsPage.php
+msgid "Import BMCs"
+msgstr "Ngenisa ii-BMC"
+
+#: lib/BmcsPage.php
+msgid "CSV File"
+msgstr "Ifayile ye-CSV"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Header row with columns: %s. Name a stored credential; never put a password in the file. Every row must be valid or nothing is imported."
+msgstr "Umqolo wentloko oneekholam: %s. Xela igama lesiqinisekiso esigciniweyo; ungaze ufake igama lokugqitha efayileni. Wonke umqolo kufuneka usebenze okanye akukho nto ingeniswayo."
+
+#: lib/BmcsPage.php
+msgid "Import"
+msgstr "Ngenisa"
+
+#: lib/BmcsPage.php
+msgid "Choose a credential"
+msgstr "Khetha isiqinisekiso"
+
+#: lib/BmcsPage.php
+msgid "None"
+msgstr "Akukho"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Deleted device (ID %d)"
+msgstr "Isixhobo esicinyiweyo (ID %d)"
+
+#: lib/BmcsPage.php
+msgid "New Redfish BMC"
+msgstr "I-BMC entsha yeRedfish"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Redfish BMC: %s"
+msgstr "I-BMC yeRedfish: %s"
+
+#: lib/BmcsPage.php
+msgid "Host name or IP address of the BMC, without https:// or a path."
+msgstr "Igama lomamkeli okanye idilesi ye-IP ye-BMC, ngaphandle kwe-https:// okanye indlela."
+
+#: lib/BmcsPage.php
+msgid "Do not verify is logged when set and shown as a warning on the health page while it stays."
+msgstr "Ungaqinisekisi ilogwa xa isetiwe kwaye iboniswa njengesilumkiso kwiphepha lempilo ngelixa isahleli njalo."
+
+#: lib/BmcsPage.php
+msgid "CA Bundle File"
+msgstr "Ifayile ye-CA Bundle"
+
+#: lib/BmcsPage.php
+msgid "For the CA bundle mode: absolute path on the poller to a PEM file that others cannot write."
+msgstr "Kwindlela ye-CA bundle: indlela epheleleyo kwi-poller eya kwifayile ye-PEM engenakubhalwa ngabanye."
+
+#: lib/BmcsPage.php
+msgid "For the pinned mode: base64 SHA-256 of the BMC public key, as sha256//... or the bare hash. A changed key fails until this is updated."
+msgstr "Kwindlela eqhotyoshelweyo: i-SHA-256 ye-base64 yeqhosha loluntu le-BMC, njenge-sha256//... okanye i-hash yodwa. Iqhosha elitshintshiweyo liyasilela kude kube lihlaziywa oku."
+
+#: lib/BmcsPage.php
+msgid "Public Key Pin"
+msgstr "IPhini yeQhosha loLuntu"
+
+#: lib/BmcsPage.php
+msgid "Allow Basic Authentication Fallback"
+msgstr "Vumela ukubuyela kuqinisekiso lwe-Basic"
+
+#: lib/BmcsPage.php
+msgid "Used only when the BMC offers no session service. Every request then carries the password; the health page warns while it is in use."
+msgstr "Isetyenziswa kuphela xa i-BMC ingaboneleli ngenkonzo yeseshoni. Isicelo ngasinye siye sithwale igama lokugqitha; iphepha lempilo liyalumkisa ngelixa isetyenziswa."
+
+#: lib/BmcsPage.php
+msgid "The Cacti device of the server this BMC manages. Leave it at none to have the plugin create a device from the list."
+msgstr "Isixhobo seCacti seseva elawulwa yile BMC. Sishiye ku-'akukho nasinye' ukuze isongezelelo siyile isixhobo kuluhlu."
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Save"
+msgstr "Gcina"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Address: %s port %d is already registered as %s."
+msgstr "Idilesi: %s izibuko %d sele ibhaliswe njenge-%s."
+
+#: lib/BmcsPage.php
+msgid "Address: this address and port are already registered."
+msgstr "Idilesi: le dilesi neli zibuko sele zibhalisiwe."
+
+#: lib/BmcsPage.php
+msgid "Name: another BMC already uses this name."
+msgstr "Igama: enye i-BMC sele ilisebenzisa eli gama."
+
+#: lib/BmcsPage.php
+msgid "Device: no Cacti device has this ID."
+msgstr "Isixhobo: akukho sixhobo seCacti esinale ID."
+
+#: lib/BmcsPage.php
+msgid "Device: another BMC is already mapped to this device."
+msgstr "Isixhobo: enye i-BMC sele imaphwe kwesi sixhobo."
+
+#: lib/CredentialsPage.php lib/Pages.php
+msgid "Redfish Credentials"
+msgstr "Iziqinisekiso zeRedfish"
+
+#: lib/CredentialsPage.php
+msgid "Password"
+msgstr "Igama lokugqitha"
+
+#: lib/CredentialsPage.php
+msgid "Used By"
+msgstr "Isetyenziswa ngu"
+
+#: lib/CredentialsPage.php
+msgid "User Name"
+msgstr "Igama lomsebenzisi"
+
+#: lib/CredentialsPage.php
+msgid "No credentials yet. Create one with a read-only BMC account."
+msgstr "Azikho iziqinisekiso okwangoku. Yila esinye ngeakhawunti ye-BMC yokufunda kuphela."
+
+#: lib/CredentialsPage.php
+msgid "None stored"
+msgstr "Akukho nto igciniweyo"
+
+#: lib/CredentialsPage.php
+msgid "Stored"
+msgstr "Igcinwe"
+
+#: lib/CredentialsPage.php
+#, php-format
+msgid "%d BMCs"
+msgstr "%d ii-BMC"
+
+#: lib/CredentialsPage.php
+msgid "New Redfish Credential"
+msgstr "Isiqinisekiso esitsha seRedfish"
+
+#: lib/CredentialsPage.php
+#, php-format
+msgid "Redfish Credential: %s"
+msgstr "Isiqinisekiso seRedfish: %s"
+
+#: lib/CredentialsPage.php
+msgid "A BMC account with the ReadOnly role. The plugin never needs a role that can change BMC state."
+msgstr "Iakhawunti ye-BMC enendima ye-ReadOnly. Isongezelelo asize sifune indima enokutshintsha imeko ye-BMC."
+
+#: lib/CredentialsPage.php
+msgid "A password is stored. Leave blank to keep it."
+msgstr "Igama lokugqitha ligciniwe. Shiya kungenanto ukuze uligcine."
+
+#: lib/CredentialsPage.php
+msgid "Stored encrypted with the vault key."
+msgstr "Igcinwe yafihlwa ngeqhosha le-vault."
+
+#: lib/DeviceProvisioner.php
+msgid "The Redfish templates are not installed completely. Reinstall them from the Redfish BMCs page."
+msgstr "Iitempleyithi zeRedfish azifakelwanga ngokupheleleyo. Zifakele kwakhona kwiphepha lee-BMC zeRedfish."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "A device \"%s\" from the %s device template, polled by poller %d, with availability checks off. Its host name is a reserved name that is never contacted."
+msgstr "Isixhobo \\\"%s\\\" esivela kwitempleyithi yesixhobo se-%s, esivavanywa yi-poller %d, sinokuhlolwa kokufumaneka okucinyiweyo. Igama laso lomamkeli ligama eligciniweyo elingaze liqhagamshelwane nalo."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "The data query \"%s\", with a graph for each of the %d members known now."
+msgstr "Umbuzo wedatha \\\"%s\\\", onegrafu yelungu ngalinye kwamalungu %d aziwayo ngoku."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "%d fans or power supplies that were present are no longer reported. They count as failed until you confirm; confirming accepts the members the BMC reports now."
+msgstr "%d iifeni okanye iziboneleli zamandla ebezikhona azisaxelwa. Zibalwa njengezisileleyo de uqinisekise; ukuqinisekisa kwamkela amalungu axelwa yi-BMC ngoku."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "The graph \"%s\", with its \"%s\" data source."
+msgstr "Igrafu \\\"%s\\\", kunye nomthombo wayo wedatha \\\"%s\\\"."
+
+#: lib/DeviceProvisioner.php
+msgid "The BMC is already mapped to a device."
+msgstr "I-BMC sele imaphwe kwisixhobo."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "Created by the Redfish plugin for BMC %s. Its values come from the plugin cache; the host name is a reserved name that is never contacted."
+msgstr "Iyilwe sisongezelelo seRedfish se-BMC %s. Amaxabiso ayo avela kwi-cache yesongezelelo; igama lomamkeli ligama eligciniweyo elingaze liqhagamshelwane nalo."
+
+#: lib/DeviceProvisioner.php
+msgid "Cacti refused to create the device. See the Cacti log."
+msgstr "ICacti yalile ukuyila isixhobo. Jonga ilogi yeCacti."
+
+#: lib/DeviceProvisioner.php
+msgid "The new device would be hidden from you by your device permissions, so it was removed again. Ask an administrator to grant access, or map the BMC to a device you can see."
+msgstr "Isixhobo esitsha besiya kufihlwa kuwe ziimvume zakho zesixhobo, ngoko ke sisusiwe kwakhona. Cela umlawuli ukuba akunike ufikelelo, okanye umaphishe i-BMC kwisixhobo onokusibona."
+
+#: lib/DeviceProvisioner.php
+msgid "The BMC was mapped to a device by someone else meanwhile, or could not be mapped, so the new device was removed again. Reload the page and check its mapping."
+msgstr "I-BMC imaphwe kwisixhobo ngomnye umntu okwangoku, okanye ayikwazanga ukumaphwa, ngoko ke isixhobo esitsha sisusiwe kwakhona. Layisha kwakhona iphepha kwaye ukhangele ukumaphwa kwayo."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "The Redfish templates could not be installed: %s"
+msgstr "Iitempleyithi zeRedfish azikwazanga ukufakelwa: %s"
+
+#: lib/DeviceWarnings.php
+msgid "The Redfish templates are not installed or not current. Reinstall them from the Redfish BMCs page."
+msgstr "Iitempleyithi zeRedfish azifakelwanga okanye azikho ngoku. Zifakele kwakhona kwiphepha lee-BMC zeRedfish."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "%s: its Cacti device was deleted. Map it to another device or create one from the BMCs page."
+msgstr "%s: isixhobo sayo seCacti sicinyiwe. Yimaphe kwesinye isixhobo okanye yila esinye kwiphepha lee-BMC."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "%s: its device is polled by poller %d but the BMC is read by poller %d. Move one of them so both use the same poller, or its graphs can read as unknown."
+msgstr "%s: isixhobo sayo sivavanywa yi-poller %d kodwa i-BMC ifundwa yi-poller %d. Shenxisa esinye sazo ukuze zombini zisebenzise i-poller efanayo, okanye iigrafu zayo zinokufundwa njengezingaziwayo."
+
+#: lib/GraphLinks.php
+msgid "Redfish graphs of this device"
+msgstr "Iigrafu zeRedfish zesi sixhobo"
+
+#: lib/HealthPage.php
+msgid "Redfish Warnings"
+msgstr "Izilumkiso zeRedfish"
+
+#: lib/HealthPage.php
+msgid "No warnings."
+msgstr "Akukho zilumkiso."
+
+#: lib/HealthPage.php
+msgid "Redfish Collector"
+msgstr "Umqokeleli weRedfish"
+
+#: lib/HealthPage.php
+msgid "BMCs"
+msgstr "Ii-BMC"
+
+#: lib/HealthPage.php
+msgid "Duration / Interval"
+msgstr "Ixesha elithathiweyo / Isithuba"
+
+#: lib/HealthPage.php
+msgid "Last Run"
+msgstr "Ukuqhuba kokuGqibela"
+
+#: lib/HealthPage.php
+msgid "Poller"
+msgstr "Poller"
+
+#: lib/HealthPage.php
+msgid "Read"
+msgstr "Ukufunda"
+
+#: lib/HealthPage.php
+msgid "Requests per BMC"
+msgstr "Izicelo nge-BMC nganye"
+
+#: lib/HealthPage.php
+msgid "Workers"
+msgstr "Abasebenzi"
+
+#: lib/HealthPage.php
+msgid "The collector has not run yet."
+msgstr "Umqokeleli akakasebenzi okwangoku."
+
+#: lib/HealthPage.php lib/OperatorPage.php
+msgid "Never"
+msgstr "Akuzange"
+
+#: lib/HealthPage.php
+msgid "Redfish BMC Status"
+msgstr "Imeko ye-BMC yeRedfish"
+
+#: lib/HealthPage.php
+msgid "Authentication"
+msgstr "Uqinisekiso"
+
+#: lib/HealthPage.php
+msgid "BMC"
+msgstr "I-BMC"
+
+#: lib/HealthPage.php
+msgid "Data"
+msgstr "Idatha"
+
+#: lib/HealthPage.php
+msgid "Discovery"
+msgstr "Ufumaniso"
+
+#: lib/HealthPage.php
+msgid "Failure"
+msgstr "Ukusilela"
+
+#: lib/HealthPage.php
+msgid "Last Success"
+msgstr "Impumelelo yokuGqibela"
+
+#: lib/HealthPage.php
+msgid "Mean Latency"
+msgstr "Ulibaziseko oluphakathi"
+
+#: lib/HealthPage.php
+msgid "Reachability"
+msgstr "Ukufikeleleka"
+
+#: lib/HealthPage.php
+msgid "Requests"
+msgstr "Izicelo"
+
+#: lib/HealthPage.php
+msgid "Source"
+msgstr "Umthombo"
+
+#: lib/HealthPage.php
+#, php-format
+msgid "newest %s"
+msgstr "entsha kakhulu %s"
+
+#: lib/HealthPage.php
+msgid "disabled"
+msgstr "ikhutshiwe"
+
+#: lib/HealthPage.php
+msgid "ok"
+msgstr "kulungile"
+
+#: lib/HealthPage.php
+msgid "stale"
+msgstr "indala"
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The vault key file cannot be used: %s. Stored passwords cannot be read or written until it is fixed."
+msgstr "Ifayile yeqhosha le-vault ayikwazi ukusetyenziswa: %s. Amagama okugqitha agciniweyo awakwazi ukufundwa okanye ukubhalwa de ilungiswe."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d took %.0f seconds, more than its budget of %d seconds."
+msgstr "Umqokeleli kwi-poller %d uthathe imizuzwana %.0f, ngaphezu kwesabelo sayo semizuzwana %d."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d ran out of time before every BMC was read; the rest resume on the next run. Add workers or raise the budget."
+msgstr "Umqokeleli kwi-poller %d uphelelwe lixesha phambi kokuba yonke i-BMC ifundwe; ezinye ziyaqhubeka kusebenzo olulandelayo. Yongeza abasebenzi okanye unyuse isabelo sexesha."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d last ran %s."
+msgstr "Umqokeleli kwi-poller %d ugqibele ukusebenza %s."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: TLS verification is off. Anyone on the path can read its traffic, including the BMC password."
+msgstr "%s: uqinisekiso lwe-TLS lucinyiwe. Nabani na osendleleni unokufunda ugqithiso lwayo, kubandakanya negama lokugqitha le-BMC."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: uses Basic authentication because the BMC offers no session service; every request carries the password."
+msgstr "%s: isebenzisa uqinisekiso lwe-Basic kuba i-BMC ayiboneleli ngenkonzo yeseshoni; isicelo ngasinye sithwala igama lokugqitha."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: a session may have been left open on the BMC; the next run deletes it after logging in."
+msgstr "%s: iseshoni isenokuba ishiywe ivuliwe kwi-BMC; usebenzo olulandelayo luyayicima emva kokungena."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: %d session logins in a row lost their response, so logins stopped. Check the BMC session list, then use Retry Now."
+msgstr "%s: %d ukungena kwiseshoni ngokulandelelana kulahlekelwe yimpendulo, ngoko ke ukungena kumile. Khangela uluhlu lweeseshoni ze-BMC, uze usebenzise u-Zama kwakhona ngoku."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: the BMC rejected the credential. It is not tried again until the credential changes."
+msgstr "%s: i-BMC isikhanyele isiqinisekiso. Asizanywa kwakhona de isiqinisekiso sitshintshe."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: its credential is missing or has no stored password."
+msgstr "%s: isiqinisekiso sayo asikho okanye asinagama lokugqitha ligciniweyo."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: %d links in its responses pointed elsewhere and were ignored."
+msgstr "%s: %d amakhonkco kwiimpendulo zayo alatha kwenye indawo kwaye angahoywa."
+
+#: lib/Html.php
+#, php-format
+msgid "%d seconds ago"
+msgstr "kwimizuzwana eyi-%d edlulileyo"
+
+#: lib/Html.php
+#, php-format
+msgid "%d minutes ago"
+msgstr "kwimizuzu eyi-%d edlulileyo"
+
+#: lib/Html.php
+#, php-format
+msgid "%d hours ago"
+msgstr "kwiiyure ezi-%d ezidlulileyo"
+
+#: lib/Html.php
+#, php-format
+msgid "%d days ago"
+msgstr "kwiintsuku ezi-%d ezidlulileyo"
+
+#: lib/OperatorPage.php
+msgid "Review the recorded observations below. Acknowledgments are personal to this session, expire when observations change, and never suppress alerts or change health."
+msgstr "Jonga kwakhona iingqwalaselo ezirekhodiweyo ngezantsi. Ukuvuma kokwakho kule seshoni kuphela, kuphelelwa xa iingqwalaselo zitshintsha, kwaye akuzange kucinezela izilumkiso okanye kutshintshe impilo."
+
+#: lib/OperatorPage.php lib/Pages.php
+msgid "Redfish Operations"
+msgstr "Imisebenzi yeRedfish"
+
+#: lib/OperatorPage.php
+msgid "Investigation"
+msgstr "Uphando"
+
+#: lib/OperatorPage.php
+msgid "Object"
+msgstr "Into"
+
+#: lib/OperatorPage.php
+msgid "Observed (UTC)"
+msgstr "Kuqwalaselwe (UTC)"
+
+#: lib/OperatorPage.php
+msgid "Unknown or stale"
+msgstr "Akwaziwa okanye kuphelelwe lixesha"
+
+#: lib/OperatorPage.php
+msgid "Acknowledged; health unchanged."
+msgstr "Kuvunyiwe; impilo ayitshintshanga."
+
+#: lib/OperatorPage.php
+msgid "Acknowledge"
+msgstr "Vuma"
+
+#: lib/OperatorPage.php
+msgid "No observations are available for devices you may access."
+msgstr "Akukho zingqwalaselo zikhoyo zezixhobo onokufikelela kuzo."
+
+#: lib/Pages.php
+msgid "Redfish Operator"
+msgstr "Umqhubi weRedfish"
+
+#: lib/Pages.php
+msgid "Redfish View"
+msgstr "Ukujonga iRedfish"
+
+#: lib/Pages.php
+msgid "Redfish Admin"
+msgstr "Umlawuli weRedfish"
+
+#: lib/Pages.php
+msgid "Redfish Health"
+msgstr "Impilo yeRedfish"
+
+#: lib/Settings.php
+#, php-format
+msgid "%s Default %d, from %d to %d."
+msgstr "%s Okungagqibekanga %d, ukusuka ku-%d ukuya ku-%d."
+
+#: lib/Settings.php
+msgid "Credential Vault"
+msgstr "Ivolt yeziQinisekiso"
+
+#: lib/Settings.php
+msgid "Vault Key File"
+msgstr "Ifayile yesiTshixo seVolt"
+
+#: lib/Settings.php
+msgid "Absolute path to the 32-byte key that encrypts stored BMC passwords. Create it yourself, outside the web root, readable only by the web server and poller user, in a directory that only root and that user can write; the plugin never creates or writes it. Back it up with the database: without it, stored passwords must be entered again."
+msgstr "Indlela epheleleyo eya kwiqhosha eliyi-32-byte elifihla amagama okugqitha e-BMC agciniweyo. Ziyilele yona ngokwakho, ngaphandle kwe-web root, ifundeke kuphela yiseva yewebhu nomsebenzisi we-poller, kulawulo olunokubhalwa kuphela ngu-root naloo msebenzisi; isongezelelo asize siyiyile okanye siyibhale. Yenzele ikopi yokhuseleko kunye nedathabheyisi: ngaphandle kwayo, amagama okugqitha agciniweyo kufuneka afakwe kwakhona."
+
+#: lib/Settings.php
+msgid "Collector"
+msgstr "Umqokeleli"
+
+#: lib/Settings.php
+msgid "Collection Interval"
+msgstr "Ithuba lokuQokelela"
+
+#: lib/Settings.php
+msgid "Seconds between reads of each BMC."
+msgstr "Imizuzwana phakathi kokufundwa kwe-BMC nganye."
+
+#: lib/Settings.php
+msgid "Rediscovery Interval"
+msgstr "Isithuba sokufumanisa kwakhona"
+
+#: lib/Settings.php
+msgid "Seconds between full resource discoveries of each BMC. A BMC is also rediscovered at once when a known resource disappears or changes type."
+msgstr "Imizuzwana phakathi kokufunyaniswa okupheleleyo kwezibonelelo ze-BMC nganye. I-BMC ikwafunyaniswa kwakhona ngoko nangoko xa isibonelelo esaziwayo sinyamalala okanye sitshintsha uhlobo."
+
+#: lib/Settings.php
+msgid "Collector Time Budget"
+msgstr "Uhlahlo-lwabiwo lweXesha loMqokeleli"
+
+#: lib/Settings.php
+msgid "Seconds one collector run may spend before it stops starting new BMCs. Keep it below the poller interval; unfinished BMCs resume on the next run."
+msgstr "Imizuzwana enokusetyenziswa lusebenzo olunye lomqokeleli phambi kokuba luyeke ukuqalisa ii-BMC ezitsha. Yigcine ingaphantsi kwesithuba se-poller; ii-BMC ezingagqitywanga ziyaqhubeka kusebenzo olulandelayo."
+
+#: lib/Settings.php
+msgid "BMCs read in parallel. Each BMC is read by one worker at a time."
+msgstr "Ii-BMC zifundwa ngaxeshanye. I-BMC nganye ifundwa ngumsebenzi omnye ngexesha."
+
+#: lib/Settings.php
+msgid "Collector Workers"
+msgstr "Abasebenzi bomqokeleli"
+
+#: lib/Settings.php
+msgid "Connect Timeout"
+msgstr "Umda Wexesha Lokudibanisa"
+
+#: lib/Settings.php
+msgid "Seconds allowed for the TCP connection and TLS handshake to a BMC."
+msgstr "Imizuzwana evumelekileyo yoqhagamshelo lwe-TCP kunye ne-TLS handshake eya kwi-BMC."
+
+#: lib/Settings.php
+msgid "Request Timeout"
+msgstr "Ixesha eliphelelweyo lesicelo"
+
+#: lib/Settings.php
+msgid "Seconds allowed for one whole request to a BMC, including the connection."
+msgstr "Imizuzwana evumelekileyo yesicelo esinye esipheleleyo kwi-BMC, kuquka uqhagamshelo."
+
+#: lib/Settings.php
+msgid "KiB accepted in one BMC response body; a larger response is refused."
+msgstr "Ii-KiB ezamkelekileyo kumzimba omnye wempendulo ye-BMC; impendulo enkulu kunoko iyaliwa."
+
+#: lib/Settings.php
+msgid "Maximum Response Size"
+msgstr "Ubungakanani obuphezulu bempendulo"
+
+#: lib/Settings.php
+msgid "Freshness"
+msgstr "Ubutsha"
+
+#: lib/Settings.php
+msgid "Collection intervals after which a reading is shown as delayed."
+msgstr "Izithuba zokuqokelela emva kwazo ufundiso luboniswa njengolulibazisekileyo."
+
+#: lib/Settings.php
+msgid "Delayed After"
+msgstr "Ilibaziseke emva kwe"
+
+#: lib/Settings.php
+msgid "Collection intervals after which a reading is stale and reads as unknown. Always at least one more than Delayed After."
+msgstr "Izithuba zokuqokelela emva kwazo ufundiso luba lundala kwaye lufundwa njengolungaziwayo. Soloko lungaphezulu ngesinye kunoko kubekwe ku-Ilibaziseke emva kwe."
+
+#: lib/Settings.php
+msgid "Stale After"
+msgstr "Iphelelwa Emva"
+
+#: lib/Settings.php
+msgid "Uninstall"
+msgstr "Khupha"
+
+#: lib/Settings.php
+msgid "Keep Plugin Tables on Uninstall"
+msgstr "Gcina iiTheyibhile ze-Plugin xa uKhupha"
+
+#: lib/Settings.php
+msgid "When checked, uninstalling the plugin keeps its BMC registry, encrypted passwords, and reading cache. Clear it to have the uninstall drop them. Uninstall never touches Cacti devices, graphs, or BMCs, including devices the plugin created."
+msgstr "Xa ikhethiwe, ukukhupha isongezelelo kugcina irejistri yaso ye-BMC, amagama okugqitha afihliweyo, kunye ne-cache yofundo. Yisuse ukuze ukukhupha kuzilahle. Ukukhupha akuze kuchukumise izixhobo zeCacti, iigrafu, okanye ii-BMC, kuquka nezixhobo eziyilwe sisongezelelo."
+
+#: lib/TlsMode.php
+msgid "Verify against the system CA store"
+msgstr "Qinisekisa ngokuchasene nevenkile ye-CA yesistim"
+
+#: lib/TlsMode.php
+msgid "Verify against a CA bundle file"
+msgstr "Qinisekisa ngokuchasene nefayile ye-CA bundle"
+
+#: lib/TlsMode.php
+msgid "Pinned public key (SHA-256)"
+msgstr "Iqhosha loluntu eliqhotyoshelweyo (SHA-256)"
+
+#: lib/TlsMode.php
+msgid "Do not verify (unsafe)"
+msgstr "Ungaqinisekisi (akukhuselekanga)"
+
+#: redfish_bmcs.php
+msgid "You do not have access to the Cacti device of this BMC."
+msgstr "Awunalo ufikelelo kwisixhobo seCacti sale BMC."
+
+#: redfish_bmcs.php
+msgid "The BMC could not be saved."
+msgstr "I-BMC ayikwazanga ukugcinwa."
+
+#: redfish_bmcs.php
+msgid "The BMC was saved."
+msgstr "I-BMC igciniwe."
+
+#: redfish_bmcs.php
+msgid "The BMC and its cached data were deleted. Its Cacti device was left in place."
+msgstr "I-BMC kunye nedatha yayo ekwi-cache zicinyiwe. Isixhobo sayo seCacti sishiywe endaweni yaso."
+
+#: redfish_bmcs.php
+msgid "Backoff and held failures were cleared; the collector reads the BMC on its next run."
+msgstr "Ukulinda nokusilela okubanjwe ngaphambili kucinyiwe; umqokeleli ufunda i-BMC kusebenzo lwakhe olulandelayo."
+
+#: redfish_bmcs.php
+msgid "Adding devices and graphs needs Cacti's device management permission."
+msgstr "Ukongeza izixhobo neegrafu kufuna imvume yolawulo lwezixhobo yeCacti."
+
+#: redfish_bmcs.php
+msgid "The device of this BMC was deleted. Choose another device, or none, on the BMC form first."
+msgstr "Isixhobo sale BMC sicinyiwe. Khetha esinye isixhobo, okanye akukho nasinye, kwifom ye-BMC kuqala."
+
+#: redfish_bmcs.php
+#, php-format
+msgid "The data queries were indexed again and %d graphs were added."
+msgstr "Imibuzo yedatha yenziwe isalathiso kwakhona kwaye kongezwe %d iigrafu."
+
+#: redfish_bmcs.php
+msgid "The device was created with its Redfish graphs."
+msgstr "Isixhobo siyilwe kunye neegrafu zaso zeRedfish."
+
+#: redfish_bmcs.php
+msgid "Installing the Redfish templates needs Cacti's Import Templates permission."
+msgstr "Ukufakela iitempleyithi zeRedfish kufuna imvume yeCacti yokungenisa iitempleyithi."
+
+#: redfish_bmcs.php
+msgid "The Redfish templates are installed."
+msgstr "Iitempleyithi zeRedfish zifakelwe."
+
+#: redfish_bmcs.php
+msgid "The Redfish templates could not be installed. The health page shows why."
+msgstr "Iitempleyithi zeRedfish azikwazanga ukufakelwa. Iphepha lempilo libonisa isizathu."
+
+#: redfish_bmcs.php
+msgid "The import could not be saved; nothing was imported."
+msgstr "Ungeniso alukwazanga ukugcinwa; akukho nto ingenisiweyo."
+
+#: redfish_bmcs.php
+#, php-format
+msgid "%d BMCs were imported."
+msgstr "%d ii-BMC zingenisiwe."
+
+#: redfish_credentials.php
+msgid "This credential is used by a BMC on a Cacti device you do not have access to, so it cannot be changed here."
+msgstr "Esi siqinisekiso sisetyenziswa yi-BMC kwisixhobo seCacti ongenalo ufikelelo kuso, ngoko ke asinakutshintshwa apha."
+
+#: redfish_credentials.php
+msgid "Name: another credential already uses this name."
+msgstr "Igama: esinye isiqinisekiso sele silisebenzisa eli gama."
+
+#: redfish_credentials.php
+msgid "User Name: enter 1 to 255 characters without control characters."
+msgstr "Igama lomsebenzisi: faka iimpawu ezi-1 ukuya kuma-255 ngaphandle kweempawu zokulawula."
+
+#: redfish_credentials.php
+msgid "Password: enter the password of the BMC account."
+msgstr "Igama lokugqitha: faka igama lokugqitha leakhawunti ye-BMC."
+
+#: redfish_credentials.php
+#, php-format
+msgid "The credential was saved, but the password was not stored: %s"
+msgstr "Isiqinisekiso sigciniwe, kodwa igama lokugqitha aligcinwanga: %s"
+
+#: redfish_credentials.php
+msgid "The credential could not be saved."
+msgstr "Isiqinisekiso asikwazanga ukugcinwa."
+
+#: redfish_credentials.php
+msgid "The credential was saved."
+msgstr "Isiqinisekiso sigciniwe."
+
+#: redfish_credentials.php
+msgid "The credential and its stored password were deleted."
+msgstr "Isiqinisekiso kunye negama laso lokugqitha eligciniweyo zicinyiwe."
+
+#: redfish_credentials.php
+msgid "The credential was not deleted. A credential in use by a BMC cannot be deleted."
+msgstr "Isiqinisekiso asicinywanga. Isiqinisekiso esisetyenziswa yi-BMC asinakucinywa."
+
+#: redfish_operator.php
+msgid "Retry collection"
+msgstr "Zama kwakhona ukuqokelela"
+
+#: redfish_operator.php
+msgid "Monitoring view"
+msgstr "Imboniselo yokubeka iliso"
+
+#: redfish_operator.php
+msgid "Observations could not be read. Ask an administrator to check the plugin log."
+msgstr "Iingqwalaselo azikwazanga ukufundwa. Cela umlawuli ajonge ilogi ye-plugin."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires PHP %s or later. This server runs PHP %s, so the plugin was not installed or enabled."
+msgstr "Isongezelelo seRedfish sifuna i-PHP %s okanye engaphezulu. Le seva isebenzisa i-PHP %s, ngoko ke isongezelelo asifakelwanga okanye asivulwanga."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires the PHP extensions %s, which this server does not load, so the plugin was not installed or enabled."
+msgstr "Isongezelelo seRedfish sifuna izongezelelo ze-PHP %s, ezingalayishwa yile seva, ngoko ke isongezelelo asifakelwanga okanye asivulwanga."
+
+#: setup.php
+msgid "Redfish"
+msgstr "Redfish"
+
+#: setup.php
+msgid "The Redfish plugin is not enabled."
+msgstr "Isongezelelo seRedfish asivulwanga."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires PHP %s or later."
+msgstr "Isongezelelo seRedfish sifuna i-PHP %s okanye engaphezulu."
+
+#: setup.php
+msgid "Management"
+msgstr "Ulawulo"

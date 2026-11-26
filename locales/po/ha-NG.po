@@ -1,0 +1,970 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: 2026 Thomas Vincent <thomasvincent@gmail.com>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: redfish 0.1.0-dev\n"
+"Report-Msgid-Bugs-To: https://github.com/somethingwithproof/plugin_redfish/issues\n"
+"PO-Revision-Date: 2026-11-26 00:00+0000\n"
+"Last-Translator: Thomas Vincent <thomasvincent@gmail.com>\n"
+"Language-Team: Thomas Vincent <thomasvincent@gmail.com>\n"
+"Language: ha-NG\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: include/operator.php
+msgid "Check collection freshness and the device graphs. Retry releases a collection hold for the next scheduled run; it does not contact the BMC now."
+msgstr "Duba sabuntar tarawa da zane-zanen na'urar. Sake gwadawa yana sakin riƙon tarawa don gudana ta gaba da aka tsara; ba ya tuntuɓar BMC yanzu."
+
+#: lib/BmcImport.php
+msgid "The file is empty or larger than 1 MiB."
+msgstr "Fayil ɗin fanko ne ko kuma ya fi 1 MiB girma."
+
+#: lib/BmcImport.php
+msgid "The file could not be read."
+msgstr "Ba a iya karanta fayil ɗin ba."
+
+#: lib/BmcImport.php
+msgid "The file has no header row."
+msgstr "Fayil ɗin ba shi da layin kanun shafi."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The file has a column named \"%s\". Import files must not carry secrets; name a stored credential in the credential column instead. Nothing was imported."
+msgstr "Fayil ɗin yana da shafi mai suna \"%s\". Fayilolin shigo da bayanai ba su kamata su ɗauki sirrika ba; a maimakon haka ambaci bayanin shiga da aka adana a cikin shafin credential. Ba a shigo da komai ba."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The header must name only these columns, each once, including name, address, and credential: %s."
+msgstr "Kanun shafi dole ne ya ambaci waɗannan shafuka kaɗai, kowanne sau ɗaya, ciki har da name, address, da credential: %s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The file has more than %d rows."
+msgstr "Fayil ɗin yana da layuka fiye da %d."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: expected %d fields, found %d."
+msgstr "Layi %d: an yi tsammanin filaye %d, an sami %d."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Credential: no stored credential is named \"%s\"."
+msgstr "Bayanin Shiga: babu bayanin shiga da aka adana mai suna \"%s\"."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: %s"
+msgstr "Layi %d: %s"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: the address %s port %d is already registered as %s."
+msgstr "Layi %d: adireshin %s tasha %d an riga an yi masa rajista a matsayin %s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "line %d"
+msgstr "layi %d"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: the name %s is already used."
+msgstr "Layi na %d: an riga an yi amfani da sunan %s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: no Cacti device has ID %d."
+msgstr "Layi na %d: babu wata na'urar Cacti mai lambar ID %d."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: device %d already has the BMC %s."
+msgstr "Layi na %d: na'ura ta %d ta riga tana da BMC %s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "of line %d"
+msgstr "na layi na %d"
+
+#: lib/BmcImport.php
+msgid "The file has no BMC rows."
+msgstr "Fayil ɗin ba shi da layukan BMC."
+
+#: lib/BmcInput.php redfish_credentials.php
+msgid "Name: enter 1 to 100 characters without control characters."
+msgstr "Suna: shigar da haruffa 1 zuwa 100 ba tare da haruffan sarrafawa ba."
+
+#: lib/BmcInput.php
+msgid "Address: enter a host name or an IP address only, without a scheme, port, path, or user name. Loopback, link-local, multicast, and unspecified addresses are refused."
+msgstr "Adireshi: shigar da sunan uwar garke ko adireshin IP kaɗai, ba tare da tsari, port, hanya, ko sunan mai amfani ba. Ba a karɓar adiresoshin loopback, link-local, multicast, da waɗanda ba a ƙayyade ba."
+
+#: lib/BmcInput.php
+msgid "Port: enter a TCP port from 1 to 65535."
+msgstr "Port: shigar da TCP port daga 1 zuwa 65535."
+
+#: lib/BmcInput.php
+msgid "Poller: only the main poller can collect BMCs in this release."
+msgstr "Poller: babban poller kaɗai zai iya tattara bayanan BMCs a wannan fitowar."
+
+#: lib/BmcInput.php
+msgid "Device: choose a Cacti device or none."
+msgstr "Na'ura: zaɓi na'urar Cacti ko babu ko ɗaya."
+
+#: lib/BmcInput.php lib/BmcsPage.php
+msgid "Credential: choose a stored credential."
+msgstr "Bayanan shiga: zaɓi bayanan shiga da aka ajiye."
+
+#: lib/BmcInput.php
+msgid "TLS Verification: choose one of the listed modes."
+msgstr "Tabbatar da TLS: zaɓi ɗaya daga cikin yanayoyin da aka jera."
+
+#: lib/BmcInput.php
+msgid "CA Bundle File: enter an absolute path without control characters, at most 512 characters."
+msgstr "Fayil ɗin CA Bundle: shigar da cikakkiyar hanya (absolute path) ba tare da haruffan sarrafawa ba, haruffa 512 a mafi yawa."
+
+#: lib/BmcInput.php
+msgid "Public Key Pin: enter the base64 SHA-256 hash of the BMC public key, optionally prefixed with sha256//."
+msgstr "Pin ɗin Maɓallin Jama'a: shigar da lambar hash ta base64 SHA-256 ta maɓallin jama'a na BMC, ana iya sanya sha256// a gaba idan ana so."
+
+#: lib/BmcRepository.php
+msgid "another BMC"
+msgstr "wani BMC daban"
+
+#: lib/BmcsPage.php lib/Pages.php
+msgid "Redfish BMCs"
+msgstr "Redfish BMCs"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php lib/OperatorPage.php
+msgid "Actions"
+msgstr "Ayyuka"
+
+#: lib/BmcsPage.php
+msgid "Address"
+msgstr "Adireshi"
+
+#: lib/BmcsPage.php
+msgid "Basic Fallback"
+msgstr "Madadin Basic"
+
+#: lib/BmcsPage.php
+msgid "Credential"
+msgstr "Shaidar Shiga"
+
+#: lib/BmcsPage.php
+msgid "Device"
+msgstr "Na'ura"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Name"
+msgstr "Suna"
+
+#: lib/BmcsPage.php
+msgid "Port"
+msgstr "Tasha"
+
+#: lib/BmcsPage.php lib/OperatorPage.php
+msgid "State"
+msgstr "Hali"
+
+#: lib/BmcsPage.php
+msgid "TLS Verification"
+msgstr "Tabbatar da TLS"
+
+#: lib/BmcsPage.php lib/HealthPage.php
+msgid "No BMCs yet."
+msgstr "Babu BMCs tukuna."
+
+#: lib/BmcsPage.php
+msgid "Missing"
+msgstr "Ya ɓace"
+
+#: lib/BmcsPage.php
+msgid "Allowed"
+msgstr "An yarda"
+
+#: lib/BmcsPage.php
+msgid "Off"
+msgstr "A kashe"
+
+#: lib/BmcsPage.php
+msgid "Disabled"
+msgstr "An kashe"
+
+#: lib/BmcsPage.php
+msgid "Enabled"
+msgstr "An kunna"
+
+#: lib/BmcsPage.php
+msgid "Retry Now"
+msgstr "Sake Gwadawa Yanzu"
+
+#: lib/BmcsPage.php
+msgid "Add Graphs"
+msgstr "Ƙara Jadawalai"
+
+#: lib/BmcsPage.php
+msgid "Create Device"
+msgstr "Ƙirƙiri Na'ura"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Delete"
+msgstr "Share"
+
+#: lib/BmcsPage.php
+msgid "Export the BMC registry as JSON (no secrets)"
+msgstr "Fitar da rajistar BMC a matsayin JSON (ba tare da sirrika ba)"
+
+#: lib/BmcsPage.php
+msgid "Reinstall the Redfish Templates"
+msgstr "Sake shigar da Samfuran Redfish"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Add Redfish graphs for %s"
+msgstr "Ƙara jadawalan Redfish don %s"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Create a Cacti device for %s"
+msgstr "Ƙirƙiri na'urar Cacti don %s"
+
+#: lib/BmcsPage.php
+msgid "Everything is already in place. Confirming indexes the data queries again and adds graphs for new members only."
+msgstr "Komai ya riga yana nan. Tabbatarwa za ta sake lissafa tambayoyin bayanai (data queries) kuma ta ƙara jadawalai don sababbin mambobi kaɗai."
+
+#: lib/BmcsPage.php
+msgid "Confirming adds:"
+msgstr "Tabbatarwa za ta ƙara:"
+
+#: lib/BmcsPage.php
+msgid "Existing devices, graphs, and thresholds are not changed."
+msgstr "Ba za a canza na'urori, jadawalai, da ƙa'idodin iyaka da ke akwai ba."
+
+#: lib/BmcsPage.php
+msgid "Confirm"
+msgstr "Tabbatar"
+
+#: lib/BmcsPage.php
+msgid "Cancel"
+msgstr "Soke"
+
+#: lib/BmcsPage.php
+msgid "Import BMCs"
+msgstr "Shigo da BMCs"
+
+#: lib/BmcsPage.php
+msgid "CSV File"
+msgstr "Fayil ɗin CSV"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Header row with columns: %s. Name a stored credential; never put a password in the file. Every row must be valid or nothing is imported."
+msgstr "Layin kanun labarai mai rukunoni: %s. Ambaci sunan bayanan shiga da aka ajiye; kada ka taɓa sanya kalmar sirri a cikin fayil ɗin. Dole ne kowane layi ya zama mai inganci ko kuma ba za a shigo da komai ba."
+
+#: lib/BmcsPage.php
+msgid "Import"
+msgstr "Shigo da"
+
+#: lib/BmcsPage.php
+msgid "Choose a credential"
+msgstr "Zaɓi bayanan shiga"
+
+#: lib/BmcsPage.php
+msgid "None"
+msgstr "Babu"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Deleted device (ID %d)"
+msgstr "Na'urar da aka goge (ID %d)"
+
+#: lib/BmcsPage.php
+msgid "New Redfish BMC"
+msgstr "Sabon Redfish BMC"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Redfish BMC: %s"
+msgstr "Redfish BMC: %s"
+
+#: lib/BmcsPage.php
+msgid "Host name or IP address of the BMC, without https:// or a path."
+msgstr "Sunan uwar garke ko adireshin IP na BMC, ba tare da https:// ko hanya ba."
+
+#: lib/BmcsPage.php
+msgid "Do not verify is logged when set and shown as a warning on the health page while it stays."
+msgstr "Ana yin rajistar 'Kada a tabbatar' lokacin da aka saita kuma ana nuna shi a matsayin gargaɗi a shafin lafiya muddin yana nan."
+
+#: lib/BmcsPage.php
+msgid "CA Bundle File"
+msgstr "Fayil ɗin CA Bundle"
+
+#: lib/BmcsPage.php
+msgid "For the CA bundle mode: absolute path on the poller to a PEM file that others cannot write."
+msgstr "Don yanayin CA bundle: cikakkiyar hanya akan poller zuwa fayil ɗin PEM wanda wasu ba za su iya rubutawa ba."
+
+#: lib/BmcsPage.php
+msgid "For the pinned mode: base64 SHA-256 of the BMC public key, as sha256//... or the bare hash. A changed key fails until this is updated."
+msgstr "Don yanayin da aka maƙala (pinned): base64 SHA-256 na maɓallin jama'a na BMC, kamar sha256//... ko hash ɗin kawai. Maɓallin da aka canza zai gaza har sai an sabunta wannan."
+
+#: lib/BmcsPage.php
+msgid "Public Key Pin"
+msgstr "Pin ɗin Maɓallin Jama'a"
+
+#: lib/BmcsPage.php
+msgid "Allow Basic Authentication Fallback"
+msgstr "Ba da Izinin Madadin Tantancewar Basic"
+
+#: lib/BmcsPage.php
+msgid "Used only when the BMC offers no session service. Every request then carries the password; the health page warns while it is in use."
+msgstr "Ana amfani da shi kaɗai idan BMC ba ta da sabis na zama (session service). Kowane buƙata zai ɗauki kalmar sirri; shafin lafiya zai yi gargaɗi yayin da ake amfani da shi."
+
+#: lib/BmcsPage.php
+msgid "The Cacti device of the server this BMC manages. Leave it at none to have the plugin create a device from the list."
+msgstr "Na'urar Cacti ta uwar garken da wannan BMC ke sarrafawa. Bar shi a babu ko ɗaya don plugin ɗin ya ƙirƙiri na'ura daga jerin."
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Save"
+msgstr "Adana"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Address: %s port %d is already registered as %s."
+msgstr "Adireshi: %s port %d an riga an yi masa rajista a matsayin %s."
+
+#: lib/BmcsPage.php
+msgid "Address: this address and port are already registered."
+msgstr "Adireshi: an riga an yi wa wannan adireshi da port rajista."
+
+#: lib/BmcsPage.php
+msgid "Name: another BMC already uses this name."
+msgstr "Suna: wani BMC daban ya riga yana amfani da wannan sunan."
+
+#: lib/BmcsPage.php
+msgid "Device: no Cacti device has this ID."
+msgstr "Na'ura: babu wata na'urar Cacti mai wannan ID ɗin."
+
+#: lib/BmcsPage.php
+msgid "Device: another BMC is already mapped to this device."
+msgstr "Na'ura: an riga an haɗa wani BMC daban zuwa wannan na'urar."
+
+#: lib/CredentialsPage.php lib/Pages.php
+msgid "Redfish Credentials"
+msgstr "Bayanan Shiga na Redfish"
+
+#: lib/CredentialsPage.php
+msgid "Password"
+msgstr "Kalmar Sirri"
+
+#: lib/CredentialsPage.php
+msgid "Used By"
+msgstr "Wanda Ke Amfani Da Shi"
+
+#: lib/CredentialsPage.php
+msgid "User Name"
+msgstr "Sunan Mai Amfani"
+
+#: lib/CredentialsPage.php
+msgid "No credentials yet. Create one with a read-only BMC account."
+msgstr "Babu bayanan shiga tukuna. Ƙirƙiri ɗaya tare da asusun BMC na karatu-kaɗai (read-only)."
+
+#: lib/CredentialsPage.php
+msgid "None stored"
+msgstr "Babu wanda aka adana"
+
+#: lib/CredentialsPage.php
+msgid "Stored"
+msgstr "An Adana"
+
+#: lib/CredentialsPage.php
+#, php-format
+msgid "%d BMCs"
+msgstr "%d BMCs"
+
+#: lib/CredentialsPage.php
+msgid "New Redfish Credential"
+msgstr "Sabon Bayanan Shiga na Redfish"
+
+#: lib/CredentialsPage.php
+#, php-format
+msgid "Redfish Credential: %s"
+msgstr "Bayanan Shiga na Redfish: %s"
+
+#: lib/CredentialsPage.php
+msgid "A BMC account with the ReadOnly role. The plugin never needs a role that can change BMC state."
+msgstr "Asusun BMC mai matsayin ReadOnly. Plugin ɗin ba ya taɓa buƙatar matsayin da zai iya canza yanayin BMC."
+
+#: lib/CredentialsPage.php
+msgid "A password is stored. Leave blank to keep it."
+msgstr "An ajiye kalmar sirri. Bar shi fanko don ci gaba da riƙe ta."
+
+#: lib/CredentialsPage.php
+msgid "Stored encrypted with the vault key."
+msgstr "An ajiye shi a ɓoye tare da maɓallin ma'ajiya (vault key)."
+
+#: lib/DeviceProvisioner.php
+msgid "The Redfish templates are not installed completely. Reinstall them from the Redfish BMCs page."
+msgstr "Ba a shigar da samfuran Redfish gaba ɗaya ba. Sake shigar da su daga shafin Redfish BMCs."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "A device \"%s\" from the %s device template, polled by poller %d, with availability checks off. Its host name is a reserved name that is never contacted."
+msgstr "Na'ura \"%s\" daga samfurin na'urar %s, wadda poller %d ke tattarawa, tare da kashe duba samuwa. Sunan uwar garkenta suna ne da aka tanada wanda ba a taɓa tuntuɓarsa ba."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "The data query \"%s\", with a graph for each of the %d members known now."
+msgstr "Tambayar bayanai \"%s\", tare da jadawali ga kowanne daga cikin mambobi %d da aka sani yanzu."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "%d fans or power supplies that were present are no longer reported. They count as failed until you confirm; confirming accepts the members the BMC reports now."
+msgstr "Fankuna ko na'urorin wutar lantarki %d da suka kasance a nan ba a ƙara ba da rahoton su ba. Ana ƙididdige su a matsayin waɗanda suka gaza har sai ka tabbatar; tabbatarwa tana karɓar mambobin da BMC ke ba da rahoto yanzu."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "The graph \"%s\", with its \"%s\" data source."
+msgstr "Jadawalin \"%s\", tare da tushen bayanansa na \"%s\"."
+
+#: lib/DeviceProvisioner.php
+msgid "The BMC is already mapped to a device."
+msgstr "An riga an haɗa BMC ɗin zuwa wata na'ura."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "Created by the Redfish plugin for BMC %s. Its values come from the plugin cache; the host name is a reserved name that is never contacted."
+msgstr "Plugin ɗin Redfish ne ya ƙirƙire shi don BMC %s. Ƙimominsa sun fito ne daga ma'ajiyar wucin gadi (cache) ta plugin ɗin; sunan uwar garken suna ne da aka tanada wanda ba a taɓa tuntuɓarsa ba."
+
+#: lib/DeviceProvisioner.php
+msgid "Cacti refused to create the device. See the Cacti log."
+msgstr "Cacti ta ƙi ƙirƙirar na'urar. Duba rajistar Cacti."
+
+#: lib/DeviceProvisioner.php
+msgid "The new device would be hidden from you by your device permissions, so it was removed again. Ask an administrator to grant access, or map the BMC to a device you can see."
+msgstr "Sabuwar na'urar za ta kasance a ɓoye daga gare ka saboda izinin na'urarka, don haka an sake cire ta. Nemi mai gudanarwa ya ba ka dama, ko ka haɗa BMC ɗin zuwa na'urar da za ka iya gani."
+
+#: lib/DeviceProvisioner.php
+msgid "The BMC was mapped to a device by someone else meanwhile, or could not be mapped, so the new device was removed again. Reload the page and check its mapping."
+msgstr "Wani ya haɗa BMC ɗin zuwa wata na'ura a halin yanzu, ko kuma ba a iya haɗa shi ba, don haka an sake cire sabuwar na'urar. Sake loda shafin kuma ka duba haɗinsa."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "The Redfish templates could not be installed: %s"
+msgstr "Ba a iya shigar da samfuran Redfish ba: %s"
+
+#: lib/DeviceWarnings.php
+msgid "The Redfish templates are not installed or not current. Reinstall them from the Redfish BMCs page."
+msgstr "Ba a shigar da samfuran Redfish ba ko ba na yanzu ba ne. Sake shigar da su daga shafin Redfish BMCs."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "%s: its Cacti device was deleted. Map it to another device or create one from the BMCs page."
+msgstr "%s: an share na'urarta ta Cacti. Haɗa ta zuwa wata na'ura ko ka ƙirƙiri ɗaya daga shafin BMCs."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "%s: its device is polled by poller %d but the BMC is read by poller %d. Move one of them so both use the same poller, or its graphs can read as unknown."
+msgstr "%s: poller %d ne ke tattara na'urarta amma poller %d ke karanta BMC ɗin. Matsar da ɗayansu don dukansu su yi amfani da poller iri ɗaya, ko kuma jadawalanta za su iya karantawa a matsayin waɗanda ba a sani ba."
+
+#: lib/GraphLinks.php
+msgid "Redfish graphs of this device"
+msgstr "Jadawalan Redfish na wannan na'urar"
+
+#: lib/HealthPage.php
+msgid "Redfish Warnings"
+msgstr "Gargaɗin Redfish"
+
+#: lib/HealthPage.php
+msgid "No warnings."
+msgstr "Babu gargaɗi."
+
+#: lib/HealthPage.php
+msgid "Redfish Collector"
+msgstr "Mai Tattarawa na Redfish"
+
+#: lib/HealthPage.php
+msgid "BMCs"
+msgstr "BMCs"
+
+#: lib/HealthPage.php
+msgid "Duration / Interval"
+msgstr "Tsawon Lokaci / Tazarar Lokaci"
+
+#: lib/HealthPage.php
+msgid "Last Run"
+msgstr "Gudun Ƙarshe"
+
+#: lib/HealthPage.php
+msgid "Poller"
+msgstr "Poller"
+
+#: lib/HealthPage.php
+msgid "Read"
+msgstr "Karanta"
+
+#: lib/HealthPage.php
+msgid "Requests per BMC"
+msgstr "Buƙatu ga kowane BMC"
+
+#: lib/HealthPage.php
+msgid "Workers"
+msgstr "Ma'aikata (Workers)"
+
+#: lib/HealthPage.php
+msgid "The collector has not run yet."
+msgstr "Mai tattarawar bai yi aiki tukuna ba."
+
+#: lib/HealthPage.php lib/OperatorPage.php
+msgid "Never"
+msgstr "Ba taɓa ba"
+
+#: lib/HealthPage.php
+msgid "Redfish BMC Status"
+msgstr "Matsayin Redfish BMC"
+
+#: lib/HealthPage.php
+msgid "Authentication"
+msgstr "Tantancewa"
+
+#: lib/HealthPage.php
+msgid "BMC"
+msgstr "BMC"
+
+#: lib/HealthPage.php
+msgid "Data"
+msgstr "Bayanai"
+
+#: lib/HealthPage.php
+msgid "Discovery"
+msgstr "Ganowa"
+
+#: lib/HealthPage.php
+msgid "Failure"
+msgstr "Gazawa"
+
+#: lib/HealthPage.php
+msgid "Last Success"
+msgstr "Nasara ta Ƙarshe"
+
+#: lib/HealthPage.php
+msgid "Mean Latency"
+msgstr "Matsakaicin Jinkiri"
+
+#: lib/HealthPage.php
+msgid "Reachability"
+msgstr "Saduwa (Reachability)"
+
+#: lib/HealthPage.php
+msgid "Requests"
+msgstr "Buƙatu"
+
+#: lib/HealthPage.php
+msgid "Source"
+msgstr "Tushe"
+
+#: lib/HealthPage.php
+#, php-format
+msgid "newest %s"
+msgstr "mafi sabunta %s"
+
+#: lib/HealthPage.php
+msgid "disabled"
+msgstr "an kashe"
+
+#: lib/HealthPage.php
+msgid "ok"
+msgstr "lafiya"
+
+#: lib/HealthPage.php
+msgid "stale"
+msgstr "tsoho (stale)"
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The vault key file cannot be used: %s. Stored passwords cannot be read or written until it is fixed."
+msgstr "Ba za a iya amfani da fayil ɗin maɓallin ma'ajiya ba: %s. Ba za a iya karanta ko rubuta kalmomin sirri da aka ajiye ba har sai an gyara shi."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d took %.0f seconds, more than its budget of %d seconds."
+msgstr "Mai tattarawa akan poller %d ya ɗauki daƙiƙa %.0f, fiye da ƙayyadadden lokacinsa na daƙiƙa %d."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d ran out of time before every BMC was read; the rest resume on the next run. Add workers or raise the budget."
+msgstr "Lokacin mai tattarawa akan poller %d ya ƙare kafin a karanta kowane BMC; sauran za su ci gaba a zagaye na gaba. Ƙara ma'aikata (workers) ko ƙara ƙayyadadden lokacin."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d last ran %s."
+msgstr "Mai tattarawa akan poller %d ya yi aiki na ƙarshe %s."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: TLS verification is off. Anyone on the path can read its traffic, including the BMC password."
+msgstr "%s: an kashe tabbatar da TLS. Duk wanda ke kan hanyar sadarwa zai iya karanta bayanan zirga-zirgarsa, gami da kalmar sirrin BMC."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: uses Basic authentication because the BMC offers no session service; every request carries the password."
+msgstr "%s: yana amfani da tantancewar Basic saboda BMC ba ta da sabis na zama (session service); kowane buƙata yana ɗauke da kalmar sirri."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: a session may have been left open on the BMC; the next run deletes it after logging in."
+msgstr "%s: wataƙila an bar zama (session) a buɗe akan BMC; zagaye na gaba zai share shi bayan an shiga."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: %d session logins in a row lost their response, so logins stopped. Check the BMC session list, then use Retry Now."
+msgstr "%s: shiga zama sau %d a jere sun rasa amsarsu, don haka shiga ya tsaya. Duba jerin zama na BMC, sannan ka yi amfani da Sake Gwadawa Yanzu."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: the BMC rejected the credential. It is not tried again until the credential changes."
+msgstr "%s: BMC ta ƙi amincewa da bayanan shigar. Ba za a sake gwadawa ba har sai bayanan shigar sun canza."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: its credential is missing or has no stored password."
+msgstr "%s: bayanan shigarsa sun ɓace ko kuma ba shi da kalmar sirrin da aka ajiye."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: %d links in its responses pointed elsewhere and were ignored."
+msgstr "%s: hanyoyin haɗi %d a cikin amsoshinsa sun nuna wani wuri daban kuma an yi watsi da su."
+
+#: lib/Html.php
+#, php-format
+msgid "%d seconds ago"
+msgstr "daƙiƙa %d da suka wuce"
+
+#: lib/Html.php
+#, php-format
+msgid "%d minutes ago"
+msgstr "minti %d da suka wuce"
+
+#: lib/Html.php
+#, php-format
+msgid "%d hours ago"
+msgstr "sa'a %d da suka wuce"
+
+#: lib/Html.php
+#, php-format
+msgid "%d days ago"
+msgstr "kwana %d da suka wuce"
+
+#: lib/OperatorPage.php
+msgid "Review the recorded observations below. Acknowledgments are personal to this session, expire when observations change, and never suppress alerts or change health."
+msgstr "Duba abubuwan da aka lura da aka yi rajista a ƙasa. Amincewa ta keɓanta ga wannan zaman ne, tana ƙarewa idan abubuwan da aka lura suka canza, kuma ba ta taɓa hana faɗakarwa ko canza lafiya ba."
+
+#: lib/OperatorPage.php lib/Pages.php
+msgid "Redfish Operations"
+msgstr "Ayyukan Redfish"
+
+#: lib/OperatorPage.php
+msgid "Investigation"
+msgstr "Bincike"
+
+#: lib/OperatorPage.php
+msgid "Object"
+msgstr "Abu"
+
+#: lib/OperatorPage.php
+msgid "Observed (UTC)"
+msgstr "An Lura (UTC)"
+
+#: lib/OperatorPage.php
+msgid "Unknown or stale"
+msgstr "Ba a sani ba ko ya tsufa"
+
+#: lib/OperatorPage.php
+msgid "Acknowledged; health unchanged."
+msgstr "An amince; lafiya ba ta canza ba."
+
+#: lib/OperatorPage.php
+msgid "Acknowledge"
+msgstr "Amince"
+
+#: lib/OperatorPage.php
+msgid "No observations are available for devices you may access."
+msgstr "Babu abubuwan da aka lura don na'urorin da za ku iya shiga."
+
+#: lib/Pages.php
+msgid "Redfish Operator"
+msgstr "Mai Gudanar da Aikin Redfish"
+
+#: lib/Pages.php
+msgid "Redfish View"
+msgstr "Kallon Redfish"
+
+#: lib/Pages.php
+msgid "Redfish Admin"
+msgstr "Admin na Redfish"
+
+#: lib/Pages.php
+msgid "Redfish Health"
+msgstr "Lafiyar Redfish"
+
+#: lib/Settings.php
+#, php-format
+msgid "%s Default %d, from %d to %d."
+msgstr "%s Tsoho (Default) %d, daga %d zuwa %d."
+
+#: lib/Settings.php
+msgid "Credential Vault"
+msgstr "Ma'ajiyar Sirri ta Shaidar Shiga"
+
+#: lib/Settings.php
+msgid "Vault Key File"
+msgstr "Fayil ɗin Maɓallin Ma'ajiyar Sirri"
+
+#: lib/Settings.php
+msgid "Absolute path to the 32-byte key that encrypts stored BMC passwords. Create it yourself, outside the web root, readable only by the web server and poller user, in a directory that only root and that user can write; the plugin never creates or writes it. Back it up with the database: without it, stored passwords must be entered again."
+msgstr "Cikakkiyar hanya zuwa maɓallin 32-byte wanda ke ɓoye kalmomin sirrin BMC da aka ajiye. Ƙirƙire shi da kanka, a wajen web root, wanda uwar garken yanar gizo da mai amfani na poller kaɗai za su iya karantawa, a cikin babban fayil da root da wannan mai amfani kaɗai za su iya rubutawa; plugin ɗin ba ya taɓa ƙirƙira ko rubuta shi. Ajiye masa kwafi tare da rumbun adana bayanai (database): ba tare da shi ba, dole ne a sake shigar da kalmomin sirrin da aka ajiye."
+
+#: lib/Settings.php
+msgid "Collector"
+msgstr "Mai Tattara Bayanai"
+
+#: lib/Settings.php
+msgid "Collection Interval"
+msgstr "Tazarar Tattara Bayanai"
+
+#: lib/Settings.php
+msgid "Seconds between reads of each BMC."
+msgstr "Daƙiƙoƙi tsakanin karatun kowane BMC."
+
+#: lib/Settings.php
+msgid "Rediscovery Interval"
+msgstr "Tazarar Sake Ganowa"
+
+#: lib/Settings.php
+msgid "Seconds between full resource discoveries of each BMC. A BMC is also rediscovered at once when a known resource disappears or changes type."
+msgstr "Daƙiƙoƙi tsakanin cikakken gano albarkatun kowane BMC. Ana kuma sake gano BMC nan da nan idan wata albarkatu da aka sani ta ɓace ko ta canza nau'i."
+
+#: lib/Settings.php
+msgid "Collector Time Budget"
+msgstr "Ƙayyadadden Lokacin Mai Tattara Bayanai"
+
+#: lib/Settings.php
+msgid "Seconds one collector run may spend before it stops starting new BMCs. Keep it below the poller interval; unfinished BMCs resume on the next run."
+msgstr "Daƙiƙoƙin da zagaye ɗaya na mai tattarawa zai iya ɗauka kafin ya daina fara sababbin BMCs. Ka sanya shi ƙasa da tazarar poller; BMCs da ba a kammala ba za su ci gaba a zagaye na gaba."
+
+#: lib/Settings.php
+msgid "BMCs read in parallel. Each BMC is read by one worker at a time."
+msgstr "BMCs da ake karantawa a lokaci guda. Ma'aikaci ɗaya ke karanta kowane BMC a lokaci guda."
+
+#: lib/Settings.php
+msgid "Collector Workers"
+msgstr "Ma'aikatan Mai Tattarawa"
+
+#: lib/Settings.php
+msgid "Connect Timeout"
+msgstr "Ƙarewar Lokacin Haɗi"
+
+#: lib/Settings.php
+msgid "Seconds allowed for the TCP connection and TLS handshake to a BMC."
+msgstr "Daƙiƙoƙin da aka yarda don haɗin TCP da gaisuwar TLS zuwa BMC."
+
+#: lib/Settings.php
+msgid "Request Timeout"
+msgstr "Ƙayyadadden Lokacin Buƙata"
+
+#: lib/Settings.php
+msgid "Seconds allowed for one whole request to a BMC, including the connection."
+msgstr "Daƙiƙoƙin da aka yarda don cikakkiyar buƙata guda ɗaya zuwa BMC, gami da haɗin."
+
+#: lib/Settings.php
+msgid "KiB accepted in one BMC response body; a larger response is refused."
+msgstr "KiB da aka karɓa a cikin jikin amsar BMC guda ɗaya; ana ƙin amincewa da amsar da ta fi girma."
+
+#: lib/Settings.php
+msgid "Maximum Response Size"
+msgstr "Mafi Girman Girman Amsa"
+
+#: lib/Settings.php
+msgid "Freshness"
+msgstr "Sabuntawa"
+
+#: lib/Settings.php
+msgid "Collection intervals after which a reading is shown as delayed."
+msgstr "Tazarorin tattarawa waɗanda bayan su za a nuna karatu a matsayin wanda ya makara."
+
+#: lib/Settings.php
+msgid "Delayed After"
+msgstr "Ya Makara Bayan"
+
+#: lib/Settings.php
+msgid "Collection intervals after which a reading is stale and reads as unknown. Always at least one more than Delayed After."
+msgstr "Tazarorin tattarawa waɗanda bayan su karatu zai zama tsoho (stale) kuma a karanta shi a matsayin wanda ba a sani ba. Kullum ya kasance a ƙalla ɗaya fiye da Ya Makara Bayan."
+
+#: lib/Settings.php
+msgid "Stale After"
+msgstr "Ya Wuce Lokaci Bayan"
+
+#: lib/Settings.php
+msgid "Uninstall"
+msgstr "Cirewa"
+
+#: lib/Settings.php
+msgid "Keep Plugin Tables on Uninstall"
+msgstr "Riƙe Teburan Plugin yayin Cirewa"
+
+#: lib/Settings.php
+msgid "When checked, uninstalling the plugin keeps its BMC registry, encrypted passwords, and reading cache. Clear it to have the uninstall drop them. Uninstall never touches Cacti devices, graphs, or BMCs, including devices the plugin created."
+msgstr "Idan aka zaɓa, cire shigarwar plugin ɗin zai riƙe rajistar BMC, kalmomin sirri da aka ɓoye, da ma'ajiyar wucin gadi (cache) ta karatu. Share shi don cire shigarwar ya goge su. Cire shigarwar ba ya taɓa na'urorin Cacti, jadawalai, ko BMCs, gami da na'urorin da plugin ɗin ya ƙirƙira."
+
+#: lib/TlsMode.php
+msgid "Verify against the system CA store"
+msgstr "Tabbatar da ma'ajiyar CA ta tsarin"
+
+#: lib/TlsMode.php
+msgid "Verify against a CA bundle file"
+msgstr "Tabbatar da fayil ɗin CA bundle"
+
+#: lib/TlsMode.php
+msgid "Pinned public key (SHA-256)"
+msgstr "Maɓallin jama'a da aka maƙala (SHA-256)"
+
+#: lib/TlsMode.php
+msgid "Do not verify (unsafe)"
+msgstr "Kada a tabbatar (ba shi da aminci)"
+
+#: redfish_bmcs.php
+msgid "You do not have access to the Cacti device of this BMC."
+msgstr "Ba ka da damar shiga na'urar Cacti ta wannan BMC."
+
+#: redfish_bmcs.php
+msgid "The BMC could not be saved."
+msgstr "Ba a iya ajiye BMC ɗin ba."
+
+#: redfish_bmcs.php
+msgid "The BMC was saved."
+msgstr "An ajiye BMC ɗin."
+
+#: redfish_bmcs.php
+msgid "The BMC and its cached data were deleted. Its Cacti device was left in place."
+msgstr "An share BMC ɗin da bayanansa da ke ma'ajiyar wucin gadi. An bar na'urarsa ta Cacti a wurinta."
+
+#: redfish_bmcs.php
+msgid "Backoff and held failures were cleared; the collector reads the BMC on its next run."
+msgstr "An share jinkirin dawowa (backoff) da gazawar da aka riƙe; mai tattarawa zai karanta BMC ɗin a zagaye na gaba."
+
+#: redfish_bmcs.php
+msgid "Adding devices and graphs needs Cacti's device management permission."
+msgstr "Ƙara na'urori da jadawalai yana buƙatar izinin sarrafa na'urori na Cacti."
+
+#: redfish_bmcs.php
+msgid "The device of this BMC was deleted. Choose another device, or none, on the BMC form first."
+msgstr "An share na'urar wannan BMC. Zaɓi wata na'ura, ko babu ko ɗaya, akan fom ɗin BMC tukuna."
+
+#: redfish_bmcs.php
+#, php-format
+msgid "The data queries were indexed again and %d graphs were added."
+msgstr "An sake lissafa tambayoyin bayanai (data queries) kuma an ƙara jadawalai %d."
+
+#: redfish_bmcs.php
+msgid "The device was created with its Redfish graphs."
+msgstr "An ƙirƙiri na'urar tare da jadawalan Redfish ɗinta."
+
+#: redfish_bmcs.php
+msgid "Installing the Redfish templates needs Cacti's Import Templates permission."
+msgstr "Shigar da samfuran Redfish yana buƙatar izinin Shigo da Samfura (Import Templates) na Cacti."
+
+#: redfish_bmcs.php
+msgid "The Redfish templates are installed."
+msgstr "An shigar da samfuran Redfish."
+
+#: redfish_bmcs.php
+msgid "The Redfish templates could not be installed. The health page shows why."
+msgstr "Ba a iya shigar da samfuran Redfish ba. Shafin lafiya zai nuna dalili."
+
+#: redfish_bmcs.php
+msgid "The import could not be saved; nothing was imported."
+msgstr "Ba a iya ajiye shigarwar ba; ba a shigo da komai ba."
+
+#: redfish_bmcs.php
+#, php-format
+msgid "%d BMCs were imported."
+msgstr "An shigo da BMCs %d."
+
+#: redfish_credentials.php
+msgid "This credential is used by a BMC on a Cacti device you do not have access to, so it cannot be changed here."
+msgstr "Wani BMC akan na'urar Cacti da ba ka da damar shiga yana amfani da wannan bayanan shigar, don haka ba za a iya canza su a nan ba."
+
+#: redfish_credentials.php
+msgid "Name: another credential already uses this name."
+msgstr "Suna: wani bayanan shiga daban ya riga yana amfani da wannan sunan."
+
+#: redfish_credentials.php
+msgid "User Name: enter 1 to 255 characters without control characters."
+msgstr "Sunan Mai Amfani: shigar da haruffa 1 zuwa 255 ba tare da haruffan sarrafawa ba."
+
+#: redfish_credentials.php
+msgid "Password: enter the password of the BMC account."
+msgstr "Kalmar Sirri: shigar da kalmar sirrin asusun BMC."
+
+#: redfish_credentials.php
+#, php-format
+msgid "The credential was saved, but the password was not stored: %s"
+msgstr "An ajiye bayanan shigar, amma ba a ajiye kalmar sirrin ba: %s"
+
+#: redfish_credentials.php
+msgid "The credential could not be saved."
+msgstr "Ba a iya ajiye bayanan shigar ba."
+
+#: redfish_credentials.php
+msgid "The credential was saved."
+msgstr "An ajiye bayanan shigar."
+
+#: redfish_credentials.php
+msgid "The credential and its stored password were deleted."
+msgstr "An share bayanan shigar da kalmar sirrinsa da aka ajiye."
+
+#: redfish_credentials.php
+msgid "The credential was not deleted. A credential in use by a BMC cannot be deleted."
+msgstr "Ba a share bayanan shigar ba. Ba za a iya share bayanan shigar da BMC ke amfani da su ba."
+
+#: redfish_operator.php
+msgid "Retry collection"
+msgstr "Sake gwada tattarawa"
+
+#: redfish_operator.php
+msgid "Monitoring view"
+msgstr "Duban sa ido"
+
+#: redfish_operator.php
+msgid "Observations could not be read. Ask an administrator to check the plugin log."
+msgstr "Ba a iya karanta abubuwan da aka lura ba. Nemi mai gudanarwa ya duba rajistar plugin."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires PHP %s or later. This server runs PHP %s, so the plugin was not installed or enabled."
+msgstr "Plugin ɗin Redfish yana buƙatar PHP %s ko na gaba. Wannan uwar garken tana aiki da PHP %s, don haka ba a shigar da plugin ɗin ko kunna shi ba."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires the PHP extensions %s, which this server does not load, so the plugin was not installed or enabled."
+msgstr "Plugin ɗin Redfish yana buƙatar ƙarin abubuwan PHP (extensions) %s, waɗanda wannan uwar garken ba ta loda ba, don haka ba a shigar da plugin ɗin ko kunna shi ba."
+
+#: setup.php
+msgid "Redfish"
+msgstr "Redfish"
+
+#: setup.php
+msgid "The Redfish plugin is not enabled."
+msgstr "Ba a kunna plugin ɗin Redfish ba."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires PHP %s or later."
+msgstr "Plugin ɗin Redfish yana buƙatar PHP %s ko na gaba."
+
+#: setup.php
+msgid "Management"
+msgstr "Gudanarwa"

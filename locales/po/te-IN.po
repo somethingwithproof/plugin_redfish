@@ -1,0 +1,970 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: 2026 Thomas Vincent <thomasvincent@gmail.com>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: redfish 0.1.0-dev\n"
+"Report-Msgid-Bugs-To: https://github.com/somethingwithproof/plugin_redfish/issues\n"
+"PO-Revision-Date: 2026-11-26 00:00+0000\n"
+"Last-Translator: Thomas Vincent <thomasvincent@gmail.com>\n"
+"Language-Team: Thomas Vincent <thomasvincent@gmail.com>\n"
+"Language: te-IN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: include/operator.php
+msgid "Check collection freshness and the device graphs. Retry releases a collection hold for the next scheduled run; it does not contact the BMC now."
+msgstr "సేకరణ తాజాదనాన్ని మరియు పరికరం గ్రాఫ్‌లను తనిఖీ చేయండి. మళ్లీ ప్రయత్నించు తదుపరి షెడ్యూల్ చేసిన రన్ కోసం సేకరణ హోల్డ్‌ను విడుదల చేస్తుంది; ఇది ఇప్పుడు BMC ని సంప్రదించదు."
+
+#: lib/BmcImport.php
+msgid "The file is empty or larger than 1 MiB."
+msgstr "ఫైల్ ఖాళీగా ఉంది లేదా 1 MiB కంటే పెద్దదిగా ఉంది."
+
+#: lib/BmcImport.php
+msgid "The file could not be read."
+msgstr "ఫైల్ చదవబడలేదు."
+
+#: lib/BmcImport.php
+msgid "The file has no header row."
+msgstr "ఫైల్‌లో హెడర్ అడ్డువరుస లేదు."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The file has a column named \"%s\". Import files must not carry secrets; name a stored credential in the credential column instead. Nothing was imported."
+msgstr "ఫైల్‌లో \"%s\" అనే నిలువు వరుస ఉంది. దిగుమతి ఫైల్‌లలో రహస్యాలు ఉండకూడదు; బదులుగా credential నిలువు వరుసలో నిల్వ చేసిన క్రెడెన్షియల్ పేరును పేర్కొనండి. ఏదీ దిగుమతి చేయబడలేదు."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The header must name only these columns, each once, including name, address, and credential: %s."
+msgstr "హెడర్‌లో name, address మరియు credential తో సహా ఈ నిలువు వరుసల పేర్లు మాత్రమే ఒక్కొక్కటి ఒకసారి ఉండాలి: %s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The file has more than %d rows."
+msgstr "ఫైల్‌లో %d కంటే ఎక్కువ అడ్డువరుసలు ఉన్నాయి."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: expected %d fields, found %d."
+msgstr "లైన్ %d: %d ఫీల్డ్‌లు అంచనా వేయబడ్డాయి, %d కనుగొనబడ్డాయి."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Credential: no stored credential is named \"%s\"."
+msgstr "క్రెడెన్షియల్: \"%s\" పేరుతో నిల్వ చేసిన క్రెడెన్షియల్ ఏదీ లేదు."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: %s"
+msgstr "లైన్ %d: %s"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: the address %s port %d is already registered as %s."
+msgstr "లైన్ %d: చిరునామా %s పోర్ట్ %d ఇప్పటికే %s గా నమోదు చేయబడింది."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "line %d"
+msgstr "లైన్ %d"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: the name %s is already used."
+msgstr "వరుస %d: %s అనే పేరు ఇప్పటికే ఉపయోగంలో ఉంది."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: no Cacti device has ID %d."
+msgstr "వరుస %d: ID %d ఉన్న Cacti పరికరం లేదు."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: device %d already has the BMC %s."
+msgstr "వరుస %d: పరికరం %d ఇప్పటికే BMC %s ని కలిగి ఉంది."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "of line %d"
+msgstr "వరుస %d యొక్క"
+
+#: lib/BmcImport.php
+msgid "The file has no BMC rows."
+msgstr "ఈ ఫైల్‌లో BMC వరుసలు లేవు."
+
+#: lib/BmcInput.php redfish_credentials.php
+msgid "Name: enter 1 to 100 characters without control characters."
+msgstr "పేరు: కంట్రోల్ అక్షరాలు లేకుండా 1 నుండి 100 అక్షరాలను నమోదు చేయండి."
+
+#: lib/BmcInput.php
+msgid "Address: enter a host name or an IP address only, without a scheme, port, path, or user name. Loopback, link-local, multicast, and unspecified addresses are refused."
+msgstr "చిరునామా: స్కీమ్, పోర్ట్, మార్గం లేదా వినియోగదారు పేరు లేకుండా కేవలం హోస్ట్ పేరు లేదా IP చిరునామాను మాత్రమే నమోదు చేయండి. లూప్‌బ్యాక్, లింక్-లోకల్, మల్టీకాస్ట్ మరియు నిర్దేశించని చిరునామాలు తిరస్కరించబడతాయి."
+
+#: lib/BmcInput.php
+msgid "Port: enter a TCP port from 1 to 65535."
+msgstr "పోర్ట్: 1 నుండి 65535 వరకు TCP పోర్ట్‌ను నమోదు చేయండి."
+
+#: lib/BmcInput.php
+msgid "Poller: only the main poller can collect BMCs in this release."
+msgstr "పోలర్: ఈ విడుదలలో ప్రధాన పోలర్ మాత్రమే BMCలను సేకరించగలదు."
+
+#: lib/BmcInput.php
+msgid "Device: choose a Cacti device or none."
+msgstr "పరికరం: Cacti పరికరాన్ని ఎంచుకోండి లేదా ఏదీ వద్దు."
+
+#: lib/BmcInput.php lib/BmcsPage.php
+msgid "Credential: choose a stored credential."
+msgstr "క్రెడెన్షియల్: నిల్వ చేసిన క్రెడెన్షియల్‌ను ఎంచుకోండి."
+
+#: lib/BmcInput.php
+msgid "TLS Verification: choose one of the listed modes."
+msgstr "TLS ధృవీకరణ: జాబితా చేసిన మోడ్‌లలో ఒకదాన్ని ఎంచుకోండి."
+
+#: lib/BmcInput.php
+msgid "CA Bundle File: enter an absolute path without control characters, at most 512 characters."
+msgstr "CA బండిల్ ఫైల్: నియంత్రణ అక్షరాలు లేకుండా గరిష్టంగా 512 అక్షరాల సంపూర్ణ మార్గాన్ని నమోదు చేయండి."
+
+#: lib/BmcInput.php
+msgid "Public Key Pin: enter the base64 SHA-256 hash of the BMC public key, optionally prefixed with sha256//."
+msgstr "పబ్లిక్ కీ పిన్: BMC పబ్లిక్ కీ యొక్క base64 SHA-256 హ్యాష్‌ను, ఐచ్ఛికంగా sha256// ఉపసర్గతో నమోదు చేయండి."
+
+#: lib/BmcRepository.php
+msgid "another BMC"
+msgstr "మరొక BMC"
+
+#: lib/BmcsPage.php lib/Pages.php
+msgid "Redfish BMCs"
+msgstr "Redfish BMCలు"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php lib/OperatorPage.php
+msgid "Actions"
+msgstr "చర్యలు"
+
+#: lib/BmcsPage.php
+msgid "Address"
+msgstr "చిరునామా"
+
+#: lib/BmcsPage.php
+msgid "Basic Fallback"
+msgstr "Basic ఫాల్‌బ్యాక్"
+
+#: lib/BmcsPage.php
+msgid "Credential"
+msgstr "క్రెడెన్షియల్"
+
+#: lib/BmcsPage.php
+msgid "Device"
+msgstr "పరికరం"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Name"
+msgstr "పేరు"
+
+#: lib/BmcsPage.php
+msgid "Port"
+msgstr "పోర్ట్"
+
+#: lib/BmcsPage.php lib/OperatorPage.php
+msgid "State"
+msgstr "స్థితి"
+
+#: lib/BmcsPage.php
+msgid "TLS Verification"
+msgstr "TLS ధృవీకరణ"
+
+#: lib/BmcsPage.php lib/HealthPage.php
+msgid "No BMCs yet."
+msgstr "ఇంకా BMCలు లేవు."
+
+#: lib/BmcsPage.php
+msgid "Missing"
+msgstr "లేదు"
+
+#: lib/BmcsPage.php
+msgid "Allowed"
+msgstr "అనుమతించబడింది"
+
+#: lib/BmcsPage.php
+msgid "Off"
+msgstr "ఆఫ్"
+
+#: lib/BmcsPage.php
+msgid "Disabled"
+msgstr "నిలిపివేయబడింది"
+
+#: lib/BmcsPage.php
+msgid "Enabled"
+msgstr "ప్రారంభించబడింది"
+
+#: lib/BmcsPage.php
+msgid "Retry Now"
+msgstr "ఇప్పుడే మళ్లీ ప్రయత్నించండి"
+
+#: lib/BmcsPage.php
+msgid "Add Graphs"
+msgstr "గ్రాఫ్‌లను జోడించండి"
+
+#: lib/BmcsPage.php
+msgid "Create Device"
+msgstr "పరికరాన్ని సృష్టించండి"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Delete"
+msgstr "తొలగించండి"
+
+#: lib/BmcsPage.php
+msgid "Export the BMC registry as JSON (no secrets)"
+msgstr "BMC రిజిస్ట్రీని JSON గా ఎగుమతి చేయండి (రహస్యాలు లేకుండా)"
+
+#: lib/BmcsPage.php
+msgid "Reinstall the Redfish Templates"
+msgstr "Redfish టెంప్లేట్‌లను మళ్లీ ఇన్‌స్టాల్ చేయండి"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Add Redfish graphs for %s"
+msgstr "%s కోసం Redfish గ్రాఫ్‌లను జోడించండి"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Create a Cacti device for %s"
+msgstr "%s కోసం Cacti పరికరాన్ని సృష్టించండి"
+
+#: lib/BmcsPage.php
+msgid "Everything is already in place. Confirming indexes the data queries again and adds graphs for new members only."
+msgstr "అన్నీ ఇప్పటికే సిద్ధంగా ఉన్నాయి. నిర్ధారించడం వలన డేటా ప్రశ్నలు మళ్లీ సూచిక చేయబడి, కొత్త సభ్యులకు మాత్రమే గ్రాఫ్‌లు జోడించబడతాయి."
+
+#: lib/BmcsPage.php
+msgid "Confirming adds:"
+msgstr "నిర్ధారించడం వలన వీటిని జోడిస్తుంది:"
+
+#: lib/BmcsPage.php
+msgid "Existing devices, graphs, and thresholds are not changed."
+msgstr "ఇప్పటికే ఉన్న పరికరాలు, గ్రాఫ్‌లు మరియు పరిమితులు మార్చబడవు."
+
+#: lib/BmcsPage.php
+msgid "Confirm"
+msgstr "నిర్ధారించు"
+
+#: lib/BmcsPage.php
+msgid "Cancel"
+msgstr "రద్దు చేయండి"
+
+#: lib/BmcsPage.php
+msgid "Import BMCs"
+msgstr "BMCలను దిగుమతి చేయండి"
+
+#: lib/BmcsPage.php
+msgid "CSV File"
+msgstr "CSV ఫైల్"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Header row with columns: %s. Name a stored credential; never put a password in the file. Every row must be valid or nothing is imported."
+msgstr "నిలువు వరుసలతో కూడిన శీర్షిక వరుస: %s. నిల్వ చేసిన క్రెడెన్షియల్ పేరును పేర్కొనండి; ఫైల్‌లో ఎప్పుడూ పాస్‌వర్డ్ ఉంచవద్దు. ప్రతి వరుస చెల్లుబాటు అయ్యేదిగా ఉండాలి, లేకపోతే ఏదీ దిగుమతి చేయబడదు."
+
+#: lib/BmcsPage.php
+msgid "Import"
+msgstr "దిగుమతి చేయండి"
+
+#: lib/BmcsPage.php
+msgid "Choose a credential"
+msgstr "క్రెడెన్షియల్‌ను ఎంచుకోండి"
+
+#: lib/BmcsPage.php
+msgid "None"
+msgstr "ఏదీ లేదు"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Deleted device (ID %d)"
+msgstr "తొలగించబడిన పరికరం (ID %d)"
+
+#: lib/BmcsPage.php
+msgid "New Redfish BMC"
+msgstr "కొత్త Redfish BMC"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Redfish BMC: %s"
+msgstr "Redfish BMC: %s"
+
+#: lib/BmcsPage.php
+msgid "Host name or IP address of the BMC, without https:// or a path."
+msgstr "https:// లేదా మార్గం లేకుండా BMC యొక్క హోస్ట్ పేరు లేదా IP చిరునామా."
+
+#: lib/BmcsPage.php
+msgid "Do not verify is logged when set and shown as a warning on the health page while it stays."
+msgstr "ధృవీకరించవద్దు అనేది సెట్ చేసినప్పుడు లాగ్ చేయబడుతుంది మరియు అది అలాగే ఉన్నంత వరకు ఆరోగ్య పేజీలో హెచ్చరికగా చూపబడుతుంది."
+
+#: lib/BmcsPage.php
+msgid "CA Bundle File"
+msgstr "CA బండిల్ ఫైల్"
+
+#: lib/BmcsPage.php
+msgid "For the CA bundle mode: absolute path on the poller to a PEM file that others cannot write."
+msgstr "CA బండిల్ మోడ్ కోసం: ఇతరులు వ్రాయలేని PEM ఫైల్‌కు పోలర్‌పై ఉన్న సంపూర్ణ మార్గం."
+
+#: lib/BmcsPage.php
+msgid "For the pinned mode: base64 SHA-256 of the BMC public key, as sha256//... or the bare hash. A changed key fails until this is updated."
+msgstr "పిన్ చేసిన మోడ్ కోసం: BMC పబ్లిక్ కీ యొక్క base64 SHA-256, sha256//... లేదా కేవలం హ్యాష్ రూపంలో. దీనిని నవీకరించే వరకు మారిన కీ విఫలమవుతుంది."
+
+#: lib/BmcsPage.php
+msgid "Public Key Pin"
+msgstr "పబ్లిక్ కీ పిన్"
+
+#: lib/BmcsPage.php
+msgid "Allow Basic Authentication Fallback"
+msgstr "Basic ప్రామాణీకరణ ఫాల్‌బ్యాక్‌ను అనుమతించండి"
+
+#: lib/BmcsPage.php
+msgid "Used only when the BMC offers no session service. Every request then carries the password; the health page warns while it is in use."
+msgstr "BMC ఎటువంటి సెషన్ సేవను అందించనప్పుడు మాత్రమే ఉపయోగించబడుతుంది. అప్పుడు ప్రతి అభ్యర్థన పాస్‌వర్డ్‌ను తీసుకువెళుతుంది; ఇది ఉపయోగంలో ఉన్నంత వరకు ఆరోగ్య పేజీ హెచ్చరిస్తుంది."
+
+#: lib/BmcsPage.php
+msgid "The Cacti device of the server this BMC manages. Leave it at none to have the plugin create a device from the list."
+msgstr "ఈ BMC నిర్వహించే సర్వర్ యొక్క Cacti పరికరం. జాబితా నుండి ప్లగ్ఇన్ ఒక పరికరాన్ని సృష్టించడానికి దీనిని ఏదీ కాదు అని వదిలివేయండి."
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Save"
+msgstr "సేవ్ చేయండి"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Address: %s port %d is already registered as %s."
+msgstr "చిరునామా: %s పోర్ట్ %d ఇప్పటికే %s గా నమోదు చేయబడింది."
+
+#: lib/BmcsPage.php
+msgid "Address: this address and port are already registered."
+msgstr "చిరునామా: ఈ చిరునామా మరియు పోర్ట్ ఇప్పటికే నమోదు చేయబడ్డాయి."
+
+#: lib/BmcsPage.php
+msgid "Name: another BMC already uses this name."
+msgstr "పేరు: మరొక BMC ఇప్పటికే ఈ పేరును ఉపయోగిస్తోంది."
+
+#: lib/BmcsPage.php
+msgid "Device: no Cacti device has this ID."
+msgstr "పరికరం: ఈ ID ఉన్న Cacti పరికరం లేదు."
+
+#: lib/BmcsPage.php
+msgid "Device: another BMC is already mapped to this device."
+msgstr "పరికరం: మరొక BMC ఇప్పటికే ఈ పరికరానికి మ్యాప్ చేయబడింది."
+
+#: lib/CredentialsPage.php lib/Pages.php
+msgid "Redfish Credentials"
+msgstr "Redfish క్రెడెన్షియల్స్"
+
+#: lib/CredentialsPage.php
+msgid "Password"
+msgstr "పాస్‌వర్డ్"
+
+#: lib/CredentialsPage.php
+msgid "Used By"
+msgstr "ఉపయోగించేవి"
+
+#: lib/CredentialsPage.php
+msgid "User Name"
+msgstr "వినియోగదారు పేరు"
+
+#: lib/CredentialsPage.php
+msgid "No credentials yet. Create one with a read-only BMC account."
+msgstr "ఇంకా క్రెడెన్షియల్స్ లేవు. రీడ్-ఓన్లీ BMC ఖాతాతో ఒకదాన్ని సృష్టించండి."
+
+#: lib/CredentialsPage.php
+msgid "None stored"
+msgstr "ఏదీ నిల్వ చేయబడలేదు"
+
+#: lib/CredentialsPage.php
+msgid "Stored"
+msgstr "నిల్వ చేయబడింది"
+
+#: lib/CredentialsPage.php
+#, php-format
+msgid "%d BMCs"
+msgstr "%d BMCలు"
+
+#: lib/CredentialsPage.php
+msgid "New Redfish Credential"
+msgstr "కొత్త Redfish క్రెడెన్షియల్"
+
+#: lib/CredentialsPage.php
+#, php-format
+msgid "Redfish Credential: %s"
+msgstr "Redfish క్రెడెన్షియల్: %s"
+
+#: lib/CredentialsPage.php
+msgid "A BMC account with the ReadOnly role. The plugin never needs a role that can change BMC state."
+msgstr "ReadOnly పాత్ర ఉన్న BMC ఖాతా. BMC స్థితిని మార్చగల పాత్ర ప్లగ్ఇన్‌కు ఎప్పుడూ అవసరం లేదు."
+
+#: lib/CredentialsPage.php
+msgid "A password is stored. Leave blank to keep it."
+msgstr "ఒక పాస్‌వర్డ్ నిల్వ చేయబడింది. దానిని అలాగే ఉంచడానికి ఖాళీగా వదిలివేయండి."
+
+#: lib/CredentialsPage.php
+msgid "Stored encrypted with the vault key."
+msgstr "వాల్ట్ కీతో గుప్తీకరించి నిల్వ చేయబడింది."
+
+#: lib/DeviceProvisioner.php
+msgid "The Redfish templates are not installed completely. Reinstall them from the Redfish BMCs page."
+msgstr "Redfish టెంప్లేట్‌లు పూర్తిగా ఇన్‌స్టాల్ చేయబడలేదు. వాటిని Redfish BMCల పేజీ నుండి మళ్లీ ఇన్‌స్టాల్ చేయండి."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "A device \"%s\" from the %s device template, polled by poller %d, with availability checks off. Its host name is a reserved name that is never contacted."
+msgstr "\"%s\" పరికరం (%s పరికర టెంప్లేట్ నుండి), పోలర్ %d ద్వారా పోల్ చేయబడింది, లభ్యత తనిఖీలు ఆఫ్‌లో ఉన్నాయి. దీని హోస్ట్ పేరు ఎప్పుడూ సంప్రదించబడని రిజర్వ్ చేయబడిన పేరు."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "The data query \"%s\", with a graph for each of the %d members known now."
+msgstr "డేటా ప్రశ్న \"%s\", ప్రస్తుతం తెలిసిన %d సభ్యులలో ప్రతిదానికి ఒక గ్రాఫ్‌తో."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "%d fans or power supplies that were present are no longer reported. They count as failed until you confirm; confirming accepts the members the BMC reports now."
+msgstr "ఇంతకు ముందు ఉన్న %d ఫ్యాన్‌లు లేదా విద్యుత్ సరఫరాలు ఇకపై నివేదించబడటం లేదు. మీరు నిర్ధారించే వరకు అవి విఫలమైనవిగా పరిగణించబడతాయి; నిర్ధారించడం ద్వారా BMC ఇప్పుడు నివేదించే సభ్యులను అంగీకరిస్తుంది."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "The graph \"%s\", with its \"%s\" data source."
+msgstr "గ్రాఫ్ \"%s\", దాని \"%s\" డేటా మూలంతో."
+
+#: lib/DeviceProvisioner.php
+msgid "The BMC is already mapped to a device."
+msgstr "BMC ఇప్పటికే ఒక పరికరానికి మ్యాప్ చేయబడింది."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "Created by the Redfish plugin for BMC %s. Its values come from the plugin cache; the host name is a reserved name that is never contacted."
+msgstr "BMC %s కోసం Redfish ప్లగ్ఇన్ ద్వారా సృష్టించబడింది. దీని విలువలు ప్లగ్ఇన్ క్యాష్ నుండి వస్తాయి; హోస్ట్ పేరు ఎప్పుడూ సంప్రదించబడని రిజర్వ్ చేయబడిన పేరు."
+
+#: lib/DeviceProvisioner.php
+msgid "Cacti refused to create the device. See the Cacti log."
+msgstr "పరికరాన్ని సృష్టించడానికి Cacti నిరాకరించింది. Cacti లాగ్ చూడండి."
+
+#: lib/DeviceProvisioner.php
+msgid "The new device would be hidden from you by your device permissions, so it was removed again. Ask an administrator to grant access, or map the BMC to a device you can see."
+msgstr "మీ పరికర అనుమతుల కారణంగా కొత్త పరికరం మీకు కనిపించదు, కాబట్టి అది మళ్లీ తీసివేయబడింది. ప్రాప్యతను మంజూరు చేయమని నిర్వాహకుడిని అడగండి లేదా మీరు చూడగలిగే పరికరానికి BMCని మ్యాప్ చేయండి."
+
+#: lib/DeviceProvisioner.php
+msgid "The BMC was mapped to a device by someone else meanwhile, or could not be mapped, so the new device was removed again. Reload the page and check its mapping."
+msgstr "ఈలోపు మరొకరు BMCని ఒక పరికరానికి మ్యాప్ చేశారు లేదా మ్యాప్ చేయడం సాధ్యం కాలేదు, కాబట్టి కొత్త పరికరం మళ్లీ తీసివేయబడింది. పేజీని మళ్లీ లోడ్ చేసి దాని మ్యాపింగ్‌ను తనిఖీ చేయండి."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "The Redfish templates could not be installed: %s"
+msgstr "Redfish టెంప్లేట్‌లను ఇన్‌స్టాల్ చేయడం సాధ్యం కాలేదు: %s"
+
+#: lib/DeviceWarnings.php
+msgid "The Redfish templates are not installed or not current. Reinstall them from the Redfish BMCs page."
+msgstr "Redfish టెంప్లేట్‌లు ఇన్‌స్టాల్ చేయబడలేదు లేదా తాజావి కావు. వాటిని Redfish BMCల పేజీ నుండి మళ్లీ ఇన్‌స్టాల్ చేయండి."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "%s: its Cacti device was deleted. Map it to another device or create one from the BMCs page."
+msgstr "%s: దీని Cacti పరికరం తొలగించబడింది. దీనిని మరొక పరికరానికి మ్యాప్ చేయండి లేదా BMCల పేజీ నుండి ఒకదాన్ని సృష్టించండి."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "%s: its device is polled by poller %d but the BMC is read by poller %d. Move one of them so both use the same poller, or its graphs can read as unknown."
+msgstr "%s: దీని పరికరం పోలర్ %d ద్వారా పోల్ చేయబడుతుంది కానీ BMC పోలర్ %d ద్వారా చదవబడుతుంది. రెండూ ఒకే పోలర్‌ను ఉపయోగించేలా వాటిలో ఒకదాన్ని తరలించండి, లేకపోతే దీని గ్రాఫ్‌లు తెలియనివిగా చూపబడవచ్చు."
+
+#: lib/GraphLinks.php
+msgid "Redfish graphs of this device"
+msgstr "ఈ పరికరం యొక్క Redfish గ్రాఫ్‌లు"
+
+#: lib/HealthPage.php
+msgid "Redfish Warnings"
+msgstr "Redfish హెచ్చరికలు"
+
+#: lib/HealthPage.php
+msgid "No warnings."
+msgstr "హెచ్చరికలు లేవు."
+
+#: lib/HealthPage.php
+msgid "Redfish Collector"
+msgstr "Redfish కలెక్టర్"
+
+#: lib/HealthPage.php
+msgid "BMCs"
+msgstr "BMCలు"
+
+#: lib/HealthPage.php
+msgid "Duration / Interval"
+msgstr "వ్యవధి / విరామం"
+
+#: lib/HealthPage.php
+msgid "Last Run"
+msgstr "చివరి రన్"
+
+#: lib/HealthPage.php
+msgid "Poller"
+msgstr "పోలర్"
+
+#: lib/HealthPage.php
+msgid "Read"
+msgstr "చదవడం"
+
+#: lib/HealthPage.php
+msgid "Requests per BMC"
+msgstr "ఒక్కో BMCకి అభ్యర్థనలు"
+
+#: lib/HealthPage.php
+msgid "Workers"
+msgstr "వర్కర్లు"
+
+#: lib/HealthPage.php
+msgid "The collector has not run yet."
+msgstr "కలెక్టర్ ఇంకా నడవలేదు."
+
+#: lib/HealthPage.php lib/OperatorPage.php
+msgid "Never"
+msgstr "ఎప్పుడూ లేదు"
+
+#: lib/HealthPage.php
+msgid "Redfish BMC Status"
+msgstr "Redfish BMC స్థితి"
+
+#: lib/HealthPage.php
+msgid "Authentication"
+msgstr "ప్రామాణీకరణ"
+
+#: lib/HealthPage.php
+msgid "BMC"
+msgstr "BMC"
+
+#: lib/HealthPage.php
+msgid "Data"
+msgstr "డేటా"
+
+#: lib/HealthPage.php
+msgid "Discovery"
+msgstr "ఆవిష్కరణ"
+
+#: lib/HealthPage.php
+msgid "Failure"
+msgstr "వైఫల్యం"
+
+#: lib/HealthPage.php
+msgid "Last Success"
+msgstr "చివరి విజయం"
+
+#: lib/HealthPage.php
+msgid "Mean Latency"
+msgstr "సగటు జాప్యం"
+
+#: lib/HealthPage.php
+msgid "Reachability"
+msgstr "చేరుకోగల స్థితి"
+
+#: lib/HealthPage.php
+msgid "Requests"
+msgstr "అభ్యర్థనలు"
+
+#: lib/HealthPage.php
+msgid "Source"
+msgstr "మూలం"
+
+#: lib/HealthPage.php
+#, php-format
+msgid "newest %s"
+msgstr "సరికొత్త %s"
+
+#: lib/HealthPage.php
+msgid "disabled"
+msgstr "నిలిపివేయబడింది"
+
+#: lib/HealthPage.php
+msgid "ok"
+msgstr "సరే"
+
+#: lib/HealthPage.php
+msgid "stale"
+msgstr "పాతది"
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The vault key file cannot be used: %s. Stored passwords cannot be read or written until it is fixed."
+msgstr "వాల్ట్ కీ ఫైల్‌ను ఉపయోగించలేము: %s. దీనిని సరిచేసే వరకు నిల్వ చేసిన పాస్‌వర్డ్‌లను చదవడం లేదా వ్రాయడం సాధ్యం కాదు."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d took %.0f seconds, more than its budget of %d seconds."
+msgstr "పోలర్ %d లోని కలెక్టర్ %.0f సెకన్లు తీసుకుంది, ఇది దాని %d సెకన్ల బడ్జెట్ కంటే ఎక్కువ."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d ran out of time before every BMC was read; the rest resume on the next run. Add workers or raise the budget."
+msgstr "అన్ని BMCలను చదవకముందే పోలర్ %d లోని కలెక్టర్ సమయం ముగిసింది; మిగిలినవి తదుపరి అమలులో కొనసాగుతాయి. వర్కర్లను జోడించండి లేదా బడ్జెట్‌ను పెంచండి."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d last ran %s."
+msgstr "పోలర్ %d లోని కలెక్టర్ చివరిసారిగా నడిచిన సమయం: %s."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: TLS verification is off. Anyone on the path can read its traffic, including the BMC password."
+msgstr "%s: TLS ధృవీకరణ ఆఫ్‌లో ఉంది. మార్గంలో ఉన్న ఎవరైనా BMC పాస్‌వర్డ్‌తో సహా దాని ట్రాఫిక్‌ను చదవగలరు."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: uses Basic authentication because the BMC offers no session service; every request carries the password."
+msgstr "%s: BMC ఎటువంటి సెషన్ సేవను అందించనందున Basic ప్రామాణీకరణను ఉపయోగిస్తుంది; ప్రతి అభ్యర్థన పాస్‌వర్డ్‌ను తీసుకువెళుతుంది."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: a session may have been left open on the BMC; the next run deletes it after logging in."
+msgstr "%s: BMCలో ఒక సెషన్ తెరిచి ఉండిపోవచ్చు; తదుపరి అమలు లాగిన్ అయిన తర్వాత దానిని తొలగిస్తుంది."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: %d session logins in a row lost their response, so logins stopped. Check the BMC session list, then use Retry Now."
+msgstr "%s: వరుసగా %d సెషన్ లాగిన్‌లకు ప్రతిస్పందన అందలేదు, కాబట్టి లాగిన్‌లు ఆగిపోయాయి. BMC సెషన్ జాబితాను తనిఖీ చేసి, ఆపై ఇప్పుడే మళ్లీ ప్రయత్నించండి ని ఉపయోగించండి."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: the BMC rejected the credential. It is not tried again until the credential changes."
+msgstr "%s: BMC క్రెడెన్షియల్‌ను తిరస్కరించింది. క్రెడెన్షియల్ మారే వరకు మళ్లీ ప్రయత్నించబడదు."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: its credential is missing or has no stored password."
+msgstr "%s: దీని క్రెడెన్షియల్ లేదు లేదా నిల్వ చేసిన పాస్‌వర్డ్ లేదు."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: %d links in its responses pointed elsewhere and were ignored."
+msgstr "%s: దీని ప్రతిస్పందనలలోని %d లింక్‌లు మరెక్కడికో సూచించాయి మరియు విస్మరించబడ్డాయి."
+
+#: lib/Html.php
+#, php-format
+msgid "%d seconds ago"
+msgstr "%d సెకన్ల క్రితం"
+
+#: lib/Html.php
+#, php-format
+msgid "%d minutes ago"
+msgstr "%d నిమిషాల క్రితం"
+
+#: lib/Html.php
+#, php-format
+msgid "%d hours ago"
+msgstr "%d గంటల క్రితం"
+
+#: lib/Html.php
+#, php-format
+msgid "%d days ago"
+msgstr "%d రోజుల క్రితం"
+
+#: lib/OperatorPage.php
+msgid "Review the recorded observations below. Acknowledgments are personal to this session, expire when observations change, and never suppress alerts or change health."
+msgstr "దిగువ నమోదు చేసిన పరిశీలనలను సమీక్షించండి. అంగీకారాలు ఈ సెషన్‌కు వ్యక్తిగతమైనవి, పరిశీలనలు మారినప్పుడు గడువు ముగుస్తాయి మరియు హెచ్చరికలను ఎప్పుడూ అణచివేయవు లేదా ఆరోగ్యాన్ని మార్చవు."
+
+#: lib/OperatorPage.php lib/Pages.php
+msgid "Redfish Operations"
+msgstr "Redfish కార్యకలాపాలు"
+
+#: lib/OperatorPage.php
+msgid "Investigation"
+msgstr "పరిశోధన"
+
+#: lib/OperatorPage.php
+msgid "Object"
+msgstr "ఆబ్జెక్ట్"
+
+#: lib/OperatorPage.php
+msgid "Observed (UTC)"
+msgstr "పరిశీలించబడింది (UTC)"
+
+#: lib/OperatorPage.php
+msgid "Unknown or stale"
+msgstr "తెలియనిది లేదా పాతది"
+
+#: lib/OperatorPage.php
+msgid "Acknowledged; health unchanged."
+msgstr "అంగీకరించబడింది; ఆరోగ్యం మారలేదు."
+
+#: lib/OperatorPage.php
+msgid "Acknowledge"
+msgstr "అంగీకరించండి"
+
+#: lib/OperatorPage.php
+msgid "No observations are available for devices you may access."
+msgstr "మీరు యాక్సెస్ చేయగల పరికరాలకు ఎటువంటి పరిశీలనలు అందుబాటులో లేవు."
+
+#: lib/Pages.php
+msgid "Redfish Operator"
+msgstr "Redfish ఆపరేటర్"
+
+#: lib/Pages.php
+msgid "Redfish View"
+msgstr "Redfish వీక్షణ"
+
+#: lib/Pages.php
+msgid "Redfish Admin"
+msgstr "Redfish నిర్వాహకుడు"
+
+#: lib/Pages.php
+msgid "Redfish Health"
+msgstr "Redfish ఆరోగ్యం"
+
+#: lib/Settings.php
+#, php-format
+msgid "%s Default %d, from %d to %d."
+msgstr "%s డిఫాల్ట్ %d, %d నుండి %d వరకు."
+
+#: lib/Settings.php
+msgid "Credential Vault"
+msgstr "క్రెడెన్షియల్ వాల్ట్"
+
+#: lib/Settings.php
+msgid "Vault Key File"
+msgstr "వాల్ట్ కీ ఫైల్"
+
+#: lib/Settings.php
+msgid "Absolute path to the 32-byte key that encrypts stored BMC passwords. Create it yourself, outside the web root, readable only by the web server and poller user, in a directory that only root and that user can write; the plugin never creates or writes it. Back it up with the database: without it, stored passwords must be entered again."
+msgstr "నిల్వ చేసిన BMC పాస్‌వర్డ్‌లను గుప్తీకరించే 32-బైట్ కీకి సంపూర్ణ మార్గం. వెబ్ రూట్ వెలుపల, వెబ్ సర్వర్ మరియు పోలర్ వినియోగదారు మాత్రమే చదవగలిగేలా, root మరియు ఆ వినియోగదారు మాత్రమే వ్రాయగలిగే డైరెక్టరీలో మీరే దీనిని సృష్టించండి; ప్లగ్ఇన్ దీనిని ఎప్పుడూ సృష్టించదు లేదా వ్రాయదు. డేటాబేస్‌తో పాటు దీనిని బ్యాకప్ చేయండి: ఇది లేకుండా, నిల్వ చేసిన పాస్‌వర్డ్‌లను మళ్లీ నమోదు చేయాలి."
+
+#: lib/Settings.php
+msgid "Collector"
+msgstr "కలెక్టర్"
+
+#: lib/Settings.php
+msgid "Collection Interval"
+msgstr "సేకరణ విరామం"
+
+#: lib/Settings.php
+msgid "Seconds between reads of each BMC."
+msgstr "ప్రతి BMC చదవడానికి మధ్య ఉండే సెకన్లు."
+
+#: lib/Settings.php
+msgid "Rediscovery Interval"
+msgstr "పునఃశోధన విరామం"
+
+#: lib/Settings.php
+msgid "Seconds between full resource discoveries of each BMC. A BMC is also rediscovered at once when a known resource disappears or changes type."
+msgstr "ప్రతి BMC యొక్క పూర్తి వనరుల ఆవిష్కరణల మధ్య ఉండే సెకన్లు. తెలిసిన వనరు అదృశ్యమైనప్పుడు లేదా రకాన్ని మార్చినప్పుడు కూడా BMC వెంటనే మళ్లీ కనుగొనబడుతుంది."
+
+#: lib/Settings.php
+msgid "Collector Time Budget"
+msgstr "కలెక్టర్ సమయ బడ్జెట్"
+
+#: lib/Settings.php
+msgid "Seconds one collector run may spend before it stops starting new BMCs. Keep it below the poller interval; unfinished BMCs resume on the next run."
+msgstr "కొత్త BMCలను ప్రారంభించడం ఆపడానికి ముందు ఒక కలెక్టర్ అమలు గడపగల సెకన్లు. దీనిని పోలర్ విరామం కంటే తక్కువగా ఉంచండి; అసంపూర్తిగా ఉన్న BMCలు తదుపరి అమలులో కొనసాగుతాయి."
+
+#: lib/Settings.php
+msgid "BMCs read in parallel. Each BMC is read by one worker at a time."
+msgstr "సమాంతరంగా చదవబడే BMCలు. ప్రతి BMC ఒకేసారి ఒక వర్కర్ ద్వారా చదవబడుతుంది."
+
+#: lib/Settings.php
+msgid "Collector Workers"
+msgstr "కలెక్టర్ వర్కర్లు"
+
+#: lib/Settings.php
+msgid "Connect Timeout"
+msgstr "కనెక్ట్ టైమ్‌అవుట్"
+
+#: lib/Settings.php
+msgid "Seconds allowed for the TCP connection and TLS handshake to a BMC."
+msgstr "BMCకి TCP కనెక్షన్ మరియు TLS హ్యాండ్‌షేక్ కోసం అనుమతించబడిన సెకన్లు."
+
+#: lib/Settings.php
+msgid "Request Timeout"
+msgstr "అభ్యర్థన గడువు"
+
+#: lib/Settings.php
+msgid "Seconds allowed for one whole request to a BMC, including the connection."
+msgstr "కనెక్షన్‌తో సహా BMCకి ఒక పూర్తి అభ్యర్థన కోసం అనుమతించబడిన సెకన్లు."
+
+#: lib/Settings.php
+msgid "KiB accepted in one BMC response body; a larger response is refused."
+msgstr "ఒక BMC ప్రతిస్పందన బాడీలో అంగీకరించబడే KiB; అంతకంటే పెద్ద ప్రతిస్పందన తిరస్కరించబడుతుంది."
+
+#: lib/Settings.php
+msgid "Maximum Response Size"
+msgstr "గరిష్ట ప్రతిస్పందన పరిమాణం"
+
+#: lib/Settings.php
+msgid "Freshness"
+msgstr "తాజాదనం"
+
+#: lib/Settings.php
+msgid "Collection intervals after which a reading is shown as delayed."
+msgstr "ఒక రీడింగ్ ఆలస్యమైనదిగా చూపబడే సేకరణ విరామాల సంఖ్య."
+
+#: lib/Settings.php
+msgid "Delayed After"
+msgstr "ఆలస్యంగా పరిగణించే సమయం"
+
+#: lib/Settings.php
+msgid "Collection intervals after which a reading is stale and reads as unknown. Always at least one more than Delayed After."
+msgstr "ఒక రీడింగ్ పాతదిగా మరియు తెలియనిదిగా చూపబడే సేకరణ విరామాల సంఖ్య. ఎల్లప్పుడూ 'ఆలస్యంగా పరిగణించే సమయం' కంటే కనీసం ఒకటి ఎక్కువ ఉండాలి."
+
+#: lib/Settings.php
+msgid "Stale After"
+msgstr "దీని తర్వాత పాతదిగా గుర్తించు"
+
+#: lib/Settings.php
+msgid "Uninstall"
+msgstr "అన్‌ఇన్‌స్టాల్ చేయండి"
+
+#: lib/Settings.php
+msgid "Keep Plugin Tables on Uninstall"
+msgstr "అన్‌ఇన్‌స్టాల్ చేసినప్పుడు ప్లగిన్ పట్టికలను ఉంచండి"
+
+#: lib/Settings.php
+msgid "When checked, uninstalling the plugin keeps its BMC registry, encrypted passwords, and reading cache. Clear it to have the uninstall drop them. Uninstall never touches Cacti devices, graphs, or BMCs, including devices the plugin created."
+msgstr "ఎంచుకున్నప్పుడు, ప్లగ్ఇన్‌ను అన్‌ఇన్‌స్టాల్ చేయడం వలన దాని BMC రిజిస్ట్రీ, గుప్తీకరించిన పాస్‌వర్డ్‌లు మరియు రీడింగ్ క్యాష్ అలాగే ఉంటాయి. అన్‌ఇన్‌స్టాల్ వాటిని తొలగించడానికి దీనిని క్లియర్ చేయండి. ప్లగ్ఇన్ సృష్టించిన పరికరాలతో సహా Cacti పరికరాలు, గ్రాఫ్‌లు లేదా BMCలను అన్‌ఇన్‌స్టాల్ ఎప్పుడూ తాకదు."
+
+#: lib/TlsMode.php
+msgid "Verify against the system CA store"
+msgstr "సిస్టమ్ CA స్టోర్‌తో ధృవీకరించండి"
+
+#: lib/TlsMode.php
+msgid "Verify against a CA bundle file"
+msgstr "CA బండిల్ ఫైల్‌తో ధృవీకరించండి"
+
+#: lib/TlsMode.php
+msgid "Pinned public key (SHA-256)"
+msgstr "పిన్ చేసిన పబ్లిక్ కీ (SHA-256)"
+
+#: lib/TlsMode.php
+msgid "Do not verify (unsafe)"
+msgstr "ధృవీకరించవద్దు (అసురక్షితం)"
+
+#: redfish_bmcs.php
+msgid "You do not have access to the Cacti device of this BMC."
+msgstr "ఈ BMC యొక్క Cacti పరికరానికి మీకు ప్రాప్యత లేదు."
+
+#: redfish_bmcs.php
+msgid "The BMC could not be saved."
+msgstr "BMCని సేవ్ చేయడం సాధ్యం కాలేదు."
+
+#: redfish_bmcs.php
+msgid "The BMC was saved."
+msgstr "BMC సేవ్ చేయబడింది."
+
+#: redfish_bmcs.php
+msgid "The BMC and its cached data were deleted. Its Cacti device was left in place."
+msgstr "BMC మరియు దాని క్యాష్ చేసిన డేటా తొలగించబడ్డాయి. దీని Cacti పరికరం అలాగే ఉంచబడింది."
+
+#: redfish_bmcs.php
+msgid "Backoff and held failures were cleared; the collector reads the BMC on its next run."
+msgstr "బ్యాక్‌ఆఫ్ మరియు నిలిపివేసిన వైఫల్యాలు క్లియర్ చేయబడ్డాయి; కలెక్టర్ తన తదుపరి అమలులో BMCని చదువుతుంది."
+
+#: redfish_bmcs.php
+msgid "Adding devices and graphs needs Cacti's device management permission."
+msgstr "పరికరాలు మరియు గ్రాఫ్‌లను జోడించడానికి Cacti పరికర నిర్వహణ అనుమతి అవసరం."
+
+#: redfish_bmcs.php
+msgid "The device of this BMC was deleted. Choose another device, or none, on the BMC form first."
+msgstr "ఈ BMC యొక్క పరికరం తొలగించబడింది. ముందుగా BMC ఫారమ్‌లో మరొక పరికరాన్ని ఎంచుకోండి లేదా ఏదీ వద్దు అని ఎంచుకోండి."
+
+#: redfish_bmcs.php
+#, php-format
+msgid "The data queries were indexed again and %d graphs were added."
+msgstr "డేటా ప్రశ్నలు మళ్లీ సూచిక చేయబడ్డాయి మరియు %d గ్రాఫ్‌లు జోడించబడ్డాయి."
+
+#: redfish_bmcs.php
+msgid "The device was created with its Redfish graphs."
+msgstr "దాని Redfish గ్రాఫ్‌లతో పరికరం సృష్టించబడింది."
+
+#: redfish_bmcs.php
+msgid "Installing the Redfish templates needs Cacti's Import Templates permission."
+msgstr "Redfish టెంప్లేట్‌లను ఇన్‌స్టాల్ చేయడానికి Cacti యొక్క టెంప్లేట్‌లను దిగుమతి చేసే అనుమతి అవసరం."
+
+#: redfish_bmcs.php
+msgid "The Redfish templates are installed."
+msgstr "Redfish టెంప్లేట్‌లు ఇన్‌స్టాల్ చేయబడ్డాయి."
+
+#: redfish_bmcs.php
+msgid "The Redfish templates could not be installed. The health page shows why."
+msgstr "Redfish టెంప్లేట్‌లను ఇన్‌స్టాల్ చేయడం సాధ్యం కాలేదు. ఆరోగ్య పేజీ కారణాన్ని చూపుతుంది."
+
+#: redfish_bmcs.php
+msgid "The import could not be saved; nothing was imported."
+msgstr "దిగుమతిని సేవ్ చేయడం సాధ్యం కాలేదు; ఏదీ దిగుమతి చేయబడలేదు."
+
+#: redfish_bmcs.php
+#, php-format
+msgid "%d BMCs were imported."
+msgstr "%d BMCలు దిగుమతి చేయబడ్డాయి."
+
+#: redfish_credentials.php
+msgid "This credential is used by a BMC on a Cacti device you do not have access to, so it cannot be changed here."
+msgstr "మీకు ప్రాప్యత లేని Cacti పరికరంలోని BMC ద్వారా ఈ క్రెడెన్షియల్ ఉపయోగించబడుతోంది, కాబట్టి దీనిని ఇక్కడ మార్చడం సాధ్యం కాదు."
+
+#: redfish_credentials.php
+msgid "Name: another credential already uses this name."
+msgstr "పేరు: మరొక క్రెడెన్షియల్ ఇప్పటికే ఈ పేరును ఉపయోగిస్తోంది."
+
+#: redfish_credentials.php
+msgid "User Name: enter 1 to 255 characters without control characters."
+msgstr "వినియోగదారు పేరు: నియంత్రణ అక్షరాలు లేకుండా 1 నుండి 255 అక్షరాలను నమోదు చేయండి."
+
+#: redfish_credentials.php
+msgid "Password: enter the password of the BMC account."
+msgstr "పాస్‌వర్డ్: BMC ఖాతా యొక్క పాస్‌వర్డ్‌ను నమోదు చేయండి."
+
+#: redfish_credentials.php
+#, php-format
+msgid "The credential was saved, but the password was not stored: %s"
+msgstr "క్రెడెన్షియల్ సేవ్ చేయబడింది, కానీ పాస్‌వర్డ్ నిల్వ చేయబడలేదు: %s"
+
+#: redfish_credentials.php
+msgid "The credential could not be saved."
+msgstr "క్రెడెన్షియల్‌ను సేవ్ చేయడం సాధ్యం కాలేదు."
+
+#: redfish_credentials.php
+msgid "The credential was saved."
+msgstr "క్రెడెన్షియల్ సేవ్ చేయబడింది."
+
+#: redfish_credentials.php
+msgid "The credential and its stored password were deleted."
+msgstr "క్రెడెన్షియల్ మరియు దాని నిల్వ చేసిన పాస్‌వర్డ్ తొలగించబడ్డాయి."
+
+#: redfish_credentials.php
+msgid "The credential was not deleted. A credential in use by a BMC cannot be deleted."
+msgstr "క్రెడెన్షియల్ తొలగించబడలేదు. BMC ఉపయోగంలో ఉన్న క్రెడెన్షియల్‌ను తొలగించడం సాధ్యం కాదు."
+
+#: redfish_operator.php
+msgid "Retry collection"
+msgstr "సేకరణను మళ్లీ ప్రయత్నించండి"
+
+#: redfish_operator.php
+msgid "Monitoring view"
+msgstr "పర్యవేక్షణ వీక్షణ"
+
+#: redfish_operator.php
+msgid "Observations could not be read. Ask an administrator to check the plugin log."
+msgstr "పరిశీలనలను చదవలేకపోయాము. ప్లగిన్ లాగ్‌ను తనిఖీ చేయమని నిర్వాహకుడిని అడగండి."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires PHP %s or later. This server runs PHP %s, so the plugin was not installed or enabled."
+msgstr "Redfish ప్లగ్ఇన్‌కు PHP %s లేదా ఆ తర్వాతి వెర్షన్ అవసరం. ఈ సర్వర్ PHP %s పై నడుస్తోంది, కాబట్టి ప్లగ్ఇన్ ఇన్‌స్టాల్ చేయబడలేదు లేదా ప్రారంభించబడలేదు."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires the PHP extensions %s, which this server does not load, so the plugin was not installed or enabled."
+msgstr "Redfish ప్లగ్ఇన్‌కు PHP పొడిగింపులు %s అవసరం, వీటిని ఈ సర్వర్ లోడ్ చేయదు, కాబట్టి ప్లగ్ఇన్ ఇన్‌స్టాల్ చేయబడలేదు లేదా ప్రారంభించబడలేదు."
+
+#: setup.php
+msgid "Redfish"
+msgstr "Redfish"
+
+#: setup.php
+msgid "The Redfish plugin is not enabled."
+msgstr "Redfish ప్లగ్ఇన్ ప్రారంభించబడలేదు."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires PHP %s or later."
+msgstr "Redfish ప్లగ్ఇన్‌కు PHP %s లేదా ఆ తర్వాతి వెర్షన్ అవసరం."
+
+#: setup.php
+msgid "Management"
+msgstr "నిర్వహణ"

@@ -1,0 +1,970 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: 2026 Thomas Vincent <thomasvincent@gmail.com>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: redfish 0.1.0-dev\n"
+"Report-Msgid-Bugs-To: https://github.com/somethingwithproof/plugin_redfish/issues\n"
+"PO-Revision-Date: 2026-11-26 00:00+0000\n"
+"Last-Translator: Thomas Vincent <thomasvincent@gmail.com>\n"
+"Language-Team: Thomas Vincent <thomasvincent@gmail.com>\n"
+"Language: rw-RW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: include/operator.php
+msgid "Check collection freshness and the device graphs. Retry releases a collection hold for the next scheduled run; it does not contact the BMC now."
+msgstr "Suzuma ubushya bw'ikusanya n'ibishushanyo by'igikoresho. \"Ongera ugerageze\" irekura ihagarikwa ry'ikusanya ku gikorwa giteganyijwe gikurikira; ntihamagara BMC ubu."
+
+#: lib/BmcImport.php
+msgid "The file is empty or larger than 1 MiB."
+msgstr "Dosiye irimo ubusa cyangwa iruta 1 MiB."
+
+#: lib/BmcImport.php
+msgid "The file could not be read."
+msgstr "Dosiye ntiyashoboye gusomwa."
+
+#: lib/BmcImport.php
+msgid "The file has no header row."
+msgstr "Dosiye nta murongo w'umutwe ifite."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The file has a column named \"%s\". Import files must not carry secrets; name a stored credential in the credential column instead. Nothing was imported."
+msgstr "Dosiye ifite inkingi yitwa \"%s\". Amadosiye yinjizwa ntagomba kugira amabanga; ahubwo vuga izina ry'ibyangombwa byo kwinjira bibitse mu nkingi ya credential. Nta cyinjijwe."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The header must name only these columns, each once, including name, address, and credential: %s."
+msgstr "Umutwe ugomba kuvuga gusa izi nkingi, buri imwe rimwe, harimo name, address, na credential: %s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The file has more than %d rows."
+msgstr "Dosiye ifite imirongo irenga %d."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: expected %d fields, found %d."
+msgstr "Umurongo %d: hateganijwe ibice %d, habonetse %d."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Credential: no stored credential is named \"%s\"."
+msgstr "Ibyangombwa byo kwinjira: nta byangombwa byo kwinjira bibitse byitwa \"%s\"."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: %s"
+msgstr "Umurongo %d: %s"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: the address %s port %d is already registered as %s."
+msgstr "Umurongo %d: aderesi %s umuyoboro %d bisanzwe byanditswe nka %s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "line %d"
+msgstr "umurongo %d"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: the name %s is already used."
+msgstr "Umurongo wa %d: izina %s rirakoreshwa."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: no Cacti device has ID %d."
+msgstr "Umurongo wa %d: nta gikoresho cya Cacti gifite ID %d."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: device %d already has the BMC %s."
+msgstr "Umurongo wa %d: igikoresho %d gisanzwe gifite BMC %s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "of line %d"
+msgstr "y'umurongo wa %d"
+
+#: lib/BmcImport.php
+msgid "The file has no BMC rows."
+msgstr "Idosiye nta mirongo ya BMC ifite."
+
+#: lib/BmcInput.php redfish_credentials.php
+msgid "Name: enter 1 to 100 characters without control characters."
+msgstr "Izina: injiza inyuguti kuva kuri 1 kugeza ku 100 nta nyuguti z'igenzura zirimo."
+
+#: lib/BmcInput.php
+msgid "Address: enter a host name or an IP address only, without a scheme, port, path, or user name. Loopback, link-local, multicast, and unspecified addresses are refused."
+msgstr "Aderesi: andika izina rya mudasobwa (host name) cyangwa aderesi ya IP gusa, utashyizemo porotokole, umuyoboro (port), inzira, cyangwa izina ry'ukoresha. Aderesi za loopback, link-local, multicast, n'izitasobanuwe ntizemerwa."
+
+#: lib/BmcInput.php
+msgid "Port: enter a TCP port from 1 to 65535."
+msgstr "Umuyoboro (Port): andika umuyoboro wa TCP kuva kuri 1 kugeza kuri 65535."
+
+#: lib/BmcInput.php
+msgid "Poller: only the main poller can collect BMCs in this release."
+msgstr "Poller: poller nyamukuru yonyine ni yo ishobora gukusanya za BMC muri iyi verisiyo."
+
+#: lib/BmcInput.php
+msgid "Device: choose a Cacti device or none."
+msgstr "Igikoresho: hitamo igikoresho cya Cacti cyangwa nta na kimwe."
+
+#: lib/BmcInput.php lib/BmcsPage.php
+msgid "Credential: choose a stored credential."
+msgstr "Umwirondoro wo kwinjira: hitamo umwirondoro wabitswe."
+
+#: lib/BmcInput.php
+msgid "TLS Verification: choose one of the listed modes."
+msgstr "Igenzura rya TLS: hitamo bumwe mu buryo bwavuzwe."
+
+#: lib/BmcInput.php
+msgid "CA Bundle File: enter an absolute path without control characters, at most 512 characters."
+msgstr "Idosiye y'ishami rya CA: andika inzira yuzuye itarimo inyuguti zigenzura, itarengeje inyuguti 512."
+
+#: lib/BmcInput.php
+msgid "Public Key Pin: enter the base64 SHA-256 hash of the BMC public key, optionally prefixed with sha256//."
+msgstr "Pini y'urufunguzo rusange: andika hash ya SHA-256 muri base64 y'urufunguzo rusange rwa BMC, ushobora kubanzirizaho sha256//."
+
+#: lib/BmcRepository.php
+msgid "another BMC"
+msgstr "indi BMC"
+
+#: lib/BmcsPage.php lib/Pages.php
+msgid "Redfish BMCs"
+msgstr "Za BMC za Redfish"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php lib/OperatorPage.php
+msgid "Actions"
+msgstr "Ibikorwa"
+
+#: lib/BmcsPage.php
+msgid "Address"
+msgstr "Aderesi"
+
+#: lib/BmcsPage.php
+msgid "Basic Fallback"
+msgstr "Uburyo bw'isimbura rya Basic"
+
+#: lib/BmcsPage.php
+msgid "Credential"
+msgstr "Ibyangombwa byo kwinjira"
+
+#: lib/BmcsPage.php
+msgid "Device"
+msgstr "Igikoresho"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Name"
+msgstr "Izina"
+
+#: lib/BmcsPage.php
+msgid "Port"
+msgstr "Port"
+
+#: lib/BmcsPage.php lib/OperatorPage.php
+msgid "State"
+msgstr "Imiterere"
+
+#: lib/BmcsPage.php
+msgid "TLS Verification"
+msgstr "Igenzura rya TLS"
+
+#: lib/BmcsPage.php lib/HealthPage.php
+msgid "No BMCs yet."
+msgstr "Nta za BMC zirashyirwamo."
+
+#: lib/BmcsPage.php
+msgid "Missing"
+msgstr "Birabura"
+
+#: lib/BmcsPage.php
+msgid "Allowed"
+msgstr "Byemewe"
+
+#: lib/BmcsPage.php
+msgid "Off"
+msgstr "Bifunze"
+
+#: lib/BmcsPage.php
+msgid "Disabled"
+msgstr "Byahagaritswe"
+
+#: lib/BmcsPage.php
+msgid "Enabled"
+msgstr "Byafunguwe"
+
+#: lib/BmcsPage.php
+msgid "Retry Now"
+msgstr "Ongera ugerageze ubu"
+
+#: lib/BmcsPage.php
+msgid "Add Graphs"
+msgstr "Ongeraho ibishushanyo"
+
+#: lib/BmcsPage.php
+msgid "Create Device"
+msgstr "Rema Igikoresho"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Delete"
+msgstr "Siba"
+
+#: lib/BmcsPage.php
+msgid "Export the BMC registry as JSON (no secrets)"
+msgstr "Ohereza hanze urutonde rwa BMC nka JSON (nta mabanga arimo)"
+
+#: lib/BmcsPage.php
+msgid "Reinstall the Redfish Templates"
+msgstr "Ongera winjize inyandikorugero za Redfish"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Add Redfish graphs for %s"
+msgstr "Ongeraho ibishushanyo bya Redfish kuri %s"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Create a Cacti device for %s"
+msgstr "Hanga igikoresho cya Cacti kuri %s"
+
+#: lib/BmcsPage.php
+msgid "Everything is already in place. Confirming indexes the data queries again and adds graphs for new members only."
+msgstr "Byose bisanzwe bihari. Kwemeza byongera gushakisha ibibazo by'amakuru (data queries) kandi bikongeraho ibishushanyo ku banyamuryango bashya gusa."
+
+#: lib/BmcsPage.php
+msgid "Confirming adds:"
+msgstr "Kwemeza byongeraho:"
+
+#: lib/BmcsPage.php
+msgid "Existing devices, graphs, and thresholds are not changed."
+msgstr "Ibikoresho bisanzwe, ibishushanyo, n'imipaka ntibihinduka."
+
+#: lib/BmcsPage.php
+msgid "Confirm"
+msgstr "Emeza"
+
+#: lib/BmcsPage.php
+msgid "Cancel"
+msgstr "Hagarika"
+
+#: lib/BmcsPage.php
+msgid "Import BMCs"
+msgstr "Injiza za BMC"
+
+#: lib/BmcsPage.php
+msgid "CSV File"
+msgstr "Idosiye ya CSV"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Header row with columns: %s. Name a stored credential; never put a password in the file. Every row must be valid or nothing is imported."
+msgstr "Umurongo w'umutwe ufite inkingi: %s. Vuga izina ry'umwirondoro wo kwinjira wabitswe; ntugashyire ijambobanga mu idosiye. Buri murongo ugomba kuba wemewe bitabaye ibyo nta kintu cyinjizwa."
+
+#: lib/BmcsPage.php
+msgid "Import"
+msgstr "Injiza"
+
+#: lib/BmcsPage.php
+msgid "Choose a credential"
+msgstr "Hitamo umwirondoro wo kwinjira"
+
+#: lib/BmcsPage.php
+msgid "None"
+msgstr "Nta na kimwe"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Deleted device (ID %d)"
+msgstr "Igikoresho cyasibwe (ID %d)"
+
+#: lib/BmcsPage.php
+msgid "New Redfish BMC"
+msgstr "BMC nshya ya Redfish"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Redfish BMC: %s"
+msgstr "BMC ya Redfish: %s"
+
+#: lib/BmcsPage.php
+msgid "Host name or IP address of the BMC, without https:// or a path."
+msgstr "Izina rya mudasobwa cyangwa aderesi ya IP ya BMC, nta https:// cyangwa inzira birimo."
+
+#: lib/BmcsPage.php
+msgid "Do not verify is logged when set and shown as a warning on the health page while it stays."
+msgstr "Kutagenzura byandikwa mu nyandiko-mvugo iyo bihiswemo kandi bikerekanwa nk'umuburo ku rupapuro rw'ubuzima igihe cyose bikiriho."
+
+#: lib/BmcsPage.php
+msgid "CA Bundle File"
+msgstr "Idosiye y'ishami rya CA"
+
+#: lib/BmcsPage.php
+msgid "For the CA bundle mode: absolute path on the poller to a PEM file that others cannot write."
+msgstr "Ku buryo bw'ishami rya CA: inzira yuzuye kuri poller igana ku idosiye ya PEM abandi badashobora kwandikamo."
+
+#: lib/BmcsPage.php
+msgid "For the pinned mode: base64 SHA-256 of the BMC public key, as sha256//... or the bare hash. A changed key fails until this is updated."
+msgstr "Ku buryo bw'urufunguzo rufashwe: SHA-256 muri base64 y'urufunguzo rusange rwa BMC, nka sha256//... cyangwa hash yonyine. Urufunguzo rwahindutse rurananirwa kugeza igihe ibi bivuguruwe."
+
+#: lib/BmcsPage.php
+msgid "Public Key Pin"
+msgstr "Pini y'urufunguzo rusange"
+
+#: lib/BmcsPage.php
+msgid "Allow Basic Authentication Fallback"
+msgstr "Emera isimbura ry'iyemeza rya Basic"
+
+#: lib/BmcsPage.php
+msgid "Used only when the BMC offers no session service. Every request then carries the password; the health page warns while it is in use."
+msgstr "Bikoreshwa gusa iyo BMC itanga nta serivisi y'isomo (session). Buri busabe icyo gihe buba bujyanye ijambobanga; urupapuro rw'ubuzima rutanga umuburo igihe birimo gukoreshwa."
+
+#: lib/BmcsPage.php
+msgid "The Cacti device of the server this BMC manages. Leave it at none to have the plugin create a device from the list."
+msgstr "Igikoresho cya Cacti cya seriveri iyi BMC iyobora. Bireke kuri nta na kimwe kugira ngo umugereka uhange igikoresho uvanye ku rutonde."
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Save"
+msgstr "Bika"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Address: %s port %d is already registered as %s."
+msgstr "Aderesi: %s umuyoboro %d yanditswe kare nka %s."
+
+#: lib/BmcsPage.php
+msgid "Address: this address and port are already registered."
+msgstr "Aderesi: iyi aderesi n'uyu muyoboro byanditswe kare."
+
+#: lib/BmcsPage.php
+msgid "Name: another BMC already uses this name."
+msgstr "Izina: indi BMC isanzwe ikoresha iri zina."
+
+#: lib/BmcsPage.php
+msgid "Device: no Cacti device has this ID."
+msgstr "Igikoresho: nta gikoresho cya Cacti gifite iyi ID."
+
+#: lib/BmcsPage.php
+msgid "Device: another BMC is already mapped to this device."
+msgstr "Igikoresho: indi BMC isanzwe ihujwe n'iki gikoresho."
+
+#: lib/CredentialsPage.php lib/Pages.php
+msgid "Redfish Credentials"
+msgstr "Imyirondoro yo kwinjira ya Redfish"
+
+#: lib/CredentialsPage.php
+msgid "Password"
+msgstr "Ijambobanga"
+
+#: lib/CredentialsPage.php
+msgid "Used By"
+msgstr "Bikoreshwa na"
+
+#: lib/CredentialsPage.php
+msgid "User Name"
+msgstr "Izina ry'ukoresha"
+
+#: lib/CredentialsPage.php
+msgid "No credentials yet. Create one with a read-only BMC account."
+msgstr "Nta myirondoro yo kwinjira iraboneka. Hanga umwe ukoresheje konti ya BMC yo gusoma gusa."
+
+#: lib/CredentialsPage.php
+msgid "None stored"
+msgstr "Nta na kimwe kibitswe"
+
+#: lib/CredentialsPage.php
+msgid "Stored"
+msgstr "Iyabitswe"
+
+#: lib/CredentialsPage.php
+#, php-format
+msgid "%d BMCs"
+msgstr "Za BMC %d"
+
+#: lib/CredentialsPage.php
+msgid "New Redfish Credential"
+msgstr "Umwirondoro mushya wa Redfish"
+
+#: lib/CredentialsPage.php
+#, php-format
+msgid "Redfish Credential: %s"
+msgstr "Umwirondoro wa Redfish: %s"
+
+#: lib/CredentialsPage.php
+msgid "A BMC account with the ReadOnly role. The plugin never needs a role that can change BMC state."
+msgstr "Konti ya BMC ifite uruhare rwa ReadOnly. Umugereka ntukenera na rimwe uruhare rushobora guhindura imiterere ya BMC."
+
+#: lib/CredentialsPage.php
+msgid "A password is stored. Leave blank to keep it."
+msgstr "Ijambobanga rirabitswe. Hasige harimo ubusa kugira ngo urigumane."
+
+#: lib/CredentialsPage.php
+msgid "Stored encrypted with the vault key."
+msgstr "Byabitswe bisobetse hakoreshejwe urufunguzo rw'ububiko."
+
+#: lib/DeviceProvisioner.php
+msgid "The Redfish templates are not installed completely. Reinstall them from the Redfish BMCs page."
+msgstr "Inyandikorugero za Redfish ntizinjijwe neza zose. Ongera uzinjize uvuye ku rupapuro rwa Za BMC za Redfish."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "A device \"%s\" from the %s device template, polled by poller %d, with availability checks off. Its host name is a reserved name that is never contacted."
+msgstr "Igikoresho \"%s\" giturutse ku nyandikorugero y'igikoresho %s, gikusanywa na poller %d, kandi igenzura ryo kuboneka rifunze. Izina ryacyo rya mudasobwa ni izina ryihariye ritigera rihamagarwa."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "The data query \"%s\", with a graph for each of the %d members known now."
+msgstr "Ikibazo cy'amakuru \"%s\", gifite igishushanyo kuri buri wese mu banyamuryango %d bazwi ubu."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "%d fans or power supplies that were present are no longer reported. They count as failed until you confirm; confirming accepts the members the BMC reports now."
+msgstr "Ibyuma bihuhura umuyaga cyangwa ibitanga umuriro %d byari bihari ntibikigaragara muri raporo. Bibarwa nk'ibyangiritse kugeza igihe wemeje; kwemeza byemera abanyamuryango BMC igaragaza ubu."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "The graph \"%s\", with its \"%s\" data source."
+msgstr "Igishushanyo \"%s\", hamwe n'isoko yacyo y'amakuru \"%s\"."
+
+#: lib/DeviceProvisioner.php
+msgid "The BMC is already mapped to a device."
+msgstr "BMC isanzwe ihujwe n'igikoresho."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "Created by the Redfish plugin for BMC %s. Its values come from the plugin cache; the host name is a reserved name that is never contacted."
+msgstr "Byahanzwe n'umugereka wa Redfish kuri BMC %s. Agaciro kayo gaturuka mu bubiko bw'agateganyo bw'umugereka; izina rya mudasobwa ni izina ryihariye ritigera rihamagarwa."
+
+#: lib/DeviceProvisioner.php
+msgid "Cacti refused to create the device. See the Cacti log."
+msgstr "Cacti yanze guhanga igikoresho. Reba inyandiko-mvugo ya Cacti."
+
+#: lib/DeviceProvisioner.php
+msgid "The new device would be hidden from you by your device permissions, so it was removed again. Ask an administrator to grant access, or map the BMC to a device you can see."
+msgstr "Igikoresho gishya cyari kuba gihishwe kuri wowe n'uburenganzira bwawe bw'ibikoresho, bityo cyakuweho. Saba umuyobozi kuguha uburenganzira, cyangwa uhuze BMC n'igikoresho ushobora kubona."
+
+#: lib/DeviceProvisioner.php
+msgid "The BMC was mapped to a device by someone else meanwhile, or could not be mapped, so the new device was removed again. Reload the page and check its mapping."
+msgstr "Hagati aho BMC yahujwe n'igikoresho n'undi muntu, cyangwa ntiyashoboye guhuzwa, bityo igikoresho gishya cyakuweho. Ongera utangize urupapuro kandi ugenzure ihuzwa ryacyo."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "The Redfish templates could not be installed: %s"
+msgstr "Inyandikorugero za Redfish ntizashoboye kwinjizwa: %s"
+
+#: lib/DeviceWarnings.php
+msgid "The Redfish templates are not installed or not current. Reinstall them from the Redfish BMCs page."
+msgstr "Inyandikorugero za Redfish ntizinjijwe cyangwa ntizigezweho. Ongera uzinjize uvuye ku rupapuro rwa Za BMC za Redfish."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "%s: its Cacti device was deleted. Map it to another device or create one from the BMCs page."
+msgstr "%s: igikoresho cyayo cya Cacti cyarasibwe. Gihuze n'ikindi gikoresho cyangwa uhange igishya uvuye ku rupapuro rwa za BMC."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "%s: its device is polled by poller %d but the BMC is read by poller %d. Move one of them so both use the same poller, or its graphs can read as unknown."
+msgstr "%s: igikoresho cyayo gikusanywa na poller %d ariko BMC isomwa na poller %d. Imura kimwe muri byo kugira ngo byombi bikoreshe poller imwe, bitabaye ibyo ibishushanyo byayo bishobora kugaragara nk'ibitazwi."
+
+#: lib/GraphLinks.php
+msgid "Redfish graphs of this device"
+msgstr "Ibishushanyo bya Redfish by'iki gikoresho"
+
+#: lib/HealthPage.php
+msgid "Redfish Warnings"
+msgstr "Imiburo ya Redfish"
+
+#: lib/HealthPage.php
+msgid "No warnings."
+msgstr "Nta miburo."
+
+#: lib/HealthPage.php
+msgid "Redfish Collector"
+msgstr "Umukusanya wa Redfish"
+
+#: lib/HealthPage.php
+msgid "BMCs"
+msgstr "Za BMC"
+
+#: lib/HealthPage.php
+msgid "Duration / Interval"
+msgstr "Igihe bimara / Intera"
+
+#: lib/HealthPage.php
+msgid "Last Run"
+msgstr "Inshuro iheruka"
+
+#: lib/HealthPage.php
+msgid "Poller"
+msgstr "Poller"
+
+#: lib/HealthPage.php
+msgid "Read"
+msgstr "Gusoma"
+
+#: lib/HealthPage.php
+msgid "Requests per BMC"
+msgstr "Ubusabe kuri buri BMC"
+
+#: lib/HealthPage.php
+msgid "Workers"
+msgstr "Abakozi (Workers)"
+
+#: lib/HealthPage.php
+msgid "The collector has not run yet."
+msgstr "Umukusanya ntarakora na rimwe."
+
+#: lib/HealthPage.php lib/OperatorPage.php
+msgid "Never"
+msgstr "Nta na rimwe"
+
+#: lib/HealthPage.php
+msgid "Redfish BMC Status"
+msgstr "Imiterere ya BMC ya Redfish"
+
+#: lib/HealthPage.php
+msgid "Authentication"
+msgstr "Iyemeza"
+
+#: lib/HealthPage.php
+msgid "BMC"
+msgstr "BMC"
+
+#: lib/HealthPage.php
+msgid "Data"
+msgstr "Amakuru"
+
+#: lib/HealthPage.php
+msgid "Discovery"
+msgstr "Ishakisha"
+
+#: lib/HealthPage.php
+msgid "Failure"
+msgstr "Ikosa"
+
+#: lib/HealthPage.php
+msgid "Last Success"
+msgstr "Iheruka kugenda neza"
+
+#: lib/HealthPage.php
+msgid "Mean Latency"
+msgstr "Impuzandengo y'igihe cyo gutegereza"
+
+#: lib/HealthPage.php
+msgid "Reachability"
+msgstr "Ukuboneka"
+
+#: lib/HealthPage.php
+msgid "Requests"
+msgstr "Ubusabe"
+
+#: lib/HealthPage.php
+msgid "Source"
+msgstr "Isoko"
+
+#: lib/HealthPage.php
+#, php-format
+msgid "newest %s"
+msgstr "gishya cyane %s"
+
+#: lib/HealthPage.php
+msgid "disabled"
+msgstr "yahagaritswe"
+
+#: lib/HealthPage.php
+msgid "ok"
+msgstr "ni byiza"
+
+#: lib/HealthPage.php
+msgid "stale"
+msgstr "cyashaje"
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The vault key file cannot be used: %s. Stored passwords cannot be read or written until it is fixed."
+msgstr "Idosiye y'urufunguzo rw'ububiko ntishobora gukoreshwa: %s. Amagambobanga abitswe ntashobora gusomwa cyangwa kwandikwa kugeza igihe bikemutse."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d took %.0f seconds, more than its budget of %d seconds."
+msgstr "Umukusanya uri kuri poller %d yamaze amasegonda %.0f, birenze igihe yagenewe cy'amasegonda %d."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d ran out of time before every BMC was read; the rest resume on the next run. Add workers or raise the budget."
+msgstr "Umukusanya uri kuri poller %d yashiranywe n'igihe mbere y'uko buri BMC isomwa; izisigaye zizakomeza ku ikorwa rikurikira. Ongeramo abakozi (workers) cyangwa wongere igihe cyagenewe."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d last ran %s."
+msgstr "Umukusanya uri kuri poller %d yaherukaga gukora %s."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: TLS verification is off. Anyone on the path can read its traffic, including the BMC password."
+msgstr "%s: igenzura rya TLS rirafunze. Umuntu wese uri mu nzira ashobora gusoma amakuru yayo, harimo n'ijambobanga rya BMC."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: uses Basic authentication because the BMC offers no session service; every request carries the password."
+msgstr "%s: ikoresha iyemeza rya Basic kubera ko BMC idatanga serivisi y'isomo (session); buri busabe buba bujyanye ijambobanga."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: a session may have been left open on the BMC; the next run deletes it after logging in."
+msgstr "%s: isomo (session) rishobora kuba ryasigaye rifunguye kuri BMC; ikorwa rikurikira rizarisiba nyuma yo kwinjira."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: %d session logins in a row lost their response, so logins stopped. Check the BMC session list, then use Retry Now."
+msgstr "%s: kwinjira mu isomo inshuro %d zikurikiranya kwabuze igisubizo, bityo kwinjira birahagarara. Genzura urutonde rw'amasomo rwa BMC, hanyuma ukoreshe Ongera ugerageze ubu."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: the BMC rejected the credential. It is not tried again until the credential changes."
+msgstr "%s: BMC yanze umwirondoro wo kwinjira. Ntizongera kugeragezwa kugeza igihe umwirondoro uhindukiye."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: its credential is missing or has no stored password."
+msgstr "%s: umwirondoro wayo wo kwinjira urabura cyangwa nta jambobanga ribitswe ufite."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: %d links in its responses pointed elsewhere and were ignored."
+msgstr "%s: amahuza %d mu bisubizo byayo yerekezaga ahandi kandi yirengagijwe."
+
+#: lib/Html.php
+#, php-format
+msgid "%d seconds ago"
+msgstr "hashize amasegonda %d"
+
+#: lib/Html.php
+#, php-format
+msgid "%d minutes ago"
+msgstr "hashize iminota %d"
+
+#: lib/Html.php
+#, php-format
+msgid "%d hours ago"
+msgstr "hashize amasaha %d"
+
+#: lib/Html.php
+#, php-format
+msgid "%d days ago"
+msgstr "hashize iminsi %d"
+
+#: lib/OperatorPage.php
+msgid "Review the recorded observations below. Acknowledgments are personal to this session, expire when observations change, and never suppress alerts or change health."
+msgstr "Suzuma ibyagaragaye byanditswe hasi aha. Kwemeza ko wabibonye ni umwihariko w'iki gikorwa cyo kwinjira, birarangira iyo ibyagaragaye bihindutse, kandi ntibihagarika na rimwe impuruza cyangwa ngo bihindure ubuzima bwa sisitemu."
+
+#: lib/OperatorPage.php lib/Pages.php
+msgid "Redfish Operations"
+msgstr "Ibikorwa bya Redfish"
+
+#: lib/OperatorPage.php
+msgid "Investigation"
+msgstr "Iperereza"
+
+#: lib/OperatorPage.php
+msgid "Object"
+msgstr "Ikintu"
+
+#: lib/OperatorPage.php
+msgid "Observed (UTC)"
+msgstr "Byagaragaye (UTC)"
+
+#: lib/OperatorPage.php
+msgid "Unknown or stale"
+msgstr "Ntibizwi cyangwa byashaje"
+
+#: lib/OperatorPage.php
+msgid "Acknowledged; health unchanged."
+msgstr "Byemejwe ko byabonywe; ubuzima ntibwahindutse."
+
+#: lib/OperatorPage.php
+msgid "Acknowledge"
+msgstr "Emeza ko wabibonye"
+
+#: lib/OperatorPage.php
+msgid "No observations are available for devices you may access."
+msgstr "Nta byagaragaye biboneka ku bikoresho ufite uburenganzira bwo kugeraho."
+
+#: lib/Pages.php
+msgid "Redfish Operator"
+msgstr "Ukoresha Redfish"
+
+#: lib/Pages.php
+msgid "Redfish View"
+msgstr "Kureba Redfish"
+
+#: lib/Pages.php
+msgid "Redfish Admin"
+msgstr "Umuyobozi wa Redfish"
+
+#: lib/Pages.php
+msgid "Redfish Health"
+msgstr "Ubuzima bwa Redfish"
+
+#: lib/Settings.php
+#, php-format
+msgid "%s Default %d, from %d to %d."
+msgstr "%s Mburabuzi ni %d, kuva kuri %d kugeza kuri %d."
+
+#: lib/Settings.php
+msgid "Credential Vault"
+msgstr "Ububiko bw'ibanga bw'ibyangombwa"
+
+#: lib/Settings.php
+msgid "Vault Key File"
+msgstr "Dosiye y'urufunguzo rw'ububiko bw'ibanga"
+
+#: lib/Settings.php
+msgid "Absolute path to the 32-byte key that encrypts stored BMC passwords. Create it yourself, outside the web root, readable only by the web server and poller user, in a directory that only root and that user can write; the plugin never creates or writes it. Back it up with the database: without it, stored passwords must be entered again."
+msgstr "Inzira yuzuye igana ku rufunguzo rwa bayite 32 rusobeka amagambobanga ya BMC abitswe. Yiremere wowe ubwawe, hanze y'umuzi w'urubuga, isomwa gusa na seriveri y'urubuga n'ukoresha poller, mu bubiko bw'amadosiye root n'uwo mukoresha bonyine bashobora kwandikamo; umugereka ntutigera ururema cyangwa ngo urwandike. Rwubikire hamwe n'ububiko bw'amakuru: udafite urwo rufunguzo, amagambobanga abitswe agomba kongera kwandikwa."
+
+#: lib/Settings.php
+msgid "Collector"
+msgstr "Igikusanyamakuru"
+
+#: lib/Settings.php
+msgid "Collection Interval"
+msgstr "Intera y'ikusanya"
+
+#: lib/Settings.php
+msgid "Seconds between reads of each BMC."
+msgstr "Amasegonda ari hagati y'isomwa rya buri BMC."
+
+#: lib/Settings.php
+msgid "Rediscovery Interval"
+msgstr "Intera yo kongera gutahura"
+
+#: lib/Settings.php
+msgid "Seconds between full resource discoveries of each BMC. A BMC is also rediscovered at once when a known resource disappears or changes type."
+msgstr "Amasegonda ari hagati y'itahura ryuzuye ry'ibikoresho bya buri BMC. BMC inatahuriwa ako kanya iyo igikoresho kizwi kibuze cyangwa gihinduye ubwoko."
+
+#: lib/Settings.php
+msgid "Collector Time Budget"
+msgstr "Igihe cyagenewe igikusanyamakuru"
+
+#: lib/Settings.php
+msgid "Seconds one collector run may spend before it stops starting new BMCs. Keep it below the poller interval; unfinished BMCs resume on the next run."
+msgstr "Amasegonda ikorwa rimwe ry'umukusanya rishobora kumara mbere y'uko rihagarika gutangira za BMC nshya. Bigumane munsi y'intera ya poller; za BMC zitarangiye zikomeza ku ikorwa rikurikira."
+
+#: lib/Settings.php
+msgid "BMCs read in parallel. Each BMC is read by one worker at a time."
+msgstr "Za BMC zisomwa icyarimwe. Buri BMC isomwa n'umukozi (worker) umwe icyarimwe."
+
+#: lib/Settings.php
+msgid "Collector Workers"
+msgstr "Abakozi b'umukusanya"
+
+#: lib/Settings.php
+msgid "Connect Timeout"
+msgstr "Igihe ntarengwa cyo kwihuza"
+
+#: lib/Settings.php
+msgid "Seconds allowed for the TCP connection and TLS handshake to a BMC."
+msgstr "Amasegonda yemewe ku kwihuza kwa TCP n'igenzura ry'itangira rya TLS kuri BMC."
+
+#: lib/Settings.php
+msgid "Request Timeout"
+msgstr "Igihe ntarengwa cy'ubusabe"
+
+#: lib/Settings.php
+msgid "Seconds allowed for one whole request to a BMC, including the connection."
+msgstr "Amasegonda yemewe ku busabe bumwe bwuzuye kuri BMC, harimo n'ukwihuza."
+
+#: lib/Settings.php
+msgid "KiB accepted in one BMC response body; a larger response is refused."
+msgstr "KiB zemewe mu gihimba kimwe cy'igisubizo cya BMC; igisubizo kinini kurushaho kirangwa."
+
+#: lib/Settings.php
+msgid "Maximum Response Size"
+msgstr "Ingano ntarengwa y'igisubizo"
+
+#: lib/Settings.php
+msgid "Freshness"
+msgstr "Ubushyashya bw'amakuru"
+
+#: lib/Settings.php
+msgid "Collection intervals after which a reading is shown as delayed."
+msgstr "Intera zo gukusanya zishira igipimo kikagaragazwa nk'icyatinze."
+
+#: lib/Settings.php
+msgid "Delayed After"
+msgstr "Cyatinze nyuma ya"
+
+#: lib/Settings.php
+msgid "Collection intervals after which a reading is stale and reads as unknown. Always at least one more than Delayed After."
+msgstr "Intera zo gukusanya zishira igipimo kikaba cyashaje kandi kigasomwa nk'ikitazwi. Buri gihe kigomba kuba kirenze nibura rimwe kuri Cyatinze nyuma ya."
+
+#: lib/Settings.php
+msgid "Stale After"
+msgstr "Bita agaciro nyuma ya"
+
+#: lib/Settings.php
+msgid "Uninstall"
+msgstr "Kura muri sisitemu"
+
+#: lib/Settings.php
+msgid "Keep Plugin Tables on Uninstall"
+msgstr "Gumisha imbonerahamwe z'umugereka igihe ukurwa muri sisitemu"
+
+#: lib/Settings.php
+msgid "When checked, uninstalling the plugin keeps its BMC registry, encrypted passwords, and reading cache. Clear it to have the uninstall drop them. Uninstall never touches Cacti devices, graphs, or BMCs, including devices the plugin created."
+msgstr "Iyo bihiswemo, gukuramo umugereka bigumana urutonde rwawo rwa BMC, amagambobanga asobetse, n'ububiko bw'agateganyo bw'ibipimo. Bikureho kugira ngo gukuramo umugereka bibisibe. Gukuramo umugereka ntibikora ku bikoresho bya Cacti, ibishushanyo, cyangwa za BMC, harimo n'ibikoresho umugereka wahanze."
+
+#: lib/TlsMode.php
+msgid "Verify against the system CA store"
+msgstr "Genzura ukoresheje ububiko bwa CA bwa sisitemu"
+
+#: lib/TlsMode.php
+msgid "Verify against a CA bundle file"
+msgstr "Genzura ukoresheje idosiye y'ishami rya CA"
+
+#: lib/TlsMode.php
+msgid "Pinned public key (SHA-256)"
+msgstr "Urufunguzo rusange rufashwe (SHA-256)"
+
+#: lib/TlsMode.php
+msgid "Do not verify (unsafe)"
+msgstr "Ntugenzure (ntibifite umutekano)"
+
+#: redfish_bmcs.php
+msgid "You do not have access to the Cacti device of this BMC."
+msgstr "Ntabwo ufite uburenganzira ku gikoresho cya Cacti cy'iyi BMC."
+
+#: redfish_bmcs.php
+msgid "The BMC could not be saved."
+msgstr "BMC ntiyashoboye kubikwa."
+
+#: redfish_bmcs.php
+msgid "The BMC was saved."
+msgstr "BMC yabitswe."
+
+#: redfish_bmcs.php
+msgid "The BMC and its cached data were deleted. Its Cacti device was left in place."
+msgstr "BMC n'amakuru yayo y'agateganyo byasibwe. Igikoresho cyayo cya Cacti cyasigaye mu mwanya wacyo."
+
+#: redfish_bmcs.php
+msgid "Backoff and held failures were cleared; the collector reads the BMC on its next run."
+msgstr "Gutegereza n'amakosa yari afashwe byahanaguwe; umukusanya asoma BMC ku ikorwa rye rikurikira."
+
+#: redfish_bmcs.php
+msgid "Adding devices and graphs needs Cacti's device management permission."
+msgstr "Kongeraho ibikoresho n'ibishushanyo bisaba uburenganzira bwa Cacti bwo gucunga ibikoresho."
+
+#: redfish_bmcs.php
+msgid "The device of this BMC was deleted. Choose another device, or none, on the BMC form first."
+msgstr "Igikoresho cy'iyi BMC cyarasibwe. Hitamo ikindi gikoresho, cyangwa nta na kimwe, ku ifishi ya BMC mbere."
+
+#: redfish_bmcs.php
+#, php-format
+msgid "The data queries were indexed again and %d graphs were added."
+msgstr "Ibibazo by'amakuru byongeye gushakishwa kandi ibishushanyo %d byongeweho."
+
+#: redfish_bmcs.php
+msgid "The device was created with its Redfish graphs."
+msgstr "Igikoresho cyahanzwe hamwe n'ibishushanyo byacyo bya Redfish."
+
+#: redfish_bmcs.php
+msgid "Installing the Redfish templates needs Cacti's Import Templates permission."
+msgstr "Kwinjiza inyandikorugero za Redfish bisaba uburenganzira bwa Cacti bwo Kwinjiza Inyandikorugero."
+
+#: redfish_bmcs.php
+msgid "The Redfish templates are installed."
+msgstr "Inyandikorugero za Redfish zinjijwe."
+
+#: redfish_bmcs.php
+msgid "The Redfish templates could not be installed. The health page shows why."
+msgstr "Inyandikorugero za Redfish ntizashoboye kwinjizwa. Urupapuro rw'ubuzima rwereka impamvu."
+
+#: redfish_bmcs.php
+msgid "The import could not be saved; nothing was imported."
+msgstr "Iyinjiza ntiryashoboye kubikwa; nta kintu cyinjijwe."
+
+#: redfish_bmcs.php
+#, php-format
+msgid "%d BMCs were imported."
+msgstr "Za BMC %d zinjijwe."
+
+#: redfish_credentials.php
+msgid "This credential is used by a BMC on a Cacti device you do not have access to, so it cannot be changed here."
+msgstr "Uyu mwirondoro wo kwinjira ukoreshwa na BMC iri ku gikoresho cya Cacti udafitiye uburenganzira, bityo ntushobora guhindurwa hano."
+
+#: redfish_credentials.php
+msgid "Name: another credential already uses this name."
+msgstr "Izina: undi mwirondoro wo kwinjira usanzwe ukoresha iri zina."
+
+#: redfish_credentials.php
+msgid "User Name: enter 1 to 255 characters without control characters."
+msgstr "Izina ry'ukoresha: andika inyuguti kuva kuri 1 kugeza kuri 255 zitarimo inyuguti zigenzura."
+
+#: redfish_credentials.php
+msgid "Password: enter the password of the BMC account."
+msgstr "Ijambobanga: andika ijambobanga rya konti ya BMC."
+
+#: redfish_credentials.php
+#, php-format
+msgid "The credential was saved, but the password was not stored: %s"
+msgstr "Umwirondoro wo kwinjira wabitswe, ariko ijambobanga ntiryabitswe: %s"
+
+#: redfish_credentials.php
+msgid "The credential could not be saved."
+msgstr "Umwirondoro wo kwinjira ntiwashoboye kubikwa."
+
+#: redfish_credentials.php
+msgid "The credential was saved."
+msgstr "Umwirondoro wo kwinjira wabitswe."
+
+#: redfish_credentials.php
+msgid "The credential and its stored password were deleted."
+msgstr "Umwirondoro wo kwinjira n'ijambobanga ryawo ribitswe byasibwe."
+
+#: redfish_credentials.php
+msgid "The credential was not deleted. A credential in use by a BMC cannot be deleted."
+msgstr "Umwirondoro wo kwinjira ntiwasibwe. Umwirondoro ukoreshwa na BMC ntushobora gusibwa."
+
+#: redfish_operator.php
+msgid "Retry collection"
+msgstr "Ongera ugerageze gukusanya"
+
+#: redfish_operator.php
+msgid "Monitoring view"
+msgstr "Imboni y'ikurikirana"
+
+#: redfish_operator.php
+msgid "Observations could not be read. Ask an administrator to check the plugin log."
+msgstr "Ibyagaragaye ntibyashoboye gusomwa. Saba umuyobozi kugenzura inyandiko-mvugo y'umugereka."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires PHP %s or later. This server runs PHP %s, so the plugin was not installed or enabled."
+msgstr "Umugereka wa Redfish usaba PHP %s cyangwa iyisumbuyeho. Iyi seriveri ikoresha PHP %s, bityo umugereka ntiwinjijwe cyangwa ngo wemezwe."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires the PHP extensions %s, which this server does not load, so the plugin was not installed or enabled."
+msgstr "Umugereka wa Redfish usaba imigereka ya PHP %s, iyi seriveri idafungura, bityo umugereka ntiwinjijwe cyangwa ngo wemezwe."
+
+#: setup.php
+msgid "Redfish"
+msgstr "Redfish"
+
+#: setup.php
+msgid "The Redfish plugin is not enabled."
+msgstr "Umugereka wa Redfish ntiwemejwe."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires PHP %s or later."
+msgstr "Umugereka wa Redfish usaba PHP %s cyangwa iyisumbuyeho."
+
+#: setup.php
+msgid "Management"
+msgstr "Imicungire"

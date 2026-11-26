@@ -1,0 +1,970 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: 2026 Thomas Vincent <thomasvincent@gmail.com>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: redfish 0.1.0-dev\n"
+"Report-Msgid-Bugs-To: https://github.com/somethingwithproof/plugin_redfish/issues\n"
+"PO-Revision-Date: 2026-11-26 00:00+0000\n"
+"Last-Translator: Thomas Vincent <thomasvincent@gmail.com>\n"
+"Language-Team: Thomas Vincent <thomasvincent@gmail.com>\n"
+"Language: mg-MG\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: include/operator.php
+msgid "Check collection freshness and the device graphs. Retry releases a collection hold for the next scheduled run; it does not contact the BMC now."
+msgstr "Hamarino ny fahavaozan'ny fanangonana sy ny kisarin'ny fitaovana. Ny fiverenana manandrana dia manala ny fanakanana ny fanangonana ho an'ny fandehanana voalahatra manaraka; tsy mifandray amin'ny BMC izao izy."
+
+#: lib/BmcImport.php
+msgid "The file is empty or larger than 1 MiB."
+msgstr "Foana ny rakitra na lehibe noho ny 1 MiB."
+
+#: lib/BmcImport.php
+msgid "The file could not be read."
+msgstr "Tsy azo novakina ny rakitra."
+
+#: lib/BmcImport.php
+msgid "The file has no header row."
+msgstr "Tsy misy andalana lohapejy ny rakitra."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The file has a column named \"%s\". Import files must not carry secrets; name a stored credential in the credential column instead. Nothing was imported."
+msgstr "Misy tsanganana mitondra ny anarana \"%s\" ny rakitra. Tsy tokony hitondra tsiambaratelo ny rakitra ampidirina; tanisao ao amin'ny tsanganana mari-pahazoan-dalana ny anaran'ny mari-pahazoan-dalana voatahiry. Tsy nisy nampidirina."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The header must name only these columns, each once, including name, address, and credential: %s."
+msgstr "Ny lohapejy dia tsy maintsy mitanisa ireto tsanganana ireto ihany, indray mandeha avy, anisan'izany ny name, address, ary credential: %s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The file has more than %d rows."
+msgstr "Misy andalana mihoatra ny %d ny rakitra."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: expected %d fields, found %d."
+msgstr "Andalana %d: saha %d no nandrasana, %d no hita."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Credential: no stored credential is named \"%s\"."
+msgstr "Mari-pahazoan-dalana: tsy misy mari-pahazoan-dalana voatahiry mitondra ny anarana \"%s\"."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: %s"
+msgstr "Andalana %d: %s"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: the address %s port %d is already registered as %s."
+msgstr "Andalana %d: ny adiresy %s seranana %d dia efa voasoratra anarana ho %s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "line %d"
+msgstr "andalana %d"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: the name %s is already used."
+msgstr "Andalana %d: efa ampiasaina ny anarana %s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: no Cacti device has ID %d."
+msgstr "Andalana %d: tsy misy fitaovana Cacti manana ID %d."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: device %d already has the BMC %s."
+msgstr "Andalana %d: ny fitaovana %d dia efa manana ny BMC %s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "of line %d"
+msgstr "amin'ny andalana %d"
+
+#: lib/BmcImport.php
+msgid "The file has no BMC rows."
+msgstr "Tsy misy andalana BMC ny rakitra."
+
+#: lib/BmcInput.php redfish_credentials.php
+msgid "Name: enter 1 to 100 characters without control characters."
+msgstr "Anarana: ampidiro litera na marika 1 hatramin'ny 100 tsy misy marika fanaraha-maso."
+
+#: lib/BmcInput.php
+msgid "Address: enter a host name or an IP address only, without a scheme, port, path, or user name. Loopback, link-local, multicast, and unspecified addresses are refused."
+msgstr "Adiresy: ampidiro ny anaran'ny mpampiantrano na ny adiresy IP ihany, tsy misy rafitra, seranana, lalana, na anaran'ny mpampiasa. Lavina ny adiresy loopback, link-local, multicast, ary ny adiresy tsy voafaritra."
+
+#: lib/BmcInput.php
+msgid "Port: enter a TCP port from 1 to 65535."
+msgstr "Seranana: ampidiro ny seranana TCP manomboka amin'ny 1 ka hatramin'ny 65535."
+
+#: lib/BmcInput.php
+msgid "Poller: only the main poller can collect BMCs in this release."
+msgstr "Poller: ny poller fototra ihany no afaka manangona BMC amin'ity kinova ity."
+
+#: lib/BmcInput.php
+msgid "Device: choose a Cacti device or none."
+msgstr "Fitaovana: misafidiana fitaovana Cacti na tsy misy."
+
+#: lib/BmcInput.php lib/BmcsPage.php
+msgid "Credential: choose a stored credential."
+msgstr "Fahazoan-dalana: misafidiana fahazoan-dalana voatahiry."
+
+#: lib/BmcInput.php
+msgid "TLS Verification: choose one of the listed modes."
+msgstr "Fanamarinana TLS: misafidiana iray amin'ireo fomba voatanisa."
+
+#: lib/BmcInput.php
+msgid "CA Bundle File: enter an absolute path without control characters, at most 512 characters."
+msgstr "Rakitra CA Bundle: ampidiro ny lalana feno tsy misy mari-tsoratra fanaraha-maso, farafahabetsany 512 tarehintsoratra."
+
+#: lib/BmcInput.php
+msgid "Public Key Pin: enter the base64 SHA-256 hash of the BMC public key, optionally prefixed with sha256//."
+msgstr "Pin-n'ny fanalahidy ho an'ny besinimaro: ampidiro ny hash base64 SHA-256 an'ny fanalahidin'ny BMC ho an'ny besinimaro, azo asiana tovona aloha sha256//."
+
+#: lib/BmcRepository.php
+msgid "another BMC"
+msgstr "BMC iray hafa"
+
+#: lib/BmcsPage.php lib/Pages.php
+msgid "Redfish BMCs"
+msgstr "BMC Redfish"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php lib/OperatorPage.php
+msgid "Actions"
+msgstr "Hetsika"
+
+#: lib/BmcsPage.php
+msgid "Address"
+msgstr "Adiresy"
+
+#: lib/BmcsPage.php
+msgid "Basic Fallback"
+msgstr "Fomba fiandry Basic"
+
+#: lib/BmcsPage.php
+msgid "Credential"
+msgstr "Fahazoan-dalana"
+
+#: lib/BmcsPage.php
+msgid "Device"
+msgstr "Fitaovana"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Name"
+msgstr "Anarana"
+
+#: lib/BmcsPage.php
+msgid "Port"
+msgstr "Seranana"
+
+#: lib/BmcsPage.php lib/OperatorPage.php
+msgid "State"
+msgstr "Toetra"
+
+#: lib/BmcsPage.php
+msgid "TLS Verification"
+msgstr "Fanamarinana TLS"
+
+#: lib/BmcsPage.php lib/HealthPage.php
+msgid "No BMCs yet."
+msgstr "Tsy mbola misy BMC."
+
+#: lib/BmcsPage.php
+msgid "Missing"
+msgstr "Tsy hita"
+
+#: lib/BmcsPage.php
+msgid "Allowed"
+msgstr "Ekena"
+
+#: lib/BmcsPage.php
+msgid "Off"
+msgstr "Maty"
+
+#: lib/BmcsPage.php
+msgid "Disabled"
+msgstr "Tsy alefa"
+
+#: lib/BmcsPage.php
+msgid "Enabled"
+msgstr "Alefa"
+
+#: lib/BmcsPage.php
+msgid "Retry Now"
+msgstr "Andramo indray izao"
+
+#: lib/BmcsPage.php
+msgid "Add Graphs"
+msgstr "Ampio grafika"
+
+#: lib/BmcsPage.php
+msgid "Create Device"
+msgstr "Mamorona Fitaovana"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Delete"
+msgstr "Fafao"
+
+#: lib/BmcsPage.php
+msgid "Export the BMC registry as JSON (no secrets)"
+msgstr "Avoahy amin'ny endrika JSON ny rejisitry ny BMC (tsy misy tsiambaratelo)"
+
+#: lib/BmcsPage.php
+msgid "Reinstall the Redfish Templates"
+msgstr "Avereno apetraka ny môdely Redfish"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Add Redfish graphs for %s"
+msgstr "Ampio grafika Redfish ho an'i %s"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Create a Cacti device for %s"
+msgstr "Mamoròna fitaovana Cacti ho an'i %s"
+
+#: lib/BmcsPage.php
+msgid "Everything is already in place. Confirming indexes the data queries again and adds graphs for new members only."
+msgstr "Efa mipetraka avokoa ny zava-drehetra. Ny fanamafisana dia manavao ny fanondroan'ny fangatahana angona ary manampy grafika ho an'ny mpikambana vaovao ihany."
+
+#: lib/BmcsPage.php
+msgid "Confirming adds:"
+msgstr "Ny fanamafisana dia manampy:"
+
+#: lib/BmcsPage.php
+msgid "Existing devices, graphs, and thresholds are not changed."
+msgstr "Tsy miova ireo fitaovana, grafika, ary fetra efa misy."
+
+#: lib/BmcsPage.php
+msgid "Confirm"
+msgstr "Hamafiso"
+
+#: lib/BmcsPage.php
+msgid "Cancel"
+msgstr "Foano"
+
+#: lib/BmcsPage.php
+msgid "Import BMCs"
+msgstr "Ampidiro ny BMC"
+
+#: lib/BmcsPage.php
+msgid "CSV File"
+msgstr "Rakitra CSV"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Header row with columns: %s. Name a stored credential; never put a password in the file. Every row must be valid or nothing is imported."
+msgstr "Andalana lohany misy tsanganana: %s. Tonony ny anaran'ny fahazoan-dalana voatahiry; aza asiana tenimiafina mihitsy ao anaty rakitra. Tsy maintsy manankery avokoa ny andalana rehetra raha tsy izany dia tsy misy nampidirina."
+
+#: lib/BmcsPage.php
+msgid "Import"
+msgstr "Ampidiro"
+
+#: lib/BmcsPage.php
+msgid "Choose a credential"
+msgstr "Misafidiana fahazoan-dalana"
+
+#: lib/BmcsPage.php
+msgid "None"
+msgstr "Tsy misy"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Deleted device (ID %d)"
+msgstr "Fitaovana voafafa (ID %d)"
+
+#: lib/BmcsPage.php
+msgid "New Redfish BMC"
+msgstr "BMC Redfish vaovao"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Redfish BMC: %s"
+msgstr "BMC Redfish: %s"
+
+#: lib/BmcsPage.php
+msgid "Host name or IP address of the BMC, without https:// or a path."
+msgstr "Anaran'ny mpampiantrano na adiresy IP an'ny BMC, tsy misy https:// na lalana."
+
+#: lib/BmcsPage.php
+msgid "Do not verify is logged when set and shown as a warning on the health page while it stays."
+msgstr "Voarakitra an-tsoratra ny tsy fanamarinana rehefa voatendry ary aseho ho fampitandremana ao amin'ny pejin'ny fahasalamana mandritra ny fotoana hijanonany."
+
+#: lib/BmcsPage.php
+msgid "CA Bundle File"
+msgstr "Rakitra CA Bundle"
+
+#: lib/BmcsPage.php
+msgid "For the CA bundle mode: absolute path on the poller to a PEM file that others cannot write."
+msgstr "Ho an'ny fomba CA bundle: lalana feno ao amin'ny poller mankany amin'ny rakitra PEM izay tsy azon'ny hafa soratana."
+
+#: lib/BmcsPage.php
+msgid "For the pinned mode: base64 SHA-256 of the BMC public key, as sha256//... or the bare hash. A changed key fails until this is updated."
+msgstr "Ho an'ny fomba pinned: base64 SHA-256 an'ny fanalahidin'ny BMC ho an'ny besinimaro, amin'ny endrika sha256//... na ny hash fotsiny. Tsy mandeha ny fanalahidy niova raha tsy nohavaozina ity."
+
+#: lib/BmcsPage.php
+msgid "Public Key Pin"
+msgstr "Pin-n'ny fanalahidy ho an'ny besinimaro"
+
+#: lib/BmcsPage.php
+msgid "Allow Basic Authentication Fallback"
+msgstr "Avelao ny fanamarinana Basic fiandry"
+
+#: lib/BmcsPage.php
+msgid "Used only when the BMC offers no session service. Every request then carries the password; the health page warns while it is in use."
+msgstr "Ampiasaina ihany rehefa tsy manolotra tolotra fivoriana ny BMC. Ny fangatahana tsirairay avy eo dia mitondra ny tenimiafina; mampitandrina ny pejin'ny fahasalamana mandritra ny fampiasana azy."
+
+#: lib/BmcsPage.php
+msgid "The Cacti device of the server this BMC manages. Leave it at none to have the plugin create a device from the list."
+msgstr "Ny fitaovana Cacti an'ny mpizara tantanin'ity BMC ity. Avelao amin'ny tsy misy mba hamoronan'ny plugin fitaovana avy amin'ny lisitra."
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Save"
+msgstr "Tehirizo"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Address: %s port %d is already registered as %s."
+msgstr "Adiresy: %s seranana %d dia efa voasoratra ho %s."
+
+#: lib/BmcsPage.php
+msgid "Address: this address and port are already registered."
+msgstr "Adiresy: efa voasoratra ity adiresy sy seranana ity."
+
+#: lib/BmcsPage.php
+msgid "Name: another BMC already uses this name."
+msgstr "Anarana: efa mampiasa ity anarana ity ny BMC iray hafa."
+
+#: lib/BmcsPage.php
+msgid "Device: no Cacti device has this ID."
+msgstr "Fitaovana: tsy misy fitaovana Cacti manana ity ID ity."
+
+#: lib/BmcsPage.php
+msgid "Device: another BMC is already mapped to this device."
+msgstr "Fitaovana: efa misy BMC iray hafa mifandray amin'ity fitaovana ity."
+
+#: lib/CredentialsPage.php lib/Pages.php
+msgid "Redfish Credentials"
+msgstr "Fahazoan-dalana Redfish"
+
+#: lib/CredentialsPage.php
+msgid "Password"
+msgstr "Tenimiafina"
+
+#: lib/CredentialsPage.php
+msgid "Used By"
+msgstr "Ampiasain'ny"
+
+#: lib/CredentialsPage.php
+msgid "User Name"
+msgstr "Anaran'ny mpampiasa"
+
+#: lib/CredentialsPage.php
+msgid "No credentials yet. Create one with a read-only BMC account."
+msgstr "Tsy mbola misy fahazoan-dalana. Mamoròna iray miaraka amin'ny kaonty BMC mamaky ihany."
+
+#: lib/CredentialsPage.php
+msgid "None stored"
+msgstr "Tsy misy voatahiry"
+
+#: lib/CredentialsPage.php
+msgid "Stored"
+msgstr "Voatahiry"
+
+#: lib/CredentialsPage.php
+#, php-format
+msgid "%d BMCs"
+msgstr "BMC %d"
+
+#: lib/CredentialsPage.php
+msgid "New Redfish Credential"
+msgstr "Fahazoan-dalana Redfish vaovao"
+
+#: lib/CredentialsPage.php
+#, php-format
+msgid "Redfish Credential: %s"
+msgstr "Fahazoan-dalana Redfish: %s"
+
+#: lib/CredentialsPage.php
+msgid "A BMC account with the ReadOnly role. The plugin never needs a role that can change BMC state."
+msgstr "Kaonty BMC manana ny andraikitra ReadOnly. Tsy mila andraikitra afaka manova ny toetry ny BMC mihitsy ny plugin."
+
+#: lib/CredentialsPage.php
+msgid "A password is stored. Leave blank to keep it."
+msgstr "Misy tenimiafina voatahiry. Avelao ho banga mba hitazomana azy."
+
+#: lib/CredentialsPage.php
+msgid "Stored encrypted with the vault key."
+msgstr "Voatahiry voasokitra miafina miaraka amin'ny fanalahidin'ny fitehirizana."
+
+#: lib/DeviceProvisioner.php
+msgid "The Redfish templates are not installed completely. Reinstall them from the Redfish BMCs page."
+msgstr "Tsy tafapetraka tanteraka ny môdely Redfish. Avereno apetraka avy ao amin'ny pejy BMC Redfish izy ireo."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "A device \"%s\" from the %s device template, polled by poller %d, with availability checks off. Its host name is a reserved name that is never contacted."
+msgstr "Fitaovana \"%s\" avy amin'ny môdely fitaovana %s, angonin'ny poller %d, miaraka amin'ny fanamarinana fahafahana mifandray maty. Ny anaran'ny mpampiantrano azy dia anarana voatokana izay tsy ifandraisana mihitsy."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "The data query \"%s\", with a graph for each of the %d members known now."
+msgstr "Ny fangatahana angona \"%s\", misy grafika ho an'ny tsirairay amin'ireo mpikambana %d fantatra ankehitriny."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "%d fans or power supplies that were present are no longer reported. They count as failed until you confirm; confirming accepts the members the BMC reports now."
+msgstr "Mpankafy na famatsiana herinaratra %d izay nisy teo aloha dia tsy voatatitra intsony. Isaina ho simba izy ireo mandra-panamafisanao; ny fanamafisana dia manaiky ireo mpikambana taterin'ny BMC ankehitriny."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "The graph \"%s\", with its \"%s\" data source."
+msgstr "Ny grafika \"%s\", miaraka amin'ny loharanon'angona \"%s\"."
+
+#: lib/DeviceProvisioner.php
+msgid "The BMC is already mapped to a device."
+msgstr "Efa mifandray amin'ny fitaovana iray ny BMC."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "Created by the Redfish plugin for BMC %s. Its values come from the plugin cache; the host name is a reserved name that is never contacted."
+msgstr "Noforonin'ny plugin Redfish ho an'ny BMC %s. Ny sandany dia avy amin'ny tahiry vonjimaikan'ny plugin; ny anaran'ny mpampiantrano dia anarana voatokana izay tsy ifandraisana mihitsy."
+
+#: lib/DeviceProvisioner.php
+msgid "Cacti refused to create the device. See the Cacti log."
+msgstr "Nanda tsy hamorona ny fitaovana i Cacti. Jereo ny firaketana Cacti."
+
+#: lib/DeviceProvisioner.php
+msgid "The new device would be hidden from you by your device permissions, so it was removed again. Ask an administrator to grant access, or map the BMC to a device you can see."
+msgstr "Ho nafenina taminao noho ny fahazoan-dalana fitaovana anananao ilay fitaovana vaovao, ka nesorina indray. Mangataha amin'ny mpitantana mba hanome alalana, na ampifandraiso amin'ny fitaovana hitanao ny BMC."
+
+#: lib/DeviceProvisioner.php
+msgid "The BMC was mapped to a device by someone else meanwhile, or could not be mapped, so the new device was removed again. Reload the page and check its mapping."
+msgstr "Nampifandraisin'olon-kafa tamin'ny fitaovana ny BMC nandritra izany, na tsy azo nampifandraisina, ka nesorina indray ilay fitaovana vaovao. Avereno alefa ny pejy ary jereo ny fifandraisany."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "The Redfish templates could not be installed: %s"
+msgstr "Tsy afaka napetraka ny môdely Redfish: %s"
+
+#: lib/DeviceWarnings.php
+msgid "The Redfish templates are not installed or not current. Reinstall them from the Redfish BMCs page."
+msgstr "Tsy tafapetraka na tsy vaovao ny môdely Redfish. Avereno apetraka avy ao amin'ny pejy BMC Redfish izy ireo."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "%s: its Cacti device was deleted. Map it to another device or create one from the BMCs page."
+msgstr "%s: voafafa ny fitaovana Cacti azy. Ampifandraiso amin'ny fitaovana hafa izy na mamoròna iray avy ao amin'ny pejy BMC."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "%s: its device is polled by poller %d but the BMC is read by poller %d. Move one of them so both use the same poller, or its graphs can read as unknown."
+msgstr "%s: ny fitaovany dia angonin'ny poller %d fa ny BMC dia vakin'ny poller %d. Afindrao ny iray amin'izy ireo mba hampiasa poller mitovy ny roa tonta, raha tsy izany dia mety ho tsy fantatra ny famakiana ny grafikany."
+
+#: lib/GraphLinks.php
+msgid "Redfish graphs of this device"
+msgstr "Grafika Redfish an'ity fitaovana ity"
+
+#: lib/HealthPage.php
+msgid "Redfish Warnings"
+msgstr "Fampitandremana Redfish"
+
+#: lib/HealthPage.php
+msgid "No warnings."
+msgstr "Tsy misy fampitandremana."
+
+#: lib/HealthPage.php
+msgid "Redfish Collector"
+msgstr "Mpanangona Redfish"
+
+#: lib/HealthPage.php
+msgid "BMCs"
+msgstr "BMC"
+
+#: lib/HealthPage.php
+msgid "Duration / Interval"
+msgstr "Faharetana / Elanelam-potoana"
+
+#: lib/HealthPage.php
+msgid "Last Run"
+msgstr "Fampandehanana farany"
+
+#: lib/HealthPage.php
+msgid "Poller"
+msgstr "Poller"
+
+#: lib/HealthPage.php
+msgid "Read"
+msgstr "Voavaky"
+
+#: lib/HealthPage.php
+msgid "Requests per BMC"
+msgstr "Fangatahana isaky ny BMC"
+
+#: lib/HealthPage.php
+msgid "Workers"
+msgstr "Mpiasa"
+
+#: lib/HealthPage.php
+msgid "The collector has not run yet."
+msgstr "Tsy mbola nandeha ny mpanangona."
+
+#: lib/HealthPage.php lib/OperatorPage.php
+msgid "Never"
+msgstr "Tsy mbola nisy"
+
+#: lib/HealthPage.php
+msgid "Redfish BMC Status"
+msgstr "Toetry ny BMC Redfish"
+
+#: lib/HealthPage.php
+msgid "Authentication"
+msgstr "Fanamarinana maha-izy azy"
+
+#: lib/HealthPage.php
+msgid "BMC"
+msgstr "BMC"
+
+#: lib/HealthPage.php
+msgid "Data"
+msgstr "Angona"
+
+#: lib/HealthPage.php
+msgid "Discovery"
+msgstr "Fitadiavana"
+
+#: lib/HealthPage.php
+msgid "Failure"
+msgstr "Tsy fahombiazana"
+
+#: lib/HealthPage.php
+msgid "Last Success"
+msgstr "Fahombiazana farany"
+
+#: lib/HealthPage.php
+msgid "Mean Latency"
+msgstr "Fahatarana antonony"
+
+#: lib/HealthPage.php
+msgid "Reachability"
+msgstr "Fahafahana mifandray"
+
+#: lib/HealthPage.php
+msgid "Requests"
+msgstr "Fangatahana"
+
+#: lib/HealthPage.php
+msgid "Source"
+msgstr "Loharano"
+
+#: lib/HealthPage.php
+#, php-format
+msgid "newest %s"
+msgstr "vaovao indrindra %s"
+
+#: lib/HealthPage.php
+msgid "disabled"
+msgstr "tsy mandeha"
+
+#: lib/HealthPage.php
+msgid "ok"
+msgstr "mety"
+
+#: lib/HealthPage.php
+msgid "stale"
+msgstr "lany andro"
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The vault key file cannot be used: %s. Stored passwords cannot be read or written until it is fixed."
+msgstr "Tsy azo ampiasaina ny rakitra fanalahidin'ny fitehirizana: %s. Tsy azo vakiana na soratana ny tenimiafina voatahiry raha tsy voamboatra izany."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d took %.0f seconds, more than its budget of %d seconds."
+msgstr "Ny mpanangona ao amin'ny poller %d dia naka %.0f segondra, mihoatra ny fetra natokana ho azy %d segondra."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d ran out of time before every BMC was read; the rest resume on the next run. Add workers or raise the budget."
+msgstr "Lany fotoana ny mpanangona ao amin'ny poller %d talohan'ny namakiana ny BMC rehetra; hitohy amin'ny fandehanana manaraka ny ambiny. Manampia mpiasa na ampitomboy ny fetram-potoana."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d last ran %s."
+msgstr "Ny mpanangona ao amin'ny poller %d dia nandeha farany %s."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: TLS verification is off. Anyone on the path can read its traffic, including the BMC password."
+msgstr "%s: maty ny fanamarinana TLS. Ny olona rehetra eny an-dalana dia afaka mamaky ny fifamoivoizany, ao anatin'izany ny tenimiafin'ny BMC."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: uses Basic authentication because the BMC offers no session service; every request carries the password."
+msgstr "%s: mampiasa fanamarinana Basic satria tsy manolotra tolotra fivoriana ny BMC; ny fangatahana tsirairay dia mitondra ny tenimiafina."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: a session may have been left open on the BMC; the next run deletes it after logging in."
+msgstr "%s: mety nisy fivoriana navela nisokatra tao amin'ny BMC; hamafa azy ny fandehanana manaraka rehefa avy miditra."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: %d session logins in a row lost their response, so logins stopped. Check the BMC session list, then use Retry Now."
+msgstr "%s: fidirana fivoriana %d nisesy no very valiny, ka nijanona ny fidirana. Jereo ny lisitry ny fivorian'ny BMC, dia ampiasao ny Andramo indray izao."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: the BMC rejected the credential. It is not tried again until the credential changes."
+msgstr "%s: nolavin'ny BMC ny fahazoan-dalana. Tsy andramana indray izany raha tsy miova ny fahazoan-dalana."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: its credential is missing or has no stored password."
+msgstr "%s: tsy hita ny fahazoan-dalana azy na tsy misy tenimiafina voatahiry."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: %d links in its responses pointed elsewhere and were ignored."
+msgstr "%s: rohy %d tao amin'ny valiny no nanondro toeran-kafa ka tsy noraharahaina."
+
+#: lib/Html.php
+#, php-format
+msgid "%d seconds ago"
+msgstr "%d segondra lasa izay"
+
+#: lib/Html.php
+#, php-format
+msgid "%d minutes ago"
+msgstr "%d minitra lasa izay"
+
+#: lib/Html.php
+#, php-format
+msgid "%d hours ago"
+msgstr "%d ora lasa izay"
+
+#: lib/Html.php
+#, php-format
+msgid "%d days ago"
+msgstr "%d andro lasa izay"
+
+#: lib/OperatorPage.php
+msgid "Review the recorded observations below. Acknowledgments are personal to this session, expire when observations change, and never suppress alerts or change health."
+msgstr "Jereo eto ambany ny fandinihana voarakitra. Ny fanekena dia manokana ho an'ity fivoriana ity, lany daty rehefa miova ny fandinihana, ary tsy manafoana fampitandremana na manova ny fahasalamana velively."
+
+#: lib/OperatorPage.php lib/Pages.php
+msgid "Redfish Operations"
+msgstr "Fikirakirana Redfish"
+
+#: lib/OperatorPage.php
+msgid "Investigation"
+msgstr "Fanadihadiana"
+
+#: lib/OperatorPage.php
+msgid "Object"
+msgstr "Singa"
+
+#: lib/OperatorPage.php
+msgid "Observed (UTC)"
+msgstr "Voamarika (UTC)"
+
+#: lib/OperatorPage.php
+msgid "Unknown or stale"
+msgstr "Tsy fantatra na efa antitra"
+
+#: lib/OperatorPage.php
+msgid "Acknowledged; health unchanged."
+msgstr "Voamarika ho ekena; tsy niova ny fahasalamana."
+
+#: lib/OperatorPage.php
+msgid "Acknowledge"
+msgstr "Ekeo"
+
+#: lib/OperatorPage.php
+msgid "No observations are available for devices you may access."
+msgstr "Tsy misy fandinihana azo jerena ho an'ny fitaovana azonao idirana."
+
+#: lib/Pages.php
+msgid "Redfish Operator"
+msgstr "Mpikirakira Redfish"
+
+#: lib/Pages.php
+msgid "Redfish View"
+msgstr "Fijerena Redfish"
+
+#: lib/Pages.php
+msgid "Redfish Admin"
+msgstr "Mpitantana Redfish"
+
+#: lib/Pages.php
+msgid "Redfish Health"
+msgstr "Fahasalaman'ny Redfish"
+
+#: lib/Settings.php
+#, php-format
+msgid "%s Default %d, from %d to %d."
+msgstr "%s Mahazatra %d, manomboka amin'ny %d ka hatramin'ny %d."
+
+#: lib/Settings.php
+msgid "Credential Vault"
+msgstr "Tahiry voaro fahazoan-dalana"
+
+#: lib/Settings.php
+msgid "Vault Key File"
+msgstr "Rakitra fanalahidin'ny tahiry voaro"
+
+#: lib/Settings.php
+msgid "Absolute path to the 32-byte key that encrypts stored BMC passwords. Create it yourself, outside the web root, readable only by the web server and poller user, in a directory that only root and that user can write; the plugin never creates or writes it. Back it up with the database: without it, stored passwords must be entered again."
+msgstr "Lalana feno mankany amin'ny fanalahidy 32-byte izay manafina ny tenimiafina BMC voatahiry. Mamoròna azy ianao tenanao, ivelan'ny fakan'ny tranonkala, azo vakian'ny mpizara tranonkala sy ny mpampiasa poller ihany, ao amin'ny lahatahiry izay i root sy io mpampiasa io ihany no afaka manoratra; ny plugin dia tsy mamorona na manoratra azy mihitsy. Ataovy dika mitovy miaraka amin'ny angona izy: raha tsy eo izy dia tsy maintsy ampidirina indray ny tenimiafina voatahiry."
+
+#: lib/Settings.php
+msgid "Collector"
+msgstr "Mpanangona"
+
+#: lib/Settings.php
+msgid "Collection Interval"
+msgstr "Elanelam-potoana fanangonana"
+
+#: lib/Settings.php
+msgid "Seconds between reads of each BMC."
+msgstr "Segondra eo anelanelan'ny famakiana ny BMC tsirairay."
+
+#: lib/Settings.php
+msgid "Rediscovery Interval"
+msgstr "Elanelam-potoana fikarohana indray"
+
+#: lib/Settings.php
+msgid "Seconds between full resource discoveries of each BMC. A BMC is also rediscovered at once when a known resource disappears or changes type."
+msgstr "Segondra eo anelanelan'ny fikarohana loharano feno ho an'ny BMC tsirairay. Karohina indray avy hatrany koa ny BMC rehefa misy loharano fantatra manjavona na miova karazana."
+
+#: lib/Settings.php
+msgid "Collector Time Budget"
+msgstr "Fetram-potoana ho an'ny mpanangona"
+
+#: lib/Settings.php
+msgid "Seconds one collector run may spend before it stops starting new BMCs. Keep it below the poller interval; unfinished BMCs resume on the next run."
+msgstr "Segondra azon'ny fandehanana iray ataon'ny mpanangona lanina alohan'ny hijanonany tsy hanomboka BMC vaovao. Tazomy eo ambanin'ny elanelam-potoanan'ny poller izany; hitohy amin'ny fandehanana manaraka ny BMC tsy vita."
+
+#: lib/Settings.php
+msgid "BMCs read in parallel. Each BMC is read by one worker at a time."
+msgstr "BMC vakiana miaraka. Ny BMC tsirairay dia vakin'ny mpiasa iray isaky ny mandeha."
+
+#: lib/Settings.php
+msgid "Collector Workers"
+msgstr "Mpiasan'ny mpanangona"
+
+#: lib/Settings.php
+msgid "Connect Timeout"
+msgstr "Fetram-potoana fifandraisana"
+
+#: lib/Settings.php
+msgid "Seconds allowed for the TCP connection and TLS handshake to a BMC."
+msgstr "Segondra omena ho an'ny fifandraisana TCP sy ny fifandraisan-tanana TLS amin'ny BMC."
+
+#: lib/Settings.php
+msgid "Request Timeout"
+msgstr "Fetram-potoanan'ny fangatahana"
+
+#: lib/Settings.php
+msgid "Seconds allowed for one whole request to a BMC, including the connection."
+msgstr "Segondra omena ho an'ny fangatahana iray manontolo amin'ny BMC, ao anatin'izany ny fifandraisana."
+
+#: lib/Settings.php
+msgid "KiB accepted in one BMC response body; a larger response is refused."
+msgstr "KiB ekena ao amin'ny vatan'ny valiny iray avy amin'ny BMC; lavina ny valiny lehibe kokoa."
+
+#: lib/Settings.php
+msgid "Maximum Response Size"
+msgstr "Haben'ny valiny farafahabetsany"
+
+#: lib/Settings.php
+msgid "Freshness"
+msgstr "Fahavaozana"
+
+#: lib/Settings.php
+msgid "Collection intervals after which a reading is shown as delayed."
+msgstr "Elanelam-potoana fanangonana aorian'izay ny famakiana dia aseho ho tara."
+
+#: lib/Settings.php
+msgid "Delayed After"
+msgstr "Tara aorian'ny"
+
+#: lib/Settings.php
+msgid "Collection intervals after which a reading is stale and reads as unknown. Always at least one more than Delayed After."
+msgstr "Elanelam-potoana fanangonana aorian'izay ny famakiana dia lany andro ary vakiana ho tsy fantatra. Mihoatra iray farafahakeliny noho ny Tara aorian'ny foana."
+
+#: lib/Settings.php
+msgid "Stale After"
+msgstr "Lany Andro Rehefa Afaka"
+
+#: lib/Settings.php
+msgid "Uninstall"
+msgstr "Fanesorana"
+
+#: lib/Settings.php
+msgid "Keep Plugin Tables on Uninstall"
+msgstr "Tazomy ny tabilaon'ny plugin rehefa manaisotra"
+
+#: lib/Settings.php
+msgid "When checked, uninstalling the plugin keeps its BMC registry, encrypted passwords, and reading cache. Clear it to have the uninstall drop them. Uninstall never touches Cacti devices, graphs, or BMCs, including devices the plugin created."
+msgstr "Rehefa voamarika, ny fanesorana ny plugin dia mitazona ny rejisitry ny BMC, ny tenimiafina voasokitra miafina, ary ny tahiry vonjimaikan'ny famakiana. Esory ny marika mba hamafan'ny fanesorana azy ireo. Ny fanesorana dia tsy mikitika mihitsy ny fitaovana Cacti, grafika, na BMC, ao anatin'izany ny fitaovana noforonin'ny plugin."
+
+#: lib/TlsMode.php
+msgid "Verify against the system CA store"
+msgstr "Hamarino amin'ny fitehirizana CA an'ny rafitra"
+
+#: lib/TlsMode.php
+msgid "Verify against a CA bundle file"
+msgstr "Hamarino amin'ny rakitra CA bundle"
+
+#: lib/TlsMode.php
+msgid "Pinned public key (SHA-256)"
+msgstr "Fanalahidy ho an'ny besinimaro voatsindrona (SHA-256)"
+
+#: lib/TlsMode.php
+msgid "Do not verify (unsafe)"
+msgstr "Aza hamarinina (tsy azo antoka)"
+
+#: redfish_bmcs.php
+msgid "You do not have access to the Cacti device of this BMC."
+msgstr "Tsy manana fahazoan-dalana hiditra amin'ny fitaovana Cacti an'ity BMC ity ianao."
+
+#: redfish_bmcs.php
+msgid "The BMC could not be saved."
+msgstr "Tsy voatahiry ny BMC."
+
+#: redfish_bmcs.php
+msgid "The BMC was saved."
+msgstr "Voatahiry ny BMC."
+
+#: redfish_bmcs.php
+msgid "The BMC and its cached data were deleted. Its Cacti device was left in place."
+msgstr "Voafafa ny BMC sy ny angona tao amin'ny tahiry vonjimaikany. Navela teo amin'ny toerany ny fitaovana Cacti azy."
+
+#: redfish_bmcs.php
+msgid "Backoff and held failures were cleared; the collector reads the BMC on its next run."
+msgstr "Voafafa ny fihemorana sy ny tsy fahombiazana voatazona; hamaky ny BMC ny mpanangona amin'ny fandehanany manaraka."
+
+#: redfish_bmcs.php
+msgid "Adding devices and graphs needs Cacti's device management permission."
+msgstr "Ny fanampiana fitaovana sy grafika dia mila ny fahazoan-dalana fitantanana fitaovana an'i Cacti."
+
+#: redfish_bmcs.php
+msgid "The device of this BMC was deleted. Choose another device, or none, on the BMC form first."
+msgstr "Voafafa ny fitaovan'ity BMC ity. Misafidiana fitaovana hafa, na tsy misy, ao amin'ny taratasin'ny BMC aloha."
+
+#: redfish_bmcs.php
+#, php-format
+msgid "The data queries were indexed again and %d graphs were added."
+msgstr "Nohavaozina indray ny fanondroan'ny fangatahana angona ary grafika %d no nampiana."
+
+#: redfish_bmcs.php
+msgid "The device was created with its Redfish graphs."
+msgstr "Noforonina niaraka tamin'ny grafika Redfish azy ny fitaovana."
+
+#: redfish_bmcs.php
+msgid "Installing the Redfish templates needs Cacti's Import Templates permission."
+msgstr "Ny fametrahana ny môdely Redfish dia mila ny fahazoan-dalana Hampiditra Môdely an'i Cacti."
+
+#: redfish_bmcs.php
+msgid "The Redfish templates are installed."
+msgstr "Tafapetraka ny môdely Redfish."
+
+#: redfish_bmcs.php
+msgid "The Redfish templates could not be installed. The health page shows why."
+msgstr "Tsy afaka napetraka ny môdely Redfish. Asehon'ny pejin'ny fahasalamana ny antony."
+
+#: redfish_bmcs.php
+msgid "The import could not be saved; nothing was imported."
+msgstr "Tsy voatahiry ny fampidirana; tsy nisy nampidirina."
+
+#: redfish_bmcs.php
+#, php-format
+msgid "%d BMCs were imported."
+msgstr "BMC %d no nampidirina."
+
+#: redfish_credentials.php
+msgid "This credential is used by a BMC on a Cacti device you do not have access to, so it cannot be changed here."
+msgstr "Ity fahazoan-dalana ity dia ampiasain'ny BMC amin'ny fitaovana Cacti iray izay tsy anananao fahazoan-dalana hidirana, ka tsy azo ovaina eto."
+
+#: redfish_credentials.php
+msgid "Name: another credential already uses this name."
+msgstr "Anarana: efa mampiasa ity anarana ity ny fahazoan-dalana iray hafa."
+
+#: redfish_credentials.php
+msgid "User Name: enter 1 to 255 characters without control characters."
+msgstr "Anaran'ny mpampiasa: ampidiro ny tarehintsoratra 1 ka hatramin'ny 255 tsy misy mari-tsoratra fanaraha-maso."
+
+#: redfish_credentials.php
+msgid "Password: enter the password of the BMC account."
+msgstr "Tenimiafina: ampidiro ny tenimiafin'ny kaonty BMC."
+
+#: redfish_credentials.php
+#, php-format
+msgid "The credential was saved, but the password was not stored: %s"
+msgstr "Voatahiry ny fahazoan-dalana, saingy tsy voatahiry ny tenimiafina: %s"
+
+#: redfish_credentials.php
+msgid "The credential could not be saved."
+msgstr "Tsy voatahiry ny fahazoan-dalana."
+
+#: redfish_credentials.php
+msgid "The credential was saved."
+msgstr "Voatahiry ny fahazoan-dalana."
+
+#: redfish_credentials.php
+msgid "The credential and its stored password were deleted."
+msgstr "Voafafa ny fahazoan-dalana sy ny tenimiafina voatahiry tao aminy."
+
+#: redfish_credentials.php
+msgid "The credential was not deleted. A credential in use by a BMC cannot be deleted."
+msgstr "Tsy voafafa ny fahazoan-dalana. Ny fahazoan-dalana ampiasain'ny BMC iray dia tsy azo fafana."
+
+#: redfish_operator.php
+msgid "Retry collection"
+msgstr "Andramo indray ny fanangonana"
+
+#: redfish_operator.php
+msgid "Monitoring view"
+msgstr "Fomba fijery fanaraha-maso"
+
+#: redfish_operator.php
+msgid "Observations could not be read. Ask an administrator to check the plugin log."
+msgstr "Tsy azo novakiana ny fandinihana. Angataho ny mpitantana hanamarina ny firaketana ny plugin."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires PHP %s or later. This server runs PHP %s, so the plugin was not installed or enabled."
+msgstr "Ny plugin Redfish dia mitaky PHP %s na vaovao kokoa. Mampiasa PHP %s ity mpizara ity, ka tsy napetraka na navela hiasa ny plugin."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires the PHP extensions %s, which this server does not load, so the plugin was not installed or enabled."
+msgstr "Ny plugin Redfish dia mitaky ny fanitarana PHP %s, izay tsy ampidirin'ity mpizara ity, ka tsy napetraka na navela hiasa ny plugin."
+
+#: setup.php
+msgid "Redfish"
+msgstr "Redfish"
+
+#: setup.php
+msgid "The Redfish plugin is not enabled."
+msgstr "Tsy mandeha ny plugin Redfish."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires PHP %s or later."
+msgstr "Ny plugin Redfish dia mitaky PHP %s na vaovao kokoa."
+
+#: setup.php
+msgid "Management"
+msgstr "Fitantanana"
