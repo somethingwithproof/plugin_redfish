@@ -1,0 +1,970 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: 2026 Thomas Vincent <thomasvincent@gmail.com>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: redfish 0.1.0-dev\n"
+"Report-Msgid-Bugs-To: https://github.com/somethingwithproof/plugin_redfish/issues\n"
+"PO-Revision-Date: 2026-11-26 00:00+0000\n"
+"Last-Translator: Thomas Vincent <thomasvincent@gmail.com>\n"
+"Language-Team: Thomas Vincent <thomasvincent@gmail.com>\n"
+"Language: de-DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: include/operator.php
+msgid "Check collection freshness and the device graphs. Retry releases a collection hold for the next scheduled run; it does not contact the BMC now."
+msgstr "Prüfen Sie die Aktualität der Erfassung und die Gerätediagramme. „Erneut versuchen“ hebt eine Erfassungssperre für den nächsten geplanten Durchlauf auf; der BMC wird jetzt nicht kontaktiert."
+
+#: lib/BmcImport.php
+msgid "The file is empty or larger than 1 MiB."
+msgstr "Die Datei ist leer oder größer als 1 MiB."
+
+#: lib/BmcImport.php
+msgid "The file could not be read."
+msgstr "Die Datei konnte nicht gelesen werden."
+
+#: lib/BmcImport.php
+msgid "The file has no header row."
+msgstr "Die Datei hat keine Kopfzeile."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The file has a column named \"%s\". Import files must not carry secrets; name a stored credential in the credential column instead. Nothing was imported."
+msgstr "Die Datei enthält eine Spalte namens „%s“. Importdateien dürfen keine Geheimnisse enthalten; geben Sie stattdessen gespeicherte Anmeldedaten in der Spalte „credential“ an. Es wurde nichts importiert."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The header must name only these columns, each once, including name, address, and credential: %s."
+msgstr "Die Kopfzeile darf nur diese Spalten jeweils einmal nennen, einschließlich name, address und credential: %s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The file has more than %d rows."
+msgstr "Die Datei hat mehr als %d Zeilen."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: expected %d fields, found %d."
+msgstr "Zeile %d: %d Felder erwartet, %d gefunden."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Credential: no stored credential is named \"%s\"."
+msgstr "Anmeldedaten: Es sind keine gespeicherten Anmeldedaten mit dem Namen „%s“ vorhanden."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: %s"
+msgstr "Zeile %d: %s"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: the address %s port %d is already registered as %s."
+msgstr "Zeile %d: Die Adresse %s Port %d ist bereits als %s registriert."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "line %d"
+msgstr "Zeile %d"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: the name %s is already used."
+msgstr "Zeile %d: Der Name %s wird bereits verwendet."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: no Cacti device has ID %d."
+msgstr "Zeile %d: Kein Cacti-Gerät hat die ID %d."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: device %d already has the BMC %s."
+msgstr "Zeile %d: Gerät %d hat bereits den BMC %s."
+
+#: lib/BmcImport.php
+#, php-format
+msgid "of line %d"
+msgstr "von Zeile %d"
+
+#: lib/BmcImport.php
+msgid "The file has no BMC rows."
+msgstr "Die Datei enthält keine BMC-Zeilen."
+
+#: lib/BmcInput.php redfish_credentials.php
+msgid "Name: enter 1 to 100 characters without control characters."
+msgstr "Name: Geben Sie 1 bis 100 Zeichen ohne Steuerzeichen ein."
+
+#: lib/BmcInput.php
+msgid "Address: enter a host name or an IP address only, without a scheme, port, path, or user name. Loopback, link-local, multicast, and unspecified addresses are refused."
+msgstr "Adresse: Geben Sie nur einen Hostnamen oder eine IP-Adresse ohne Schema, Port, Pfad oder Benutzernamen ein. Loopback-, Link-Local-, Multicast- und nicht spezifizierte Adressen werden abgelehnt."
+
+#: lib/BmcInput.php
+msgid "Port: enter a TCP port from 1 to 65535."
+msgstr "Port: Geben Sie einen TCP-Port von 1 bis 65535 ein."
+
+#: lib/BmcInput.php
+msgid "Poller: only the main poller can collect BMCs in this release."
+msgstr "Poller: In dieser Version kann nur der Haupt-Poller BMCs erfassen."
+
+#: lib/BmcInput.php
+msgid "Device: choose a Cacti device or none."
+msgstr "Gerät: Wählen Sie ein Cacti-Gerät oder keines."
+
+#: lib/BmcInput.php lib/BmcsPage.php
+msgid "Credential: choose a stored credential."
+msgstr "Anmeldedaten: Wählen Sie gespeicherte Anmeldedaten aus."
+
+#: lib/BmcInput.php
+msgid "TLS Verification: choose one of the listed modes."
+msgstr "TLS-Überprüfung: Wählen Sie einen der aufgeführten Modi aus."
+
+#: lib/BmcInput.php
+msgid "CA Bundle File: enter an absolute path without control characters, at most 512 characters."
+msgstr "CA-Bundle-Datei: Geben Sie einen absoluten Pfad ohne Steuerzeichen mit maximal 512 Zeichen ein."
+
+#: lib/BmcInput.php
+msgid "Public Key Pin: enter the base64 SHA-256 hash of the BMC public key, optionally prefixed with sha256//."
+msgstr "Public-Key-Pin: Geben Sie den Base64-SHA-256-Hash des öffentlichen BMC-Schlüssels ein, optional mit dem Präfix sha256//."
+
+#: lib/BmcRepository.php
+msgid "another BMC"
+msgstr "ein anderer BMC"
+
+#: lib/BmcsPage.php lib/Pages.php
+msgid "Redfish BMCs"
+msgstr "Redfish-BMCs"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php lib/OperatorPage.php
+msgid "Actions"
+msgstr "Aktionen"
+
+#: lib/BmcsPage.php
+msgid "Address"
+msgstr "Adresse"
+
+#: lib/BmcsPage.php
+msgid "Basic Fallback"
+msgstr "Basic-Fallback"
+
+#: lib/BmcsPage.php
+msgid "Credential"
+msgstr "Zugangsdaten"
+
+#: lib/BmcsPage.php
+msgid "Device"
+msgstr "Zielsystem"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Name"
+msgstr "Name"
+
+#: lib/BmcsPage.php
+msgid "Port"
+msgstr "Port"
+
+#: lib/BmcsPage.php lib/OperatorPage.php
+msgid "State"
+msgstr "Zustand"
+
+#: lib/BmcsPage.php
+msgid "TLS Verification"
+msgstr "TLS-Überprüfung"
+
+#: lib/BmcsPage.php lib/HealthPage.php
+msgid "No BMCs yet."
+msgstr "Noch keine BMCs vorhanden."
+
+#: lib/BmcsPage.php
+msgid "Missing"
+msgstr "Fehlt"
+
+#: lib/BmcsPage.php
+msgid "Allowed"
+msgstr "Zulässig"
+
+#: lib/BmcsPage.php
+msgid "Off"
+msgstr "Aus"
+
+#: lib/BmcsPage.php
+msgid "Disabled"
+msgstr "Deaktiviert"
+
+#: lib/BmcsPage.php
+msgid "Enabled"
+msgstr "Aktiviert"
+
+#: lib/BmcsPage.php
+msgid "Retry Now"
+msgstr "Jetzt erneut versuchen"
+
+#: lib/BmcsPage.php
+msgid "Add Graphs"
+msgstr "Diagramme hinzufügen"
+
+#: lib/BmcsPage.php
+msgid "Create Device"
+msgstr "Gerät erstellen"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Delete"
+msgstr "Löschen"
+
+#: lib/BmcsPage.php
+msgid "Export the BMC registry as JSON (no secrets)"
+msgstr "BMC-Registrierung als JSON exportieren (ohne Geheimnisse)"
+
+#: lib/BmcsPage.php
+msgid "Reinstall the Redfish Templates"
+msgstr "Redfish-Vorlagen neu installieren"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Add Redfish graphs for %s"
+msgstr "Redfish-Diagramme für %s hinzufügen"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Create a Cacti device for %s"
+msgstr "Cacti-Gerät für %s erstellen"
+
+#: lib/BmcsPage.php
+msgid "Everything is already in place. Confirming indexes the data queries again and adds graphs for new members only."
+msgstr "Alles ist bereits vorhanden. Durch Bestätigen werden die Datenabfragen erneut indiziert und nur Diagramme für neue Elemente hinzugefügt."
+
+#: lib/BmcsPage.php
+msgid "Confirming adds:"
+msgstr "Durch Bestätigen wird hinzugefügt:"
+
+#: lib/BmcsPage.php
+msgid "Existing devices, graphs, and thresholds are not changed."
+msgstr "Bestehende Geräte, Diagramme und Schwellenwerte werden nicht geändert."
+
+#: lib/BmcsPage.php
+msgid "Confirm"
+msgstr "Bestätigen"
+
+#: lib/BmcsPage.php
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: lib/BmcsPage.php
+msgid "Import BMCs"
+msgstr "BMCs importieren"
+
+#: lib/BmcsPage.php
+msgid "CSV File"
+msgstr "CSV-Datei"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Header row with columns: %s. Name a stored credential; never put a password in the file. Every row must be valid or nothing is imported."
+msgstr "Kopfzeile mit Spalten: %s. Geben Sie gespeicherte Anmeldedaten an; tragen Sie niemals ein Passwort in die Datei ein. Jede Zeile muss gültig sein, sonst wird nichts importiert."
+
+#: lib/BmcsPage.php
+msgid "Import"
+msgstr "Importieren"
+
+#: lib/BmcsPage.php
+msgid "Choose a credential"
+msgstr "Anmeldedaten auswählen"
+
+#: lib/BmcsPage.php
+msgid "None"
+msgstr "Keiner"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Deleted device (ID %d)"
+msgstr "Gelöschtes Gerät (ID %d)"
+
+#: lib/BmcsPage.php
+msgid "New Redfish BMC"
+msgstr "Neuer Redfish-BMC"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Redfish BMC: %s"
+msgstr "Redfish-BMC: %s"
+
+#: lib/BmcsPage.php
+msgid "Host name or IP address of the BMC, without https:// or a path."
+msgstr "Hostname oder IP-Adresse des BMC, ohne https:// oder einen Pfad."
+
+#: lib/BmcsPage.php
+msgid "Do not verify is logged when set and shown as a warning on the health page while it stays."
+msgstr "„Nicht überprüfen“ wird beim Festlegen protokolliert und auf der Zustandsseite als Warnung angezeigt, solange diese Einstellung aktiv bleibt."
+
+#: lib/BmcsPage.php
+msgid "CA Bundle File"
+msgstr "CA-Bundle-Datei"
+
+#: lib/BmcsPage.php
+msgid "For the CA bundle mode: absolute path on the poller to a PEM file that others cannot write."
+msgstr "Für den CA-Bundle-Modus: absoluter Pfad auf dem Poller zu einer PEM-Datei, auf die andere Benutzer keinen Schreibzugriff haben."
+
+#: lib/BmcsPage.php
+msgid "For the pinned mode: base64 SHA-256 of the BMC public key, as sha256//... or the bare hash. A changed key fails until this is updated."
+msgstr "Für den Pinning-Modus: Base64-SHA-256-Hash des öffentlichen BMC-Schlüssels als sha256//... oder als reiner Hash. Ein geänderter Schlüssel schlägt fehl, bis dieser Wert aktualisiert wird."
+
+#: lib/BmcsPage.php
+msgid "Public Key Pin"
+msgstr "Public-Key-Pin"
+
+#: lib/BmcsPage.php
+msgid "Allow Basic Authentication Fallback"
+msgstr "Fallback auf Basic-Authentifizierung zulassen"
+
+#: lib/BmcsPage.php
+msgid "Used only when the BMC offers no session service. Every request then carries the password; the health page warns while it is in use."
+msgstr "Wird nur verwendet, wenn der BMC keinen Sitzungsdienst anbietet. Jede Anfrage überträgt dann das Passwort; die Zustandsseite warnt, solange dies aktiv ist."
+
+#: lib/BmcsPage.php
+msgid "The Cacti device of the server this BMC manages. Leave it at none to have the plugin create a device from the list."
+msgstr "Das Cacti-Gerät des Servers, den dieser BMC verwaltet. Belassen Sie es auf „Keine“, damit das Plugin ein Gerät aus der Liste erstellt."
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Save"
+msgstr "Speichern"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Address: %s port %d is already registered as %s."
+msgstr "Adresse: %s Port %d ist bereits als %s registriert."
+
+#: lib/BmcsPage.php
+msgid "Address: this address and port are already registered."
+msgstr "Adresse: Diese Adresse und dieser Port sind bereits registriert."
+
+#: lib/BmcsPage.php
+msgid "Name: another BMC already uses this name."
+msgstr "Name: Ein anderer BMC verwendet diesen Namen bereits."
+
+#: lib/BmcsPage.php
+msgid "Device: no Cacti device has this ID."
+msgstr "Gerät: Kein Cacti-Gerät hat diese ID."
+
+#: lib/BmcsPage.php
+msgid "Device: another BMC is already mapped to this device."
+msgstr "Gerät: Ein anderer BMC ist diesem Gerät bereits zugeordnet."
+
+#: lib/CredentialsPage.php lib/Pages.php
+msgid "Redfish Credentials"
+msgstr "Redfish-Anmeldedaten"
+
+#: lib/CredentialsPage.php
+msgid "Password"
+msgstr "Passwort"
+
+#: lib/CredentialsPage.php
+msgid "Used By"
+msgstr "Verwendet von"
+
+#: lib/CredentialsPage.php
+msgid "User Name"
+msgstr "Benutzername"
+
+#: lib/CredentialsPage.php
+msgid "No credentials yet. Create one with a read-only BMC account."
+msgstr "Noch keine Anmeldedaten vorhanden. Erstellen Sie welche mit einem schreibgeschützten BMC-Konto."
+
+#: lib/CredentialsPage.php
+msgid "None stored"
+msgstr "Keine gespeichert"
+
+#: lib/CredentialsPage.php
+msgid "Stored"
+msgstr "Gespeichert"
+
+#: lib/CredentialsPage.php
+#, php-format
+msgid "%d BMCs"
+msgstr "%d BMCs"
+
+#: lib/CredentialsPage.php
+msgid "New Redfish Credential"
+msgstr "Neue Redfish-Anmeldedaten"
+
+#: lib/CredentialsPage.php
+#, php-format
+msgid "Redfish Credential: %s"
+msgstr "Redfish-Anmeldedaten: %s"
+
+#: lib/CredentialsPage.php
+msgid "A BMC account with the ReadOnly role. The plugin never needs a role that can change BMC state."
+msgstr "Ein BMC-Konto mit der Rolle ReadOnly. Das Plugin benötigt niemals eine Rolle, die den BMC-Zustand ändern kann."
+
+#: lib/CredentialsPage.php
+msgid "A password is stored. Leave blank to keep it."
+msgstr "Ein Passwort ist gespeichert. Lassen Sie das Feld leer, um es beizubehalten."
+
+#: lib/CredentialsPage.php
+msgid "Stored encrypted with the vault key."
+msgstr "Verschlüsselt mit dem Vault-Schlüssel gespeichert."
+
+#: lib/DeviceProvisioner.php
+msgid "The Redfish templates are not installed completely. Reinstall them from the Redfish BMCs page."
+msgstr "Die Redfish-Vorlagen sind nicht vollständig installiert. Installieren Sie sie über die Seite „Redfish-BMCs“ neu."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "A device \"%s\" from the %s device template, polled by poller %d, with availability checks off. Its host name is a reserved name that is never contacted."
+msgstr "Ein Gerät „%s“ aus der Gerätevorlage %s, abgefragt von Poller %d, mit deaktivierten Verfügbarkeitsprüfungen. Sein Hostname ist ein reservierter Name, der niemals kontaktiert wird."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "The data query \"%s\", with a graph for each of the %d members known now."
+msgstr "Die Datenabfrage „%s“ mit einem Diagramm für jedes der %d derzeit bekannten Elemente."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "%d fans or power supplies that were present are no longer reported. They count as failed until you confirm; confirming accepts the members the BMC reports now."
+msgstr "%d Lüfter oder Netzteile, die vorhanden waren, werden nicht mehr gemeldet. Sie gelten bis zur Bestätigung als ausgefallen; durch Bestätigen werden die aktuell vom BMC gemeldeten Elemente übernommen."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "The graph \"%s\", with its \"%s\" data source."
+msgstr "Das Diagramm „%s“ mit seiner Datenquelle „%s“."
+
+#: lib/DeviceProvisioner.php
+msgid "The BMC is already mapped to a device."
+msgstr "Der BMC ist bereits einem Gerät zugeordnet."
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "Created by the Redfish plugin for BMC %s. Its values come from the plugin cache; the host name is a reserved name that is never contacted."
+msgstr "Vom Redfish-Plugin für BMC %s erstellt. Seine Werte stammen aus dem Plugin-Cache; der Hostname ist ein reservierter Name, der niemals kontaktiert wird."
+
+#: lib/DeviceProvisioner.php
+msgid "Cacti refused to create the device. See the Cacti log."
+msgstr "Cacti hat die Erstellung des Geräts abgelehnt. Siehe Cacti-Protokoll."
+
+#: lib/DeviceProvisioner.php
+msgid "The new device would be hidden from you by your device permissions, so it was removed again. Ask an administrator to grant access, or map the BMC to a device you can see."
+msgstr "Das neue Gerät wäre aufgrund Ihrer Geräteberechtigungen vor Ihnen verborgen gewesen und wurde daher wieder entfernt. Bitten Sie einen Administrator um Zugriff oder ordnen Sie den BMC einem Gerät zu, das Sie sehen können."
+
+#: lib/DeviceProvisioner.php
+msgid "The BMC was mapped to a device by someone else meanwhile, or could not be mapped, so the new device was removed again. Reload the page and check its mapping."
+msgstr "Der BMC wurde inzwischen von jemand anderem einem Gerät zugeordnet oder konnte nicht zugeordnet werden, sodass das neue Gerät wieder entfernt wurde. Laden Sie die Seite neu und prüfen Sie die Zuordnung."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "The Redfish templates could not be installed: %s"
+msgstr "Die Redfish-Vorlagen konnten nicht installiert werden: %s"
+
+#: lib/DeviceWarnings.php
+msgid "The Redfish templates are not installed or not current. Reinstall them from the Redfish BMCs page."
+msgstr "Die Redfish-Vorlagen sind nicht installiert oder nicht aktuell. Installieren Sie sie über die Seite „Redfish-BMCs“ neu."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "%s: its Cacti device was deleted. Map it to another device or create one from the BMCs page."
+msgstr "%s: Sein Cacti-Gerät wurde gelöscht. Ordnen Sie ihn einem anderen Gerät zu oder erstellen Sie eines auf der BMCs-Seite."
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "%s: its device is polled by poller %d but the BMC is read by poller %d. Move one of them so both use the same poller, or its graphs can read as unknown."
+msgstr "%s: Sein Gerät wird von Poller %d abgefragt, aber der BMC wird von Poller %d ausgelesen. Verschieben Sie eines von beiden, sodass beide denselben Poller verwenden, da die Diagramme sonst möglicherweise als unbekannt angezeigt werden."
+
+#: lib/GraphLinks.php
+msgid "Redfish graphs of this device"
+msgstr "Redfish-Diagramme dieses Geräts"
+
+#: lib/HealthPage.php
+msgid "Redfish Warnings"
+msgstr "Redfish-Warnungen"
+
+#: lib/HealthPage.php
+msgid "No warnings."
+msgstr "Keine Warnungen."
+
+#: lib/HealthPage.php
+msgid "Redfish Collector"
+msgstr "Redfish-Kollektor"
+
+#: lib/HealthPage.php
+msgid "BMCs"
+msgstr "BMCs"
+
+#: lib/HealthPage.php
+msgid "Duration / Interval"
+msgstr "Dauer / Intervall"
+
+#: lib/HealthPage.php
+msgid "Last Run"
+msgstr "Letzter Lauf"
+
+#: lib/HealthPage.php
+msgid "Poller"
+msgstr "Poller"
+
+#: lib/HealthPage.php
+msgid "Read"
+msgstr "Gelesen"
+
+#: lib/HealthPage.php
+msgid "Requests per BMC"
+msgstr "Anfragen pro BMC"
+
+#: lib/HealthPage.php
+msgid "Workers"
+msgstr "Worker"
+
+#: lib/HealthPage.php
+msgid "The collector has not run yet."
+msgstr "Der Kollektor wurde noch nicht ausgeführt."
+
+#: lib/HealthPage.php lib/OperatorPage.php
+msgid "Never"
+msgstr "Nie"
+
+#: lib/HealthPage.php
+msgid "Redfish BMC Status"
+msgstr "Redfish-BMC-Status"
+
+#: lib/HealthPage.php
+msgid "Authentication"
+msgstr "Authentifizierung"
+
+#: lib/HealthPage.php
+msgid "BMC"
+msgstr "BMC"
+
+#: lib/HealthPage.php
+msgid "Data"
+msgstr "Daten"
+
+#: lib/HealthPage.php
+msgid "Discovery"
+msgstr "Erkennung"
+
+#: lib/HealthPage.php
+msgid "Failure"
+msgstr "Fehler"
+
+#: lib/HealthPage.php
+msgid "Last Success"
+msgstr "Letzter Erfolg"
+
+#: lib/HealthPage.php
+msgid "Mean Latency"
+msgstr "Mittlere Latenz"
+
+#: lib/HealthPage.php
+msgid "Reachability"
+msgstr "Erreichbarkeit"
+
+#: lib/HealthPage.php
+msgid "Requests"
+msgstr "Anfragen"
+
+#: lib/HealthPage.php
+msgid "Source"
+msgstr "Quelle"
+
+#: lib/HealthPage.php
+#, php-format
+msgid "newest %s"
+msgstr "neueste %s"
+
+#: lib/HealthPage.php
+msgid "disabled"
+msgstr "deaktiviert"
+
+#: lib/HealthPage.php
+msgid "ok"
+msgstr "ok"
+
+#: lib/HealthPage.php
+msgid "stale"
+msgstr "veraltet"
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The vault key file cannot be used: %s. Stored passwords cannot be read or written until it is fixed."
+msgstr "Die Vault-Schlüsseldatei kann nicht verwendet werden: %s. Gespeicherte Passwörter können nicht gelesen oder geschrieben werden, bis das Problem behoben ist."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d took %.0f seconds, more than its budget of %d seconds."
+msgstr "Der Kollektor auf Poller %d benötigte %.0f Sekunden und damit mehr als sein Zeitbudget von %d Sekunden."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d ran out of time before every BMC was read; the rest resume on the next run. Add workers or raise the budget."
+msgstr "Dem Kollektor auf Poller %d ist die Zeit abgelaufen, bevor jeder BMC ausgelesen werden konnte; die übrigen werden beim nächsten Durchlauf fortgesetzt. Fügen Sie Worker hinzu oder erhöhen Sie das Zeitbudget."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d last ran %s."
+msgstr "Der Kollektor auf Poller %d lief zuletzt %s."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: TLS verification is off. Anyone on the path can read its traffic, including the BMC password."
+msgstr "%s: Die TLS-Überprüfung ist deaktiviert. Jeder auf dem Übertragungsweg kann den Datenverkehr einschließlich des BMC-Passworts mitlesen."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: uses Basic authentication because the BMC offers no session service; every request carries the password."
+msgstr "%s: verwendet Basic-Authentifizierung, da der BMC keinen Sitzungsdienst anbietet; jede Anfrage überträgt das Passwort."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: a session may have been left open on the BMC; the next run deletes it after logging in."
+msgstr "%s: Möglicherweise wurde eine Sitzung auf dem BMC offen gelassen; der nächste Durchlauf löscht sie nach der Anmeldung."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: %d session logins in a row lost their response, so logins stopped. Check the BMC session list, then use Retry Now."
+msgstr "%s: Bei %d Sitzungsanmeldungen in Folge ging die Antwort verloren, daher wurden weitere Anmeldungen gestoppt. Prüfen Sie die BMC-Sitzungsliste und verwenden Sie anschließend „Jetzt erneut versuchen“."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: the BMC rejected the credential. It is not tried again until the credential changes."
+msgstr "%s: Der BMC hat die Zugangsdaten abgelehnt. Es erfolgt kein weiterer Versuch, bis sich die Zugangsdaten ändern."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: its credential is missing or has no stored password."
+msgstr "%s: Die Zugangsdaten fehlen oder enthalten kein gespeichertes Passwort."
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: %d links in its responses pointed elsewhere and were ignored."
+msgstr "%s: %d Links in den Antworten verwiesen auf andere Ziele und wurden ignoriert."
+
+#: lib/Html.php
+#, php-format
+msgid "%d seconds ago"
+msgstr "vor %d Sekunden"
+
+#: lib/Html.php
+#, php-format
+msgid "%d minutes ago"
+msgstr "vor %d Minuten"
+
+#: lib/Html.php
+#, php-format
+msgid "%d hours ago"
+msgstr "vor %d Stunden"
+
+#: lib/Html.php
+#, php-format
+msgid "%d days ago"
+msgstr "vor %d Tagen"
+
+#: lib/OperatorPage.php
+msgid "Review the recorded observations below. Acknowledgments are personal to this session, expire when observations change, and never suppress alerts or change health."
+msgstr "Prüfen Sie die unten aufgezeichneten Beobachtungen. Bestätigungen gelten nur für Ihre Sitzung, verfallen bei Änderungen der Beobachtungen und unterdrücken weder Alarme noch ändern sie den Zustandsstatus."
+
+#: lib/OperatorPage.php lib/Pages.php
+msgid "Redfish Operations"
+msgstr "Redfish-Betrieb"
+
+#: lib/OperatorPage.php
+msgid "Investigation"
+msgstr "Untersuchung"
+
+#: lib/OperatorPage.php
+msgid "Object"
+msgstr "Objekt"
+
+#: lib/OperatorPage.php
+msgid "Observed (UTC)"
+msgstr "Beobachtet (UTC)"
+
+#: lib/OperatorPage.php
+msgid "Unknown or stale"
+msgstr "Unbekannt oder veraltet"
+
+#: lib/OperatorPage.php
+msgid "Acknowledged; health unchanged."
+msgstr "Bestätigt; Zustandsstatus unverändert."
+
+#: lib/OperatorPage.php
+msgid "Acknowledge"
+msgstr "Bestätigen"
+
+#: lib/OperatorPage.php
+msgid "No observations are available for devices you may access."
+msgstr "Für Geräte, auf die Sie zugreifen dürfen, liegen keine Beobachtungen vor."
+
+#: lib/Pages.php
+msgid "Redfish Operator"
+msgstr "Redfish-Operator"
+
+#: lib/Pages.php
+msgid "Redfish View"
+msgstr "Redfish-Ansicht"
+
+#: lib/Pages.php
+msgid "Redfish Admin"
+msgstr "Redfish-Admin"
+
+#: lib/Pages.php
+msgid "Redfish Health"
+msgstr "Redfish-Zustand"
+
+#: lib/Settings.php
+#, php-format
+msgid "%s Default %d, from %d to %d."
+msgstr "%s Standard: %d, von %d bis %d."
+
+#: lib/Settings.php
+msgid "Credential Vault"
+msgstr "Zugangsdatentresor"
+
+#: lib/Settings.php
+msgid "Vault Key File"
+msgstr "Tresorschlüsseldatei"
+
+#: lib/Settings.php
+msgid "Absolute path to the 32-byte key that encrypts stored BMC passwords. Create it yourself, outside the web root, readable only by the web server and poller user, in a directory that only root and that user can write; the plugin never creates or writes it. Back it up with the database: without it, stored passwords must be entered again."
+msgstr "Absoluter Pfad zum 32-Byte-Schlüssel, mit dem gespeicherte BMC-Passwörter verschlüsselt werden. Erstellen Sie ihn selbst außerhalb des Web-Stammverzeichnisses, nur für den Webserver- und Poller-Benutzer lesbar, in einem Verzeichnis, in das nur root und dieser Benutzer schreiben dürfen; das Plugin erstellt oder beschreibt ihn niemals. Sichern Sie ihn zusammen mit der Datenbank: Ohne ihn müssen gespeicherte Passwörter erneut eingegeben werden."
+
+#: lib/Settings.php
+msgid "Collector"
+msgstr "Kollektor"
+
+#: lib/Settings.php
+msgid "Collection Interval"
+msgstr "Erfassungsintervall"
+
+#: lib/Settings.php
+msgid "Seconds between reads of each BMC."
+msgstr "Sekunden zwischen dem Auslesen jedes BMC."
+
+#: lib/Settings.php
+msgid "Rediscovery Interval"
+msgstr "Intervall für Neuerkennung"
+
+#: lib/Settings.php
+msgid "Seconds between full resource discoveries of each BMC. A BMC is also rediscovered at once when a known resource disappears or changes type."
+msgstr "Sekunden zwischen vollständigen Ressourcenerkennungen jedes BMC. Ein BMC wird außerdem sofort neu erkannt, wenn eine bekannte Ressource verschwindet oder ihren Typ ändert."
+
+#: lib/Settings.php
+msgid "Collector Time Budget"
+msgstr "Zeitbudget des Kollektors"
+
+#: lib/Settings.php
+msgid "Seconds one collector run may spend before it stops starting new BMCs. Keep it below the poller interval; unfinished BMCs resume on the next run."
+msgstr "Sekunden, die ein Kollektordurchlauf benötigen darf, bevor er keine neuen BMCs mehr startet. Halten Sie diesen Wert unter dem Poller-Intervall; nicht abgeschlossene BMCs werden beim nächsten Durchlauf fortgesetzt."
+
+#: lib/Settings.php
+msgid "BMCs read in parallel. Each BMC is read by one worker at a time."
+msgstr "Parallel ausgelesene BMCs. Jeder BMC wird jeweils von einem Worker ausgelesen."
+
+#: lib/Settings.php
+msgid "Collector Workers"
+msgstr "Kollektor-Worker"
+
+#: lib/Settings.php
+msgid "Connect Timeout"
+msgstr "Verbindungs-Timeout"
+
+#: lib/Settings.php
+msgid "Seconds allowed for the TCP connection and TLS handshake to a BMC."
+msgstr "Zulässige Sekunden für die TCP-Verbindung und den TLS-Handshake zu einem BMC."
+
+#: lib/Settings.php
+msgid "Request Timeout"
+msgstr "Anfrage-Zeitlimit"
+
+#: lib/Settings.php
+msgid "Seconds allowed for one whole request to a BMC, including the connection."
+msgstr "Zulässige Sekunden für eine vollständige Anfrage an einen BMC einschließlich des Verbindungsaufbaus."
+
+#: lib/Settings.php
+msgid "KiB accepted in one BMC response body; a larger response is refused."
+msgstr "Zulässige KiB im Antworttext eines BMC; größere Antworten werden abgelehnt."
+
+#: lib/Settings.php
+msgid "Maximum Response Size"
+msgstr "Maximale Antwortgröße"
+
+#: lib/Settings.php
+msgid "Freshness"
+msgstr "Aktualität"
+
+#: lib/Settings.php
+msgid "Collection intervals after which a reading is shown as delayed."
+msgstr "Erfassungsintervalle, nach denen ein Messwert als verzögert angezeigt wird."
+
+#: lib/Settings.php
+msgid "Delayed After"
+msgstr "Verzögert nach"
+
+#: lib/Settings.php
+msgid "Collection intervals after which a reading is stale and reads as unknown. Always at least one more than Delayed After."
+msgstr "Erfassungsintervalle, nach denen ein Messwert veraltet ist und als unbekannt gilt. Immer mindestens eins mehr als „Verzögert nach“."
+
+#: lib/Settings.php
+msgid "Stale After"
+msgstr "Veraltet nach"
+
+#: lib/Settings.php
+msgid "Uninstall"
+msgstr "Deinstallation"
+
+#: lib/Settings.php
+msgid "Keep Plugin Tables on Uninstall"
+msgstr "Plugin-Tabellen bei Deinstallation behalten"
+
+#: lib/Settings.php
+msgid "When checked, uninstalling the plugin keeps its BMC registry, encrypted passwords, and reading cache. Clear it to have the uninstall drop them. Uninstall never touches Cacti devices, graphs, or BMCs, including devices the plugin created."
+msgstr "Wenn aktiviert, bleiben bei der Deinstallation des Plugins die BMC-Registrierung, die verschlüsselten Passwörter und der Messwert-Cache erhalten. Deaktivieren Sie diese Option, damit sie bei der Deinstallation gelöscht werden. Die Deinstallation lässt Cacti-Geräte, Graphen und BMCs unberührt, einschließlich der vom Plugin erstellten Geräte."
+
+#: lib/TlsMode.php
+msgid "Verify against the system CA store"
+msgstr "Gegen den System-CA-Speicher überprüfen"
+
+#: lib/TlsMode.php
+msgid "Verify against a CA bundle file"
+msgstr "Gegen eine CA-Bundle-Datei überprüfen"
+
+#: lib/TlsMode.php
+msgid "Pinned public key (SHA-256)"
+msgstr "Angehefteter öffentlicher Schlüssel (SHA-256)"
+
+#: lib/TlsMode.php
+msgid "Do not verify (unsafe)"
+msgstr "Nicht überprüfen (unsicher)"
+
+#: redfish_bmcs.php
+msgid "You do not have access to the Cacti device of this BMC."
+msgstr "Sie haben keinen Zugriff auf das Cacti-Gerät dieses BMC."
+
+#: redfish_bmcs.php
+msgid "The BMC could not be saved."
+msgstr "Der BMC konnte nicht gespeichert werden."
+
+#: redfish_bmcs.php
+msgid "The BMC was saved."
+msgstr "Der BMC wurde gespeichert."
+
+#: redfish_bmcs.php
+msgid "The BMC and its cached data were deleted. Its Cacti device was left in place."
+msgstr "Der BMC und seine zwischengespeicherten Daten wurden gelöscht. Das zugehörige Cacti-Gerät blieb erhalten."
+
+#: redfish_bmcs.php
+msgid "Backoff and held failures were cleared; the collector reads the BMC on its next run."
+msgstr "Wartezeit und zurückgehaltene Fehler wurden zurückgesetzt; der Kollektor liest den BMC beim nächsten Durchlauf aus."
+
+#: redfish_bmcs.php
+msgid "Adding devices and graphs needs Cacti's device management permission."
+msgstr "Zum Hinzufügen von Geräten und Graphen ist die Cacti-Berechtigung zur Geräteverwaltung erforderlich."
+
+#: redfish_bmcs.php
+msgid "The device of this BMC was deleted. Choose another device, or none, on the BMC form first."
+msgstr "Das Gerät dieses BMC wurde gelöscht. Wählen Sie zuerst im BMC-Formular ein anderes Gerät oder keines aus."
+
+#: redfish_bmcs.php
+#, php-format
+msgid "The data queries were indexed again and %d graphs were added."
+msgstr "Die Datenabfragen wurden neu indiziert und %d Graphen wurden hinzugefügt."
+
+#: redfish_bmcs.php
+msgid "The device was created with its Redfish graphs."
+msgstr "Das Gerät wurde mit seinen Redfish-Graphen erstellt."
+
+#: redfish_bmcs.php
+msgid "Installing the Redfish templates needs Cacti's Import Templates permission."
+msgstr "Zum Installieren der Redfish-Vorlagen ist die Cacti-Berechtigung „Vorlagen importieren“ erforderlich."
+
+#: redfish_bmcs.php
+msgid "The Redfish templates are installed."
+msgstr "Die Redfish-Vorlagen sind installiert."
+
+#: redfish_bmcs.php
+msgid "The Redfish templates could not be installed. The health page shows why."
+msgstr "Die Redfish-Vorlagen konnten nicht installiert werden. Die Zustandsseite zeigt den Grund an."
+
+#: redfish_bmcs.php
+msgid "The import could not be saved; nothing was imported."
+msgstr "Der Import konnte nicht gespeichert werden; es wurde nichts importiert."
+
+#: redfish_bmcs.php
+#, php-format
+msgid "%d BMCs were imported."
+msgstr "%d BMCs wurden importiert."
+
+#: redfish_credentials.php
+msgid "This credential is used by a BMC on a Cacti device you do not have access to, so it cannot be changed here."
+msgstr "Diese Zugangsdaten werden von einem BMC auf einem Cacti-Gerät verwendet, auf das Sie keinen Zugriff haben, und können daher hier nicht geändert werden."
+
+#: redfish_credentials.php
+msgid "Name: another credential already uses this name."
+msgstr "Name: Andere Zugangsdaten verwenden diesen Namen bereits."
+
+#: redfish_credentials.php
+msgid "User Name: enter 1 to 255 characters without control characters."
+msgstr "Benutzername: Geben Sie 1 bis 255 Zeichen ohne Steuerzeichen ein."
+
+#: redfish_credentials.php
+msgid "Password: enter the password of the BMC account."
+msgstr "Passwort: Geben Sie das Passwort des BMC-Kontos ein."
+
+#: redfish_credentials.php
+#, php-format
+msgid "The credential was saved, but the password was not stored: %s"
+msgstr "Die Zugangsdaten wurden gespeichert, das Passwort jedoch nicht: %s"
+
+#: redfish_credentials.php
+msgid "The credential could not be saved."
+msgstr "Die Zugangsdaten konnten nicht gespeichert werden."
+
+#: redfish_credentials.php
+msgid "The credential was saved."
+msgstr "Die Zugangsdaten wurden gespeichert."
+
+#: redfish_credentials.php
+msgid "The credential and its stored password were deleted."
+msgstr "Die Zugangsdaten und das gespeicherte Passwort wurden gelöscht."
+
+#: redfish_credentials.php
+msgid "The credential was not deleted. A credential in use by a BMC cannot be deleted."
+msgstr "Die Zugangsdaten wurden nicht gelöscht. Zugangsdaten, die von einem BMC verwendet werden, können nicht gelöscht werden."
+
+#: redfish_operator.php
+msgid "Retry collection"
+msgstr "Erfassung wiederholen"
+
+#: redfish_operator.php
+msgid "Monitoring view"
+msgstr "Überwachungsansicht"
+
+#: redfish_operator.php
+msgid "Observations could not be read. Ask an administrator to check the plugin log."
+msgstr "Die Beobachtungen konnten nicht gelesen werden. Bitten Sie einen Administrator, das Plugin-Protokoll zu prüfen."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires PHP %s or later. This server runs PHP %s, so the plugin was not installed or enabled."
+msgstr "Das Redfish-Plugin erfordert PHP %s oder höher. Auf diesem Server läuft PHP %s, daher wurde das Plugin weder installiert noch aktiviert."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires the PHP extensions %s, which this server does not load, so the plugin was not installed or enabled."
+msgstr "Das Redfish-Plugin erfordert die PHP-Erweiterungen %s, die auf diesem Server nicht geladen sind, daher wurde das Plugin weder installiert noch aktiviert."
+
+#: setup.php
+msgid "Redfish"
+msgstr "Redfish"
+
+#: setup.php
+msgid "The Redfish plugin is not enabled."
+msgstr "Das Redfish-Plugin ist nicht aktiviert."
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires PHP %s or later."
+msgstr "Das Redfish-Plugin erfordert PHP %s oder höher."
+
+#: setup.php
+msgid "Management"
+msgstr "Verwaltung"

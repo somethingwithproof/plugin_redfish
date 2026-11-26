@@ -1,0 +1,970 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: 2026 Thomas Vincent <thomasvincent@gmail.com>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: redfish 0.1.0-dev\n"
+"Report-Msgid-Bugs-To: https://github.com/somethingwithproof/plugin_redfish/issues\n"
+"PO-Revision-Date: 2026-11-26 00:00+0000\n"
+"Last-Translator: Thomas Vincent <thomasvincent@gmail.com>\n"
+"Language-Team: Thomas Vincent <thomasvincent@gmail.com>\n"
+"Language: zh-TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: include/operator.php
+msgid "Check collection freshness and the device graphs. Retry releases a collection hold for the next scheduled run; it does not contact the BMC now."
+msgstr "請檢查收集資料的新鮮度與裝置圖表。重試會解除下一次排程執行的收集暫止狀態；不會立即連線至 BMC。"
+
+#: lib/BmcImport.php
+msgid "The file is empty or larger than 1 MiB."
+msgstr "檔案為空白或大於 1 MiB。"
+
+#: lib/BmcImport.php
+msgid "The file could not be read."
+msgstr "無法讀取該檔案。"
+
+#: lib/BmcImport.php
+msgid "The file has no header row."
+msgstr "檔案沒有標題列。"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The file has a column named \"%s\". Import files must not carry secrets; name a stored credential in the credential column instead. Nothing was imported."
+msgstr "檔案包含名為「%s」的欄位。匯入檔案不得包含機密資訊；請改為在 credential 欄位中指定已儲存的憑證名稱。未匯入任何項目。"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The header must name only these columns, each once, including name, address, and credential: %s."
+msgstr "標題列只能包含下列欄位且每個僅限一次，並必須包含 name、address 與 credential：%s。"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "The file has more than %d rows."
+msgstr "檔案超過 %d 列。"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: expected %d fields, found %d."
+msgstr "第 %d 列：預期應有 %d 個欄位，實際找到 %d 個。"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Credential: no stored credential is named \"%s\"."
+msgstr "憑證：沒有名為「%s」的已儲存憑證。"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: %s"
+msgstr "第 %d 列：%s"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: the address %s port %d is already registered as %s."
+msgstr "第 %d 列：位址 %s 連接埠 %d 已註冊為 %s。"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "line %d"
+msgstr "第 %d 列"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: the name %s is already used."
+msgstr "第 %d 行：名稱 %s 已被使用。"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: no Cacti device has ID %d."
+msgstr "第 %d 行：沒有 ID 為 %d 的 Cacti 裝置。"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "Line %d: device %d already has the BMC %s."
+msgstr "第 %d 行：裝置 %d 已有 BMC %s。"
+
+#: lib/BmcImport.php
+#, php-format
+msgid "of line %d"
+msgstr "第 %d 行的"
+
+#: lib/BmcImport.php
+msgid "The file has no BMC rows."
+msgstr "檔案中沒有 BMC 資料列。"
+
+#: lib/BmcInput.php redfish_credentials.php
+msgid "Name: enter 1 to 100 characters without control characters."
+msgstr "名稱：請輸入 1 到 100 個字元，且不得包含控制字元。"
+
+#: lib/BmcInput.php
+msgid "Address: enter a host name or an IP address only, without a scheme, port, path, or user name. Loopback, link-local, multicast, and unspecified addresses are refused."
+msgstr "位址：請僅輸入主機名稱或 IP 位址，不要包含通訊協定配置、連接埠、路徑或使用者名稱。系統將拒絕回環、連結本機、多播與未指定位址。"
+
+#: lib/BmcInput.php
+msgid "Port: enter a TCP port from 1 to 65535."
+msgstr "連接埠：請輸入 1 到 65535 之間的 TCP 連接埠。"
+
+#: lib/BmcInput.php
+msgid "Poller: only the main poller can collect BMCs in this release."
+msgstr "輪詢器：此版本僅主輪詢器可以收集 BMC。"
+
+#: lib/BmcInput.php
+msgid "Device: choose a Cacti device or none."
+msgstr "裝置：請選擇一個 Cacti 裝置或選擇無。"
+
+#: lib/BmcInput.php lib/BmcsPage.php
+msgid "Credential: choose a stored credential."
+msgstr "認證資訊：請選擇已儲存的認證資訊。"
+
+#: lib/BmcInput.php
+msgid "TLS Verification: choose one of the listed modes."
+msgstr "TLS 驗證：請選擇清單中的其中一種模式。"
+
+#: lib/BmcInput.php
+msgid "CA Bundle File: enter an absolute path without control characters, at most 512 characters."
+msgstr "CA 憑證套件檔案：請輸入不含控制字元的絕對路徑，最多 512 個字元。"
+
+#: lib/BmcInput.php
+msgid "Public Key Pin: enter the base64 SHA-256 hash of the BMC public key, optionally prefixed with sha256//."
+msgstr "公開金鑰釘選：請輸入 BMC 公開金鑰的 base64 SHA-256 雜湊值，可視需要加上 sha256// 前綴。"
+
+#: lib/BmcRepository.php
+msgid "another BMC"
+msgstr "另一個 BMC"
+
+#: lib/BmcsPage.php lib/Pages.php
+msgid "Redfish BMCs"
+msgstr "Redfish BMC"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php lib/OperatorPage.php
+msgid "Actions"
+msgstr "動作"
+
+#: lib/BmcsPage.php
+msgid "Address"
+msgstr "位址"
+
+#: lib/BmcsPage.php
+msgid "Basic Fallback"
+msgstr "Basic 驗證備援"
+
+#: lib/BmcsPage.php
+msgid "Credential"
+msgstr "憑證"
+
+#: lib/BmcsPage.php
+msgid "Device"
+msgstr "裝置"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Name"
+msgstr "名稱"
+
+#: lib/BmcsPage.php
+msgid "Port"
+msgstr "連接埠"
+
+#: lib/BmcsPage.php lib/OperatorPage.php
+msgid "State"
+msgstr "狀態"
+
+#: lib/BmcsPage.php
+msgid "TLS Verification"
+msgstr "TLS 驗證"
+
+#: lib/BmcsPage.php lib/HealthPage.php
+msgid "No BMCs yet."
+msgstr "尚無 BMC。"
+
+#: lib/BmcsPage.php
+msgid "Missing"
+msgstr "缺少"
+
+#: lib/BmcsPage.php
+msgid "Allowed"
+msgstr "允許"
+
+#: lib/BmcsPage.php
+msgid "Off"
+msgstr "關閉"
+
+#: lib/BmcsPage.php
+msgid "Disabled"
+msgstr "已停用"
+
+#: lib/BmcsPage.php
+msgid "Enabled"
+msgstr "已啟用"
+
+#: lib/BmcsPage.php
+msgid "Retry Now"
+msgstr "立即重試"
+
+#: lib/BmcsPage.php
+msgid "Add Graphs"
+msgstr "新增圖表"
+
+#: lib/BmcsPage.php
+msgid "Create Device"
+msgstr "建立裝置"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Delete"
+msgstr "刪除"
+
+#: lib/BmcsPage.php
+msgid "Export the BMC registry as JSON (no secrets)"
+msgstr "將 BMC 登錄檔匯出為 JSON（不含機密資訊）"
+
+#: lib/BmcsPage.php
+msgid "Reinstall the Redfish Templates"
+msgstr "重新安裝 Redfish 範本"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Add Redfish graphs for %s"
+msgstr "為 %s 新增 Redfish 圖表"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Create a Cacti device for %s"
+msgstr "為 %s 建立 Cacti 裝置"
+
+#: lib/BmcsPage.php
+msgid "Everything is already in place. Confirming indexes the data queries again and adds graphs for new members only."
+msgstr "一切皆已就緒。確認後將重新為資料查詢建立索引，並僅為新成員新增圖表。"
+
+#: lib/BmcsPage.php
+msgid "Confirming adds:"
+msgstr "確認後將新增："
+
+#: lib/BmcsPage.php
+msgid "Existing devices, graphs, and thresholds are not changed."
+msgstr "現有的裝置、圖表與閾值不會變更。"
+
+#: lib/BmcsPage.php
+msgid "Confirm"
+msgstr "確認"
+
+#: lib/BmcsPage.php
+msgid "Cancel"
+msgstr "取消"
+
+#: lib/BmcsPage.php
+msgid "Import BMCs"
+msgstr "匯入 BMC"
+
+#: lib/BmcsPage.php
+msgid "CSV File"
+msgstr "CSV 檔案"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Header row with columns: %s. Name a stored credential; never put a password in the file. Every row must be valid or nothing is imported."
+msgstr "包含以下欄位的標題列：%s。請指定已儲存的認證資訊名稱；切勿將密碼放入檔案中。每一列都必須有效，否則將不會匯入任何項目。"
+
+#: lib/BmcsPage.php
+msgid "Import"
+msgstr "匯入"
+
+#: lib/BmcsPage.php
+msgid "Choose a credential"
+msgstr "選擇認證資訊"
+
+#: lib/BmcsPage.php
+msgid "None"
+msgstr "無"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Deleted device (ID %d)"
+msgstr "已刪除的裝置（ID %d）"
+
+#: lib/BmcsPage.php
+msgid "New Redfish BMC"
+msgstr "新增 Redfish BMC"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Redfish BMC: %s"
+msgstr "Redfish BMC：%s"
+
+#: lib/BmcsPage.php
+msgid "Host name or IP address of the BMC, without https:// or a path."
+msgstr "BMC 的主機名稱或 IP 位址，不含 https:// 或路徑。"
+
+#: lib/BmcsPage.php
+msgid "Do not verify is logged when set and shown as a warning on the health page while it stays."
+msgstr "設為「不驗證」時將會寫入日誌，並在維持該設定期間於健康狀態頁面顯示為警告。"
+
+#: lib/BmcsPage.php
+msgid "CA Bundle File"
+msgstr "CA 憑證套件檔案"
+
+#: lib/BmcsPage.php
+msgid "For the CA bundle mode: absolute path on the poller to a PEM file that others cannot write."
+msgstr "用於 CA 憑證套件模式：輪詢器上其他使用者無法寫入之 PEM 檔案的絕對路徑。"
+
+#: lib/BmcsPage.php
+msgid "For the pinned mode: base64 SHA-256 of the BMC public key, as sha256//... or the bare hash. A changed key fails until this is updated."
+msgstr "用於釘選模式：BMC 公開金鑰的 base64 SHA-256，格式為 sha256//... 或純雜湊值。金鑰變更後將會失敗，直到更新此設定為止。"
+
+#: lib/BmcsPage.php
+msgid "Public Key Pin"
+msgstr "公開金鑰釘選"
+
+#: lib/BmcsPage.php
+msgid "Allow Basic Authentication Fallback"
+msgstr "允許 Basic 驗證備援"
+
+#: lib/BmcsPage.php
+msgid "Used only when the BMC offers no session service. Every request then carries the password; the health page warns while it is in use."
+msgstr "僅在 BMC 未提供工作階段服務時使用。屆時每個請求都會夾帶密碼；使用期間健康狀態頁面將會發出警告。"
+
+#: lib/BmcsPage.php
+msgid "The Cacti device of the server this BMC manages. Leave it at none to have the plugin create a device from the list."
+msgstr "此 BMC 所管理伺服器的 Cacti 裝置。若保留為無，則可由外掛程式從清單中建立裝置。"
+
+#: lib/BmcsPage.php lib/CredentialsPage.php
+msgid "Save"
+msgstr "儲存"
+
+#: lib/BmcsPage.php
+#, php-format
+msgid "Address: %s port %d is already registered as %s."
+msgstr "位址：%s 連接埠 %d 已註冊為 %s。"
+
+#: lib/BmcsPage.php
+msgid "Address: this address and port are already registered."
+msgstr "位址：此位址與連接埠已被註冊。"
+
+#: lib/BmcsPage.php
+msgid "Name: another BMC already uses this name."
+msgstr "名稱：已有另一個 BMC 使用此名稱。"
+
+#: lib/BmcsPage.php
+msgid "Device: no Cacti device has this ID."
+msgstr "裝置：沒有具備此 ID 的 Cacti 裝置。"
+
+#: lib/BmcsPage.php
+msgid "Device: another BMC is already mapped to this device."
+msgstr "裝置：已有另一個 BMC 對應至此裝置。"
+
+#: lib/CredentialsPage.php lib/Pages.php
+msgid "Redfish Credentials"
+msgstr "Redfish 認證資訊"
+
+#: lib/CredentialsPage.php
+msgid "Password"
+msgstr "密碼"
+
+#: lib/CredentialsPage.php
+msgid "Used By"
+msgstr "使用項目"
+
+#: lib/CredentialsPage.php
+msgid "User Name"
+msgstr "使用者名稱"
+
+#: lib/CredentialsPage.php
+msgid "No credentials yet. Create one with a read-only BMC account."
+msgstr "尚無認證資訊。請使用唯讀權限的 BMC 帳號建立一組。"
+
+#: lib/CredentialsPage.php
+msgid "None stored"
+msgstr "尚未儲存"
+
+#: lib/CredentialsPage.php
+msgid "Stored"
+msgstr "已儲存"
+
+#: lib/CredentialsPage.php
+#, php-format
+msgid "%d BMCs"
+msgstr "%d 個 BMC"
+
+#: lib/CredentialsPage.php
+msgid "New Redfish Credential"
+msgstr "新增 Redfish 認證資訊"
+
+#: lib/CredentialsPage.php
+#, php-format
+msgid "Redfish Credential: %s"
+msgstr "Redfish 認證資訊：%s"
+
+#: lib/CredentialsPage.php
+msgid "A BMC account with the ReadOnly role. The plugin never needs a role that can change BMC state."
+msgstr "具備 ReadOnly 角色的 BMC 帳號。此外掛程式永遠不需要可變更 BMC 狀態的角色。"
+
+#: lib/CredentialsPage.php
+msgid "A password is stored. Leave blank to keep it."
+msgstr "已儲存密碼。留空則保留原密碼。"
+
+#: lib/CredentialsPage.php
+msgid "Stored encrypted with the vault key."
+msgstr "使用保存庫金鑰加密儲存。"
+
+#: lib/DeviceProvisioner.php
+msgid "The Redfish templates are not installed completely. Reinstall them from the Redfish BMCs page."
+msgstr "Redfish 範本未完整安裝。請從 Redfish BMC 頁面重新安裝。"
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "A device \"%s\" from the %s device template, polled by poller %d, with availability checks off. Its host name is a reserved name that is never contacted."
+msgstr "裝置「%s」（來自 %s 裝置範本），由輪詢器 %d 輪詢，且關閉可用性檢查。其主機名稱為保留名稱，永遠不會進行連線。"
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "The data query \"%s\", with a graph for each of the %d members known now."
+msgstr "資料查詢「%s」，為目前已知的 %d 個成員各建立一張圖表。"
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "%d fans or power supplies that were present are no longer reported. They count as failed until you confirm; confirming accepts the members the BMC reports now."
+msgstr "原本存在的 %d 個風扇或電源供應器不再回報。在您確認之前，這些項目將計為故障；確認後將接受 BMC 目前回報的成員。"
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "The graph \"%s\", with its \"%s\" data source."
+msgstr "圖表「%s」及其「%s」資料來源。"
+
+#: lib/DeviceProvisioner.php
+msgid "The BMC is already mapped to a device."
+msgstr "此 BMC 已對應至某個裝置。"
+
+#: lib/DeviceProvisioner.php
+#, php-format
+msgid "Created by the Redfish plugin for BMC %s. Its values come from the plugin cache; the host name is a reserved name that is never contacted."
+msgstr "由 Redfish 外掛程式為 BMC %s 建立。其數值來自外掛程式快取；主機名稱為保留名稱，永遠不會進行連線。"
+
+#: lib/DeviceProvisioner.php
+msgid "Cacti refused to create the device. See the Cacti log."
+msgstr "Cacti 拒絕建立該裝置。請參閱 Cacti 日誌。"
+
+#: lib/DeviceProvisioner.php
+msgid "The new device would be hidden from you by your device permissions, so it was removed again. Ask an administrator to grant access, or map the BMC to a device you can see."
+msgstr "由於您的裝置權限設定，新裝置將會對您隱藏，因此已將其再次移除。請要求管理員授予存取權限，或將 BMC 對應至您可檢視的裝置。"
+
+#: lib/DeviceProvisioner.php
+msgid "The BMC was mapped to a device by someone else meanwhile, or could not be mapped, so the new device was removed again. Reload the page and check its mapping."
+msgstr "在此期間此 BMC 已被其他人對應至裝置，或無法進行對應，因此新裝置已再次移除。請重新載入頁面並檢查其對應關係。"
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "The Redfish templates could not be installed: %s"
+msgstr "無法安裝 Redfish 範本：%s"
+
+#: lib/DeviceWarnings.php
+msgid "The Redfish templates are not installed or not current. Reinstall them from the Redfish BMCs page."
+msgstr "Redfish 範本尚未安裝或不是最新版本。請從 Redfish BMC 頁面重新安裝。"
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "%s: its Cacti device was deleted. Map it to another device or create one from the BMCs page."
+msgstr "%s：其 Cacti 裝置已被刪除。請將其對應至其他裝置，或從 BMC 頁面建立新裝置。"
+
+#: lib/DeviceWarnings.php
+#, php-format
+msgid "%s: its device is polled by poller %d but the BMC is read by poller %d. Move one of them so both use the same poller, or its graphs can read as unknown."
+msgstr "%s：其裝置由輪詢器 %d 輪詢，但 BMC 由輪詢器 %d 讀取。請移動其中一方以使兩者使用相同的輪詢器，否則其圖表可能會顯示為未知。"
+
+#: lib/GraphLinks.php
+msgid "Redfish graphs of this device"
+msgstr "此裝置的 Redfish 圖表"
+
+#: lib/HealthPage.php
+msgid "Redfish Warnings"
+msgstr "Redfish 警告"
+
+#: lib/HealthPage.php
+msgid "No warnings."
+msgstr "沒有警告。"
+
+#: lib/HealthPage.php
+msgid "Redfish Collector"
+msgstr "Redfish 收集器"
+
+#: lib/HealthPage.php
+msgid "BMCs"
+msgstr "BMC"
+
+#: lib/HealthPage.php
+msgid "Duration / Interval"
+msgstr "執行時間 / 間隔"
+
+#: lib/HealthPage.php
+msgid "Last Run"
+msgstr "上次執行"
+
+#: lib/HealthPage.php
+msgid "Poller"
+msgstr "輪詢器"
+
+#: lib/HealthPage.php
+msgid "Read"
+msgstr "讀取"
+
+#: lib/HealthPage.php
+msgid "Requests per BMC"
+msgstr "每個 BMC 的請求數"
+
+#: lib/HealthPage.php
+msgid "Workers"
+msgstr "工作程序"
+
+#: lib/HealthPage.php
+msgid "The collector has not run yet."
+msgstr "收集器尚未執行。"
+
+#: lib/HealthPage.php lib/OperatorPage.php
+msgid "Never"
+msgstr "從未"
+
+#: lib/HealthPage.php
+msgid "Redfish BMC Status"
+msgstr "Redfish BMC 狀態"
+
+#: lib/HealthPage.php
+msgid "Authentication"
+msgstr "驗證"
+
+#: lib/HealthPage.php
+msgid "BMC"
+msgstr "BMC"
+
+#: lib/HealthPage.php
+msgid "Data"
+msgstr "資料"
+
+#: lib/HealthPage.php
+msgid "Discovery"
+msgstr "探索"
+
+#: lib/HealthPage.php
+msgid "Failure"
+msgstr "失敗"
+
+#: lib/HealthPage.php
+msgid "Last Success"
+msgstr "上次成功"
+
+#: lib/HealthPage.php
+msgid "Mean Latency"
+msgstr "平均延遲"
+
+#: lib/HealthPage.php
+msgid "Reachability"
+msgstr "可達性"
+
+#: lib/HealthPage.php
+msgid "Requests"
+msgstr "請求數"
+
+#: lib/HealthPage.php
+msgid "Source"
+msgstr "來源"
+
+#: lib/HealthPage.php
+#, php-format
+msgid "newest %s"
+msgstr "最新 %s"
+
+#: lib/HealthPage.php
+msgid "disabled"
+msgstr "已停用"
+
+#: lib/HealthPage.php
+msgid "ok"
+msgstr "正常"
+
+#: lib/HealthPage.php
+msgid "stale"
+msgstr "過期"
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The vault key file cannot be used: %s. Stored passwords cannot be read or written until it is fixed."
+msgstr "無法使用保存庫金鑰檔案：%s。在修正此問題之前，無法讀取或寫入已儲存的密碼。"
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d took %.0f seconds, more than its budget of %d seconds."
+msgstr "輪詢器 %d 上的收集器花費了 %.0f 秒，超過其 %d 秒的預算時間。"
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d ran out of time before every BMC was read; the rest resume on the next run. Add workers or raise the budget."
+msgstr "輪詢器 %d 上的收集器在讀取完所有 BMC 前即已逾時；其餘項目將在下次執行時繼續。請增加工作程序數量或提高預算時間。"
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "The collector on poller %d last ran %s."
+msgstr "輪詢器 %d 上的收集器上次執行時間為 %s。"
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: TLS verification is off. Anyone on the path can read its traffic, including the BMC password."
+msgstr "%s：TLS 驗證已關閉。路徑上的任何人都可能讀取其流量，包含 BMC 密碼。"
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: uses Basic authentication because the BMC offers no session service; every request carries the password."
+msgstr "%s：由於 BMC 未提供工作階段服務，因此使用 Basic 驗證；每個請求都會夾帶密碼。"
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: a session may have been left open on the BMC; the next run deletes it after logging in."
+msgstr "%s：BMC 上可能有未關閉的工作階段；下次執行時將在登入後予以刪除。"
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: %d session logins in a row lost their response, so logins stopped. Check the BMC session list, then use Retry Now."
+msgstr "%s：連續 %d 次工作階段登入失去回應，因此已停止登入。請檢查 BMC 工作階段清單，然後使用「立即重試」。"
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: the BMC rejected the credential. It is not tried again until the credential changes."
+msgstr "%s：BMC 拒絕了該認證資訊。在變更認證資訊之前不會再次嘗試。"
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: its credential is missing or has no stored password."
+msgstr "%s：其認證資訊遺失或未儲存密碼。"
+
+#: lib/HealthWarnings.php
+#, php-format
+msgid "%s: %d links in its responses pointed elsewhere and were ignored."
+msgstr "%s：其回應中有 %d 個連結指向他處，已被忽略。"
+
+#: lib/Html.php
+#, php-format
+msgid "%d seconds ago"
+msgstr "%d 秒前"
+
+#: lib/Html.php
+#, php-format
+msgid "%d minutes ago"
+msgstr "%d 分鐘前"
+
+#: lib/Html.php
+#, php-format
+msgid "%d hours ago"
+msgstr "%d 小時前"
+
+#: lib/Html.php
+#, php-format
+msgid "%d days ago"
+msgstr "%d 天前"
+
+#: lib/OperatorPage.php
+msgid "Review the recorded observations below. Acknowledgments are personal to this session, expire when observations change, and never suppress alerts or change health."
+msgstr "請檢視下方已記錄的觀測項目。確認狀態僅適用於目前的工作階段，會在觀測項目變更時失效，且永遠不會抑制警示或變更健康狀態。"
+
+#: lib/OperatorPage.php lib/Pages.php
+msgid "Redfish Operations"
+msgstr "Redfish 操作"
+
+#: lib/OperatorPage.php
+msgid "Investigation"
+msgstr "調查"
+
+#: lib/OperatorPage.php
+msgid "Object"
+msgstr "物件"
+
+#: lib/OperatorPage.php
+msgid "Observed (UTC)"
+msgstr "觀測時間 (UTC)"
+
+#: lib/OperatorPage.php
+msgid "Unknown or stale"
+msgstr "未知或已過時"
+
+#: lib/OperatorPage.php
+msgid "Acknowledged; health unchanged."
+msgstr "已確認；健康狀態不變。"
+
+#: lib/OperatorPage.php
+msgid "Acknowledge"
+msgstr "確認"
+
+#: lib/OperatorPage.php
+msgid "No observations are available for devices you may access."
+msgstr "您可存取的裝置目前沒有可用的觀測項目。"
+
+#: lib/Pages.php
+msgid "Redfish Operator"
+msgstr "Redfish 操作員"
+
+#: lib/Pages.php
+msgid "Redfish View"
+msgstr "Redfish 檢視"
+
+#: lib/Pages.php
+msgid "Redfish Admin"
+msgstr "Redfish 管理員"
+
+#: lib/Pages.php
+msgid "Redfish Health"
+msgstr "Redfish 健康狀態"
+
+#: lib/Settings.php
+#, php-format
+msgid "%s Default %d, from %d to %d."
+msgstr "%s 預設值 %d，範圍從 %d 到 %d。"
+
+#: lib/Settings.php
+msgid "Credential Vault"
+msgstr "憑證保存庫"
+
+#: lib/Settings.php
+msgid "Vault Key File"
+msgstr "保存庫金鑰檔案"
+
+#: lib/Settings.php
+msgid "Absolute path to the 32-byte key that encrypts stored BMC passwords. Create it yourself, outside the web root, readable only by the web server and poller user, in a directory that only root and that user can write; the plugin never creates or writes it. Back it up with the database: without it, stored passwords must be entered again."
+msgstr "用於加密所儲存 BMC 密碼的 32 位元組金鑰之絕對路徑。請自行建立於網站根目錄之外、僅限網頁伺服器與輪詢器使用者可讀取，且位於僅 root 與該使用者可寫入的目錄中；外掛程式永遠不會建立或寫入此檔案。請隨資料庫一同備份：若遺失此金鑰，則必須重新輸入已儲存的密碼。"
+
+#: lib/Settings.php
+msgid "Collector"
+msgstr "收集器"
+
+#: lib/Settings.php
+msgid "Collection Interval"
+msgstr "收集間隔"
+
+#: lib/Settings.php
+msgid "Seconds between reads of each BMC."
+msgstr "每次讀取各 BMC 之間的間隔秒數。"
+
+#: lib/Settings.php
+msgid "Rediscovery Interval"
+msgstr "重新探索間隔"
+
+#: lib/Settings.php
+msgid "Seconds between full resource discoveries of each BMC. A BMC is also rediscovered at once when a known resource disappears or changes type."
+msgstr "對各 BMC 執行完整資源探索之間的間隔秒數。當已知資源消失或變更類型時，也會立即重新探索 BMC。"
+
+#: lib/Settings.php
+msgid "Collector Time Budget"
+msgstr "收集器時間預算"
+
+#: lib/Settings.php
+msgid "Seconds one collector run may spend before it stops starting new BMCs. Keep it below the poller interval; unfinished BMCs resume on the next run."
+msgstr "單次收集器執行在停止啟動新 BMC 前可花費的秒數。請保持低於輪詢器間隔；未完成的 BMC 將在下次執行時繼續。"
+
+#: lib/Settings.php
+msgid "BMCs read in parallel. Each BMC is read by one worker at a time."
+msgstr "平行讀取的 BMC 數量。每個 BMC 每次由一個工作程序讀取。"
+
+#: lib/Settings.php
+msgid "Collector Workers"
+msgstr "收集器工作程序數"
+
+#: lib/Settings.php
+msgid "Connect Timeout"
+msgstr "連線逾時"
+
+#: lib/Settings.php
+msgid "Seconds allowed for the TCP connection and TLS handshake to a BMC."
+msgstr "允許連線至 BMC 進行 TCP 連線與 TLS 交握的秒數。"
+
+#: lib/Settings.php
+msgid "Request Timeout"
+msgstr "請求逾時"
+
+#: lib/Settings.php
+msgid "Seconds allowed for one whole request to a BMC, including the connection."
+msgstr "允許向 BMC 發出單次完整請求（包含連線）的秒數。"
+
+#: lib/Settings.php
+msgid "KiB accepted in one BMC response body; a larger response is refused."
+msgstr "單次 BMC 回應主體所接受的 KiB 大小；超過此大小的回應將被拒絕。"
+
+#: lib/Settings.php
+msgid "Maximum Response Size"
+msgstr "最大回應大小"
+
+#: lib/Settings.php
+msgid "Freshness"
+msgstr "時效性"
+
+#: lib/Settings.php
+msgid "Collection intervals after which a reading is shown as delayed."
+msgstr "超過多少個收集間隔後，讀數將顯示為延遲。"
+
+#: lib/Settings.php
+msgid "Delayed After"
+msgstr "延遲判定間隔數"
+
+#: lib/Settings.php
+msgid "Collection intervals after which a reading is stale and reads as unknown. Always at least one more than Delayed After."
+msgstr "超過多少個收集間隔後，讀數將視為過期並顯示為未知。此數值必須至少比「延遲判定間隔數」多 1。"
+
+#: lib/Settings.php
+msgid "Stale After"
+msgstr "資料過時秒數"
+
+#: lib/Settings.php
+msgid "Uninstall"
+msgstr "解除安裝"
+
+#: lib/Settings.php
+msgid "Keep Plugin Tables on Uninstall"
+msgstr "解除安裝時保留外掛程式資料表"
+
+#: lib/Settings.php
+msgid "When checked, uninstalling the plugin keeps its BMC registry, encrypted passwords, and reading cache. Clear it to have the uninstall drop them. Uninstall never touches Cacti devices, graphs, or BMCs, including devices the plugin created."
+msgstr "勾選時，解除安裝外掛程式將會保留其 BMC 登錄檔、加密密碼與讀數快取。取消勾選則會在解除安裝時將其刪除。解除安裝永遠不會更動 Cacti 裝置、圖表或 BMC，包含此外掛程式所建立的裝置。"
+
+#: lib/TlsMode.php
+msgid "Verify against the system CA store"
+msgstr "使用系統 CA 憑證存放區驗證"
+
+#: lib/TlsMode.php
+msgid "Verify against a CA bundle file"
+msgstr "使用 CA 憑證套件檔案驗證"
+
+#: lib/TlsMode.php
+msgid "Pinned public key (SHA-256)"
+msgstr "釘選公開金鑰 (SHA-256)"
+
+#: lib/TlsMode.php
+msgid "Do not verify (unsafe)"
+msgstr "不驗證（不安全）"
+
+#: redfish_bmcs.php
+msgid "You do not have access to the Cacti device of this BMC."
+msgstr "您沒有存取此 BMC 對應 Cacti 裝置的權限。"
+
+#: redfish_bmcs.php
+msgid "The BMC could not be saved."
+msgstr "無法儲存 BMC。"
+
+#: redfish_bmcs.php
+msgid "The BMC was saved."
+msgstr "已儲存 BMC。"
+
+#: redfish_bmcs.php
+msgid "The BMC and its cached data were deleted. Its Cacti device was left in place."
+msgstr "已刪除 BMC 及其快取資料。其 Cacti 裝置已予保留。"
+
+#: redfish_bmcs.php
+msgid "Backoff and held failures were cleared; the collector reads the BMC on its next run."
+msgstr "已清除退避與保留的失敗狀態；收集器將於下次執行時讀取此 BMC。"
+
+#: redfish_bmcs.php
+msgid "Adding devices and graphs needs Cacti's device management permission."
+msgstr "新增裝置與圖表需要 Cacti 的裝置管理權限。"
+
+#: redfish_bmcs.php
+msgid "The device of this BMC was deleted. Choose another device, or none, on the BMC form first."
+msgstr "此 BMC 的裝置已被刪除。請先在 BMC 表單上選擇其他裝置或選擇無。"
+
+#: redfish_bmcs.php
+#, php-format
+msgid "The data queries were indexed again and %d graphs were added."
+msgstr "已重新為資料查詢建立索引，並新增了 %d 張圖表。"
+
+#: redfish_bmcs.php
+msgid "The device was created with its Redfish graphs."
+msgstr "已建立裝置及其 Redfish 圖表。"
+
+#: redfish_bmcs.php
+msgid "Installing the Redfish templates needs Cacti's Import Templates permission."
+msgstr "安裝 Redfish 範本需要 Cacti 的匯入範本權限。"
+
+#: redfish_bmcs.php
+msgid "The Redfish templates are installed."
+msgstr "已安裝 Redfish 範本。"
+
+#: redfish_bmcs.php
+msgid "The Redfish templates could not be installed. The health page shows why."
+msgstr "無法安裝 Redfish 範本。健康狀態頁面有顯示原因。"
+
+#: redfish_bmcs.php
+msgid "The import could not be saved; nothing was imported."
+msgstr "無法儲存匯入內容；未匯入任何項目。"
+
+#: redfish_bmcs.php
+#, php-format
+msgid "%d BMCs were imported."
+msgstr "已匯入 %d 個 BMC。"
+
+#: redfish_credentials.php
+msgid "This credential is used by a BMC on a Cacti device you do not have access to, so it cannot be changed here."
+msgstr "此認證資訊正由您無權存取之 Cacti 裝置上的 BMC 使用，因此無法在此處變更。"
+
+#: redfish_credentials.php
+msgid "Name: another credential already uses this name."
+msgstr "名稱：已有另一組認證資訊使用此名稱。"
+
+#: redfish_credentials.php
+msgid "User Name: enter 1 to 255 characters without control characters."
+msgstr "使用者名稱：請輸入 1 到 255 個不含控制字元的字元。"
+
+#: redfish_credentials.php
+msgid "Password: enter the password of the BMC account."
+msgstr "密碼：請輸入 BMC 帳號的密碼。"
+
+#: redfish_credentials.php
+#, php-format
+msgid "The credential was saved, but the password was not stored: %s"
+msgstr "已儲存認證資訊，但未能儲存密碼：%s"
+
+#: redfish_credentials.php
+msgid "The credential could not be saved."
+msgstr "無法儲存認證資訊。"
+
+#: redfish_credentials.php
+msgid "The credential was saved."
+msgstr "已儲存認證資訊。"
+
+#: redfish_credentials.php
+msgid "The credential and its stored password were deleted."
+msgstr "已刪除認證資訊及其儲存的密碼。"
+
+#: redfish_credentials.php
+msgid "The credential was not deleted. A credential in use by a BMC cannot be deleted."
+msgstr "未刪除認證資訊。無法刪除正由 BMC 使用中的認證資訊。"
+
+#: redfish_operator.php
+msgid "Retry collection"
+msgstr "重試收集"
+
+#: redfish_operator.php
+msgid "Monitoring view"
+msgstr "監控檢視"
+
+#: redfish_operator.php
+msgid "Observations could not be read. Ask an administrator to check the plugin log."
+msgstr "無法讀取觀測紀錄。請聯繫管理員檢查外掛程式日誌。"
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires PHP %s or later. This server runs PHP %s, so the plugin was not installed or enabled."
+msgstr "Redfish 外掛程式需要 PHP %s 或更新版本。此伺服器執行的是 PHP %s，因此未能安裝或啟用此外掛程式。"
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires the PHP extensions %s, which this server does not load, so the plugin was not installed or enabled."
+msgstr "Redfish 外掛程式需要 PHP 擴充功能 %s，但此伺服器並未載入，因此未能安裝或啟用此外掛程式。"
+
+#: setup.php
+msgid "Redfish"
+msgstr "Redfish"
+
+#: setup.php
+msgid "The Redfish plugin is not enabled."
+msgstr "Redfish 外掛程式未啟用。"
+
+#: setup.php
+#, php-format
+msgid "The Redfish plugin requires PHP %s or later."
+msgstr "Redfish 外掛程式需要 PHP %s 或更新版本。"
+
+#: setup.php
+msgid "Management"
+msgstr "管理"
