@@ -39,6 +39,7 @@ final readonly class Bmc {
 		public string $pin,
 		public bool $basicFallback,
 		public AdminState $adminState,
+		public bool $ipmiFallback = false,
 	) {
 	}
 
@@ -60,7 +61,8 @@ final readonly class Bmc {
 			return null;
 		}
 
-		$port = Row::int($row, 'port', 443, 1);
+		$port      = Row::int($row, 'port', 443, 1);
+		$protocols = array_map('trim', explode(',', strtolower(Row::string($row, 'protocols'))));
 
 		return new self(
 			id: $id,
@@ -75,6 +77,7 @@ final readonly class Bmc {
 			pin: self::normalizePin(Row::string($row, 'pin_sha256')) ?? '',
 			basicFallback: Row::bool($row, 'basic_fallback'),
 			adminState: AdminState::tryFrom(Row::string($row, 'admin_state')) ?? AdminState::Disabled,
+			ipmiFallback: in_array('ipmi', $protocols, true),
 		);
 	}
 
@@ -108,7 +111,7 @@ final readonly class Bmc {
 			'name'           => $this->name,
 			'address'        => $this->address,
 			'port'           => $this->port,
-			'protocols'      => 'redfish',
+			'protocols'      => $this->ipmiFallback ? 'redfish,ipmi' : 'redfish',
 			'poller_id'      => $this->pollerId,
 			'host_id'        => $this->hostId,
 			'credential_id'  => $this->credentialId,

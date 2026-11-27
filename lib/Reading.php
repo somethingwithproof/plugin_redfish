@@ -31,6 +31,8 @@ final readonly class Reading {
 	public const SOURCE_SENSOR      = 'redfish.sensor';
 	public const SOURCE_LEGACY      = 'redfish.legacy';
 	public const SOURCE_NODE        = 'redfish.node';
+	public const SOURCE_IPMI_DCMI   = 'ipmi.dcmi';
+	public const SOURCE_IPMI_SDR    = 'ipmi.sdr';
 
 	public const METRICS = [
 		'power_watts', 'inlet_celsius', 'ambient_celsius', 'temperature_celsius', 'fan_speed',

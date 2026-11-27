@@ -27,7 +27,7 @@ namespace Somethingwithproof\Redfish;
  * database.
  */
 final readonly class BmcInput {
-	public const FIELDS = ['name', 'address', 'port', 'poller_id', 'host_id', 'credential_id', 'tls_mode', 'ca_file', 'pin_sha256', 'basic_fallback', 'enabled'];
+	public const FIELDS = ['name', 'address', 'port', 'poller_id', 'host_id', 'credential_id', 'tls_mode', 'ca_file', 'pin_sha256', 'basic_fallback', 'ipmi_fallback', 'enabled'];
 
 	/**
 	 * @param array<string, string> $errors field => message
@@ -58,10 +58,10 @@ final readonly class BmcInput {
 			$errors['port'] = __('Port: enter a TCP port from 1 to 65535.', 'redfish');
 		}
 
-		// Phases 1 to 3 collect on the main poller only.
+		// Phase 4 supports main and remote data collectors (poller_id >= 1).
 		$poller = Row::string($input, 'poller_id') === '' ? Bmc::MAIN_POLLER : Row::int($input, 'poller_id', 0);
 
-		if ($poller !== Bmc::MAIN_POLLER) {
+		if ($poller < 1) {
 			$errors['poller_id'] = __('Poller: only the main poller can collect BMCs in this release.', 'redfish');
 		}
 
@@ -111,6 +111,7 @@ final readonly class BmcInput {
 			pin: $mode === TlsMode::Pin ? (string) $normalizedPin : '',
 			basicFallback: Row::bool($input, 'basic_fallback'),
 			adminState: Row::bool($input, 'enabled') ? AdminState::Enabled : AdminState::Disabled,
+			ipmiFallback: Row::bool($input, 'ipmi_fallback'),
 		), []);
 	}
 }

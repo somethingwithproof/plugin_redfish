@@ -88,6 +88,10 @@ final class HealthWarnings {
 			if ($h->linksRefused > 0) {
 				$warnings[] = ['message' => __('%s: %d links in its responses pointed elsewhere and were ignored.', $bmc->name, $h->linksRefused, 'redfish'), 'admin' => false];
 			}
+
+			if ($bmc->ipmiFallback) {
+				$warnings[] = ['message' => sprintf('%s: IPMI fallback is enabled; IPMI 2.0 over UDP 623 exposes password hashes to reachable clients. Restrict UDP 623 to a management VLAN.', $bmc->name), 'admin' => false];
+			}
 		}
 
 		return $warnings;
