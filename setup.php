@@ -785,39 +785,47 @@ function redfish_remote_agent($data) {
 
 /**
  * abilities_register hook: register read-only Redfish abilities gated on the
- * Redfish View realm, returning zero credentials.
+ * Redfish View realm via DB lookup for the explicit user ID, returning zero
+ * credentials.
  *
- * @param mixed $abilities
+ * @param mixed $registrar
  * @return mixed
  */
-function redfish_abilities_register($abilities) {
+function redfish_abilities_register($registrar = null) {
 	if (!redfish_boot()) {
-		return $abilities;
+		return $registrar;
 	}
 
-	$list  = is_array($abilities) ? $abilities : array();
-	$clock = new \Somethingwithproof\Redfish\SystemClock();
+	$clock  = new \Somethingwithproof\Redfish\SystemClock();
+	$realms = new \Somethingwithproof\Redfish\RealmRepository(false);
 
 	$defs = \Somethingwithproof\Redfish\Abilities::definitions(
-		function (): bool {
-			return PHP_SAPI === 'cli' || api_user_realm_auth(\Somethingwithproof\Redfish\HealthPage::FILE);
+		function (int $userId) use ($realms): bool {
+			return $realms->userHasAnyFile(
+				$userId,
+				array_merge(
+					\Somethingwithproof\Redfish\Pages::VIEW,
+					\Somethingwithproof\Redfish\Pages::OPERATOR,
+					\Somethingwithproof\Redfish\Pages::ADMIN
+				)
+			);
 		},
-		function (): bool {
-			return PHP_SAPI === 'cli' || api_user_realm_auth(\Somethingwithproof\Redfish\BmcsPage::FILE);
+		function (int $userId) use ($realms): bool {
+			return $realms->userHasAnyFile($userId, \Somethingwithproof\Redfish\Pages::ADMIN);
 		},
-		function (): \Somethingwithproof\Redfish\DeviceScope {
-			if (PHP_SAPI === 'cli') {
-				return new \Somethingwithproof\Redfish\DeviceScope(
-					function (int $hostId): bool {
-						return true;
-					},
-					function (int $hostId): bool {
-						return true;
-					}
-				);
+		function (int $userId): \Somethingwithproof\Redfish\DeviceScope {
+			if (function_exists('is_device_allowed')) {
+				return \Somethingwithproof\Redfish\DeviceScope::forUser($userId, redfish_bmcs());
 			}
 
-			return redfish_device_scope();
+			return new \Somethingwithproof\Redfish\DeviceScope(
+				function (int $hostId): bool {
+					return false;
+				},
+				function (int $hostId): bool {
+					return redfish_bmcs()->hostExists($hostId);
+				}
+			);
 		},
 		function (): \Somethingwithproof\Redfish\BmcRepository {
 			return redfish_bmcs();
@@ -848,28 +856,29 @@ function redfish_abilities_register($abilities) {
 		}
 	);
 
-	foreach ($defs as $def) {
-		$list[] = $def;
+	if (is_object($registrar) && method_exists($registrar, 'register')) {
+		\Somethingwithproof\Redfish\Abilities::registerOn($registrar, $defs);
+
+		return $registrar;
 	}
 
-	return $list;
+	return $defs;
 }
 
 /**
- * doctor_register_checks hook: register local read-only Redfish diagnostics.
+ * doctor_register_checks hook: return evaluated local read-only Redfish diagnostics.
  *
- * @param mixed $checks
- * @return mixed
+ * @param mixed $context
+ * @return list<array<string, mixed>>
  */
-function redfish_doctor_register_checks($checks) {
+function redfish_doctor_register_checks($context = array()): array {
 	if (!redfish_boot()) {
-		return $checks;
+		return array();
 	}
 
-	$list  = is_array($checks) ? $checks : array();
 	$clock = new \Somethingwithproof\Redfish\SystemClock();
 
-	$defs = \Somethingwithproof\Redfish\DoctorChecks::definitions(
+	return \Somethingwithproof\Redfish\DoctorChecks::definitions(
 		function (): \Somethingwithproof\Redfish\Schema {
 			return new \Somethingwithproof\Redfish\Schema(false);
 		},
@@ -898,38 +907,31 @@ function redfish_doctor_register_checks($checks) {
 			return $clock;
 		}
 	);
-
-	foreach ($defs as $def) {
-		$list[] = $def;
-	}
-
-	return $list;
 }
 
 /**
  * doctor_register_debug_info hook: provide a redacted, plain-array diagnostic
  * snapshot with zero cross-plugin imports and zero credential material.
  *
- * @param mixed $info
- * @return mixed
+ * @param mixed $context
+ * @return list<array<string, mixed>>
  */
-function redfish_doctor_register_debug_info($info) {
+function redfish_doctor_register_debug_info($context = array()): array {
 	if (!redfish_boot()) {
-		return $info;
+		return array();
 	}
 
-	$sections            = is_array($info) ? $info : array();
-	$sections['redfish'] = \Somethingwithproof\Redfish\DoctorChecks::debugInfo(
-		plugin_redfish_version(),
-		new \Somethingwithproof\Redfish\Schema(false),
-		redfish_credential_store(),
-		redfish_bmcs(),
-		new \Somethingwithproof\Redfish\HealthRepository(false),
-		redfish_racks(),
-		redfish_settings()
+	return array(
+		\Somethingwithproof\Redfish\DoctorChecks::debugInfo(
+			plugin_redfish_version(),
+			new \Somethingwithproof\Redfish\Schema(false),
+			redfish_credential_store(),
+			redfish_bmcs(),
+			new \Somethingwithproof\Redfish\HealthRepository(false),
+			redfish_racks(),
+			redfish_settings()
+		),
 	);
-
-	return $sections;
 }
 
 /**
@@ -937,23 +939,43 @@ function redfish_doctor_register_debug_info($info) {
  * descriptors with zero cross-plugin imports and zero credential material.
  *
  * @param mixed $resources
- * @return mixed
+ * @return list<array<string, mixed>>
  */
-function redfish_api_register_resources($resources) {
+function redfish_api_register_resources($resources = array()): array {
 	if (!redfish_boot()) {
-		return $resources;
+		return array();
 	}
 
-	$list  = is_array($resources) ? $resources : array();
-	$clock = new \Somethingwithproof\Redfish\SystemClock();
-	$defs  = \Somethingwithproof\Redfish\ApiResources::descriptors(
-		function (): bool {
-			return PHP_SAPI === 'cli' || api_user_realm_auth(\Somethingwithproof\Redfish\HealthPage::FILE);
+	$clock  = new \Somethingwithproof\Redfish\SystemClock();
+	$realms = new \Somethingwithproof\Redfish\RealmRepository(false);
+
+	return \Somethingwithproof\Redfish\ApiResources::descriptors(
+		function (int $userId) use ($realms): bool {
+			if ($userId > 0) {
+				return $realms->userHasAnyFile(
+					$userId,
+					array_merge(
+						\Somethingwithproof\Redfish\Pages::VIEW,
+						\Somethingwithproof\Redfish\Pages::OPERATOR,
+						\Somethingwithproof\Redfish\Pages::ADMIN
+					)
+				);
+			}
+
+			return PHP_SAPI === 'cli' || (function_exists('api_user_realm_auth') && (bool) api_user_realm_auth(\Somethingwithproof\Redfish\HealthPage::FILE));
 		},
-		function (): bool {
-			return PHP_SAPI === 'cli' || api_user_realm_auth(\Somethingwithproof\Redfish\BmcsPage::FILE);
+		function (int $userId) use ($realms): bool {
+			if ($userId > 0) {
+				return $realms->userHasAnyFile($userId, \Somethingwithproof\Redfish\Pages::ADMIN);
+			}
+
+			return PHP_SAPI === 'cli' || (function_exists('api_user_realm_auth') && (bool) api_user_realm_auth(\Somethingwithproof\Redfish\BmcsPage::FILE));
 		},
-		function (): \Somethingwithproof\Redfish\DeviceScope {
+		function (int $userId): \Somethingwithproof\Redfish\DeviceScope {
+			if ($userId > 0 && function_exists('is_device_allowed')) {
+				return \Somethingwithproof\Redfish\DeviceScope::forUser($userId, redfish_bmcs());
+			}
+
 			if (PHP_SAPI === 'cli') {
 				return new \Somethingwithproof\Redfish\DeviceScope(
 					function (int $hostId): bool {
@@ -986,28 +1008,21 @@ function redfish_api_register_resources($resources) {
 			return \Somethingwithproof\Redfish\FreshnessEvaluator::fromSettings($clock, redfish_settings());
 		}
 	);
-
-	foreach ($defs as $def) {
-		$list[] = $def;
-	}
-
-	return $list;
 }
 
 /**
  * casc_register_providers hook: register Redfish CasC provider using vault
  * references and SHA-256 plan confirmation hashes.
  *
- * @param mixed $providers
+ * @param mixed $registrar
  * @return mixed
  */
-function redfish_casc_register_providers($providers) {
+function redfish_casc_register_providers($registrar = null) {
 	if (!redfish_boot()) {
-		return $providers;
+		return is_object($registrar) ? $registrar : array();
 	}
 
-	$list   = is_array($providers) ? $providers : array();
-	$list[] = \Somethingwithproof\Redfish\CascProvider::registration(
+	$descriptor = \Somethingwithproof\Redfish\CascProvider::registration(
 		function (): \Somethingwithproof\Redfish\BmcRepository {
 			return redfish_bmcs();
 		},
@@ -1019,7 +1034,13 @@ function redfish_casc_register_providers($providers) {
 		}
 	);
 
-	return $list;
+	if (is_object($registrar) && method_exists($registrar, 'register')) {
+		$registrar->register($descriptor);
+
+		return $registrar;
+	}
+
+	return $descriptor;
 }
 
 /** Resolve role inheritance against Cacti's current user and group grants. */

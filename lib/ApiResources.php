@@ -28,26 +28,26 @@ namespace Somethingwithproof\Redfish;
  */
 final class ApiResources {
 	/**
-	 * AIP resource type identifier for Redfish BMCs.
+	 * AIP collection identifier for Redfish BMCs.
 	 */
-	public const TYPE_BMC = 'redfish.cacti.net/Bmc';
+	public const COLLECTION_BMCS = 'redfishBmcs';
 
 	/**
-	 * AIP resource type identifier for Redfish racks and power summaries.
+	 * AIP collection identifier for Redfish racks and power summaries.
 	 */
-	public const TYPE_RACK = 'redfish.cacti.net/Rack';
+	public const COLLECTION_RACKS = 'redfishRacks';
 
 	/**
-	 * AIP resource type identifier for Redfish BMC health records.
+	 * AIP collection identifier for Redfish BMC health records.
 	 */
-	public const TYPE_HEALTH = 'redfish.cacti.net/Health';
+	public const COLLECTION_HEALTH = 'redfishHealth';
 
 	/**
 	 * Build plain-array Google AIP resource descriptors for api_register_resources.
 	 *
-	 * @param \Closure(): bool                 $canView     checks Redfish View realm authorization
-	 * @param \Closure(): bool                 $isAdmin     checks Redfish Admin realm authorization
-	 * @param \Closure(): DeviceScope          $scope       resolves Cacti device visibility
+	 * @param \Closure(int): bool              $canView     checks Redfish View realm authorization for $userId
+	 * @param \Closure(int): bool              $isAdmin     checks Redfish Admin realm authorization for $userId
+	 * @param \Closure(int): DeviceScope       $scope       resolves Cacti device visibility for $userId
 	 * @param \Closure(): BmcRepository        $bmcs        BMC repository provider
 	 * @param \Closure(): CredentialRepository $credentials credential repository provider
 	 * @param \Closure(): RackRepository       $racks       rack repository provider
@@ -69,35 +69,22 @@ final class ApiResources {
 	): array {
 		return [
 			[
-				'plugin'     => 'redfish',
-				'type'       => self::TYPE_BMC,
-				'singular'   => 'bmc',
-				'plural'     => 'bmcs',
-				'pattern'    => 'bmcs/{bmc}',
-				'version'    => 'v1',
-				'read_only'  => true,
-				'methods'    => ['get', 'list'],
-				'realm'      => HealthPage::FILE,
-				'fields'     => [
-					'name'           => 'string',
-					'id'             => 'integer',
-					'display_name'   => 'string',
-					'address'        => 'string',
-					'port'           => 'integer',
-					'poller_id'      => 'integer',
-					'host_id'        => 'integer',
-					'protocols'      => 'array',
-					'tls_mode'       => 'string',
-					'admin_state'    => 'string',
-					'credential_ref' => 'string',
-				],
-				'handlers'   => [
-					'list' => static function (array $params = []) use ($canView, $isAdmin, $scope, $bmcs, $credentials): array {
-						if (!$canView()) {
-							return ['code' => 403, 'error' => 'PERMISSION_DENIED', 'bmcs' => []];
+				'plugin'        => 'redfish',
+				'collection'    => self::COLLECTION_BMCS,
+				'singleton'     => 'redfishBmc',
+				'description'   => 'Read-only Redfish BMC inventory and protocol configuration (no credentials).',
+				'realm_read'    => BmcsPage::FILE,
+				'filter_fields' => ['id', 'name', 'display_name', 'address', 'poller_id', 'host_id', 'tls_mode', 'admin_state'],
+				'order_fields'  => ['id', 'name', 'display_name', 'poller_id'],
+				'handlers'      => [
+					'list' => static function (array $context = []) use ($canView, $isAdmin, $scope, $bmcs, $credentials): array {
+						$userId = Row::int($context, 'user_id', 0, 0);
+
+						if (!$canView($userId)) {
+							return [];
 						}
 
-						$visible  = HealthPage::visible($scope()->filter($bmcs()->all()), $isAdmin());
+						$visible  = HealthPage::visible($scope($userId)->filter($bmcs()->all()), $isAdmin($userId));
 						$credRefs = [];
 
 						foreach ($credentials()->all() as $cred) {
@@ -108,7 +95,7 @@ final class ApiResources {
 
 						foreach ($visible as $bmc) {
 							$items[] = [
-								'name'           => 'bmcs/' . $bmc->id,
+								'name'           => self::COLLECTION_BMCS . '/' . $bmc->id,
 								'id'             => $bmc->id,
 								'display_name'   => $bmc->name,
 								'address'        => $bmc->address,
@@ -122,18 +109,20 @@ final class ApiResources {
 							];
 						}
 
-						return ['code' => 200, 'bmcs' => $items];
+						return $items;
 					},
-					'get'  => static function (int $id) use ($canView, $isAdmin, $scope, $bmcs, $credentials): array {
-						if (!$canView()) {
-							return ['code' => 403, 'error' => 'PERMISSION_DENIED'];
+					'get'  => static function (int|string $id, array $context = []) use ($canView, $isAdmin, $scope, $bmcs, $credentials): ?array {
+						$userId = Row::int($context, 'user_id', 0, 0);
+
+						if (!$canView($userId) || !is_numeric($id) || (int) $id <= 0) {
+							return null;
 						}
 
-						$visible = HealthPage::visible($scope()->filter($bmcs()->all()), $isAdmin());
-						$credRef = '';
+						$targetId = (int) $id;
+						$visible  = HealthPage::visible($scope($userId)->filter($bmcs()->all()), $isAdmin($userId));
 
 						foreach ($visible as $bmc) {
-							if ($bmc->id !== $id) {
+							if ($bmc->id !== $targetId) {
 								continue;
 							}
 
@@ -141,58 +130,44 @@ final class ApiResources {
 							$credRef = $cred !== null ? CascProvider::VAULT_PREFIX . $cred->name : '';
 
 							return [
-								'code'     => 200,
-								'resource' => [
-									'name'           => 'bmcs/' . $bmc->id,
-									'id'             => $bmc->id,
-									'display_name'   => $bmc->name,
-									'address'        => $bmc->address,
-									'port'           => $bmc->port,
-									'poller_id'      => $bmc->pollerId,
-									'host_id'        => $bmc->hostId,
-									'protocols'      => $bmc->ipmiFallback ? ['redfish', 'ipmi'] : ['redfish'],
-									'tls_mode'       => $bmc->tlsMode->value,
-									'admin_state'    => $bmc->adminState->value,
-									'credential_ref' => $credRef,
-								],
+								'name'           => self::COLLECTION_BMCS . '/' . $bmc->id,
+								'id'             => $bmc->id,
+								'display_name'   => $bmc->name,
+								'address'        => $bmc->address,
+								'port'           => $bmc->port,
+								'poller_id'      => $bmc->pollerId,
+								'host_id'        => $bmc->hostId,
+								'protocols'      => $bmc->ipmiFallback ? ['redfish', 'ipmi'] : ['redfish'],
+								'tls_mode'       => $bmc->tlsMode->value,
+								'admin_state'    => $bmc->adminState->value,
+								'credential_ref' => $credRef,
 							];
 						}
 
-						return ['code' => 404, 'error' => 'NOT_FOUND'];
+						return null;
 					},
 				],
 			],
 			[
-				'plugin'     => 'redfish',
-				'type'       => self::TYPE_RACK,
-				'singular'   => 'rack',
-				'plural'     => 'racks',
-				'pattern'    => 'racks/{rack}',
-				'version'    => 'v1',
-				'read_only'  => true,
-				'methods'    => ['get', 'list'],
-				'realm'      => HealthPage::FILE,
-				'fields'     => [
-					'name'               => 'string',
-					'rack_id'            => 'integer',
-					'site_id'            => 'integer',
-					'power_watts'        => 'number',
-					'power_budget_watts' => 'number',
-					'utilization_pct'    => 'number',
-					'headroom_watts'     => 'number',
-					'coverage_pct'       => 'number',
-					'over_budget'        => 'boolean',
-				],
-				'handlers'   => [
-					'list' => static function (array $params = []) use ($canView, $scope, $racks, $caches, $freshness): array {
-						if (!$canView()) {
-							return ['code' => 403, 'error' => 'PERMISSION_DENIED', 'racks' => []];
+				'plugin'        => 'redfish',
+				'collection'    => self::COLLECTION_RACKS,
+				'singleton'     => 'redfishRack',
+				'description'   => 'Read-only Redfish rack power summaries, budgets, and member coverage.',
+				'realm_read'    => BmcsPage::FILE,
+				'filter_fields' => ['id', 'name', 'display_name', 'site_id', 'over_budget'],
+				'order_fields'  => ['id', 'name', 'display_name', 'site_id'],
+				'handlers'      => [
+					'list' => static function (array $context = []) use ($canView, $scope, $racks, $caches, $freshness): array {
+						$userId = Row::int($context, 'user_id', 0, 0);
+
+						if (!$canView($userId)) {
+							return [];
 						}
 
 						$rackRepo  = $racks();
 						$cacheRepo = $caches();
 						$freshEval = $freshness();
-						$devScope  = $scope();
+						$devScope  = $scope($userId);
 						$items     = [];
 
 						foreach ($rackRepo->all() as $rack) {
@@ -208,25 +183,32 @@ final class ApiResources {
 									: $cacheRepo->forHost($member['host_id']);
 							}
 
-							$items[] = ['resource_name' => 'racks/' . $rack->id] + RackPowerSummary::compute($rack, $memberCaches, $freshEval)->toArray();
+							$summary = RackPowerSummary::compute($rack, $memberCaches, $freshEval)->toArray();
+							$items[] = [
+								'name'         => self::COLLECTION_RACKS . '/' . $rack->id,
+								'id'           => $rack->id,
+								'display_name' => $rack->name,
+							] + $summary;
 						}
 
-						return ['code' => 200, 'racks' => $items];
+						return $items;
 					},
-					'get'  => static function (int $id) use ($canView, $scope, $racks, $caches, $freshness): array {
-						if (!$canView()) {
-							return ['code' => 403, 'error' => 'PERMISSION_DENIED'];
+					'get'  => static function (int|string $id, array $context = []) use ($canView, $scope, $racks, $caches, $freshness): ?array {
+						$userId = Row::int($context, 'user_id', 0, 0);
+
+						if (!$canView($userId) || !is_numeric($id) || (int) $id <= 0) {
+							return null;
 						}
 
 						$rackRepo = $racks();
-						$rack     = $rackRepo->find($id);
+						$rack     = $rackRepo->find((int) $id);
 
 						if ($rack === null) {
-							return ['code' => 404, 'error' => 'NOT_FOUND'];
+							return null;
 						}
 
 						$cacheRepo    = $caches();
-						$devScope     = $scope();
+						$devScope     = $scope($userId);
 						$memberCaches = [];
 
 						foreach ($rackRepo->members($rack->id) as $member) {
@@ -239,46 +221,41 @@ final class ApiResources {
 								: $cacheRepo->forHost($member['host_id']);
 						}
 
+						$summary = RackPowerSummary::compute($rack, $memberCaches, $freshness())->toArray();
+
 						return [
-							'code'     => 200,
-							'resource' => ['resource_name' => 'racks/' . $rack->id] + RackPowerSummary::compute($rack, $memberCaches, $freshness())->toArray(),
-						];
+							'name'         => self::COLLECTION_RACKS . '/' . $rack->id,
+							'id'           => $rack->id,
+							'display_name' => $rack->name,
+						] + $summary;
 					},
 				],
 			],
 			[
-				'plugin'     => 'redfish',
-				'type'       => self::TYPE_HEALTH,
-				'singular'   => 'health',
-				'plural'     => 'health',
-				'pattern'    => 'bmcs/{bmc}/health',
-				'version'    => 'v1',
-				'read_only'  => true,
-				'methods'    => ['get', 'list'],
-				'realm'      => HealthPage::FILE,
-				'fields'     => [
-					'name'          => 'string',
-					'bmc_id'        => 'integer',
-					'reachability'  => 'string',
-					'failure_class' => 'string',
-					'last_success'  => 'integer',
-					'generation'    => 'string',
-					'latency_ms'    => 'number',
-				],
-				'handlers'   => [
-					'list' => static function (array $params = []) use ($canView, $isAdmin, $scope, $bmcs, $health): array {
-						if (!$canView()) {
-							return ['code' => 403, 'error' => 'PERMISSION_DENIED', 'health' => []];
+				'plugin'        => 'redfish',
+				'collection'    => self::COLLECTION_HEALTH,
+				'singleton'     => 'redfishHealth',
+				'description'   => 'Read-only Redfish BMC reachability and collection health snapshots.',
+				'realm_read'    => BmcsPage::FILE,
+				'filter_fields' => ['id', 'name', 'bmc_id', 'reachability', 'failure_class'],
+				'order_fields'  => ['id', 'name', 'bmc_id', 'last_success'],
+				'handlers'      => [
+					'list' => static function (array $context = []) use ($canView, $isAdmin, $scope, $bmcs, $health): array {
+						$userId = Row::int($context, 'user_id', 0, 0);
+
+						if (!$canView($userId)) {
+							return [];
 						}
 
-						$visible    = HealthPage::visible($scope()->filter($bmcs()->all()), $isAdmin());
+						$visible    = HealthPage::visible($scope($userId)->filter($bmcs()->all()), $isAdmin($userId));
 						$healthRepo = $health();
 						$items      = [];
 
 						foreach ($visible as $bmc) {
 							$h       = $healthRepo->find($bmc->id) ?? new BmcHealth($bmc->id);
 							$items[] = [
-								'name'          => 'bmcs/' . $bmc->id . '/health',
+								'name'          => self::COLLECTION_HEALTH . '/' . $bmc->id,
+								'id'            => $bmc->id,
 								'bmc_id'        => $bmc->id,
 								'reachability'  => $h->reachability->value,
 								'failure_class' => $h->failure->value ?? '',
@@ -288,37 +265,38 @@ final class ApiResources {
 							];
 						}
 
-						return ['code' => 200, 'health' => $items];
+						return $items;
 					},
-					'get'  => static function (int $id) use ($canView, $isAdmin, $scope, $bmcs, $health): array {
-						if (!$canView()) {
-							return ['code' => 403, 'error' => 'PERMISSION_DENIED'];
+					'get'  => static function (int|string $id, array $context = []) use ($canView, $isAdmin, $scope, $bmcs, $health): ?array {
+						$userId = Row::int($context, 'user_id', 0, 0);
+
+						if (!$canView($userId) || !is_numeric($id) || (int) $id <= 0) {
+							return null;
 						}
 
-						$visible = HealthPage::visible($scope()->filter($bmcs()->all()), $isAdmin());
+						$targetId = (int) $id;
+						$visible  = HealthPage::visible($scope($userId)->filter($bmcs()->all()), $isAdmin($userId));
 
 						foreach ($visible as $bmc) {
-							if ($bmc->id !== $id) {
+							if ($bmc->id !== $targetId) {
 								continue;
 							}
 
 							$h = $health()->find($bmc->id) ?? new BmcHealth($bmc->id);
 
 							return [
-								'code'     => 200,
-								'resource' => [
-									'name'          => 'bmcs/' . $bmc->id . '/health',
-									'bmc_id'        => $bmc->id,
-									'reachability'  => $h->reachability->value,
-									'failure_class' => $h->failure->value ?? '',
-									'last_success'  => $h->lastSuccess,
-									'generation'    => $h->generation,
-									'latency_ms'    => $h->latencyMs,
-								],
+								'name'          => self::COLLECTION_HEALTH . '/' . $bmc->id,
+								'id'            => $bmc->id,
+								'bmc_id'        => $bmc->id,
+								'reachability'  => $h->reachability->value,
+								'failure_class' => $h->failure->value ?? '',
+								'last_success'  => $h->lastSuccess,
+								'generation'    => $h->generation,
+								'latency_ms'    => $h->latencyMs,
 							];
 						}
 
-						return ['code' => 404, 'error' => 'NOT_FOUND'];
+						return null;
 					},
 				],
 			],

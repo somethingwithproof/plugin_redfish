@@ -360,16 +360,19 @@ it('exercises Cli error branches, apply confirmation success, and CascProvider a
 	expect($applied['exit'])->toBe(0)
 		->and($applied['stdout'])->toContain('Applied ');
 
-	// CascProvider::registration callbacks.
-	$reg = CascProvider::registration(
+	// CascProvider::registration canonical array callbacks.
+	$reg    = CascProvider::registration(
 		static fn (): BmcRepository => $bmcs,
 		static fn (): CredentialRepository => $creds,
 		static fn (): RackRepository => $racks
 	);
-	expect($reg['id'])->toBe('redfish')
-		->and($reg['export']('yaml'))->toContain('provider: redfish')
-		->and($reg['validate']($yaml, 'yaml'))->toBe([])
-		->and($reg['plan']($yaml, 'yaml')['hash'])->toBe($hash);
+	$parsed = CascProvider::parse($yaml, 'yaml');
+	expect($reg['slug'])->toBe('redfish')
+		->and($reg['schemaVersion'])->toBe('1.0')
+		->and($reg['export']([])['provider'])->toBe('redfish')
+		->and($reg['validate']($parsed))->toBe([])
+		->and($reg['plan']($parsed, [])['hash'])->toBe($hash)
+		->and($reg['apply']($parsed, $hash, ['user_id' => 1])['ok'])->toBeTrue();
 });
 
 it('exercises Schema full migration v0 through v3 including v2 host_owner deduplication and v3 rack tables', function () {

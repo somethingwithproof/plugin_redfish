@@ -561,14 +561,61 @@ final class CascProvider {
 	 */
 	public static function registration(\Closure $bmcs, \Closure $credentials, \Closure $racks): array {
 		return [
-			'id'          => self::PROVIDER_ID,
-			'name'        => 'Redfish BMC & Rack Configuration',
-			'formats'     => ['yaml', 'xml'],
-			'export'      => static fn (string $format = 'yaml'): string => self::export(self::buildDocument($bmcs()->all(), $credentials()->all(), $racks()->all()), $format),
-			'validate'    => static fn (string $content, string $format = 'yaml'): array => self::validate(self::parse($content, $format)),
-			'plan'        => static fn (string $content, string $format = 'yaml'): array => self::plan(self::parse($content, $format), self::buildDocument($bmcs()->all(), $credentials()->all(), $racks()->all())),
-			'apply'       => static fn (string $content, string $confirmHash, string $format = 'yaml', int $userId = 0): array => self::apply(self::parse($content, $format), $confirmHash, $bmcs(), $credentials(), $racks(), $userId),
+			'slug'          => self::PROVIDER_ID,
+			'schemaVersion' => '1.0',
+			'export'        => static function (array $options = []) use ($bmcs, $credentials, $racks): array {
+				$rackRepo    = $racks();
+				$allRacks    = $rackRepo->all();
+				$rackMembers = [];
+
+				foreach ($allRacks as $rack) {
+					$rackMembers[$rack->id] = $rackRepo->members($rack->id);
+				}
+
+				return self::buildDocument($bmcs()->all(), $credentials()->all(), $allRacks, $rackMembers);
+			},
+			'validate'      => static function (array $desired): array {
+				$doc = self::normalizeDesiredDocument($desired);
+
+				return self::validate($doc);
+			},
+			'plan'          => static function (array $desired, array $options = []) use ($bmcs, $credentials, $racks): array {
+				$doc     = self::normalizeDesiredDocument($desired);
+				$current = self::buildDocument($bmcs()->all(), $credentials()->all(), $racks()->all());
+
+				return self::plan($doc, $current);
+			},
+			'apply'         => static function (array $desired, string $confirm, array $options = []) use ($bmcs, $credentials, $racks): array {
+				$doc    = self::normalizeDesiredDocument($desired);
+				$userId = Row::int($options, 'user_id', 0, 0);
+
+				return self::apply($doc, $confirm, $bmcs(), $credentials(), $racks(), $userId);
+			},
 		];
+	}
+
+	/**
+	 * Ensure a desired array document carries default provider and schema_version keys.
+	 *
+	 * @param array<array-key, mixed> $desired
+	 * @return array<string, mixed>
+	 */
+	private static function normalizeDesiredDocument(array $desired): array {
+		$doc = [];
+
+		foreach ($desired as $k => $v) {
+			$doc[(string) $k] = $v;
+		}
+
+		if (!array_key_exists('provider', $doc)) {
+			$doc['provider'] = self::PROVIDER_ID;
+		}
+
+		if (!array_key_exists('schema_version', $doc)) {
+			$doc['schema_version'] = self::SCHEMA_VERSION;
+		}
+
+		return $doc;
 	}
 
 	/**

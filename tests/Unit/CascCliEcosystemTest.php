@@ -19,6 +19,7 @@
 
 use Somethingwithproof\Redfish\Abilities;
 use Somethingwithproof\Redfish\AdminState;
+use Somethingwithproof\Redfish\ApiResources;
 use Somethingwithproof\Redfish\Bmc;
 use Somethingwithproof\Redfish\BmcRepository;
 use Somethingwithproof\Redfish\CascProvider;
@@ -36,6 +37,7 @@ use Somethingwithproof\Redfish\MaintWindow;
 use Somethingwithproof\Redfish\NodeCacheRepository;
 use Somethingwithproof\Redfish\Rack;
 use Somethingwithproof\Redfish\RackRepository;
+use Somethingwithproof\Redfish\RealmRepository;
 use Somethingwithproof\Redfish\Schema;
 use Somethingwithproof\Redfish\Settings;
 use Somethingwithproof\Redfish\TlsMode;
@@ -148,7 +150,7 @@ it('runs CLI export, validate, plan, apply confirmation guard, and health text/j
 	expect($healthText['exit'])->toBe(0)->and($healthText['stdout'])->toContain('srv01');
 });
 
-it('registers read-only MCP abilities gated on View realm with zero credentials', function () {
+it('registers read-only MCP abilities via registrar object with canonical schemas and user-ID permissions', function () {
 	$GLOBALS['__redfish_db_rows'] = [
 		'FROM plugin_redfish_credential ORDER BY name' => [['id' => 1, 'name' => 'ro', 'username' => 'monitor', 'revision' => 1, 'created_at' => 1, 'updated_at' => 1]],
 		'FROM plugin_redfish_bmc ORDER BY name' => [['id' => 1, 'name' => 'srv01', 'address' => '10.0.1.20', 'port' => 443, 'protocols' => 'redfish', 'poller_id' => 1, 'host_id' => 5, 'credential_id' => 1, 'tls_mode' => 'system', 'ca_file' => '', 'pin_sha256' => '', 'basic_fallback' => '', 'admin_state' => 'enabled']],
@@ -156,6 +158,11 @@ it('registers read-only MCP abilities gated on View realm with zero credentials'
 		'FROM plugin_redfish_rack_member WHERE rack_id = ?' => [],
 		'FROM plugin_redfish_health WHERE bmc_id = ?' => [['bmc_id' => 1, 'reachability' => 'reachable', 'last_success' => 1_800_000_000]],
 		'FROM plugin_redfish_run ORDER BY poller_id' => [],
+		'FROM plugin_realms WHERE plugin = ?' => [
+			['id' => 12, 'file' => 'redfish_health.php'],
+			['id' => 13, 'file' => 'redfish_bmcs.php,redfish_credentials.php'],
+		],
+		'FROM user_auth_realm' => [['realm_id' => 112]],
 	];
 
 	$clock    = new FixedClock(1_800_000_000);
@@ -163,9 +170,9 @@ it('registers read-only MCP abilities gated on View realm with zero credentials'
 	$allow    = false;
 
 	$defs = Abilities::definitions(
-		static function () use (&$allow): bool { return $allow; },
-		static fn (): bool => false,
-		static fn (): DeviceScope => new DeviceScope(static fn (int $h): bool => $h === 5, static fn (int $h): bool => true),
+		static function (int $userId) use (&$allow): bool { return $allow && $userId > 0; },
+		static fn (int $userId): bool => false,
+		static fn (int $userId): DeviceScope => new DeviceScope(static fn (int $h): bool => $h === 5, static fn (int $h): bool => true),
 		static fn (): BmcRepository => new BmcRepository(false, $clock),
 		static fn (): CredentialRepository => new CredentialRepository(false, $clock),
 		static fn (): RackRepository => new RackRepository(false, $clock),
@@ -177,41 +184,93 @@ it('registers read-only MCP abilities gated on View realm with zero credentials'
 		static fn (): FixedClock => $clock,
 	);
 
-	$byName = [];
+	expect(array_keys($defs))->toBe([Abilities::LIST_BMCS, Abilities::GET_RACK_POWER, Abilities::GET_HEALTH]);
+
+	$assertSchema = static function (array $schema) use (&$assertSchema): void {
+		$type = is_array($schema['type'] ?? null) ? $schema['type'][0] : ($schema['type'] ?? '');
+
+		if ($type === 'object') {
+			expect($schema['additionalProperties'] ?? null)->toBeFalse()
+				->and($schema)->toHaveKey('properties');
+
+			foreach ($schema['properties'] as $prop) {
+				$assertSchema($prop);
+			}
+		} elseif ($type === 'array') {
+			expect($schema['items'] ?? null)->toBeArray()
+				->and($schema['maxItems'] ?? null)->toBeInt()->toBeGreaterThan(0);
+			$assertSchema($schema['items']);
+		}
+	};
+
+	$expectedKeys = ['label', 'description', 'category', 'input_schema', 'output_schema', 'annotations', 'permission', 'execute'];
 
 	foreach ($defs as $def) {
-		expect($def['read_only'])->toBeTrue();
-		$byName[$def['name']] = $def['callback'];
+		expect(array_keys($def))->toBe($expectedKeys)
+			->and($def['annotations'])->toBe(['readOnly' => true, 'destructive' => false, 'idempotent' => true]);
+		$assertSchema($def['input_schema']);
+		$assertSchema($def['output_schema']);
 	}
 
-	expect(array_keys($byName))->toBe([Abilities::LIST_BMCS, Abilities::GET_RACK_POWER, Abilities::GET_HEALTH]);
-
 	// Denied when viewer lacks Redfish View realm.
-	expect(($byName[Abilities::LIST_BMCS])([])['ok'])->toBeFalse()
-		->and(($byName[Abilities::GET_RACK_POWER])([])['ok'])->toBeFalse()
-		->and(($byName[Abilities::GET_HEALTH])([])['ok'])->toBeFalse();
+	expect(($defs[Abilities::LIST_BMCS]['permission'])(42))->toBeFalse()
+		->and(($defs[Abilities::LIST_BMCS]['execute'])(42, new \stdClass())['ok'])->toBeFalse()
+		->and(($defs[Abilities::GET_RACK_POWER]['execute'])(42, new \stdClass())['ok'])->toBeFalse()
+		->and(($defs[Abilities::GET_HEALTH]['execute'])(42, new \stdClass())['ok'])->toBeFalse();
 
 	// Allowed with Redfish View realm, zero secrets returned.
 	$allow = true;
-	$bmcs  = ($byName[Abilities::LIST_BMCS])([]);
-	$racks = ($byName[Abilities::GET_RACK_POWER])([]);
-	$hlth  = ($byName[Abilities::GET_HEALTH])([]);
+	$bmcs  = ($defs[Abilities::LIST_BMCS]['execute'])(42, new \stdClass());
+	$racks = ($defs[Abilities::GET_RACK_POWER]['execute'])(42, new \stdClass());
+	$hlth  = ($defs[Abilities::GET_HEALTH]['execute'])(42, new \stdClass());
 
 	expect($bmcs['ok'])->toBeTrue()
 		->and($bmcs['bmcs'][0]['credential_ref'])->toBe('vault:redfish:ro')
-		->and(json_encode($bmcs))->not->toContain('password')
+		->and((string) json_encode($bmcs))->not->toContain('password')
 		->and($racks['ok'])->toBeTrue()
 		->and($racks['racks'][0]['name'])->toBe('Rack-1')
 		->and($hlth['ok'])->toBeTrue()
 		->and($hlth['bmcs'][0]['reachability'])->toBe('reachable');
+
+	// Verify setup.php hook calls $registrar->register($id, $def) and DB-backed permission callback.
+	$registrar = new class() {
+		/** @var array<string, string> */
+		public array $categories = [];
+		/** @var array<string, array<string, mixed>> */
+		public array $abilities = [];
+
+		public function registerCategory(string $id, string $label): void {
+			$this->categories[$id] = $label;
+		}
+
+		/** @param array<string, mixed> $def */
+		public function register(string $id, array $def): void {
+			$this->abilities[$id] = $def;
+		}
+	};
+
+	redfish_abilities_register($registrar);
+	expect($registrar->categories)->toHaveKey('redfish', 'Redfish')
+		->and(array_keys($registrar->abilities))->toBe([Abilities::LIST_BMCS, Abilities::GET_RACK_POWER, Abilities::GET_HEALTH])
+		->and(($registrar->abilities[Abilities::LIST_BMCS]['permission'])(42))->toBeTrue()
+		->and(($registrar->abilities[Abilities::LIST_BMCS]['permission'])(0))->toBeFalse();
+
+	// Verify RealmRepository denies when user has no grant.
+	$realms = new RealmRepository(false);
+	expect($realms->userHasAnyFile(42, ['redfish_bmcs.php']))->toBeTrue()
+		->and($realms->userHasAnyFile(42, ['unknown.php']))->toBeFalse()
+		->and($realms->userHasAnyFile(0, ['redfish_health.php']))->toBeFalse();
+	$GLOBALS['__redfish_db_rows']['FROM user_auth_realm'] = [];
+	expect($realms->userHasAnyFile(42, ['redfish_health.php']))->toBeFalse();
 });
 
-it('registers Doctor checks and ecosystem hooks cleanly', function () {
+it('registers canonical Doctor checks, debug info, CasC provider, and API resources cleanly', function () {
 	$GLOBALS['__redfish_db_rows'] = [
 		'SELECT value FROM settings WHERE name = ?' => [[(string) Schema::VERSION]],
 		'FROM plugin_redfish_run ORDER BY poller_id' => [['poller_id' => 1, 'run_started' => 1_799_999_900, 'run_duration' => 10.0, 'bmcs' => 1, 'collected' => 1, 'skipped' => 0, 'requests' => 5, 'workers' => 4, 'stopped_early' => '']],
 		'FROM plugin_redfish_bmc ORDER BY name' => [['id' => 1, 'name' => 'srv01', 'address' => '10.0.1.20', 'port' => 443, 'protocols' => 'redfish,ipmi', 'poller_id' => 1, 'host_id' => 5, 'credential_id' => 1, 'tls_mode' => 'system', 'ca_file' => '', 'pin_sha256' => '', 'basic_fallback' => '', 'admin_state' => 'enabled']],
 		'FROM plugin_redfish_rack ORDER BY site_id, name' => [],
+		'FROM plugin_redfish_health WHERE bmc_id = ?' => [['bmc_id' => 1, 'reachability' => 'reachable', 'last_success' => 1_800_000_000]],
 	];
 
 	$clock    = new FixedClock(1_800_000_000);
@@ -229,69 +288,110 @@ it('registers Doctor checks and ecosystem hooks cleanly', function () {
 		static fn (): FixedClock => $clock,
 	);
 
-	$results = [];
+	$byId = [];
 
 	foreach ($checks as $check) {
-		$results[$check['id']] = ($check['callback'])();
+		expect($check)->toHaveKeys(['id', 'plugin', 'category', 'title', 'status', 'message', 'details', 'remediation'])
+			->and($check['plugin'])->toBe('redfish')
+			->and(str_starts_with($check['id'], 'redfish.'))->toBeTrue()
+			->and(in_array($check['status'], ['ok', 'warn', 'fail', 'info'], true))->toBeTrue()
+			->and($check['message'])->not->toBe('');
+		$byId[$check['id']] = $check;
 	}
 
-	expect($results['redfish.schema']['status'])->toBe('ok')
-		->and($results['redfish.vault_key']['status'])->toBe('error')
-		->and($results['redfish.collector_runs']['status'])->toBe('ok')
-		->and($results['redfish.bmc_security']['status'])->toBe('warning')
-		->and($results['redfish.rack_power']['status'])->toBe('ok');
+	expect($byId['redfish.schema']['status'])->toBe('ok')
+		->and($byId['redfish.vault_key']['status'])->toBe('fail')
+		->and($byId['redfish.collector_runs']['status'])->toBe('ok')
+		->and($byId['redfish.bmc_security']['status'])->toBe('warn')
+		->and($byId['redfish.rack_power']['status'])->toBe('ok');
 
-	// Verify setup.php hook wrappers register entries.
-	expect(redfish_abilities_register([]))->toHaveCount(3)
-		->and(redfish_doctor_register_checks([]))->toHaveCount(5)
-		->and(redfish_casc_register_providers([]))->toHaveCount(1);
+	// Verify doctor_register_checks does NOT echo $context and returns evaluated list.
+	$hookChecks = redfish_doctor_register_checks(['mode' => 'run', 'plugin' => 'redfish']);
+	expect(array_is_list($hookChecks))->toBeTrue()
+		->and($hookChecks)->toHaveCount(5)
+		->and($hookChecks)->not->toHaveKey('mode')
+		->and($hookChecks)->not->toHaveKey('plugin');
 
-	// Verify decoupled doctor_register_debug_info and api_register_resources hooks.
-	$debug = redfish_doctor_register_debug_info([]);
-	expect($debug)->toHaveKey('redfish')
-		->and($debug['redfish']['fields']['schema_version']['expected'])->toBe(Schema::VERSION)
-		->and($debug['redfish']['fields']['bmcs_total']['value'])->toBe(1)
+	// Verify doctor_register_debug_info does NOT echo $context and returns canonical list with scalar fields.
+	$debug = redfish_doctor_register_debug_info(['plugin' => 'redfish']);
+	expect(array_is_list($debug))->toBeTrue()
+		->and($debug)->toHaveCount(1)
+		->and($debug[0]['id'])->toBe('redfish.overview')
+		->and($debug[0]['plugin'])->toBe('redfish')
+		->and($debug[0]['fields']['schema_version_expected']['value'])->toBe(Schema::VERSION)
+		->and($debug[0]['fields']['bmcs_total']['value'])->toBe(1)
 		->and((string) json_encode($debug))->not->toContain('/nonexistent/redfish-vault.key')
 		->and((string) json_encode($debug))->not->toContain('password');
 
-	$resources = redfish_api_register_resources([]);
-	expect(array_column($resources, 'type'))->toBe([
-		\Somethingwithproof\Redfish\ApiResources::TYPE_BMC,
-		\Somethingwithproof\Redfish\ApiResources::TYPE_RACK,
-		\Somethingwithproof\Redfish\ApiResources::TYPE_HEALTH,
-	]);
-
-	foreach ($resources as $res) {
-		expect($res['read_only'])->toBeTrue()
-			->and($res['methods'])->toBe(['get', 'list']);
+	foreach ($debug[0]['fields'] as $field) {
+		expect($field['value'] === null || is_scalar($field['value']))->toBeTrue();
 	}
 
-	// Verify API resource handlers enforce permissions, return expected shapes, and leak zero secrets.
+	// Verify casc_register_providers registers 1-arg descriptor on registrar object and unwraps otherwise.
+	$cascRegistrar = new class() {
+		/** @var array<string, mixed>|null */
+		public ?array $registered = null;
+
+		/** @param array<string, mixed> $descriptor */
+		public function register(array $descriptor): void {
+			$this->registered = $descriptor;
+		}
+	};
+
+	redfish_casc_register_providers($cascRegistrar);
+	expect($cascRegistrar->registered)->toBeArray()
+		->and($cascRegistrar->registered['slug'])->toBe('redfish')
+		->and($cascRegistrar->registered['schemaVersion'])->toBe('1.0')
+		->and(is_callable($cascRegistrar->registered['export']))->toBeTrue()
+		->and(is_callable($cascRegistrar->registered['validate']))->toBeTrue()
+		->and(is_callable($cascRegistrar->registered['plan']))->toBeTrue()
+		->and(is_callable($cascRegistrar->registered['apply']))->toBeTrue();
+
+	$unwrapped = redfish_casc_register_providers([]);
+	expect($unwrapped['slug'])->toBe('redfish')
+		->and($unwrapped['schemaVersion'])->toBe('1.0');
+
+	// Verify api_register_resources returns canonical plain list.
+	$resources = redfish_api_register_resources([]);
+	expect(array_is_list($resources))->toBeTrue()
+		->and(array_column($resources, 'collection'))->toBe([
+			ApiResources::COLLECTION_BMCS,
+			ApiResources::COLLECTION_RACKS,
+			ApiResources::COLLECTION_HEALTH,
+		]);
+
+	foreach ($resources as $res) {
+		expect($res['plugin'])->toBe('redfish')
+			->and($res['realm_read'])->toBe('redfish_bmcs.php')
+			->and(preg_match('/^[a-z][A-Za-z0-9]{2,63}$/', $res['collection']))->toBe(1)
+			->and(array_keys($res['handlers']))->toBe(['list', 'get']);
+	}
+
 	$bmcRes  = $resources[0];
 	$rackRes = $resources[1];
 	$hlthRes = $resources[2];
 
 	$bmcList = $bmcRes['handlers']['list']([]);
-	expect($bmcList['code'])->toBe(200)
-		->and($bmcList['bmcs'][0]['name'])->toBe('bmcs/1')
+	expect($bmcList)->toHaveCount(1)
+		->and($bmcList[0]['name'])->toBe('redfishBmcs/1')
 		->and((string) json_encode($bmcList))->not->toContain('password');
-	expect($bmcRes['handlers']['get'](1)['code'])->toBe(200);
-	expect($bmcRes['handlers']['get'](999)['code'])->toBe(404);
+	expect($bmcRes['handlers']['get']('1', [])['id'] ?? null)->toBe(1);
+	expect($bmcRes['handlers']['get']('999', []))->toBeNull();
 
-	expect($rackRes['handlers']['list']([])['code'])->toBe(200);
-	expect($rackRes['handlers']['get'](999)['code'])->toBe(404);
+	expect($rackRes['handlers']['list']([]))->toBe([]);
+	expect($rackRes['handlers']['get']('999', []))->toBeNull();
 
 	$hlthList = $hlthRes['handlers']['list']([]);
-	expect($hlthList['code'])->toBe(200)
-		->and($hlthList['health'][0]['name'])->toBe('bmcs/1/health');
-	expect($hlthRes['handlers']['get'](1)['code'])->toBe(200);
-	expect($hlthRes['handlers']['get'](999)['code'])->toBe(404);
+	expect($hlthList)->toHaveCount(1)
+		->and($hlthList[0]['name'])->toBe('redfishHealth/1');
+	expect($hlthRes['handlers']['get']('1', [])['bmc_id'] ?? null)->toBe(1);
+	expect($hlthRes['handlers']['get']('999', []))->toBeNull();
 
 	// Verify denied path on ApiResources directly.
-	$denied = \Somethingwithproof\Redfish\ApiResources::descriptors(
-		static fn (): bool => false,
-		static fn (): bool => false,
-		static fn (): DeviceScope => new DeviceScope(static fn (int $h): bool => false, static fn (int $h): bool => false),
+	$denied = ApiResources::descriptors(
+		static fn (int $u): bool => false,
+		static fn (int $u): bool => false,
+		static fn (int $u): DeviceScope => new DeviceScope(static fn (int $h): bool => false, static fn (int $h): bool => false),
 		static fn (): BmcRepository => new BmcRepository(false, $clock),
 		static fn (): CredentialRepository => new CredentialRepository(false, $clock),
 		static fn (): RackRepository => new RackRepository(false, $clock),
@@ -299,10 +399,10 @@ it('registers Doctor checks and ecosystem hooks cleanly', function () {
 		static fn (): NodeCacheRepository => new NodeCacheRepository(false),
 		static fn (): FreshnessEvaluator => FreshnessEvaluator::fromSettings($clock, $settings),
 	);
-	expect($denied[0]['handlers']['list']([])['code'])->toBe(403)
-		->and($denied[0]['handlers']['get'](1)['code'])->toBe(403)
-		->and($denied[1]['handlers']['list']([])['code'])->toBe(403)
-		->and($denied[1]['handlers']['get'](1)['code'])->toBe(403)
-		->and($denied[2]['handlers']['list']([])['code'])->toBe(403)
-		->and($denied[2]['handlers']['get'](1)['code'])->toBe(403);
+	expect($denied[0]['handlers']['list'](['user_id' => 9]))->toBe([])
+		->and($denied[0]['handlers']['get']('1', ['user_id' => 9]))->toBeNull()
+		->and($denied[1]['handlers']['list'](['user_id' => 9]))->toBe([])
+		->and($denied[1]['handlers']['get']('1', ['user_id' => 9]))->toBeNull()
+		->and($denied[2]['handlers']['list'](['user_id' => 9]))->toBe([])
+		->and($denied[2]['handlers']['get']('1', ['user_id' => 9]))->toBeNull();
 });
