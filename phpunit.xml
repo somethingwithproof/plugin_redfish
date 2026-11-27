@@ -16,6 +16,7 @@
     </php>
     <testsuites>
         <testsuite name="Plugin Redfish">
+            <directory>tests/Quality</directory>
             <directory>tests/Security</directory>
             <directory>tests/Unit</directory>
             <directory>tests/Transport</directory>

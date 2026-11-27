@@ -24,9 +24,19 @@ namespace Somethingwithproof\Redfish;
  * devices. Safely returns empty results when plugin_maint is not installed.
  */
 final class MaintRepository {
+	/**
+	 * Initialize a new MaintRepository instance.
+	 *
+	 * @param \PDO|false $connection
+	 */
 	public function __construct(private readonly \PDO|false $connection) {
 	}
 
+	/**
+	 * Is installed.
+	 *
+	 * @return bool
+	 */
 	public function isInstalled(): bool {
 		$count = (int) db_fetch_cell_prepared(
 			"SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME IN ('plugin_maint_schedules', 'plugin_maint_hosts')",

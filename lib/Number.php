@@ -24,6 +24,12 @@ namespace Somethingwithproof\Redfish;
  * decimal without an exponent, which RRDtool and Thold both parse.
  */
 final class Number {
+	/**
+	 * Format.
+	 *
+	 * @param float|null $value
+	 * @return string
+	 */
 	public static function format(?float $value): string {
 		if ($value === null || !is_finite($value)) {
 			return 'U';

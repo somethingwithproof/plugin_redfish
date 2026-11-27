@@ -25,8 +25,21 @@ namespace Somethingwithproof\Redfish;
  * list position (REQ-DISC-005).
  */
 final readonly class Member {
+	/**
+	 * Node constant.
+	 */
 	public const NODE = 'node';
 
+	/**
+	 * Initialize a new Member instance.
+	 *
+	 * @param string $key
+	 * @param string $kind
+	 * @param string $chassis
+	 * @param string $name
+	 * @param string $source
+	 * @param bool $absent
+	 */
 	public function __construct(
 		public string $key,
 		public string $kind,

@@ -27,9 +27,18 @@ namespace Somethingwithproof\Redfish;
  * nothing is saved unless every row is valid.
  */
 final class BmcImport {
+	/**
+	 * Max bytes constant.
+	 */
 	public const MAX_BYTES = 1048576;
+	/**
+	 * Max rows constant.
+	 */
 	public const MAX_ROWS  = 1000;
 
+	/**
+	 * Columns constant.
+	 */
 	public const COLUMNS = ['name', 'address', 'port', 'credential', 'tls_mode', 'ca_file', 'pin_sha256', 'basic_fallback', 'enabled', 'host_id'];
 
 	/**

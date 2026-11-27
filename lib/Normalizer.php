@@ -27,6 +27,9 @@ namespace Somethingwithproof\Redfish;
  * cannot vouch for a value yields null, which reads as U (REQ-MODEL-002).
  */
 final class Normalizer {
+	/**
+	 * Max members constant.
+	 */
 	public const MAX_MEMBERS = 128;
 
 	/**

@@ -25,6 +25,16 @@ namespace Somethingwithproof\Redfish;
  * change state are POST; csrf-magic adds its token to each.
  */
 final class Html {
+	/**
+	 * Text.
+	 *
+	 * @param string $name
+	 * @param string $label
+	 * @param string $value
+	 * @param int $length
+	 * @param string $help
+	 * @return string
+	 */
 	public static function text(string $name, string $label, string $value, int $length, string $help = ''): string {
 		return '<tr><td><label for="' . html_escape($name) . '">' . html_escape($label) . '</label>' . ($help === '' ? '' : '<br><small>' . html_escape($help) . '</small>') . '</td>'
 			. '<td><input type="text" id="' . html_escape($name) . '" name="' . html_escape($name) . '" value="' . html_escape($value) . '" maxlength="' . $length . '" size="' . min(60, $length) . '"></td></tr>';
@@ -39,6 +49,15 @@ final class Html {
 			. '<td><input type="password" id="' . html_escape($name) . '" name="' . html_escape($name) . '" value="" autocomplete="new-password" size="40" maxlength="' . CredentialStore::MAX_PASSWORD_BYTES . '"></td></tr>';
 	}
 
+	/**
+	 * Checkbox.
+	 *
+	 * @param string $name
+	 * @param string $label
+	 * @param bool $checked
+	 * @param string $help
+	 * @return string
+	 */
 	public static function checkbox(string $name, string $label, bool $checked, string $help = ''): string {
 		return '<tr><td><label for="' . html_escape($name) . '">' . html_escape($label) . '</label>' . ($help === '' ? '' : '<br><small>' . html_escape($help) . '</small>') . '</td>'
 			. '<td><input type="checkbox" id="' . html_escape($name) . '" name="' . html_escape($name) . '" value="on"' . ($checked ? ' checked' : '') . '></td></tr>';
@@ -57,6 +76,15 @@ final class Html {
 		return $html . '</select></td></tr>';
 	}
 
+	/**
+	 * Action.
+	 *
+	 * @param string $file
+	 * @param int $id
+	 * @param string $action
+	 * @param string $label
+	 * @return string
+	 */
 	public static function action(string $file, int $id, string $action, string $label): string {
 		return '<form method="post" action="' . html_escape($file) . '" style="display:inline">'
 			. '<input type="hidden" name="action" value="' . html_escape($action) . '">'
@@ -79,6 +107,12 @@ final class Html {
 		return '<tr class="tableHeader"><th>' . implode('</th><th>', array_map('html_escape', $cells)) . '</th></tr>';
 	}
 
+	/**
+	 * Age.
+	 *
+	 * @param int $seconds
+	 * @return string
+	 */
 	public static function age(int $seconds): string {
 		$seconds = max(0, $seconds);
 

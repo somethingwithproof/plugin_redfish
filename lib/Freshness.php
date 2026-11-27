@@ -30,6 +30,11 @@ enum Freshness: string {
 	case Stale   = 'stale';
 	case Never   = 'never';
 
+	/**
+	 * Usable.
+	 *
+	 * @return bool
+	 */
 	public function usable(): bool {
 		return $this === self::Current || $this === self::Delayed;
 	}

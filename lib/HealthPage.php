@@ -25,8 +25,24 @@ namespace Somethingwithproof\Redfish;
  * a response body, and no secret is read here at all (REQ-HEALTH-005).
  */
 final class HealthPage {
+	/**
+	 * File constant.
+	 */
 	public const FILE = 'redfish_health.php';
 
+	/**
+	 * Initialize a new HealthPage instance.
+	 *
+	 * @param BmcRepository $bmcs
+	 * @param HealthRepository $health
+	 * @param ReadingRepository $readings
+	 * @param DiscoveryRepository $discovery
+	 * @param CredentialStore $credentials
+	 * @param FreshnessEvaluator $freshness
+	 * @param Clock $clock
+	 * @param DeviceScope $scope
+	 * @param MaintWindow|null $maint
+	 */
 	public function __construct(
 		private readonly BmcRepository $bmcs,
 		private readonly HealthRepository $health,

@@ -35,9 +35,21 @@ namespace Somethingwithproof\Redfish;
  * Basic is used only when the BMC allows it and sessions are unavailable.
  */
 final class Collector {
+	/**
+	 * Due slack constant.
+	 */
 	public const DUE_SLACK      = 30;
+	/**
+	 * Backoff cap constant.
+	 */
 	public const BACKOFF_CAP    = 3600;
+	/**
+	 * Session budget constant.
+	 */
 	public const SESSION_BUDGET = 3;
+	/**
+	 * Rediscover after failures constant.
+	 */
 	public const REDISCOVER_AFTER_FAILURES = 3;
 
 	/** Failure classes that end the reading of targets for this run. */
@@ -50,6 +62,21 @@ final class Collector {
 	/** When the lease on the BMC being collected expires. */
 	private int $leaseExpires = 0;
 
+	/**
+	 * Initialize a new Collector instance.
+	 *
+	 * @param BmcRepository $bmcs
+	 * @param CredentialStore $credentials
+	 * @param LeaseRepository $leases
+	 * @param HealthRepository $health
+	 * @param DiscoveryRepository $discovery
+	 * @param ReadingRepository $readings
+	 * @param ClientFactory $clients
+	 * @param Settings $settings
+	 * @param Clock $clock
+	 * @param string $holder
+	 * @param IpmiClient|null $ipmi
+	 */
 	public function __construct(
 		private readonly BmcRepository $bmcs,
 		private readonly CredentialStore $credentials,

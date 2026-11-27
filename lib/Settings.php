@@ -41,6 +41,9 @@ final readonly class Settings {
 		'redfish_max_body_kib'      => [2048, 64, 16384],
 	];
 
+	/**
+	 * Names constant.
+	 */
 	public const NAMES = [
 		'redfish_vault_key_file',
 		'redfish_collect_interval',
@@ -55,8 +58,26 @@ final readonly class Settings {
 		'redfish_uninstall_keep_tables',
 	];
 
+	/**
+	 * Default key file constant.
+	 */
 	public const DEFAULT_KEY_FILE = '/etc/cacti/redfish-vault.key';
 
+	/**
+	 * Initialize a new Settings instance.
+	 *
+	 * @param string $vaultKeyFile
+	 * @param int $collectInterval
+	 * @param int $discoverInterval
+	 * @param int $collectorBudget
+	 * @param int $workers
+	 * @param int $delayedAfter
+	 * @param int $staleAfter
+	 * @param int $connectTimeout
+	 * @param int $requestTimeout
+	 * @param int $maxBodyBytes
+	 * @param bool $keepTablesOnUninstall
+	 */
 	public function __construct(
 		public string $vaultKeyFile,
 		public int $collectInterval,

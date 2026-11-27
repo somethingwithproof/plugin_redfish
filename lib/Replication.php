@@ -24,9 +24,23 @@ namespace Somethingwithproof\Redfish;
  * (REQ-REM-001 to REQ-REM-014).
  */
 final class Replication {
+	/**
+	 * Agent action health constant.
+	 */
 	public const AGENT_ACTION_HEALTH    = 'redfish_health';
+	/**
+	 * Agent action discovery constant.
+	 */
 	public const AGENT_ACTION_DISCOVERY = 'redfish_discovery';
 
+	/**
+	 * Initialize a new Replication instance.
+	 *
+	 * @param ReplicationRepository $repository
+	 * @param BmcRepository $bmcs
+	 * @param HealthRepository $health
+	 * @param DiscoveryRepository $discovery
+	 */
 	public function __construct(
 		private readonly ReplicationRepository $repository,
 		private readonly BmcRepository $bmcs,

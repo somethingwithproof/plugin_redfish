@@ -23,6 +23,14 @@ namespace Somethingwithproof\Redfish;
  * One encrypted vault value as stored in plugin_redfish_secret.
  */
 final readonly class VaultEntry {
+	/**
+	 * Initialize a new VaultEntry instance.
+	 *
+	 * @param string $nonce
+	 * @param string $ciphertext
+	 * @param string $tag
+	 * @param string $keyId
+	 */
 	public function __construct(
 		public string $nonce,
 		public string $ciphertext,

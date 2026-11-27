@@ -33,10 +33,22 @@ namespace Somethingwithproof\Redfish;
  * gives the same index.
  */
 final class IndexKey {
+	/**
+	 * Max constant.
+	 */
 	public const MAX = 120;
 
+	/**
+	 * Safe constant.
+	 */
 	private const SAFE = '/^[A-Za-z0-9._:\/-]+$/';
 
+	/**
+	 * Of.
+	 *
+	 * @param string $memberKey
+	 * @return string
+	 */
 	public static function of(string $memberKey): string {
 		if ($memberKey !== '' && strlen($memberKey) <= self::MAX && preg_match(self::SAFE, $memberKey) === 1) {
 			return $memberKey;

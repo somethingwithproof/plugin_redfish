@@ -29,6 +29,9 @@ namespace Somethingwithproof\Redfish;
  * power drop.
  */
 final readonly class RackPowerSummary {
+	/**
+	 * Thold values constant.
+	 */
 	public const THOLD_VALUES = [
 		'power_watts',
 		'power_budget_watts',
@@ -39,6 +42,18 @@ final readonly class RackPowerSummary {
 		'coverage_pct',
 	];
 
+	/**
+	 * Initialize a new RackPowerSummary instance.
+	 *
+	 * @param Rack $rack
+	 * @param float|null $powerWatts
+	 * @param float|null $powerBudgetWatts
+	 * @param float|null $utilizationPct
+	 * @param float|null $headroomWatts
+	 * @param int $membersTotal
+	 * @param int $membersReporting
+	 * @param float $coveragePct
+	 */
 	public function __construct(
 		public Rack $rack,
 		public ?float $powerWatts,

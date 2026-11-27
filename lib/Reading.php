@@ -27,19 +27,51 @@ namespace Somethingwithproof\Redfish;
  * clock at write time; freshness is derived from it when read.
  */
 final readonly class Reading {
+	/**
+	 * Source environment constant.
+	 */
 	public const SOURCE_ENVIRONMENT = 'redfish.environment';
+	/**
+	 * Source sensor constant.
+	 */
 	public const SOURCE_SENSOR      = 'redfish.sensor';
+	/**
+	 * Source legacy constant.
+	 */
 	public const SOURCE_LEGACY      = 'redfish.legacy';
+	/**
+	 * Source node constant.
+	 */
 	public const SOURCE_NODE        = 'redfish.node';
+	/**
+	 * Source ipmi dcmi constant.
+	 */
 	public const SOURCE_IPMI_DCMI   = 'ipmi.dcmi';
+	/**
+	 * Source ipmi sdr constant.
+	 */
 	public const SOURCE_IPMI_SDR    = 'ipmi.sdr';
 
+	/**
+	 * Metrics constant.
+	 */
 	public const METRICS = [
 		'power_watts', 'inlet_celsius', 'ambient_celsius', 'temperature_celsius', 'fan_speed',
 		'psu_input_watts', 'psu_output_watts', 'health_code',
 		'members_absent', 'members_unknown', 'members_degraded',
 	];
 
+	/**
+	 * Initialize a new Reading instance.
+	 *
+	 * @param string $member
+	 * @param string $metric
+	 * @param float|null $value
+	 * @param string $unit
+	 * @param string $source
+	 * @param string $rule
+	 * @param string $state
+	 */
 	public function __construct(
 		public string $member,
 		public string $metric,

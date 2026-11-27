@@ -43,12 +43,14 @@ const REDFISH_TABLES = [
 const REDFISH_HOOKS = [
 	'abilities_register',
 	'api_device_new',
+	'api_register_resources',
 	'auth_alternate_realms',
 	'casc_register_providers',
 	'config_arrays',
 	'config_settings',
 	'device_remove',
 	'doctor_register_checks',
+	'doctor_register_debug_info',
 	'draw_navigation_text',
 	'graph_buttons',
 	'poller_bottom',
@@ -168,6 +170,26 @@ it('finishes the member baseline of an upgrade stopped after adding the column',
 	expect($state['result'])->toBeTrue()
 		->and($state['schema'])->toEqual('3')
 		->and($state['v2']['expected'])->toBe(['1/fan/A' => 'on', '1/fan/B' => '']);
+});
+
+it('upgrades from the prior main (v2) schema to v3 cleanly and idempotently', function () {
+	lifecycle('install');
+	lifecycle('schema_v2');
+
+	$first = lifecycle('upgrade');
+	expect($first['result'])->toBeTrue()
+		->and($first['schema'])->toEqual('3')
+		->and(array_keys($first['tables']))->toBe(REDFISH_TABLES)
+		->and($first['tracked'])->toBe(REDFISH_TABLES)
+		->and(array_keys($first['hooks']))->toBe(REDFISH_HOOKS)
+		->and($first['tables']['plugin_redfish_credential'])->toBe(1)
+		->and($first['tables']['plugin_redfish_bmc'])->toBe(1);
+
+	$second = lifecycle('upgrade');
+	expect($second['result'])->toBeTrue()
+		->and($second['schema'])->toEqual('3')
+		->and($second['tables'])->toBe($first['tables'])
+		->and($second['hooks'])->toBe($first['hooks']);
 });
 
 it('does not advance past a migration that did not run', function () {

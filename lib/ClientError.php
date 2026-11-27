@@ -26,6 +26,14 @@ namespace Somethingwithproof\Redfish;
  * reached the BMC before the failure.
  */
 final class ClientError extends \RuntimeException {
+	/**
+	 * Initialize a new ClientError instance.
+	 *
+	 * @param FailureClass $class
+	 * @param int $retryAfter
+	 * @param bool $sent
+	 * @param int $status
+	 */
 	public function __construct(
 		public readonly FailureClass $class,
 		public readonly int $retryAfter = 0,
@@ -35,6 +43,12 @@ final class ClientError extends \RuntimeException {
 		parent::__construct($class->value . ($status > 0 ? ' (HTTP ' . $status . ')' : ''));
 	}
 
+	/**
+	 * From transport.
+	 *
+	 * @param TransportError $e
+	 * @return self
+	 */
 	public static function fromTransport(TransportError $e): self {
 		return new self($e->class, 0, $e->sent);
 	}

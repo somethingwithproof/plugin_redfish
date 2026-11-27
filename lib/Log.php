@@ -26,18 +26,42 @@ namespace Somethingwithproof\Redfish;
  * failure class, and any local detail passes through the Redactor first.
  */
 final class Log {
+	/**
+	 * Debug.
+	 *
+	 * @param string $message
+	 * @return void
+	 */
 	public static function debug(string $message): void {
 		cacti_log('DEBUG: ' . $message, false, 'REDFISH', POLLER_VERBOSITY_DEBUG);
 	}
 
+	/**
+	 * Info.
+	 *
+	 * @param string $message
+	 * @return void
+	 */
 	public static function info(string $message): void {
 		cacti_log('NOTE: ' . $message, false, 'REDFISH', POLLER_VERBOSITY_MEDIUM);
 	}
 
+	/**
+	 * Warning.
+	 *
+	 * @param string $message
+	 * @return void
+	 */
 	public static function warning(string $message): void {
 		cacti_log('WARNING: ' . $message, false, 'REDFISH');
 	}
 
+	/**
+	 * Error.
+	 *
+	 * @param string $message
+	 * @return void
+	 */
 	public static function error(string $message): void {
 		cacti_log('ERROR: ' . $message, false, 'REDFISH');
 	}

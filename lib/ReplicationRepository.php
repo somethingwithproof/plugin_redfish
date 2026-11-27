@@ -40,6 +40,11 @@ final class ReplicationRepository {
 		'plugin_redfish_rack_member',
 	];
 
+	/**
+	 * Initialize a new ReplicationRepository instance.
+	 *
+	 * @param \PDO|false $connection
+	 */
 	public function __construct(private readonly \PDO|false $connection) {
 	}
 

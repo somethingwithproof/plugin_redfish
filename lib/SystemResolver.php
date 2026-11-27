@@ -24,6 +24,11 @@ namespace Somethingwithproof\Redfish;
  * /etc/hosts, then IPv6 from DNS. An IP literal is returned as it is.
  */
 final class SystemResolver implements Resolver {
+	/**
+	 * Resolve.
+	 *
+	 * @param string $host
+	 */
 	public function resolve(string $host): array {
 		if (Address::isIp($host)) {
 			return [$host];

@@ -27,6 +27,9 @@ namespace Somethingwithproof\Redfish;
  * database.
  */
 final readonly class BmcInput {
+	/**
+	 * Fields constant.
+	 */
 	public const FIELDS = ['name', 'address', 'port', 'poller_id', 'host_id', 'credential_id', 'tls_mode', 'ca_file', 'pin_sha256', 'basic_fallback', 'ipmi_fallback', 'enabled'];
 
 	/**

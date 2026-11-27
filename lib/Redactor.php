@@ -29,11 +29,20 @@ namespace Somethingwithproof\Redfish;
  * pattern, so a value that never reached the known list is still masked.
  */
 final class Redactor {
+	/**
+	 * Mask constant.
+	 */
 	private const MASK = '[redacted]';
 
 	/** @var list<string> */
 	private array $known = [];
 
+	/**
+	 * Add.
+	 *
+	 * @param Secret $secret
+	 * @return void
+	 */
 	public function add(Secret $secret): void {
 		$value = $secret->reveal();
 
@@ -64,6 +73,12 @@ final class Redactor {
 		'/-----BEGIN [A-Z ]*PRIVATE KEY-----.*?(?:-----END [A-Z ]*PRIVATE KEY-----|$)/s',
 	];
 
+	/**
+	 * Clean.
+	 *
+	 * @param string $text
+	 * @return string
+	 */
 	public function clean(string $text): string {
 		// Every span is found in the original text and masked once at the
 		// end. Applied one after another, a pass could hide material from

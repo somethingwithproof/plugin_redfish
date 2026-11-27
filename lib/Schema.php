@@ -34,36 +34,65 @@ namespace Somethingwithproof\Redfish;
  * the next run (REQ-LIFE-001). No migration contacts a BMC.
  */
 final class Schema {
+	/**
+	 * Version constant.
+	 */
 	public const VERSION = 3;
 
+	/**
+	 * Hooks constant.
+	 */
 	public const HOOKS = [
-		'abilities_register'      => 'redfish_abilities_register',
-		'api_device_new'          => 'redfish_api_device_new',
-		'auth_alternate_realms'   => 'redfish_auth_alternate_realms',
-		'casc_register_providers' => 'redfish_casc_register_providers',
-		'config_arrays'           => 'redfish_config_arrays',
-		'config_settings'         => 'redfish_config_settings',
-		'device_remove'           => 'redfish_device_remove',
-		'doctor_register_checks'  => 'redfish_doctor_register_checks',
-		'draw_navigation_text'    => 'redfish_draw_navigation_text',
-		'graph_buttons'           => 'redfish_graph_buttons',
-		'poller_bottom'           => 'redfish_poller_bottom',
-		'remote_agent'            => 'redfish_remote_agent',
-		'replicate_out'           => 'redfish_replicate_out',
+		'abilities_register'         => 'redfish_abilities_register',
+		'api_device_new'             => 'redfish_api_device_new',
+		'api_register_resources'     => 'redfish_api_register_resources',
+		'auth_alternate_realms'      => 'redfish_auth_alternate_realms',
+		'casc_register_providers'    => 'redfish_casc_register_providers',
+		'config_arrays'              => 'redfish_config_arrays',
+		'config_settings'            => 'redfish_config_settings',
+		'device_remove'              => 'redfish_device_remove',
+		'doctor_register_checks'     => 'redfish_doctor_register_checks',
+		'doctor_register_debug_info' => 'redfish_doctor_register_debug_info',
+		'draw_navigation_text'       => 'redfish_draw_navigation_text',
+		'graph_buttons'              => 'redfish_graph_buttons',
+		'poller_bottom'              => 'redfish_poller_bottom',
+		'remote_agent'               => 'redfish_remote_agent',
+		'replicate_out'              => 'redfish_replicate_out',
 	];
 
+	/**
+	 * Plugin constant.
+	 */
 	private const PLUGIN  = 'redfish';
+	/**
+	 * Setting constant.
+	 */
 	private const SETTING = 'redfish_schema_version';
 
+	/**
+	 * Initialize a new Schema instance.
+	 *
+	 * @param \PDO|false $connection
+	 */
 	public function __construct(private readonly \PDO|false $connection) {
 	}
 
+	/**
+	 * Stored version.
+	 *
+	 * @return int
+	 */
 	public function storedVersion(): int {
 		$value = db_fetch_cell_prepared('SELECT value FROM settings WHERE name = ?', [self::SETTING], '', true, $this->connection);
 
 		return is_numeric($value) ? (int) $value : 0;
 	}
 
+	/**
+	 * Is current.
+	 *
+	 * @return bool
+	 */
 	public function isCurrent(): bool {
 		return $this->storedVersion() === self::VERSION;
 	}
@@ -102,18 +131,41 @@ final class Schema {
 		return true;
 	}
 
+	/**
+	 * Recorded plugin version.
+	 *
+	 * @return string
+	 */
 	public function recordedPluginVersion(): string {
 		return (string) db_fetch_cell_prepared('SELECT version FROM plugin_config WHERE directory = ?', [self::PLUGIN], '', true, $this->connection);
 	}
 
+	/**
+	 * Record plugin version.
+	 *
+	 * @param string $version
+	 * @param string $author
+	 * @param string $homepage
+	 * @return void
+	 */
 	public function recordPluginVersion(string $version, string $author, string $homepage): void {
 		db_execute_prepared('UPDATE plugin_config SET version = ?, author = ?, webpage = ? WHERE directory = ?', [$version, $author, $homepage, self::PLUGIN], true, $this->connection);
 	}
 
+	/**
+	 * Plugin enabled.
+	 *
+	 * @return bool
+	 */
 	public function pluginEnabled(): bool {
 		return (int) db_fetch_cell_prepared('SELECT status FROM plugin_config WHERE directory = ?', [self::PLUGIN], '', true, $this->connection) === 1;
 	}
 
+	/**
+	 * Hooks registered.
+	 *
+	 * @return bool
+	 */
 	public function hooksRegistered(): bool {
 		$placeholders = implode(', ', array_fill(0, count(self::HOOKS), '?'));
 
@@ -133,6 +185,11 @@ final class Schema {
 		return $ok !== false && (int) db_fetch_cell_prepared("SELECT COUNT(*) FROM plugin_db_changes WHERE plugin = ? AND method = 'create'", [self::PLUGIN], '', true, $this->connection) === 0;
 	}
 
+	/**
+	 * Forget version.
+	 *
+	 * @return void
+	 */
 	public function forgetVersion(): void {
 		db_execute_prepared('DELETE FROM settings WHERE name = ?', [self::SETTING], true, $this->connection);
 	}
@@ -212,10 +269,24 @@ final class Schema {
 		return (bool) db_execute_prepared('ALTER TABLE plugin_redfish_bmc ADD UNIQUE KEY host_owner (host_owner)', [], true, $this->connection);
 	}
 
+	/**
+	 * Column exists.
+	 *
+	 * @param string $table
+	 * @param string $column
+	 * @return bool
+	 */
 	private function columnExists(string $table, string $column): bool {
 		return db_fetch_cell_prepared('SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?', [$table, $column], '', true, $this->connection) > 0;
 	}
 
+	/**
+	 * Index exists.
+	 *
+	 * @param string $table
+	 * @param string $index
+	 * @return bool
+	 */
 	private function indexExists(string $table, string $index): bool {
 		return db_fetch_cell_prepared('SELECT COUNT(*) FROM information_schema.STATISTICS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND INDEX_NAME = ?', [$table, $index], '', true, $this->connection) > 0;
 	}
@@ -253,6 +324,12 @@ final class Schema {
 		return true;
 	}
 
+	/**
+	 * Table exists.
+	 *
+	 * @param string $table
+	 * @return bool
+	 */
 	private function tableExists(string $table): bool {
 		return db_fetch_cell_prepared('SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?', [$table], '', true, $this->connection) > 0;
 	}

@@ -24,6 +24,13 @@ namespace Somethingwithproof\Redfish;
  * reading cache only, never contacting a BMC.
  */
 final class RackSummaryScript {
+	/**
+	 * Initialize a new RackSummaryScript instance.
+	 *
+	 * @param RackRepository $racks
+	 * @param NodeCacheRepository $caches
+	 * @param FreshnessEvaluator $freshness
+	 */
 	public function __construct(
 		private readonly RackRepository $racks,
 		private readonly NodeCacheRepository $caches,
@@ -31,6 +38,12 @@ final class RackSummaryScript {
 	) {
 	}
 
+	/**
+	 * Summary for.
+	 *
+	 * @param int $rackId
+	 * @return RackPowerSummary|null
+	 */
 	public function summaryFor(int $rackId): ?RackPowerSummary {
 		$rack = $this->racks->find($rackId);
 
@@ -51,6 +64,12 @@ final class RackSummaryScript {
 		return RackPowerSummary::compute($rack, $memberCaches, $this->freshness);
 	}
 
+	/**
+	 * Answer.
+	 *
+	 * @param int $rackId
+	 * @return string
+	 */
 	public function answer(int $rackId): string {
 		$summary = $this->summaryFor($rackId);
 

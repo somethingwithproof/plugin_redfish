@@ -50,11 +50,21 @@ final class MemberQuery {
 	/** Input fields every query has. */
 	public const INPUTS = ['index', 'name', 'chassis', 'unit'];
 
+	/**
+	 * Cache seconds constant.
+	 */
 	private const CACHE_SECONDS = 30;
 
 	/** @var array<int, array{at: int, cache: ?NodeCache}> */
 	private array $loaded = [];
 
+	/**
+	 * Initialize a new MemberQuery instance.
+	 *
+	 * @param NodeCacheRepository $caches
+	 * @param FreshnessEvaluator $freshness
+	 * @param Clock $clock
+	 */
 	public function __construct(
 		private readonly NodeCacheRepository $caches,
 		private readonly FreshnessEvaluator $freshness,
@@ -62,6 +72,16 @@ final class MemberQuery {
 	) {
 	}
 
+	/**
+	 * Answer.
+	 *
+	 * @param int $hostId
+	 * @param string $kind
+	 * @param string $command
+	 * @param string $field
+	 * @param string $index
+	 * @return string
+	 */
 	public function answer(int $hostId, string $kind, string $command, string $field = '', string $index = ''): string {
 		if (!isset(self::OUTPUTS[$kind]) || $hostId <= 0) {
 			return $command === 'get' ? 'U' : '';
@@ -105,6 +125,15 @@ final class MemberQuery {
 		return self::lines($lines);
 	}
 
+	/**
+	 * Get.
+	 *
+	 * @param NodeCache $cache
+	 * @param string $kind
+	 * @param string $field
+	 * @param string $index
+	 * @return string
+	 */
 	private function get(NodeCache $cache, string $kind, string $field, string $index): string {
 		if (!isset(self::OUTPUTS[$kind][$field]) || !IndexKey::plausible($index)) {
 			return 'U';
@@ -157,6 +186,12 @@ final class MemberQuery {
 		return mb_substr($clean === '' ? '-' : $clean, 0, 100);
 	}
 
+	/**
+	 * Load.
+	 *
+	 * @param int $hostId
+	 * @return NodeCache|null
+	 */
 	private function load(int $hostId): ?NodeCache {
 		$now = $this->clock->now();
 

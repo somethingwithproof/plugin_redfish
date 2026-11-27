@@ -245,4 +245,64 @@ it('registers Doctor checks and ecosystem hooks cleanly', function () {
 	expect(redfish_abilities_register([]))->toHaveCount(3)
 		->and(redfish_doctor_register_checks([]))->toHaveCount(5)
 		->and(redfish_casc_register_providers([]))->toHaveCount(1);
+
+	// Verify decoupled doctor_register_debug_info and api_register_resources hooks.
+	$debug = redfish_doctor_register_debug_info([]);
+	expect($debug)->toHaveKey('redfish')
+		->and($debug['redfish']['fields']['schema_version']['expected'])->toBe(Schema::VERSION)
+		->and($debug['redfish']['fields']['bmcs_total']['value'])->toBe(1)
+		->and((string) json_encode($debug))->not->toContain('/nonexistent/redfish-vault.key')
+		->and((string) json_encode($debug))->not->toContain('password');
+
+	$resources = redfish_api_register_resources([]);
+	expect(array_column($resources, 'type'))->toBe([
+		\Somethingwithproof\Redfish\ApiResources::TYPE_BMC,
+		\Somethingwithproof\Redfish\ApiResources::TYPE_RACK,
+		\Somethingwithproof\Redfish\ApiResources::TYPE_HEALTH,
+	]);
+
+	foreach ($resources as $res) {
+		expect($res['read_only'])->toBeTrue()
+			->and($res['methods'])->toBe(['get', 'list']);
+	}
+
+	// Verify API resource handlers enforce permissions, return expected shapes, and leak zero secrets.
+	$bmcRes  = $resources[0];
+	$rackRes = $resources[1];
+	$hlthRes = $resources[2];
+
+	$bmcList = $bmcRes['handlers']['list']([]);
+	expect($bmcList['code'])->toBe(200)
+		->and($bmcList['bmcs'][0]['name'])->toBe('bmcs/1')
+		->and((string) json_encode($bmcList))->not->toContain('password');
+	expect($bmcRes['handlers']['get'](1)['code'])->toBe(200);
+	expect($bmcRes['handlers']['get'](999)['code'])->toBe(404);
+
+	expect($rackRes['handlers']['list']([])['code'])->toBe(200);
+	expect($rackRes['handlers']['get'](999)['code'])->toBe(404);
+
+	$hlthList = $hlthRes['handlers']['list']([]);
+	expect($hlthList['code'])->toBe(200)
+		->and($hlthList['health'][0]['name'])->toBe('bmcs/1/health');
+	expect($hlthRes['handlers']['get'](1)['code'])->toBe(200);
+	expect($hlthRes['handlers']['get'](999)['code'])->toBe(404);
+
+	// Verify denied path on ApiResources directly.
+	$denied = \Somethingwithproof\Redfish\ApiResources::descriptors(
+		static fn (): bool => false,
+		static fn (): bool => false,
+		static fn (): DeviceScope => new DeviceScope(static fn (int $h): bool => false, static fn (int $h): bool => false),
+		static fn (): BmcRepository => new BmcRepository(false, $clock),
+		static fn (): CredentialRepository => new CredentialRepository(false, $clock),
+		static fn (): RackRepository => new RackRepository(false, $clock),
+		static fn (): HealthRepository => new HealthRepository(false),
+		static fn (): NodeCacheRepository => new NodeCacheRepository(false),
+		static fn (): FreshnessEvaluator => FreshnessEvaluator::fromSettings($clock, $settings),
+	);
+	expect($denied[0]['handlers']['list']([])['code'])->toBe(403)
+		->and($denied[0]['handlers']['get'](1)['code'])->toBe(403)
+		->and($denied[1]['handlers']['list']([])['code'])->toBe(403)
+		->and($denied[1]['handlers']['get'](1)['code'])->toBe(403)
+		->and($denied[2]['handlers']['list']([])['code'])->toBe(403)
+		->and($denied[2]['handlers']['get'](1)['code'])->toBe(403);
 });

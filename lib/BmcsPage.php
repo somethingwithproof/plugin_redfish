@@ -24,8 +24,18 @@ namespace Somethingwithproof\Redfish;
  * No page request contacts a BMC (REQ-UI-004); the collector does that.
  */
 final class BmcsPage {
+	/**
+	 * File constant.
+	 */
 	public const FILE = 'redfish_bmcs.php';
 
+	/**
+	 * Initialize a new BmcsPage instance.
+	 *
+	 * @param BmcRepository $bmcs
+	 * @param CredentialRepository $credentials
+	 * @param DeviceScope $scope
+	 */
 	public function __construct(
 		private readonly BmcRepository $bmcs,
 		private readonly CredentialRepository $credentials,
@@ -33,6 +43,11 @@ final class BmcsPage {
 	) {
 	}
 
+	/**
+	 * Render list.
+	 *
+	 * @return void
+	 */
 	public function renderList(): void {
 		html_start_box(__('Redfish BMCs', 'redfish'), '100%', '', '3', 'center', self::FILE . '?action=edit');
 
@@ -235,6 +250,13 @@ final class BmcsPage {
 		return $errors;
 	}
 
+	/**
+	 * Rebinds.
+	 *
+	 * @param Bmc|null $before
+	 * @param Bmc $after
+	 * @return bool
+	 */
 	private function rebinds(?Bmc $before, Bmc $after): bool {
 		return $before === null
 			|| $before->address !== $after->address

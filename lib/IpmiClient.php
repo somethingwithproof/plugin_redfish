@@ -29,7 +29,13 @@ namespace Somethingwithproof\Redfish;
  * never on CLI argv. Output size and wall-clock execution time are bounded.
  */
 final class IpmiClient {
+	/**
+	 * Max output bytes constant.
+	 */
 	public const MAX_OUTPUT_BYTES = 262144;
+	/**
+	 * Default binary constant.
+	 */
 	public const DEFAULT_BINARY   = 'ipmitool';
 
 	/**

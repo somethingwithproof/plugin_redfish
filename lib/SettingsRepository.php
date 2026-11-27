@@ -29,9 +29,19 @@ namespace Somethingwithproof\Redfish;
  * the same defaults everywhere.
  */
 final class SettingsRepository {
+	/**
+	 * Initialize a new SettingsRepository instance.
+	 *
+	 * @param \PDO|false $connection
+	 */
 	public function __construct(private readonly \PDO|false $connection) {
 	}
 
+	/**
+	 * Load.
+	 *
+	 * @return Settings
+	 */
 	public function load(): Settings {
 		$placeholders = implode(', ', array_fill(0, count(Settings::NAMES), '?'));
 		$row          = [];

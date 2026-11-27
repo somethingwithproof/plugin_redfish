@@ -28,13 +28,34 @@ namespace Somethingwithproof\Redfish;
  * Only explicitly allowlisted read-only subcommands may be built.
  */
 final class IpmiCommand {
+	/**
+	 * Op dcmi power constant.
+	 */
 	public const OP_DCMI_POWER      = 'dcmi_power';
+	/**
+	 * Op sdr temperature constant.
+	 */
 	public const OP_SDR_TEMPERATURE = 'sdr_temperature';
+	/**
+	 * Op sdr fan constant.
+	 */
 	public const OP_SDR_FAN         = 'sdr_fan';
+	/**
+	 * Op sdr psu constant.
+	 */
 	public const OP_SDR_PSU         = 'sdr_psu';
+	/**
+	 * Op chassis status constant.
+	 */
 	public const OP_CHASSIS_STATUS  = 'chassis_status';
 
+	/**
+	 * Auth env constant.
+	 */
 	public const AUTH_ENV  = 'env';
+	/**
+	 * Auth file constant.
+	 */
 	public const AUTH_FILE = 'file';
 
 	/**

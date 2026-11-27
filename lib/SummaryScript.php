@@ -33,8 +33,18 @@ namespace Somethingwithproof\Redfish;
  * can alert on a BMC that stopped answering.
  */
 final class SummaryScript {
+	/**
+	 * Values constant.
+	 */
 	public const VALUES = ['power_watts', 'inlet_celsius', 'max_temp_celsius', 'fans_bad', 'psus_bad', 'health_code', 'age'];
 
+	/**
+	 * Initialize a new SummaryScript instance.
+	 *
+	 * @param NodeCacheRepository $caches
+	 * @param FreshnessEvaluator $freshness
+	 * @param Clock $clock
+	 */
 	public function __construct(
 		private readonly NodeCacheRepository $caches,
 		private readonly FreshnessEvaluator $freshness,
@@ -42,6 +52,12 @@ final class SummaryScript {
 	) {
 	}
 
+	/**
+	 * Answer.
+	 *
+	 * @param int $hostId
+	 * @return string
+	 */
 	public function answer(int $hostId): string {
 		return self::format($this->values($this->caches->forHost($hostId)));
 	}

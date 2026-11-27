@@ -175,4 +175,67 @@ final class DoctorChecks {
 			],
 		];
 	}
+
+	/**
+	 * Build a redacted diagnostic snapshot for the doctor_register_debug_info
+	 * hook. Emits plain associative arrays only and never includes passwords,
+	 * vault key contents, or raw file paths.
+	 *
+	 * @param array<string, string> $versionInfo plugin INFO metadata
+	 * @param Schema                $schema      schema helper
+	 * @param CredentialStore       $credentials credential store
+	 * @param BmcRepository         $bmcs        BMC repository
+	 * @param HealthRepository      $health      health repository
+	 * @param RackRepository        $racks       rack repository
+	 * @param Settings              $settings    plugin settings
+	 * @return array<string, mixed>
+	 */
+	public static function debugInfo(
+		array $versionInfo,
+		Schema $schema,
+		CredentialStore $credentials,
+		BmcRepository $bmcs,
+		HealthRepository $health,
+		RackRepository $racks,
+		Settings $settings,
+	): array {
+		$allBmcs     = $bmcs->all();
+		$enabled     = 0;
+		$ipmiEnabled = 0;
+		$tlsModes    = [];
+
+		foreach ($allBmcs as $bmc) {
+			if ($bmc->enabled()) {
+				$enabled++;
+			}
+
+			if ($bmc->ipmiFallback) {
+				$ipmiEnabled++;
+			}
+
+			$mode            = $bmc->tlsMode->value;
+			$tlsModes[$mode] = ($tlsModes[$mode] ?? 0) + 1;
+		}
+
+		$runs = $health->runs();
+
+		return [
+			'label'   => 'Redfish',
+			'private' => false,
+			'fields'  => [
+				'plugin_version'   => ['label' => 'Plugin Version', 'value' => $versionInfo['version'] ?? 'unknown'],
+				'schema_version'   => ['label' => 'Schema Version', 'value' => $schema->storedVersion(), 'expected' => Schema::VERSION],
+				'vault_key_status' => ['label' => 'Vault Key Status', 'value' => $credentials->keyProblem() === null ? 'ok' : 'error'],
+				'bmcs_total'       => ['label' => 'BMCs Registered', 'value' => count($allBmcs)],
+				'bmcs_enabled'     => ['label' => 'BMCs Enabled', 'value' => $enabled],
+				'ipmi_fallback'    => ['label' => 'BMCs With IPMI Fallback', 'value' => $ipmiEnabled],
+				'tls_modes'        => ['label' => 'TLS Modes', 'value' => $tlsModes],
+				'racks_total'      => ['label' => 'Racks Configured', 'value' => count($racks->all())],
+				'collector_runs'   => ['label' => 'Poller Collector Runs', 'value' => count($runs)],
+				'collect_interval' => ['label' => 'Collection Interval (s)', 'value' => $settings->collectInterval],
+				'collector_budget' => ['label' => 'Collector Budget (s)', 'value' => $settings->collectorBudget],
+				'workers'          => ['label' => 'Collector Workers', 'value' => $settings->workers],
+			],
+		];
+	}
 }

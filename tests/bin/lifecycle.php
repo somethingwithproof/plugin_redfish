@@ -124,6 +124,17 @@ switch ($action) {
 		db_execute("REPLACE INTO settings (name, value) VALUES ('redfish_schema_version', '1')");
 
 		break;
+	case 'schema_v2':
+		// The prior main schema (version 2): no rack tables and only the 8 main hooks.
+		db_execute('DROP TABLE IF EXISTS `plugin_redfish_rack_member`');
+		db_execute('DROP TABLE IF EXISTS `plugin_redfish_rack`');
+		db_execute("DELETE FROM plugin_db_changes WHERE plugin = 'redfish' AND `table` IN ('plugin_redfish_rack', 'plugin_redfish_rack_member')");
+		db_execute("DELETE FROM plugin_hooks WHERE name = 'redfish' AND hook NOT IN ('auth_alternate_realms', 'api_device_new', 'config_arrays', 'config_settings', 'device_remove', 'draw_navigation_text', 'graph_buttons', 'poller_bottom')");
+		db_execute("INSERT INTO plugin_redfish_credential (name, username) VALUES ('PreUpgrade', 'monitor')");
+		db_execute("INSERT INTO plugin_redfish_bmc (name, address, port, poller_id, host_id, credential_id, created_at, updated_at) VALUES ('pre-bmc', '192.0.2.50', 443, 1, 0, 1, 1, 1)");
+		db_execute("REPLACE INTO settings (name, value) VALUES ('redfish_schema_version', '2')");
+
+		break;
 	case 'drop_registrations':
 		// What a failed hook registration on an earlier request leaves.
 		db_execute("DELETE FROM plugin_hooks WHERE name = 'redfish'");

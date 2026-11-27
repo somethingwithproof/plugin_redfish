@@ -24,6 +24,11 @@ namespace Somethingwithproof\Redfish;
  * inside the BMC's result transaction.
  */
 final class DiscoveryRepository {
+	/**
+	 * Initialize a new DiscoveryRepository instance.
+	 *
+	 * @param \PDO|false $connection
+	 */
 	public function __construct(private readonly \PDO|false $connection) {
 	}
 

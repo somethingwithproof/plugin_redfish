@@ -23,13 +23,29 @@ namespace Somethingwithproof\Redfish;
  * A clock that stays where it is put, for tests and for replaying a run.
  */
 final class FixedClock implements Clock {
+	/**
+	 * Initialize a new FixedClock instance.
+	 *
+	 * @param int $time
+	 */
 	public function __construct(private int $time) {
 	}
 
+	/**
+	 * Now.
+	 *
+	 * @return int
+	 */
 	public function now(): int {
 		return $this->time;
 	}
 
+	/**
+	 * Advance.
+	 *
+	 * @param int $seconds
+	 * @return void
+	 */
 	public function advance(int $seconds): void {
 		$this->time += $seconds;
 	}

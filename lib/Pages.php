@@ -28,8 +28,17 @@ namespace Somethingwithproof\Redfish;
  * credentials are Redfish Admin pages (REQ-UI-005).
  */
 final class Pages {
+	/**
+	 * Operator constant.
+	 */
 	public const OPERATOR = ['redfish_operator.php'];
+	/**
+	 * View constant.
+	 */
 	public const VIEW  = ['redfish_health.php'];
+	/**
+	 * Admin constant.
+	 */
 	public const ADMIN = ['redfish_bmcs.php', 'redfish_credentials.php'];
 
 	/**

@@ -27,6 +27,9 @@ namespace Somethingwithproof\Redfish;
  * never 0.
  */
 final class IpmiNormalizer {
+	/**
+	 * Chassis id constant.
+	 */
 	public const CHASSIS_ID = 'ipmi';
 
 	/**
@@ -267,12 +270,26 @@ final class IpmiNormalizer {
 		return $rows;
 	}
 
+	/**
+	 * Is absent.
+	 *
+	 * @param string $status
+	 * @param string $reading
+	 * @return bool
+	 */
 	private static function isAbsent(string $status, string $reading): bool {
 		$lower = strtolower($reading);
 
 		return $status === 'ns' && (str_contains($lower, 'not present') || str_contains($lower, 'absent'));
 	}
 
+	/**
+	 * Sdr health code.
+	 *
+	 * @param string $status
+	 * @param string $reading
+	 * @return float|null
+	 */
 	private static function sdrHealthCode(string $status, string $reading): ?float {
 		$lower = strtolower($reading);
 
@@ -292,6 +309,12 @@ final class IpmiNormalizer {
 		};
 	}
 
+	/**
+	 * Parse temperature.
+	 *
+	 * @param string $reading
+	 * @return float|null
+	 */
 	private static function parseTemperature(string $reading): ?float {
 		if (preg_match('/(-?[0-9]+(?:\.[0-9]+)?)\s*degrees\s*C\b/i', $reading, $match) === 1) {
 			return (float) $match[1];
@@ -319,6 +342,12 @@ final class IpmiNormalizer {
 		return [null, ''];
 	}
 
+	/**
+	 * Parse watts.
+	 *
+	 * @param string $reading
+	 * @return float|null
+	 */
 	private static function parseWatts(string $reading): ?float {
 		if (preg_match('/([0-9]+(?:\.[0-9]+)?)\s*Watts?\b/i', $reading, $match) === 1) {
 			return (float) $match[1];

@@ -30,6 +30,19 @@ namespace Somethingwithproof\Redfish;
  *   health   --format=text|json
  */
 final class Cli {
+	/**
+	 * Initialize a new Cli instance.
+	 *
+	 * @param BmcRepository $bmcs
+	 * @param CredentialRepository $credentials
+	 * @param RackRepository $racks
+	 * @param HealthRepository $health
+	 * @param NodeCacheRepository $caches
+	 * @param FreshnessEvaluator $freshness
+	 * @param MaintWindow $maint
+	 * @param Settings $settings
+	 * @param Clock $clock
+	 */
 	public function __construct(
 		private readonly BmcRepository $bmcs,
 		private readonly CredentialRepository $credentials,
@@ -348,6 +361,11 @@ final class Cli {
 		return $opts;
 	}
 
+	/**
+	 * Usage.
+	 *
+	 * @return string
+	 */
 	public static function usage(): string {
 		return "usage: redfish.php <command> [options]\n"
 			. "  export   --format=yaml|xml\n"

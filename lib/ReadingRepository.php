@@ -26,6 +26,11 @@ namespace Somethingwithproof\Redfish;
  * writes nothing unless this worker still holds it.
  */
 final class ReadingRepository {
+	/**
+	 * Initialize a new ReadingRepository instance.
+	 *
+	 * @param \PDO|false $connection
+	 */
 	public function __construct(private readonly \PDO|false $connection) {
 	}
 

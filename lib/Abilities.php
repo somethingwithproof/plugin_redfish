@@ -27,8 +27,17 @@ namespace Somethingwithproof\Redfish;
  * credentials, passwords, vault keys, or session tokens.
  */
 final class Abilities {
+	/**
+	 * List bmcs constant.
+	 */
 	public const LIST_BMCS      = 'redfish-list-bmcs';
+	/**
+	 * Get rack power constant.
+	 */
 	public const GET_RACK_POWER = 'redfish-get-rack-power';
+	/**
+	 * Get health constant.
+	 */
 	public const GET_HEALTH     = 'redfish-get-health';
 
 	/**

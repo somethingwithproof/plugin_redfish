@@ -56,6 +56,11 @@ enum FailureClass: string {
 	case Malformed             = 'malformed';
 	case JsonDepth             = 'json_depth';
 
+	/**
+	 * Reachability.
+	 *
+	 * @return Reachability
+	 */
 	public function reachability(): Reachability {
 		return match ($this) {
 			self::AuthRejected => Reachability::AuthFailed,

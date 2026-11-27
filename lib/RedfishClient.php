@@ -35,19 +35,51 @@ namespace Somethingwithproof\Redfish;
  * headers; the Redactor knows both.
  */
 final class RedfishClient {
+	/**
+	 * Decode factor constant.
+	 */
 	public const DECODE_FACTOR = 16;
 
+	/**
+	 * Service root constant.
+	 */
 	public const SERVICE_ROOT    = '/redfish/v1/';
+	/**
+	 * Max redirects constant.
+	 */
 	public const MAX_REDIRECTS   = 3;
+	/**
+	 * Retry after cap constant.
+	 */
 	public const RETRY_AFTER_CAP = 3600;
+	/**
+	 * Max depth constant.
+	 */
 	public const MAX_DEPTH       = 32;
 
+	/**
+	 * Session property.
+	 */
 	private ?Session $session = null;
 
+	/**
+	 * Basic property.
+	 */
 	private ?Secret $basic = null;
 
+	/**
+	 * Latency property.
+	 */
 	private float $latency = 0.0;
 
+	/**
+	 * Initialize a new RedfishClient instance.
+	 *
+	 * @param GuardedTransport $transport
+	 * @param Endpoint $endpoint
+	 * @param Redactor $redactor
+	 * @param Clock $clock
+	 */
 	public function __construct(
 		private readonly GuardedTransport $transport,
 		private readonly Endpoint $endpoint,
@@ -74,6 +106,11 @@ final class RedfishClient {
 		return $this->fetch($path, true);
 	}
 
+	/**
+	 * Guard.
+	 *
+	 * @return OperationGuard
+	 */
 	public function guard(): OperationGuard {
 		return $this->transport->guard();
 	}
@@ -134,6 +171,11 @@ final class RedfishClient {
 		$this->redactor->add($this->basic);
 	}
 
+	/**
+	 * Auth mode.
+	 *
+	 * @return string
+	 */
 	public function authMode(): string {
 		return match (true) {
 			$this->session !== null => 'session',
@@ -165,6 +207,12 @@ final class RedfishClient {
 		return $this->session;
 	}
 
+	/**
+	 * Delete session.
+	 *
+	 * @param string $path
+	 * @return bool
+	 */
 	public function deleteSession(string $path): bool {
 		try {
 			$response = $this->send(new HttpRequest('DELETE', $path, $this->headers(true)));
@@ -175,10 +223,20 @@ final class RedfishClient {
 		return ($response->status >= 200 && $response->status < 300) || $response->status === 404;
 	}
 
+	/**
+	 * Requests.
+	 *
+	 * @return int
+	 */
 	public function requests(): int {
 		return $this->transport->requests();
 	}
 
+	/**
+	 * Mean latency ms.
+	 *
+	 * @return float
+	 */
 	public function meanLatencyMs(): float {
 		$requests = $this->transport->requests();
 
@@ -243,6 +301,12 @@ final class RedfishClient {
 		return $bytes * self::DECODE_FACTOR <= intdiv(max(0, $free), 2);
 	}
 
+	/**
+	 * Bytes.
+	 *
+	 * @param string $value
+	 * @return int
+	 */
 	private static function bytes(string $value): int {
 		$value = trim($value);
 
@@ -299,6 +363,12 @@ final class RedfishClient {
 		return $decoded;
 	}
 
+	/**
+	 * Status error.
+	 *
+	 * @param HttpResponse $response
+	 * @return ClientError
+	 */
 	private function statusError(HttpResponse $response): ClientError {
 		$class = match (true) {
 			$response->status === 429                                => FailureClass::Throttled,

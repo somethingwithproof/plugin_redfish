@@ -487,6 +487,61 @@ jobs:
     - name: Lint licensing metadata
       run: pipx run --spec 'reuse[charset-normalizer]==6.3.0' reuse lint
 
+  unit-coverage:
+    name: Unit coverage gate (pcov)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+    - name: Checkout plugin
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
+        path: plugin
+
+    - name: Install PHP 8.4 with pcov
+      uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+      with:
+        php-version: '8.4'
+        tools: composer:2.10.3
+        extensions: openssl, xml, json, mbstring
+        ini-values: "pcov.enabled=1, pcov.directory=lib, date.timezone=America/New_York"
+        coverage: pcov
+
+    - name: Checkout shared CI tooling
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        repository: Cacti/cacti
+        ref: f3ff777992875740e4665fedfe2eff8335f5b894
+        persist-credentials: false
+        path: ci-tools
+        sparse-checkout: |
+          tests/tools/plugin-harness
+
+    - name: Install the locked Pest harness
+      run: |
+        set -euo pipefail
+        harness="$RUNNER_TEMP/cacti-plugin-harness"
+        mkdir -p "$harness"
+        cp ci-tools/tests/tools/plugin-harness/composer.json ci-tools/tests/tools/plugin-harness/composer.lock "$harness/"
+        composer --working-dir="$harness" validate --strict
+        composer --working-dir="$harness" install --no-interaction --no-progress --prefer-dist
+        echo "CACTI_PEST_BIN=$harness/vendor/bin/pest" >> "$GITHUB_ENV"
+
+    - name: Run unit, quality, security, and transport tests with pcov coverage
+      working-directory: plugin
+      run: |
+        set -euo pipefail
+        mkdir -p coverage
+        "$CACTI_PEST_BIN" --configuration=phpunit.xml --coverage-clover=coverage/clover.xml --coverage-text
+        php tests/bin/coverage-gate.php coverage/clover.xml 80
+
+    - name: Upload Clover coverage report
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+      with:
+        name: redfish-coverage-clover
+        path: plugin/coverage/clover.xml
+        retention-days: 14
+
   # Runs the plugin's real collector, through Cacti's poller_redfish.php with the
   # production client (TLS verified against a throwaway CA, no loopback
   # allowance), against DMTF's Redfish Mockup Server. It asserts the sensor set a
@@ -774,6 +829,7 @@ jobs:
       - integration-test
       - php-guard
       - mockup-bmc
+      - unit-coverage
       - workflow-lint
       - reuse
     runs-on: ubuntu-latest

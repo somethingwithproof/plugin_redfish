@@ -27,14 +27,37 @@ namespace Somethingwithproof\Redfish;
  * credential's row fails to decrypt instead of being used.
  */
 final class Vault {
+	/**
+	 * Nonce bytes constant.
+	 */
 	public const NONCE_BYTES = 12;
+	/**
+	 * Tag bytes constant.
+	 */
 	public const TAG_BYTES   = 16;
 
+	/**
+	 * Cipher constant.
+	 */
 	private const CIPHER = 'aes-256-gcm';
 
+	/**
+	 * Initialize a new Vault instance.
+	 *
+	 * @param VaultKey $key
+	 */
 	public function __construct(private readonly VaultKey $key) {
 	}
 
+	/**
+	 * Encrypt.
+	 *
+	 * @param Secret $secret
+	 * @param int $credentialId
+	 * @param string $purpose
+	 * @return VaultEntry
+	 * @throws CredentialError
+	 */
 	public function encrypt(Secret $secret, int $credentialId, string $purpose): VaultEntry {
 		$nonce = random_bytes(self::NONCE_BYTES);
 		$tag   = '';
@@ -65,6 +88,13 @@ final class Vault {
 		return new Secret($plain);
 	}
 
+	/**
+	 * Additional data.
+	 *
+	 * @param int $credentialId
+	 * @param string $purpose
+	 * @return string
+	 */
 	private static function additionalData(int $credentialId, string $purpose): string {
 		return 'plugin_redfish/vault/v1/credential/' . $credentialId . '/' . $purpose;
 	}

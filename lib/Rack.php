@@ -23,8 +23,21 @@ namespace Somethingwithproof\Redfish;
  * One rack definition in the rack registry (REQ-RACK-001 to REQ-RACK-005).
  */
 final readonly class Rack {
+	/**
+	 * Default min coverage pct constant.
+	 */
 	public const DEFAULT_MIN_COVERAGE_PCT = 80.0;
 
+	/**
+	 * Initialize a new Rack instance.
+	 *
+	 * @param int $id
+	 * @param int $siteId
+	 * @param string $name
+	 * @param float|null $powerBudgetWatts
+	 * @param float $minCoveragePct
+	 * @param string $notes
+	 */
 	public function __construct(
 		public int $id,
 		public int $siteId,

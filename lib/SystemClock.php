@@ -19,7 +19,15 @@
 
 namespace Somethingwithproof\Redfish;
 
+/**
+ * Class representing system clock.
+ */
 final class SystemClock implements Clock {
+	/**
+	 * Now.
+	 *
+	 * @return int
+	 */
 	public function now(): int {
 		return time();
 	}

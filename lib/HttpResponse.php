@@ -19,6 +19,9 @@
 
 namespace Somethingwithproof\Redfish;
 
+/**
+ * Class representing http response.
+ */
 final readonly class HttpResponse {
 	/**
 	 * @param array<string, string> $headers lower-case names
@@ -30,6 +33,12 @@ final readonly class HttpResponse {
 	) {
 	}
 
+	/**
+	 * Header.
+	 *
+	 * @param string $name
+	 * @return string
+	 */
 	public function header(string $name): string {
 		return $this->headers[strtolower($name)] ?? '';
 	}

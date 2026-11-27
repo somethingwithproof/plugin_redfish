@@ -55,6 +55,12 @@ final class DeviceScope {
 		);
 	}
 
+	/**
+	 * Allows.
+	 *
+	 * @param int $hostId
+	 * @return bool
+	 */
 	public function allows(int $hostId): bool {
 		return $hostId <= 0 || !($this->exists)($hostId) || ($this->allowed)($hostId);
 	}
@@ -79,10 +85,23 @@ final class DeviceScope {
 		return true;
 	}
 
+	/**
+	 * Allows credential.
+	 *
+	 * @param BmcRepository $bmcs
+	 * @param int $credentialId
+	 * @return bool
+	 */
 	public function allowsCredential(BmcRepository $bmcs, int $credentialId): bool {
 		return $this->allowsAll($bmcs->credentialHosts($credentialId));
 	}
 
+	/**
+	 * Allows bmc.
+	 *
+	 * @param Bmc $bmc
+	 * @return bool
+	 */
 	public function allowsBmc(Bmc $bmc): bool {
 		return $this->allows($bmc->hostId);
 	}

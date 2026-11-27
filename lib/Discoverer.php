@@ -33,12 +33,30 @@ namespace Somethingwithproof\Redfish;
  * in linksRefused and ignored (REQ-RF-005).
  */
 final class Discoverer {
+	/**
+	 * Max chassis constant.
+	 */
 	public const MAX_CHASSIS = 16;
+	/**
+	 * Max fans constant.
+	 */
 	public const MAX_FANS    = 64;
+	/**
+	 * Max psus constant.
+	 */
 	public const MAX_PSUS    = 32;
 
+	/**
+	 * Links refused property.
+	 */
 	private int $linksRefused = 0;
 
+	/**
+	 * Initialize a new Discoverer instance.
+	 *
+	 * @param RedfishClient $client
+	 * @param Endpoint $endpoint
+	 */
 	public function __construct(private readonly RedfishClient $client, private readonly Endpoint $endpoint) {
 	}
 
@@ -113,6 +131,11 @@ final class Discoverer {
 		);
 	}
 
+	/**
+	 * Links refused.
+	 *
+	 * @return int
+	 */
 	public function linksRefused(): int {
 		return $this->linksRefused;
 	}
@@ -306,6 +329,12 @@ final class Discoverer {
 		return $paths;
 	}
 
+	/**
+	 * Follow.
+	 *
+	 * @param mixed $link
+	 * @return string|null
+	 */
 	private function follow(mixed $link): ?string {
 		if ($link === null) {
 			return null;

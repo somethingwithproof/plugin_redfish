@@ -26,12 +26,24 @@ namespace Somethingwithproof\Redfish;
  * plugin_redfish_rack_member). Rack names are unique within a site.
  */
 final class RackRepository {
+	/**
+	 * Initialize a new RackRepository instance.
+	 *
+	 * @param \PDO|false $connection
+	 * @param Clock $clock
+	 */
 	public function __construct(
 		private readonly \PDO|false $connection,
 		private readonly Clock $clock,
 	) {
 	}
 
+	/**
+	 * Find.
+	 *
+	 * @param int $id
+	 * @return Rack|null
+	 */
 	public function find(int $id): ?Rack {
 		if ($id <= 0) {
 			return null;
@@ -42,6 +54,13 @@ final class RackRepository {
 		return is_array($row) && $row !== [] ? Rack::fromRow($row) : null;
 	}
 
+	/**
+	 * Find by name.
+	 *
+	 * @param int $siteId
+	 * @param string $name
+	 * @return Rack|null
+	 */
 	public function findByName(int $siteId, string $name): ?Rack {
 		$row = db_fetch_row_prepared('SELECT * FROM plugin_redfish_rack WHERE site_id = ? AND name = ?', [$siteId, trim($name)], true, $this->connection);
 
@@ -65,6 +84,13 @@ final class RackRepository {
 		return $out;
 	}
 
+	/**
+	 * Save.
+	 *
+	 * @param Rack $rack
+	 * @param int $userId
+	 * @return int
+	 */
 	public function save(Rack $rack, int $userId): int {
 		$now = $this->clock->now();
 
@@ -99,6 +125,13 @@ final class RackRepository {
 		return $ok ? $rack->id : 0;
 	}
 
+	/**
+	 * Delete.
+	 *
+	 * @param int $id
+	 * @param int $userId
+	 * @return bool
+	 */
 	public function delete(int $id, int $userId): bool {
 		if ($this->find($id) === null || !db_begin_transaction($this->connection)) {
 			return false;
@@ -161,6 +194,13 @@ final class RackRepository {
 		return $ok;
 	}
 
+	/**
+	 * Remove host.
+	 *
+	 * @param int $hostId
+	 * @param int $userId
+	 * @return bool
+	 */
 	public function removeHost(int $hostId, int $userId): bool {
 		if ($hostId <= 0) {
 			return false;

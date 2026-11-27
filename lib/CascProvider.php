@@ -28,10 +28,22 @@ namespace Somethingwithproof\Redfish;
  * during parse/validate. Applies require an exact SHA-256 plan confirmation hash.
  */
 final class CascProvider {
+	/**
+	 * Provider id constant.
+	 */
 	public const PROVIDER_ID = 'redfish';
+	/**
+	 * Schema version constant.
+	 */
 	public const SCHEMA_VERSION = 1;
+	/**
+	 * Vault prefix constant.
+	 */
 	public const VAULT_PREFIX = 'vault:redfish:';
 
+	/**
+	 * Secret key pattern constant.
+	 */
 	private const SECRET_KEY_PATTERN = '/pass|secret|token|private_key|vault_key|auth_token/i';
 
 	/**
@@ -718,6 +730,12 @@ final class CascProvider {
 		return $out;
 	}
 
+	/**
+	 * Yaml scalar.
+	 *
+	 * @param mixed $value
+	 * @return string
+	 */
 	private static function yamlScalar(mixed $value): string {
 		if ($value === null) {
 			return 'null';
@@ -879,6 +897,12 @@ final class CascProvider {
 		return $list;
 	}
 
+	/**
+	 * Parse yaml scalar.
+	 *
+	 * @param string $raw
+	 * @return mixed
+	 */
 	private static function parseYamlScalar(string $raw): mixed {
 		if (strlen($raw) >= 2 && $raw[0] === '"' && str_ends_with($raw, '"')) {
 			$inner = substr($raw, 1, -1);
@@ -1000,6 +1024,15 @@ final class CascProvider {
 		}
 	}
 
+	/**
+	 * Append xml scalar.
+	 *
+	 * @param \DOMDocument $dom
+	 * @param \DOMElement $parent
+	 * @param string $name
+	 * @param mixed $value
+	 * @return void
+	 */
 	private static function appendXmlScalar(\DOMDocument $dom, \DOMElement $parent, string $name, mixed $value): void {
 		$el = $dom->createElement($name);
 

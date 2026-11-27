@@ -1,0 +1,235 @@
+# SPDX-FileCopyrightText: 2026 Thomas Vincent <thomasvincent@gmail.com>
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# This file is part of plugin_redfish, a plugin for Cacti.
+# https://github.com/somethingwithproof/plugin_redfish
+#
+# Static Drupal-style configuration and state schema for plugin_redfish.
+# Strictly separates declarative, exportable configuration from ephemeral
+# runtime state and encrypted secret material.
+
+schema_version: 1
+plugin: redfish
+namespace: Somethingwithproof\Redfish
+
+config:
+  redfish.settings:
+    type: mapping
+    label: Redfish plugin settings
+    exportable: true
+    mapping:
+      redfish_vault_key_file:
+        type: path
+        label: Vault key file path
+        default: /etc/cacti/redfish-vault.key
+        sensitive: false
+        host_local: true
+      redfish_collect_interval:
+        type: integer
+        label: Collection interval in seconds
+        default: 300
+        min: 60
+        max: 86400
+      redfish_discover_interval:
+        type: integer
+        label: Rediscovery interval in seconds
+        default: 3600
+        min: 300
+        max: 604800
+      redfish_collector_budget:
+        type: integer
+        label: Collector time budget in seconds
+        default: 240
+        min: 10
+        max: 3600
+      redfish_workers:
+        type: integer
+        label: Parallel collector workers
+        default: 4
+        min: 1
+        max: 32
+      redfish_delayed_after:
+        type: integer
+        label: Collection intervals before delayed
+        default: 2
+        min: 1
+        max: 10
+      redfish_stale_after:
+        type: integer
+        label: Collection intervals before stale
+        default: 4
+        min: 2
+        max: 50
+      redfish_connect_timeout:
+        type: integer
+        label: TCP/TLS connect timeout in seconds
+        default: 5
+        min: 1
+        max: 30
+      redfish_request_timeout:
+        type: integer
+        label: Full HTTP request timeout in seconds
+        default: 20
+        min: 2
+        max: 120
+      redfish_max_body_kib:
+        type: integer
+        label: Maximum BMC response body size in KiB
+        default: 2048
+        min: 64
+        max: 16384
+      redfish_uninstall_keep_tables:
+        type: boolean
+        label: Keep plugin tables on uninstall
+        default: true
+
+  redfish.bmc:
+    type: mapping
+    label: Registered BMC target
+    table: plugin_redfish_bmc
+    exportable: true
+    mapping:
+      name:
+        type: string
+        max_length: 100
+      address:
+        type: hostname_or_ip
+        max_length: 253
+      port:
+        type: integer
+        default: 443
+        min: 1
+        max: 65535
+      protocols:
+        type: string
+        default: redfish
+        enum: [redfish, "redfish,ipmi"]
+      poller_id:
+        type: integer
+        default: 1
+        min: 1
+      host_id:
+        type: integer
+        default: 0
+        min: 0
+      credential_ref:
+        type: vault_reference
+        pattern: "^vault:redfish:[A-Za-z0-9._-]+$"
+      tls_mode:
+        type: string
+        default: system
+        enum: [system, ca_bundle, pin_sha256, unverified]
+      ca_file:
+        type: path
+        max_length: 512
+      pin_sha256:
+        type: string
+        max_length: 64
+      basic_fallback:
+        type: boolean
+        default: false
+      admin_state:
+        type: string
+        default: enabled
+        enum: [enabled, disabled]
+
+  redfish.credential:
+    type: mapping
+    label: Credential metadata (vault reference only, never secret material)
+    table: plugin_redfish_credential
+    exportable: true
+    mapping:
+      name:
+        type: string
+        max_length: 100
+      username:
+        type: string
+        max_length: 255
+
+  redfish.rack:
+    type: mapping
+    label: Rack power rollup definition
+    table: plugin_redfish_rack
+    exportable: true
+    mapping:
+      site_id:
+        type: integer
+        default: 0
+        min: 0
+      name:
+        type: string
+        max_length: 100
+      power_budget_watts:
+        type: float
+        nullable: true
+      min_coverage_pct:
+        type: float
+        default: 80.0
+        min: 0.0
+        max: 100.0
+      notes:
+        type: string
+        max_length: 255
+
+  redfish.rack_member:
+    type: mapping
+    label: Device-to-rack assignment
+    table: plugin_redfish_rack_member
+    exportable: true
+    mapping:
+      host_id:
+        type: integer
+        min: 1
+      rack_id:
+        type: integer
+        min: 1
+      bmc_id:
+        type: integer
+        default: 0
+        min: 0
+      unit_position:
+        type: integer
+        default: 0
+        min: 0
+
+state:
+  settings:
+    redfish_schema_version:
+      type: integer
+      exportable: false
+      description: Installed database migration version
+    redfish_templates_version:
+      type: string
+      exportable: false
+      description: Installed shipped template checksum
+    redfish_templates_failure:
+      type: string
+      exportable: false
+      description: Last template installation failure marker
+
+  tables:
+    plugin_redfish_secret:
+      exportable: false
+      sensitive: true
+      description: AES-256-GCM encrypted BMC password vault entries
+    plugin_redfish_discovery:
+      exportable: false
+      description: Cached Redfish service root and discovery plan per BMC
+    plugin_redfish_member:
+      exportable: false
+      description: Discovered fan, temperature, and PSU members per BMC
+    plugin_redfish_reading:
+      exportable: false
+      description: Latest normalized sensor readings cached for script server
+    plugin_redfish_health:
+      exportable: false
+      description: Per-BMC collector health, backoff, and session sweep state
+    plugin_redfish_lease:
+      exportable: false
+      description: Ephemeral collector leases preventing concurrent BMC polls
+    plugin_redfish_run:
+      exportable: false
+      description: Per-poller collector execution summary
+    plugin_redfish_audit:
+      exportable: false
+      description: Append-only metadata change audit log
