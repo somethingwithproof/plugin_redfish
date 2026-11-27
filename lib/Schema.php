@@ -34,17 +34,22 @@ namespace Somethingwithproof\Redfish;
  * the next run (REQ-LIFE-001). No migration contacts a BMC.
  */
 final class Schema {
-	public const VERSION = 2;
+	public const VERSION = 3;
 
 	public const HOOKS = [
-		'auth_alternate_realms' => 'redfish_auth_alternate_realms',
-		'api_device_new'       => 'redfish_api_device_new',
-		'config_arrays'        => 'redfish_config_arrays',
-		'config_settings'      => 'redfish_config_settings',
-		'device_remove'        => 'redfish_device_remove',
-		'draw_navigation_text' => 'redfish_draw_navigation_text',
-		'graph_buttons'        => 'redfish_graph_buttons',
-		'poller_bottom'        => 'redfish_poller_bottom',
+		'abilities_register'      => 'redfish_abilities_register',
+		'api_device_new'          => 'redfish_api_device_new',
+		'auth_alternate_realms'   => 'redfish_auth_alternate_realms',
+		'casc_register_providers' => 'redfish_casc_register_providers',
+		'config_arrays'           => 'redfish_config_arrays',
+		'config_settings'         => 'redfish_config_settings',
+		'device_remove'           => 'redfish_device_remove',
+		'doctor_register_checks'  => 'redfish_doctor_register_checks',
+		'draw_navigation_text'    => 'redfish_draw_navigation_text',
+		'graph_buttons'           => 'redfish_graph_buttons',
+		'poller_bottom'           => 'redfish_poller_bottom',
+		'remote_agent'            => 'redfish_remote_agent',
+		'replicate_out'           => 'redfish_replicate_out',
 	];
 
 	private const PLUGIN  = 'redfish';
@@ -139,7 +144,20 @@ final class Schema {
 		return [
 			1 => fn (): bool => $this->createTables(self::tables()),
 			2 => fn (): bool => $this->addMemberBaseline(),
+			3 => fn (): bool => $this->addRackTables(),
 		];
+	}
+
+	/**
+	 * Version 3: rack registry and per-device rack assignment tables.
+	 */
+	private function addRackTables(): bool {
+		$all = self::tables();
+
+		return $this->createTables([
+			'plugin_redfish_rack'        => $all['plugin_redfish_rack'],
+			'plugin_redfish_rack_member' => $all['plugin_redfish_rack_member'],
+		]);
 	}
 
 	/**
@@ -443,6 +461,34 @@ final class Schema {
 				],
 				'primary' => 'id',
 				'keys'    => [['name' => 'object', 'columns' => ['object', 'object_id', 'changed_at']]],
+			],
+			// Phase 3 rack registry and power budget rollup tables (REQ-RACK-001 to REQ-RACK-005).
+			'plugin_redfish_rack' => $innodb + [
+				'comment' => 'Rack definitions and power budgets',
+				'columns' => [
+					$id('id') + ['auto_increment' => true],
+					$count('site_id'),
+					$text('name', 100),
+					['name' => 'power_budget_watts', 'type' => 'double', 'NULL' => true],
+					['name' => 'min_coverage_pct', 'type' => 'double', 'NULL' => false, 'default' => '80'],
+					$text('notes', 255),
+					$count('created_at'),
+					$count('updated_at'),
+				],
+				'primary'     => 'id',
+				'unique_keys' => [['name' => 'site_name', 'columns' => ['site_id', 'name']]],
+			],
+			'plugin_redfish_rack_member' => $innodb + [
+				'comment' => 'At most one rack assignment per Cacti device',
+				'columns' => [
+					$id('host_id'),
+					$id('rack_id'),
+					$count('bmc_id'),
+					$count('unit_position'),
+					$count('added_at'),
+				],
+				'primary' => 'host_id',
+				'keys'    => [['name' => 'rack_id', 'columns' => ['rack_id']], ['name' => 'bmc_id', 'columns' => ['bmc_id']]],
 			],
 		];
 	}

@@ -186,6 +186,62 @@ function redfish_bmcs(): \Somethingwithproof\Redfish\BmcRepository {
 	return new \Somethingwithproof\Redfish\BmcRepository(false, new \Somethingwithproof\Redfish\SystemClock());
 }
 
+function redfish_racks(): \Somethingwithproof\Redfish\RackRepository {
+	return new \Somethingwithproof\Redfish\RackRepository(false, new \Somethingwithproof\Redfish\SystemClock());
+}
+
+function redfish_maint(): \Somethingwithproof\Redfish\MaintWindow {
+	$pluginCheck = null;
+
+	if (function_exists('plugin_maint_check_cacti_host')) {
+		$pluginCheck = function (int $hostId): bool {
+			return (bool) plugin_maint_check_cacti_host($hostId);
+		};
+	}
+
+	return new \Somethingwithproof\Redfish\MaintWindow(
+		new \Somethingwithproof\Redfish\MaintRepository(false),
+		new \Somethingwithproof\Redfish\SystemClock(),
+		$pluginCheck
+	);
+}
+
+function redfish_rack_summary_script(): \Somethingwithproof\Redfish\RackSummaryScript {
+	$clock = new \Somethingwithproof\Redfish\SystemClock();
+
+	return new \Somethingwithproof\Redfish\RackSummaryScript(
+		redfish_racks(),
+		new \Somethingwithproof\Redfish\NodeCacheRepository(false),
+		\Somethingwithproof\Redfish\FreshnessEvaluator::fromSettings($clock, redfish_settings())
+	);
+}
+
+function redfish_replication(): \Somethingwithproof\Redfish\Replication {
+	return new \Somethingwithproof\Redfish\Replication(
+		new \Somethingwithproof\Redfish\ReplicationRepository(false),
+		redfish_bmcs(),
+		new \Somethingwithproof\Redfish\HealthRepository(false),
+		new \Somethingwithproof\Redfish\DiscoveryRepository(false)
+	);
+}
+
+function redfish_cli(): \Somethingwithproof\Redfish\Cli {
+	$clock    = new \Somethingwithproof\Redfish\SystemClock();
+	$settings = redfish_settings();
+
+	return new \Somethingwithproof\Redfish\Cli(
+		redfish_bmcs(),
+		redfish_credentials(),
+		redfish_racks(),
+		new \Somethingwithproof\Redfish\HealthRepository(false),
+		new \Somethingwithproof\Redfish\NodeCacheRepository(false),
+		\Somethingwithproof\Redfish\FreshnessEvaluator::fromSettings($clock, $settings),
+		redfish_maint(),
+		$settings,
+		$clock
+	);
+}
+
 /**
  * The current user's device permissions over BMC records.
  */
@@ -442,6 +498,7 @@ function redfish_device_remove($hostIds) {
 	}
 
 	$count = redfish_bmcs()->unmapHosts($ids);
+	redfish_racks()->removeHosts($ids);
 
 	if ($count > 0) {
 		\Somethingwithproof\Redfish\Log::info(sprintf('%d BMCs lost their device when it was deleted; they can be mapped again from the BMC list', $count));
@@ -552,8 +609,227 @@ function redfish_collector(int $pollerId, int $worker): \Somethingwithproof\Redf
 		\Somethingwithproof\Redfish\ClientFactory::production($settings),
 		$settings,
 		$clock,
-		'p' . $pollerId . 'w' . $worker . '-' . getmypid() . '-' . bin2hex(random_bytes(4))
+		'p' . $pollerId . 'w' . $worker . '-' . getmypid() . '-' . bin2hex(random_bytes(4)),
+		new \Somethingwithproof\Redfish\IpmiClient()
 	);
+}
+
+/**
+ * replicate_out hook: replicates non-secret Redfish configuration tables to
+ * remote pollers while keeping vault key files strictly local per poller.
+ *
+ * @param mixed $data
+ * @return mixed
+ */
+function redfish_replicate_out($data) {
+	if (!redfish_boot() || !is_array($data)) {
+		return $data;
+	}
+
+	$pollerId = isset($data['remote_poller_id']) && is_numeric($data['remote_poller_id']) ? (int) $data['remote_poller_id'] : 0;
+
+	if ($pollerId <= 0 && isset($data['poller_id']) && is_numeric($data['poller_id'])) {
+		$pollerId = (int) $data['poller_id'];
+	}
+
+	$remoteConn = $data['rcnn_id'] ?? false;
+
+	// Replicate only non-secret configuration tables via Cacti's replicate_out_table();
+	// vault key files remain strictly local on each poller.
+	if ($pollerId > 1 && is_object($remoteConn) && function_exists('replicate_out_table')) {
+		$payload = redfish_replication()->exportForPoller($pollerId);
+		$tables  = array(
+			'plugin_redfish_bmc'         => $payload['bmcs'],
+			'plugin_redfish_credential'  => $payload['credentials'],
+			'plugin_redfish_rack'        => $payload['racks'],
+			'plugin_redfish_rack_member' => $payload['rack_members'],
+		);
+
+		foreach ($tables as $table => $rows) {
+			replicate_out_table($remoteConn, $rows, $table, $pollerId);
+		}
+	}
+
+	return $data;
+}
+
+/**
+ * remote_agent hook: read-only health and discovery actions accepting numeric
+ * identifiers only and returning zero credentials or secrets.
+ *
+ * @param mixed $data
+ * @return mixed
+ */
+function redfish_remote_agent($data) {
+	if (!redfish_boot() || !is_array($data)) {
+		return $data;
+	}
+
+	$action = isset($data['action']) && is_string($data['action']) ? $data['action'] : '';
+
+	if ($action !== \Somethingwithproof\Redfish\Replication::AGENT_ACTION_HEALTH
+		&& $action !== \Somethingwithproof\Redfish\Replication::AGENT_ACTION_DISCOVERY) {
+		return $data;
+	}
+
+	$clean = array();
+
+	foreach ($data as $k => $v) {
+		$clean[(string) $k] = $v;
+	}
+
+	return redfish_replication()->handleRemoteAgent($clean);
+}
+
+/**
+ * abilities_register hook: register read-only Redfish abilities gated on the
+ * Redfish View realm, returning zero credentials.
+ *
+ * @param mixed $abilities
+ * @return mixed
+ */
+function redfish_abilities_register($abilities) {
+	if (!redfish_boot()) {
+		return $abilities;
+	}
+
+	$list  = is_array($abilities) ? $abilities : array();
+	$clock = new \Somethingwithproof\Redfish\SystemClock();
+
+	$defs = \Somethingwithproof\Redfish\Abilities::definitions(
+		function (): bool {
+			return PHP_SAPI === 'cli' || api_user_realm_auth(\Somethingwithproof\Redfish\HealthPage::FILE);
+		},
+		function (): bool {
+			return PHP_SAPI === 'cli' || api_user_realm_auth(\Somethingwithproof\Redfish\BmcsPage::FILE);
+		},
+		function (): \Somethingwithproof\Redfish\DeviceScope {
+			if (PHP_SAPI === 'cli') {
+				return new \Somethingwithproof\Redfish\DeviceScope(
+					function (int $hostId): bool {
+						return true;
+					},
+					function (int $hostId): bool {
+						return true;
+					}
+				);
+			}
+
+			return redfish_device_scope();
+		},
+		function (): \Somethingwithproof\Redfish\BmcRepository {
+			return redfish_bmcs();
+		},
+		function (): \Somethingwithproof\Redfish\CredentialRepository {
+			return redfish_credentials();
+		},
+		function (): \Somethingwithproof\Redfish\RackRepository {
+			return redfish_racks();
+		},
+		function (): \Somethingwithproof\Redfish\HealthRepository {
+			return new \Somethingwithproof\Redfish\HealthRepository(false);
+		},
+		function (): \Somethingwithproof\Redfish\NodeCacheRepository {
+			return new \Somethingwithproof\Redfish\NodeCacheRepository(false);
+		},
+		function () use ($clock): \Somethingwithproof\Redfish\FreshnessEvaluator {
+			return \Somethingwithproof\Redfish\FreshnessEvaluator::fromSettings($clock, redfish_settings());
+		},
+		function (): \Somethingwithproof\Redfish\MaintWindow {
+			return redfish_maint();
+		},
+		function (): \Somethingwithproof\Redfish\Settings {
+			return redfish_settings();
+		},
+		function () use ($clock): \Somethingwithproof\Redfish\Clock {
+			return $clock;
+		}
+	);
+
+	foreach ($defs as $def) {
+		$list[] = $def;
+	}
+
+	return $list;
+}
+
+/**
+ * doctor_register_checks hook: register local read-only Redfish diagnostics.
+ *
+ * @param mixed $checks
+ * @return mixed
+ */
+function redfish_doctor_register_checks($checks) {
+	if (!redfish_boot()) {
+		return $checks;
+	}
+
+	$list  = is_array($checks) ? $checks : array();
+	$clock = new \Somethingwithproof\Redfish\SystemClock();
+
+	$defs = \Somethingwithproof\Redfish\DoctorChecks::definitions(
+		function (): \Somethingwithproof\Redfish\Schema {
+			return new \Somethingwithproof\Redfish\Schema(false);
+		},
+		function (): \Somethingwithproof\Redfish\CredentialStore {
+			return redfish_credential_store();
+		},
+		function (): \Somethingwithproof\Redfish\BmcRepository {
+			return redfish_bmcs();
+		},
+		function (): \Somethingwithproof\Redfish\HealthRepository {
+			return new \Somethingwithproof\Redfish\HealthRepository(false);
+		},
+		function (): \Somethingwithproof\Redfish\RackRepository {
+			return redfish_racks();
+		},
+		function (): \Somethingwithproof\Redfish\NodeCacheRepository {
+			return new \Somethingwithproof\Redfish\NodeCacheRepository(false);
+		},
+		function () use ($clock): \Somethingwithproof\Redfish\FreshnessEvaluator {
+			return \Somethingwithproof\Redfish\FreshnessEvaluator::fromSettings($clock, redfish_settings());
+		},
+		function (): \Somethingwithproof\Redfish\Settings {
+			return redfish_settings();
+		},
+		function () use ($clock): \Somethingwithproof\Redfish\Clock {
+			return $clock;
+		}
+	);
+
+	foreach ($defs as $def) {
+		$list[] = $def;
+	}
+
+	return $list;
+}
+
+/**
+ * casc_register_providers hook: register Redfish CasC provider using vault
+ * references and SHA-256 plan confirmation hashes.
+ *
+ * @param mixed $providers
+ * @return mixed
+ */
+function redfish_casc_register_providers($providers) {
+	if (!redfish_boot()) {
+		return $providers;
+	}
+
+	$list   = is_array($providers) ? $providers : array();
+	$list[] = \Somethingwithproof\Redfish\CascProvider::registration(
+		function (): \Somethingwithproof\Redfish\BmcRepository {
+			return redfish_bmcs();
+		},
+		function (): \Somethingwithproof\Redfish\CredentialRepository {
+			return redfish_credentials();
+		},
+		function (): \Somethingwithproof\Redfish\RackRepository {
+			return redfish_racks();
+		}
+	);
+
+	return $list;
 }
 
 /** Resolve role inheritance against Cacti's current user and group grants. */
