@@ -36,6 +36,7 @@ final class HealthPage {
 		private readonly FreshnessEvaluator $freshness,
 		private readonly Clock $clock,
 		private readonly DeviceScope $scope,
+		private readonly ?MaintWindow $maint = null,
 	) {
 	}
 
@@ -144,9 +145,16 @@ final class HealthPage {
 
 		$data = $states === [] ? '-' : implode(', ', array_map(static fn (string $s, int $n): string => "$s $n", array_keys($states), $states)) . '; ' . __('newest %s', Html::age($now - $newest), 'redfish');
 
+		$activeMaint  = $this->maint !== null ? $this->maint->activeForHost($bmc->hostId) : null;
+		$reachability = $bmc->enabled() ? $h->reachability->value : __('disabled', 'redfish');
+
+		if ($activeMaint !== null) {
+			$reachability .= ' [MAINT]';
+		}
+
 		return [
 			$bmc->name,
-			$bmc->enabled() ? $h->reachability->value : __('disabled', 'redfish'),
+			$reachability,
 			$h->failure->value ?? '-',
 			$h->lastSuccess > 0 ? Html::age($now - $h->lastSuccess) : __('Never', 'redfish'),
 			$h->generation === '' ? '-' : $h->generation . ($plan === null ? '' : ' (' . trim($plan->vendor . ' ' . $plan->redfishVersion) . ')'),
