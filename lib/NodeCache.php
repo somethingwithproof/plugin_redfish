@@ -25,17 +25,38 @@ namespace Somethingwithproof\Redfish;
  * them. The script server answers from this only; it never contacts a BMC
  * (REQ-DQ-005, REQ-ALERT-004).
  */
-final readonly class NodeCache {
+final class NodeCache {
+	/**
+	 * Lazy cache of members grouped by kind in original order.
+	 *
+	 * @var array<string, list<array{key: string, kind: string, name: string, chassis: string, presence: string, expected: bool}>>|null
+	 */
+	private ?array $byKind = null;
+
+	/**
+	 * Lazy cache of members grouped by kind and sorted by IndexKey::of(key).
+	 *
+	 * @var array<string, list<array{key: string, kind: string, name: string, chassis: string, presence: string, expected: bool}>>
+	 */
+	private array $sortedByKind = [];
+
+	/**
+	 * Lazy O(1) lookup table keyed by kind then computed IndexKey.
+	 *
+	 * @var array<string, array<string, array{key: string, kind: string, name: string, chassis: string, presence: string, expected: bool}>>
+	 */
+	private array $indexByKind = [];
+
 	/**
 	 * @param list<array{key: string, kind: string, name: string, chassis: string, presence: string, expected: bool}> $members
 	 * @param array<string, array<string, array{value: ?float, unit: string, observed_at: int}>>       $readings member key => metric => reading
 	 */
 	public function __construct(
-		public int $bmcId,
-		public int $registeredAt,
-		public int $lastSuccess,
-		public array $members,
-		public array $readings,
+		public readonly int $bmcId,
+		public readonly int $registeredAt,
+		public readonly int $lastSuccess,
+		public readonly array $members,
+		public readonly array $readings,
 	) {
 	}
 
@@ -45,23 +66,78 @@ final readonly class NodeCache {
 	 * @return list<array{key: string, kind: string, name: string, chassis: string, presence: string, expected: bool}>
 	 */
 	public function membersOf(string $kind): array {
-		$out = array_values(array_filter($this->members, static fn (array $m): bool => $m['kind'] === $kind));
-		usort($out, static fn (array $a, array $b): int => strcmp(IndexKey::of($a['key']), IndexKey::of($b['key'])));
+		if (isset($this->sortedByKind[$kind])) {
+			return $this->sortedByKind[$kind];
+		}
 
-		return $out;
+		$raw = $this->membersOfUnsorted($kind);
+
+		if (count($raw) <= 1) {
+			return $this->sortedByKind[$kind] = $raw;
+		}
+
+		// Schwartzian transform: compute IndexKey::of() once per member rather
+		// than inside every O(M log M) comparator invocation.
+		$keyed = [];
+
+		foreach ($raw as $member) {
+			$idx = IndexKey::of($member['key']);
+			$keyed[$idx] ??= [];
+			$keyed[$idx][] = $member;
+		}
+
+		ksort($keyed, SORT_STRING);
+		$sorted = [];
+
+		foreach ($keyed as $bucket) {
+			foreach ($bucket as $member) {
+				$sorted[] = $member;
+			}
+		}
+
+		return $this->sortedByKind[$kind] = $sorted;
+	}
+
+	/**
+	 * Members of one kind without sorting overhead, for aggregations that are
+	 * order-independent (such as max temperature or fault counts).
+	 *
+	 * @param string $kind member kind (fan, temperature, psu, etc.)
+	 * @return list<array{key: string, kind: string, name: string, chassis: string, presence: string, expected: bool}>
+	 */
+	public function membersOfUnsorted(string $kind): array {
+		if ($this->byKind === null) {
+			$grouped = [];
+
+			foreach ($this->members as $member) {
+				$grouped[$member['kind']][] = $member;
+			}
+
+			$this->byKind = $grouped;
+		}
+
+		return $this->byKind[$kind] ?? [];
 	}
 
 	/**
 	 * @return array{key: string, kind: string, name: string, chassis: string, presence: string, expected: bool}|null
 	 */
 	public function memberAt(string $kind, string $index): ?array {
-		foreach ($this->members as $member) {
-			if ($member['kind'] === $kind && IndexKey::of($member['key']) === $index) {
-				return $member;
+		if (!isset($this->indexByKind[$kind])) {
+			$map = [];
+
+			foreach ($this->membersOfUnsorted($kind) as $member) {
+				$idx = IndexKey::of($member['key']);
+
+				if (!isset($map[$idx])) {
+					$map[$idx] = $member;
+				}
 			}
+
+			$this->indexByKind[$kind] = $map;
 		}
 
-		return null;
+		return $this->indexByKind[$kind][$index] ?? null;
 	}
 
 	/**

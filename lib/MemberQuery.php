@@ -97,14 +97,20 @@ final class MemberQuery {
 			};
 		}
 
+		if ($command === 'get') {
+			return $this->get($cache, $kind, $field, $index);
+		}
+
+		if ($command === 'num_indexes') {
+			return (string) count($cache->membersOfUnsorted($kind));
+		}
+
 		$members = $cache->membersOf($kind);
 
 		return match ($command) {
-			'index'       => self::lines(array_map(static fn (array $m): string => IndexKey::of($m['key']), $members)),
-			'num_indexes' => (string) count($members),
-			'query'       => $this->query($cache, $kind, $field, $members),
-			'get'         => $this->get($cache, $kind, $field, $index),
-			default       => '',
+			'index' => self::lines(array_map(static fn (array $m): string => IndexKey::of($m['key']), $members)),
+			'query' => $this->query($cache, $kind, $field, $members),
+			default => '',
 		};
 	}
 

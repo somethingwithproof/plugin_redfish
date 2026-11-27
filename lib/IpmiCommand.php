@@ -48,6 +48,14 @@ final class IpmiCommand {
 	 * Op chassis status constant.
 	 */
 	public const OP_CHASSIS_STATUS  = 'chassis_status';
+	/**
+	 * Op sel elist constant.
+	 */
+	public const OP_SEL_ELIST       = 'sel_elist';
+	/**
+	 * Op sel info constant.
+	 */
+	public const OP_SEL_INFO        = 'sel_info';
 
 	/**
 	 * Auth env constant.
@@ -71,6 +79,8 @@ final class IpmiCommand {
 		self::OP_SDR_FAN         => ['sdr', 'type', 'Fan'],
 		self::OP_SDR_PSU         => ['sdr', 'type', 'Power Supply'],
 		self::OP_CHASSIS_STATUS  => ['chassis', 'status'],
+		self::OP_SEL_ELIST       => ['sel', 'elist'],
+		self::OP_SEL_INFO        => ['sel', 'info'],
 	];
 
 	/**

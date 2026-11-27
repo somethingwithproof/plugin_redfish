@@ -51,6 +51,10 @@ final readonly class Reading {
 	 * Source ipmi sdr constant.
 	 */
 	public const SOURCE_IPMI_SDR    = 'ipmi.sdr';
+	/**
+	 * Source ipmi sel constant.
+	 */
+	public const SOURCE_IPMI_SEL    = 'ipmi.sel';
 
 	/**
 	 * Metrics constant.
@@ -59,6 +63,14 @@ final readonly class Reading {
 		'power_watts', 'inlet_celsius', 'ambient_celsius', 'temperature_celsius', 'fan_speed',
 		'psu_input_watts', 'psu_output_watts', 'health_code',
 		'members_absent', 'members_unknown', 'members_degraded',
+		'fans_degraded', 'fans_failed', 'fan_min_rpm', 'fan_max_rpm', 'fan_min_percent', 'fan_max_percent',
+		'psu_redundancy_code', 'psu_redundancy_loss_count',
+		'ecc_corrected_errors', 'ecc_uncorrected_errors',
+		'ecc_period_corrected_errors', 'ecc_period_uncorrected_errors',
+		'drive_predicted_wear_pct', 'drive_media_life_left_pct', 'drive_failure_predicted',
+		'sel_critical_count', 'sel_warning_count',
+		'sel_critical_rate_per_hour', 'sel_warning_rate_per_hour',
+		'sel_percent_used', 'sel_overflow',
 	];
 
 	/**

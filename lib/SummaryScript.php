@@ -78,7 +78,7 @@ final class SummaryScript {
 		$out['inlet_celsius'] = $node('inlet_celsius');
 		$out['health_code']   = $node('health_code');
 
-		foreach ($cache->membersOf('temperature') as $member) {
+		foreach ($cache->membersOfUnsorted('temperature') as $member) {
 			$value = $member['presence'] === 'present' ? $cache->served($member['key'], 'temperature_celsius', $this->freshness) : null;
 
 			if ($value !== null) {
@@ -106,7 +106,7 @@ final class SummaryScript {
 	private function bad(NodeCache $cache, string $kind): int {
 		$bad = 0;
 
-		foreach ($cache->membersOf($kind) as $member) {
+		foreach ($cache->membersOfUnsorted($kind) as $member) {
 			if (NodeCache::missing($member)) {
 				$bad++;
 

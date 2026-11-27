@@ -99,7 +99,10 @@ final class Discoverer {
 			$found   = $this->chassis($resource, $id);
 
 			$chassis[] = ['id' => $id, 'path' => $chassisPath, 'systems' => $systems, 'power' => $found['power']];
-			$targets   = array_merge($targets, $found['targets']);
+
+			if ($found['targets'] !== []) {
+				array_push($targets, ...$found['targets']);
+			}
 		}
 
 		if ($chassis === []) {
@@ -313,12 +316,14 @@ final class Discoverer {
 	 */
 	private function members(array $collection, int $limit): array {
 		$paths = [];
+		$seen  = [];
 
 		foreach (is_array($collection['Members'] ?? null) ? $collection['Members'] : [] as $member) {
 			$path = is_array($member) ? $this->follow($member['@odata.id'] ?? null) : null;
 
-			if ($path !== null && !in_array($path, $paths, true)) {
-				$paths[] = $path;
+			if ($path !== null && !isset($seen[$path])) {
+				$seen[$path] = true;
+				$paths[]     = $path;
 			}
 
 			if (count($paths) >= $limit) {

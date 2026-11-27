@@ -57,11 +57,31 @@ final readonly class Target {
 	 * Legacy power constant.
 	 */
 	public const LEGACY_POWER    = 'legacy_power';
+	/**
+	 * Power subsystem redundancy constant.
+	 */
+	public const POWER_SUBSYSTEM = 'power_subsystem';
+	/**
+	 * Memory ECC metrics constant.
+	 */
+	public const MEMORY_METRICS  = 'memory_metrics';
+	/**
+	 * Storage drive health constant.
+	 */
+	public const DRIVE           = 'drive';
+	/**
+	 * BMC SEL entries constant.
+	 */
+	public const SEL_ENTRIES     = 'sel_entries';
 
 	/**
 	 * Kinds constant.
 	 */
-	public const KINDS = [self::ENVIRONMENT, self::THERMAL_METRICS, self::FAN, self::PSU, self::PSU_METRICS, self::LEGACY_THERMAL, self::LEGACY_POWER];
+	public const KINDS = [
+		self::ENVIRONMENT, self::THERMAL_METRICS, self::FAN, self::PSU, self::PSU_METRICS,
+		self::LEGACY_THERMAL, self::LEGACY_POWER, self::POWER_SUBSYSTEM,
+		self::MEMORY_METRICS, self::DRIVE, self::SEL_ENTRIES,
+	];
 
 	/**
 	 * @param string       $type   resource type from @odata.type, such as "Fan"

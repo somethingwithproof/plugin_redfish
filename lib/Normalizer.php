@@ -44,6 +44,10 @@ final class Normalizer {
 			Target::PSU_METRICS     => self::psuMetrics($target, $resource),
 			Target::LEGACY_THERMAL  => self::legacyThermal($target, $resource),
 			Target::LEGACY_POWER    => self::legacyPower($target, $resource),
+			Target::POWER_SUBSYSTEM => self::powerSubsystem($target, $resource),
+			Target::MEMORY_METRICS  => HardwareHealthParser::parseMemoryMetrics($target->chassis, $target->member, $resource),
+			Target::DRIVE           => HardwareHealthParser::parseDriveHealth($target->chassis, $target->member, $resource),
+			Target::SEL_ENTRIES     => HardwareHealthParser::parseRedfishSel($target->chassis, $resource)->toObservation(),
 			default                 => new Observation(),
 		};
 	}
@@ -451,7 +455,49 @@ final class Normalizer {
 					$out->add(new Reading($key, 'psu_output_watts', $output, 'W', Reading::SOURCE_LEGACY, 'legacy.psu_output', $state));
 				});
 			}
+
+			if ($key !== null && is_array($resource['Redundancy'] ?? null) && $resource['Redundancy'] !== []) {
+				$parsed = RedundancyTelemetry::fromRedfishPower($resource);
+				$code   = match ($parsed['status']) {
+					RedundancyTelemetry::STATUS_REDUNDANT => 0.0,
+					RedundancyTelemetry::STATUS_DEGRADED  => 1.0,
+					RedundancyTelemetry::STATUS_LOST      => 2.0,
+					default                               => null,
+				};
+				$out->member(new Member($key, 'chassis', $target->chassis, $target->chassis, Reading::SOURCE_LEGACY));
+				$out->add(new Reading($key, 'psu_redundancy_code', $code, '', Reading::SOURCE_LEGACY, 'legacy.psu_redundancy', $parsed['status']));
+				$out->add(new Reading($key, 'psu_redundancy_loss_count', (float) $parsed['loss_count'], '', Reading::SOURCE_LEGACY, 'legacy.psu_redundancy', $parsed['status']));
+			}
 		}
+
+		return $out;
+	}
+
+	/**
+	 * Normalize PowerSubsystem PSU redundancy groups into chassis readings.
+	 *
+	 * @param Target               $target   PowerSubsystem discovery target
+	 * @param array<string, mixed> $resource decoded PowerSubsystem payload
+	 * @return Observation
+	 */
+	private static function powerSubsystem(Target $target, array $resource): Observation {
+		$out = new Observation();
+		$key = Member::key($target->chassis, 'chassis', $target->chassis);
+
+		if ($key === null || !is_array($resource['PowerSupplyRedundancy'] ?? null) || $resource['PowerSupplyRedundancy'] === []) {
+			return $out;
+		}
+
+		$parsed = RedundancyTelemetry::fromRedfishPower($resource);
+		$code   = match ($parsed['status']) {
+			RedundancyTelemetry::STATUS_REDUNDANT => 0.0,
+			RedundancyTelemetry::STATUS_DEGRADED  => 1.0,
+			RedundancyTelemetry::STATUS_LOST      => 2.0,
+			default                               => null,
+		};
+		$out->member(new Member($key, 'chassis', $target->chassis, $target->chassis, Reading::SOURCE_SENSOR));
+		$out->add(new Reading($key, 'psu_redundancy_code', $code, '', Reading::SOURCE_SENSOR, 'power_subsystem.redundancy', $parsed['status']));
+		$out->add(new Reading($key, 'psu_redundancy_loss_count', (float) $parsed['loss_count'], '', Reading::SOURCE_SENSOR, 'power_subsystem.redundancy', $parsed['status']));
 
 		return $out;
 	}

@@ -162,10 +162,29 @@ final class IpmiNormalizer {
 	 * Parse "ipmitool sdr type 'Power Supply'" lines.
 	 */
 	public static function parseSdrPowerSupplies(string $output): Observation {
-		$obs = new Observation();
+		$obs            = new Observation();
+		$chassisKey     = Member::key(self::CHASSIS_ID, 'chassis', self::CHASSIS_ID);
+		$redundancyCode = null;
+		$lossCount      = 0;
 
 		foreach (self::sdrRows($output) as $row) {
-			$id  = $row['name'];
+			$id    = $row['name'];
+			$lower = strtolower($id . ' ' . $row['reading']);
+
+			if (str_contains($lower, 'redundancy') && !str_contains($lower, 'watts')) {
+				if (str_contains($lower, 'redundancy lost') || str_contains($lower, 'non-redundant') || str_contains($lower, 'insufficient')) {
+					$redundancyCode = max($redundancyCode ?? 0.0, 2.0);
+					$lossCount      = max($lossCount, 1);
+				} elseif (str_contains($lower, 'redundancy degraded') || str_contains($lower, 'degraded')) {
+					$redundancyCode = max($redundancyCode ?? 0.0, 1.0);
+					$lossCount      = max($lossCount, 1);
+				} elseif (str_contains($lower, 'fully redundant') || $row['status'] === 'ok') {
+					$redundancyCode ??= 0.0;
+				}
+
+				continue;
+			}
+
 			$key = Member::key(self::CHASSIS_ID, 'psu', $id);
 
 			if ($key === null || isset($obs->members[$key])) {
@@ -182,14 +201,48 @@ final class IpmiNormalizer {
 				$watts = self::parseWatts($row['reading']);
 
 				if ($watts !== null) {
-					$lower = strtolower($id);
-					$metric = str_contains($lower, 'out') ? 'psu_output_watts' : 'psu_input_watts';
+					$nameLower = strtolower($id);
+					$metric    = str_contains($nameLower, 'out') ? 'psu_output_watts' : 'psu_input_watts';
 					$obs->add(new Reading($key, $metric, $watts, 'W', Reading::SOURCE_IPMI_SDR, 'ipmi.sdr.psu_watts', $row['status']));
 				}
 			}
 		}
 
+		if ($chassisKey !== null && $redundancyCode !== null) {
+			$statusLabel = match ((int) $redundancyCode) {
+				0       => RedundancyTelemetry::STATUS_REDUNDANT,
+				1       => RedundancyTelemetry::STATUS_DEGRADED,
+				default => RedundancyTelemetry::STATUS_LOST,
+			};
+			$obs->member(new Member($chassisKey, 'chassis', self::CHASSIS_ID, self::CHASSIS_ID, Reading::SOURCE_IPMI_SDR));
+			$obs->add(new Reading($chassisKey, 'psu_redundancy_code', $redundancyCode, '', Reading::SOURCE_IPMI_SDR, 'ipmi.sdr.psu_redundancy', $statusLabel));
+			$obs->add(new Reading($chassisKey, 'psu_redundancy_loss_count', (float) $lossCount, '', Reading::SOURCE_IPMI_SDR, 'ipmi.sdr.psu_redundancy', $statusLabel));
+		}
+
 		return $obs;
+	}
+
+	/**
+	 * Parse fan and PSU redundancy summary from IPMI SDR outputs.
+	 *
+	 * @param string $fanOutput output of "ipmitool sdr type Fan"
+	 * @param string $psuOutput output of "ipmitool sdr type 'Power Supply'"
+	 * @return RedundancyTelemetry
+	 */
+	public static function parseSdrRedundancy(string $fanOutput, string $psuOutput): RedundancyTelemetry {
+		return RedundancyTelemetry::fromIpmiSdr($fanOutput, $psuOutput);
+	}
+
+	/**
+	 * Parse IPMI SEL output into a typed SelSummary.
+	 *
+	 * @param string $selOutput     output of "ipmitool sel elist" or "ipmitool sel info"
+	 * @param int    $windowSeconds rolling window width in seconds
+	 * @param int    $now           reference Unix timestamp
+	 * @return SelSummary
+	 */
+	public static function parseSel(string $selOutput, int $windowSeconds = 3600, int $now = 0): SelSummary {
+		return HardwareHealthParser::parseIpmiSel($selOutput, $windowSeconds, $now);
 	}
 
 	/**

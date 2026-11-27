@@ -57,12 +57,12 @@ final class Observation {
 	 * @return void
 	 */
 	public function merge(self $other): void {
-		foreach ($other->members as $member) {
-			$this->member($member);
+		foreach ($other->members as $key => $member) {
+			$this->members[$key] ??= $member;
 		}
 
-		foreach ($other->readings as $reading) {
-			$this->add($reading);
+		foreach ($other->readings as $key => $reading) {
+			$this->readings[$key] = $reading;
 		}
 	}
 

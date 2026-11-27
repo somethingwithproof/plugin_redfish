@@ -146,11 +146,15 @@ final class ThermalDeltaAnalyzer {
 			];
 		}
 
-		$inlets  = [];
-		$deltas  = [];
-		$parsed  = [];
-		$inRec   = 0;
-		$overMax = 0;
+		$sampleCount = count($samples);
+		$inlets      = [];
+		$deltas      = [];
+		$nodeDeltas  = [];
+		$inRec       = 0;
+		$overMax     = 0;
+		$inletMean   = 0.0;
+		$inletM2     = 0.0;
+		$deltaSum    = 0.0;
 
 		foreach ($samples as $index => $sample) {
 			$inlet   = $sample['inlet_c'];
@@ -166,6 +170,12 @@ final class ThermalDeltaAnalyzer {
 
 			$inlets[] = $inlet;
 
+			// Welford online variance avoids a second pass over $inlets.
+			$n          = $index + 1;
+			$diff       = $inlet - $inletMean;
+			$inletMean += $diff / $n;
+			$inletM2   += $diff * ($inlet - $inletMean);
+
 			if ($inlet >= self::ASHRAE_RECOMMENDED_MIN_C && $inlet <= self::ASHRAE_RECOMMENDED_MAX_C) {
 				$inRec++;
 			}
@@ -174,54 +184,58 @@ final class ThermalDeltaAnalyzer {
 				$overMax++;
 			}
 
-			$delta = $exhaust !== null ? $exhaust - $inlet : null;
+			$delta              = $exhaust !== null ? $exhaust - $inlet : null;
+			$nodeDeltas[$index] = $delta;
 
 			if ($delta !== null) {
-				$deltas[] = $delta;
+				$deltas[]  = $delta;
+				$deltaSum += $delta;
 			}
-
-			$parsed[] = [
-				'id'        => $sample['id'],
-				'inlet_c'   => $inlet,
-				'exhaust_c' => $exhaust,
-				'delta_c'   => $delta,
-			];
 		}
 
-		$sortedInlets = $inlets;
-		sort($sortedInlets);
-		$inletMean   = array_sum($inlets) / count($inlets);
-		$inletMedian = self::percentile($sortedInlets, 0.50);
-		$inletP95    = self::percentile($sortedInlets, 0.95);
-		$inletStd    = self::stdDev($inlets, $inletMean);
+		// Sort $inlets in place to avoid duplicating the full fleet vector.
+		sort($inlets);
+		$inletMin    = $inlets[0];
+		$inletMax    = $inlets[$sampleCount - 1];
+		$inletMedian = self::percentile($inlets, 0.50);
+		$inletP95    = self::percentile($inlets, 0.95);
+		$inletStd    = sqrt($inletM2 / $sampleCount);
+		unset($inlets);
 
+		$deltaCount  = count($deltas);
 		$deltaMedian = null;
 		$deltaMad    = null;
 		$deltaMean   = null;
 		$deltaMin    = null;
 		$deltaMax    = null;
 
-		if ($deltas !== []) {
-			$sortedDeltas = $deltas;
-			sort($sortedDeltas);
-			$deltaMin    = $sortedDeltas[0];
-			$deltaMax    = $sortedDeltas[count($sortedDeltas) - 1];
-			$deltaMean   = array_sum($deltas) / count($deltas);
-			$deltaMedian = self::percentile($sortedDeltas, 0.50);
-			$absDevs     = array_map(static fn (float $v): float => abs($v - $deltaMedian), $deltas);
-			sort($absDevs);
-			$deltaMad = self::percentile($absDevs, 0.50);
+		if ($deltaCount > 0) {
+			sort($deltas);
+			$deltaMin    = $deltas[0];
+			$deltaMax    = $deltas[$deltaCount - 1];
+			$deltaMean   = $deltaSum / $deltaCount;
+			$deltaMedian = self::percentile($deltas, 0.50);
+
+			foreach ($deltas as $i => $v) {
+				$deltas[$i] = abs($v - $deltaMedian);
+			}
+
+			sort($deltas);
+			$deltaMad = self::percentile($deltas, 0.50);
+			unset($deltas);
 		}
 
 		$nodes    = [];
 		$maxScore = 0.0;
+		$scale    = max(1.0, ($deltaMad ?? 0.0) * self::MAD_TO_SIGMA);
 
-		foreach ($parsed as $item) {
+		foreach ($samples as $index => $item) {
 			$score   = 0.0;
 			$reasons = [];
 			$robustZ = null;
 			$inlet   = $item['inlet_c'];
-			$delta   = $item['delta_c'];
+			$exhaust = $item['exhaust_c'] ?? null;
+			$delta   = $nodeDeltas[$index];
 
 			if ($inlet > $allowMaxC) {
 				$score    += min(50.0, 25.0 + ($inlet - $allowMaxC) * 4.0);
@@ -243,8 +257,7 @@ final class ThermalDeltaAnalyzer {
 					$reasons[] = 'high_delta_t_airflow_restriction';
 				}
 
-				if ($deltaMedian !== null && count($deltas) >= 3) {
-					$scale = max(1.0, ($deltaMad ?? 0.0) * self::MAD_TO_SIGMA);
+				if ($deltaMedian !== null && $deltaCount >= 3) {
 					$robustZ = ($delta - $deltaMedian) / $scale;
 
 					if (abs($robustZ) >= 3.0) {
@@ -263,7 +276,7 @@ final class ThermalDeltaAnalyzer {
 			$nodes[] = [
 				'id'            => $item['id'],
 				'inlet_c'       => round($inlet, 2),
-				'exhaust_c'     => $item['exhaust_c'] !== null ? round($item['exhaust_c'], 2) : null,
+				'exhaust_c'     => $exhaust !== null ? round($exhaust, 2) : null,
 				'delta_c'       => $delta !== null ? round($delta, 2) : null,
 				'robust_z'      => $robustZ !== null ? round($robustZ, 3) : null,
 				'anomaly_score' => $score,
@@ -273,16 +286,16 @@ final class ThermalDeltaAnalyzer {
 		}
 
 		return [
-			'sample_count'       => count($samples),
-			'delta_sample_count' => count($deltas),
+			'sample_count'       => $sampleCount,
+			'delta_sample_count' => $deltaCount,
 			'inlet_distribution' => [
-				'min_c'                  => round($sortedInlets[0], 2),
-				'max_c'                  => round($sortedInlets[count($sortedInlets) - 1], 2),
+				'min_c'                  => round($inletMin, 2),
+				'max_c'                  => round($inletMax, 2),
 				'mean_c'                 => round($inletMean, 2),
 				'median_c'               => round($inletMedian, 2),
 				'p95_c'                  => round($inletP95, 2),
 				'std_dev_c'              => round($inletStd, 3),
-				'ashrae_recommended_pct' => round(($inRec / count($samples)) * 100.0, 2),
+				'ashrae_recommended_pct' => round(($inRec / $sampleCount) * 100.0, 2),
 				'above_allowable_count'  => $overMax,
 			],
 			'delta_distribution' => [
@@ -318,19 +331,33 @@ final class ThermalDeltaAnalyzer {
 			$exhaust = $cache->served(Member::NODE, 'exhaust_temp_c', $freshness);
 
 			if ($inlet === null || $exhaust === null) {
-				foreach ($cache->membersOf('temperature') as $member) {
-					$value = $cache->served($member['key'], 'temp_c', $freshness);
-
-					if ($value === null) {
-						continue;
-					}
-
+				foreach ($cache->membersOfUnsorted('temperature') as $member) {
 					$label = strtolower($member['name'] . ' ' . $member['key']);
 
-					if ($inlet === null && preg_match('/\b(inlet|intake|ambient)\b/', $label) === 1) {
-						$inlet = $value;
-					} elseif ($exhaust === null && preg_match('/\b(exhaust|outlet)\b/', $label) === 1) {
-						$exhaust = $value;
+					if (
+						$inlet === null
+						&& (str_contains($label, 'inlet') || str_contains($label, 'intake') || str_contains($label, 'ambient'))
+						&& preg_match('/\b(inlet|intake|ambient)\b/', $label) === 1
+					) {
+						$value = $cache->served($member['key'], 'temp_c', $freshness);
+
+						if ($value !== null) {
+							$inlet = $value;
+						}
+					} elseif (
+						$exhaust === null
+						&& (str_contains($label, 'exhaust') || str_contains($label, 'outlet'))
+						&& preg_match('/\b(exhaust|outlet)\b/', $label) === 1
+					) {
+						$value = $cache->served($member['key'], 'temp_c', $freshness);
+
+						if ($value !== null) {
+							$exhaust = $value;
+						}
+					}
+
+					if ($inlet !== null && $exhaust !== null) {
+						break;
 					}
 				}
 			}
@@ -394,23 +421,5 @@ final class ThermalDeltaAnalyzer {
 		$weight = $rank - $lower;
 
 		return $sorted[$lower] * (1.0 - $weight) + $sorted[$upper] * $weight;
-	}
-
-	/**
-	 * Compute population standard deviation for a non-empty series.
-	 *
-	 * @param non-empty-list<float> $values samples
-	 * @param float                 $mean   arithmetic mean
-	 * @return float
-	 */
-	private static function stdDev(array $values, float $mean): float {
-		$variance = 0.0;
-
-		foreach ($values as $value) {
-			$diff      = $value - $mean;
-			$variance += $diff * $diff;
-		}
-
-		return sqrt($variance / count($values));
 	}
 }
