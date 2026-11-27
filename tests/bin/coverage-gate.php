@@ -44,6 +44,37 @@ $pct     = $total > 0 ? ($covered / $total) * 100.0 : 0.0;
 
 printf("Measured line coverage: %.2f%% (%d / %d statements)\n", $pct, $covered, $total);
 
+$uncovered = array();
+
+foreach ($xml->xpath('//file') ?: array() as $fileNode) {
+	if (!isset($fileNode->metrics)) {
+		continue;
+	}
+
+	$fm   = $fileNode->metrics;
+	$ftot = (int) $fm['statements'];
+	$fcov = (int) $fm['coveredstatements'];
+	$miss = $ftot - $fcov;
+
+	if ($miss > 0) {
+		$uncovered[] = array(
+			'name' => basename((string) $fileNode['name']),
+			'miss' => $miss,
+			'cov'  => $fcov,
+			'tot'  => $ftot,
+			'pct'  => $ftot > 0 ? ($fcov / $ftot) * 100.0 : 100.0,
+		);
+	}
+}
+
+usort($uncovered, static function (array $a, array $b): int {
+	return $b['miss'] <=> $a['miss'];
+});
+
+foreach (array_slice($uncovered, 0, 12) as $row) {
+	printf("  %-32s %6.2f%% (%d/%d, %d uncovered)\n", $row['name'], $row['pct'], $row['cov'], $row['tot'], $row['miss']);
+}
+
 if ($pct < $minPct) {
 	fwrite(STDERR, sprintf("Line coverage %.2f%% is below minimum threshold %.2f%%\n", $pct, $minPct));
 	exit(1);
