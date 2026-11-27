@@ -1,4 +1,4 @@
-<!-- Source: README.md; SHA256: 7b4e83a58a1adc844cb0615ef30e95476cba2851f96bb454d2a816fb2774724d -->
+<!-- Source: README.md; SHA256: 6972a6c9ac754cd60e63c5caf971451ea8fe6e279eef757d886e1a168d3eef01 -->
 
 <!-- translations:start -->
 [English](../../../README.md) | [简体中文](../zh-CN/README.md) | [हिन्दी](../hi-IN/README.md) | [Español (España)](../es-ES/README.md) | [Español (Latinoamérica)](../es-419/README.md) | [العربية (السعودية)](../ar-SA/README.md) | [Afrikaans](../af-ZA/README.md) | [አማርኛ](../am-ET/README.md) | [العربية (مصر)](../ar-EG/README.md) | [العربية (المغرب)](../ar-MA/README.md) | [বাংলা](../bn-BD/README.md) | [Bosanski](../bs-BA/README.md) | [Deutsch](../de-DE/README.md) | [فارسی](../fa-IR/README.md) | [Filipino](../fil-PH/README.md) | [Français](../fr-FR/README.md) | [Français (Maroc)](../fr-MA/README.md) | [Français (Sénégal)](../fr-SN/README.md) | [Hausa](../ha-NG/README.md) | [עברית](../he-IL/README.md) | [Hrvatski](../hr-HR/README.md) | [Bahasa Indonesia](../id-ID/README.md) | [Igbo](../ig-NG/README.md) | [Italiano](../it-IT/README.md) | [日本語](../ja-JP/README.md) | [한국어](../ko-KR/README.md) | [Malagasy](../mg-MG/README.md) | [मराठी](../mr-IN/README.md) | [Bahasa Melayu](../ms-MY/README.md) | [Nederlands](../nl-NL/README.md) | [Polski](../pl-PL/README.md) | [Português (Brasil)](../pt-BR/README.md) | [Русский](../ru-RU/README.md) | [Kinyarwanda](README.md) | [Soomaali](../so-SO/README.md) | [Српски](../sr-RS/README.md) | [Svenska](../sv-SE/README.md) | [Kiswahili](../sw-KE/README.md) | [தமிழ்](../ta-IN/README.md) | [తెలుగు](../te-IN/README.md) | [ไทย](../th-TH/README.md) | [Türkçe](../tr-TR/README.md) | [Українська](../uk-UA/README.md) | [اردو](../ur-PK/README.md) | [Tiếng Việt](../vi-VN/README.md) | [isiXhosa](../xh-ZA/README.md) | [Yorùbá](../yo-NG/README.md) | [繁體中文](../zh-TW/README.md) | [isiZulu](../zu-ZA/README.md)
@@ -6,33 +6,81 @@
 
 # plugin_redfish
 
-Umugereka wa Cacti 1.2 uzana ikoreshwa ry'amashanyarazi ya seriveri, ubushyuhe bwinjira, imiterere y'imiyaga ikonjesha (fans), n'ubuzima bw'ibikoresho bitanga amashanyarazi (power supplies) bivuye muri kontorore zicunga ibikoresho bya seriveri (BMCs) bikajya muri Cacti nk'ibikoresho bisanzwe, amasoko y'amakuru, n'ibishushanyo mbonera, hakoreshejwe Redfish hamwe n'uburyo bwa IPMI bwo kwitabaza igihe bikenewe. Hanyuma Thold na Maint bitanga impuruza kandi bikazihagarika by'agateganyo, naho icyiciro kizakurikiraho kikazongeramo igiteranyo cy'amashanyarazi ku rwego rwa rack.
+Umugereka wa Cacti 1.2 uzana ikoreshwa ry'amashanyarazi ya seriveri, ubushyuhe bwinjira, imiterere y'imiyaga ikonjesha (fans), n'ubuzima bw'ibikoresho bitanga amashanyarazi (power supplies) bivuye muri kontorore zicunga ibikoresho bya seriveri (BMCs) bikajya muri Cacti nk'ibikoresho bisanzwe, amasoko y'amakuru, n'ibishushanyo mbonera, hakoreshejwe Redfish hamwe n'uburyo bwa IPMI bwo kwitabaza bwo gusoma gusa igihe bikenewe n'igiteranyo cy'amashanyarazi ku rwego rwa rack. Thold na Maint bitanga impuruza kandi bikazihagarika by'agateganyo binyuze ku masoko y'amakuru asanzwe ya Cacti.
 
-> **Imiterere: iri mu ikorwa, nta verisiyo irasohoka (0.1.0-dev).** Ibyiciro bya 2 (ishyirwaho ry'ibanze) na 3 (ibikoresho bya Cacti n'impuruza) byahujwe kuri `main`. Uyu mugereka ntufitanye isano n'umushinga wa Cacti. Ushyirwa kuri Cacti 1.2.31 ikoresha PHP 8.2 cyangwa izisumbuyeho, ukandika BMCs n'ibyangombwa byo kwinjira, ugasoma amashanyarazi, ubushyuhe, imiyaga ikonjesha, n'ubuzima bw'ibitanga amashanyarazi kuri buri BMC ukoresheje Redfish ubishyira mu bubiko bw'agateganyo bwawo, kandi ukerekana ubuzima bw'ikusanyamakuru. Wongeramo ibikoresho bya Cacti, ibishushanyo mbonera bya buri gice n'iby'incamake, hamwe n'ubufasha bwa Thold na Maint binyuze mu masoko y'amakuru asanzwe. CI yagerageje BMC y'igikoresho cy'ikinyoma cyubatswe ku makuru yanditswe n'intoki hamwe na seriveri y'icyitegererezo ya DMTF Redfish; nta BMC nyayo cyangwa itsinda ry'igerageza riremezwa. Igishushanyo n'ubushakashatsi biboneka muri [docs/PLAN.md](../../PLAN.md), [docs/research/](../../research), no muri [docs/decisions/](../../decisions).
+> **Imiterere: iri mu ikorwa, nta verisiyo irasohoka (`0.1.0-dev`).** Uyu mugereka ntufitanye isano n'umushinga wa Cacti. Ushyirwa kuri Cacti 1.2.31 cyangwa izisumbuyeho ikoresha PHP 8.2 cyangwa izisumbuyeho kandi ugashyira mu bikorwa umukusanyi wa Redfish, ububiko bw'ibyangombwa byo kwinjira bishyizwe mu ibanga, gutegura ibikoresho n'ibishushanyo mbonera bya Cacti, uburyo bwa IPMI bwo kwitabaza bwo gusoma gusa, igiteranyo cy'amashanyarazi ya rack, kwerekana igihe cyo kubungabunga cya Cacti Maint, ikoporora n'imirongo y'umukozi ku bakusanyi b'amakuru bo ku ruhande, umutangabikorwa wa CasC na CLI y'umukozi w'ibikorwa, ubushobozi (abilities) bwa MCP, n'igenzura ryo gusuzuma ibibazo rya Doctor. CI igerageza ibikoresho by'igerageza, DMTF Redfish Mockup Server (ibishushanyo bya subsystem, legacy-only, na HPE iLO Gen11), na Thold v1.8.2 hamwe na Maint v1.3; nta BMC nyayo y'ibikoresho cyangwa itsinda ry'igerageza riremezwa. Igishushanyo n'ubushakashatsi biboneka muri [docs/PLAN.md](../../PLAN.md), [docs/research/](../../research/), no muri [docs/decisions/](../../decisions/).
 
-### Ibyo icyiciro cya 2 gitanga
+## Ubushobozi bwashyizwe mu bikorwa
 
-- Gushyiramo, kuvugurura, guhagarika, no gukuramo binyuze kuri API y'imigereka ya Cacti, imbonerahamwe zikagumaho mu gihe cyo gukuramo keretse igihe igenamiterere ryo kuzigumishaho ryakuweho. Kuri PHP iri munsi ya 8.2, umugereka wanga gushyirwamo cyangwa kwemezwa kandi ukagaragaza impamvu.
-- Inzego z'uburenganzira "Redfish View" (urupapuro rw'ubuzima), "Redfish Operator" (urupapuro rw'ibikorwa), na "Redfish Admin" (impapuro za BMCs n'ibyangombwa byo kwinjira), hamwe n'igenamiterere munsi ya Configuration > Settings > Redfish.
-- Igitabo cy'iyandikisha rya BMC gifite uburyo bwo kwinjiza muri CSV no gusohora muri JSON. Dosiye zinjizwa ntizigomba kuba zirimo amagambo y'ibanga; ibyangombwa byo kwinjira bishingira ku izina.
-- Ibyangombwa byo kwinjira bibikwa bishyizwe mu ibanga hakoreshejwe AES-256-GCM. Urufunguzo ni dosiye iri hanze y'ububiko bw'amakuru, `/etc/cacti/redfish-vault.key` nk'uko bisanzwe, rufite inyuguti n'imibare 64 za hexadecimal (`openssl rand -hex 32`) cyangwa byte 32 z'ukuri zidasobanutse, rufitwe n'umukoresha wa poller, rudashobora gusomwa n'abandi bakoresha, mu bubiko umukoresha wa poller cyangwa root wenyine bashobora kwandikamo. Urufunguzo rw'inyuguti 32 zisanzwe zandikwa rwanzwe nk'ijambo ry'ibanga. **Bika kopi y'iyi dosiye y'urufunguzo hamwe n'ububiko bw'amakuru**; utayifite, buri jambo ry'ibanga ribitswe rigomba kongera kwinjizwa bundi bushya.
-- Igenzura rya TLS rirahora ryaka nk'uko bisanzwe, hamwe na CA bundle kuri buri BMC cyangwa gufata SPKI SHA-256. Guhitamo kutagenzura TLS kuri buri BMC byandikwa mu makuru y'ibikorwa kandi biguma ku rupapuro rw'ubuzima nk'umuburo.
-- Umukiriya wa Redfish usoma gusa: `GET` hamwe no kwinjira no gusohoka muri sesiyo gusa, bigenzurwa ku rutonde rw'ibyemewe mbere y'uko ubusabe ubwo ari bwo bwose bwoherezwa.
-- Umukusanyi utangizwa na `poller_bottom` ku ma BMC ari kuri poller nyamukuru, hamwe n'igihe ntarengwa n'uburenganzira bwo gukora kuri buri BMC, gutegereza igihe bibaye ngombwa (backoff), no gusukura nyuma y'ihagarara ritunguranye rya sesiyo imwe umugereka wanditse. Abakusanyi bo ku ruhande (remote collectors) ntibaremerwa; bakeneye ihitamo ryeruye ry'uburyo umukusanyi agera ku bubiko bw'amakuru n'urufunguzo (icyiciro cya 4).
-- Amakuru ya BMC n'ibyangombwa byo kwinjira bikurikiza uburenganzira bw'ibikoresho bya Cacti: Redfish Admin areba, ahindura, kandi agahuza gusa ama BMC ari ku bikoresho yemerewe kureba, ndetse n'ibyangombwa byo kwinjira bidakoreshwa na BMC n'imwe iri ku gikoresho gihishwe.
+### Umukusanyi w'ibanze, ububiko bw'ibanga, n'ibikoresho bya Cacti
 
-### Ibyo icyiciro cya 3 cyongeraho
+- **Imikorere y'ubuzima n'imiterere y'ububiko (schema).** Ishyirwamo, ivugururwa, ihagarikwa, kandi igakurwamo binyuze kuri API y'imigereka ya Cacti (`Schema::VERSION = 3`, imbonerahamwe 12). Imbonerahamwe zigumaho mu gihe cyo gukuramo keretse igihe *Keep Plugin Tables on Uninstall* yakuweho. Imirongo y'itangiriro isomwa kuri PHP 8.0 kandi ikanga PHP iri munsi ya 8.2 cyangwa kubura kwa `ext-openssl` hamwe n'ubutumwa bw'ikosa bweruye.
+- **Igitabo cy'iyandikisha n'uburenganzira.** Inzego z'uburenganzira *Redfish View* (`redfish_health.php`), *Redfish Operator* (`redfish_operator.php`), na *Redfish Admin* (`redfish_bmcs.php`, `redfish_credentials.php`), hamwe n'igenamiterere munsi ya **Configuration > Settings > Redfish**. Igitabo cy'iyandikisha rya BMC gishyigikira kwinjiza muri CSV (ibyangombwa byo kwinjira bishingira ku izina; amagambo y'ibanga ari muri dosiye zinjizwa arangwa) no gusohora muri JSON. Amakuru ya BMC n'ibyangombwa byo kwinjira bikurikiza uburenganzira bw'ibikoresho bya Cacti.
+- **Ububiko bw'ibyangombwa byo kwinjira bishyizwe mu ibanga.** Amagambo y'ibanga abikwa ashyizwe mu ibanga hakoreshejwe AES-256-GCM muri `plugin_redfish_secret`. Urufunguzo ruba hanze y'ububiko bw'amakuru (`/etc/cacti/redfish-vault.key` nk'uko bisanzwe) nk'inyuguti n'imibare 64 za hexadecimal (`openssl rand -hex 32`) cyangwa byte 32 z'ibanga ritononekara, rufitwe n'umukoresha wa poller, rudashobora gusomwa n'abandi bakoresha, mu bubiko umukoresha wa root cyangwa uwo mukoresha wenyine bashobora kwandikamo. Ijambo ry'ibanga ry'inyuguti 32 zisanzwe zandikwa rirangwa. **Bika kopi y'iyi dosiye y'urufunguzo hamwe n'ububiko bw'amakuru**; utayifite, amagambo y'ibanga abitswe agomba kongera kwinjizwa.
+- **TLS n'umukiriya wa Redfish usoma gusa.** Igenzura rya TLS rirahora ryaka nk'uko bisanzwe hakoreshejwe ububiko bwa CA bwa sisitemu, CA bundle kuri buri BMC, cyangwa gufata SPKI SHA-256; guhitamo kutagenzura TLS kuri buri BMC biguma bigaragara nk'umuburo w'ubuzima n'umuburo w'igenzura rya Doctor. Umukiriya wemera gusa `GET` hamwe no kwinjira (`POST`) no gusohoka (`DELETE`) muri sesiyo ya Redfish, hamwe n'uburyo bwa Basic kuri buri BMC nk'uburyo bwo kwitabaza igihe sesiyo zitaboneka. Ishakisha rihitamo mbere ibikoresho bishya bya subsystem na sensor bya Redfish kandi rikisunga ibikoresho bishaje bya `Power` na `Thermal` nk'uburyo bwo kwitabaza.
+- **Imikorere y'umukusanyi.** `poller_redfish.php` itangizwa na `poller_bottom`, igakoresha igikorwa nyamukuru kimwe kuri buri poller binyuze mu gitabo cy'ibikorwa cya Cacti hamwe n'ibikorwa by'abakozi bishobora gutegurwa (`redfish_workers`), ikabona uburenganzira bw'igihe gito kuri buri BMC, ikubahiriza ingengo y'igihe (`redfish_collector_budget`), igakoresha gutegereza kwiyongera buhoro buhoro, kandi igasukura sesiyo ya mbere y'umugereka ubwawo nyuma y'ihagarara ritunguranye.
+- **Inyandikorugero, ibikoresho, n'ibishushanyo mbonera.** Yinjiza `templates/redfish-templates.xml` hakurikijwe hash kandi igakoporora dosiye eshatu za XML z'ibibazo by'amakuru bya script server (`redfish_fans.xml`, `redfish_temperatures.xml`, `redfish_psus.xml`) muri `<cacti>/resource/script_server/` itandukanyije n'izindi kugira ngo itasimbuza dosiye zahinduwe n'umukoresha. **Create Device** na **Add Graphs** bisaba kwemeza gahunda yo gutegura, bigahuza ibibazo ku gikoresho cya seriveri cyahujwe cyangwa bigakora igikoresho cya "Redfish BMC" munsi ya `.invalid` igenzura ry'iboneka rifunze, kandi bigahuza buri gishushanyo mbonera cya Redfish bisubiza ku bishushanyo mbonera bya Redfish by'icyo gikoresho binyuze kuri `graph_buttons`.
+- **Ibyinjizwa bya script server bishingiye ku bubiko bw'agateganyo gusa.** `scripts/ss_redfish_members.php` itanga ibipimo by'imiyaga ikonjesha, ubushyuhe, na PSU kuri buri gice, naho `scripts/ss_redfish_summary.php` igatanga ibipimo bya "Redfish Node Summary" (amashanyarazi, ubushyuhe bwinjira n'ubwo hejuru cyane, umubare w'imiyaga ikonjesha na PSU bitameze neza, ubuzima bw'inodo, n'igihe gishize kuva ku isoma ryiza rya nyuma). Guhamagara script server gusoma ububiko bw'agateganyo bwo mu gikoresho gusa kandi ntikuvugana na BMC na rimwe. Ibipimo bibuze, bishaje, cyangwa by'ibice byavuyeho bitanga `U` (ntibitanga `0` na rimwe), mu gihe `age` yo ihora itanga agaciro kugira ngo ibipimo ntarengwa bifate za BMC zahagaze gusubiza.
 
-- Inyandikorugero (templates) zitangwa nka XML y'inyandikorugero ya Cacti muri `templates/` kandi zikinjizwa n'uburyo bw'iyinjiza bwa Cacti ubwayo mu gihe cyo gushyiramo no kuvugurura, zihujwe na hash, bityo iyinjiza rikavugurura ibikoresho by'umugereka kandi ntiryongere ikintu kabiri. Dosiye eshatu z'ibibazo by'amakuru zikopororwa muri `<cacti>/resource/script_server/` hamwe na hash yanditswe; umugereka ntiwigera usimbuza dosiye iriho utanditse, kandi urupapuro rw'ubuzima ruburira abayobozi igihe inyandikorugero cyangwa dosiye y'ikibazo itari mu mwanya wayo. **Reinstall the Redfish Templates** ku rupapuro rwa BMCs irazinjiza bundi bushya; ikenera uburenganzira bwa Cacti bwo kwinjiza inyandikorugero (Import Templates).
-- **Create Device** cyangwa **Add Graphs** kuri buri BMC ([ADR 0015](../../decisions/0015-attach-to-the-server-device-or-create-one-per-bmc.md)). BMC yahujwe n'igikoresho gisanzwe cya seriveri ibona ibibazo byayo by'amakuru n'ibishushanyo mbonera kuri icyo gikoresho. BMC itarahujwe ibona igikoresho gishya giturutse ku nyandikorugero y'igikoresho "Redfish BMC", igenzura ry'iboneka rifunze kandi ifite izina rya host munsi ya `.invalid`, bityo Cacti ntiyigere ivugana na BMC kandi ntiyigere yerekana aderesi yayo. Mu buryo ubwo ari bwo bwose umuyobozi abanza kwemeza gahunda igaragaza ibizongerwamo. Byombi bikenera uburenganzira bwa Cacti bwo gucunga ibikoresho ndetse na Redfish Admin; igikoresho gishya uwagikoze adashobora kureba gikurwaho nanone.
-- Ibibazo bitatu by'amakuru bya script server, "Redfish Fans", "Redfish Temperatures", na "Redfish Power Supplies", bifite indekisi ishingiye ku rufunguzo rwa buri gice cya BMC, hamwe n'igishushanyo mbonera kuri buri gice: umuvuduko w'umuyaga ikonjesha ku ijanisha cyangwa RPM (urugero urwo ari rwo rwose BMC itanga), ubushyuhe, n'amashanyarazi yinjira n'asohoka mu ma watts ku bitanga amashanyarazi, buri kimwe gifite kode y'ubuzima bwacyo.
-- Icyinjiza cya "Redfish Node Summary" gifite amashanyarazi, ubushyuhe bwinjira, ubushyuhe buri hejuru kurusha ubundi, imiyaga ikonjesha n'ibitanga amashanyarazi bitameze neza, ubuzima bw'inodo (node), n'igihe gishize kuva ku isoma ryiza rya nyuma, bishushanyijwe ku bishushanyo mbonera bine: amashanyarazi, ubushyuhe, ubuzima bw'ibice, n'igihe amakuru amaze. Ibipimo ntarengwa bya Thold kuri aya masoko y'amakuru bitanga impuruza, kandi Maint ikazihagarika by'agateganyo, nta mpinduka zikozwe ku mugereka n'umwe muri iyo yombi.
-- Script server isubiza ivuye mu bubiko bw'agateganyo bw'umugereka gusa kandi ntiyigera ivugana na BMC. Agaciro kabuze, kashaje, gafite urundi rugero, cyangwa kavuye ku gice kitakiriho kaba `U`, kugira ngo ibishushanyo mbonera byerekane icyuho, atari zeru; `age` ihora ifite agaciro, bityo igipimo ntarengwa kuri yo kigafata BMC yahagaze gusubiza.
-- Umurongo uhuza kuva kuri buri gishushanyo mbonera cya Redfish ujya ku bishushanyo mbonera bya Redfish by'igikoresho, werekanwa gusa ku bakoresha Cacti yemerera kureba icyo gikoresho.
+**Iyo ibice bya BMC bihindutse** (nk'umuyaga ikonjesha wasimbuwe cyangwa ivugurura rya firmware rihindura amazina y'ibyuma bifata ibipimo), ongera ukoreshe **Add Graphs**. Umuyaga ikonjesha cyangwa igitanga amashanyarazi cyari gihari none kikaba kidahari bibarirwa muri `fans_bad` cyangwa `psus_bad` kugeza byemewe; umwanya utigeze ushyirwamo ikintu ntubarwa. Ibice byavuyeho bigumana amasoko y'amakuru n'ibishushanyo mbonera byabyo bisanzwe, bisoma `U` guhera icyo gihe kugeza bisibwe n'intoki. Gusiba igikoresho cya Cacti bikuraho ihuzwa rya BMC yacyo kandi bigakuraho umwanya wacyo muri rack ariko bikagumishaho BMC n'ububiko bw'agateganyo; gusiba BMC cyangwa gukuramo umugereka bigumishaho ibikoresho n'ibishushanyo mbonera bya Cacti.
 
-**Iyo ibice bya BMC bihindutse** (umuyaga ikonjesha uhinduwe, ivugurura rya firmware rihindura amazina y'ibyuma bifata ibipimo), hitamo **Add Graphs** nanone. Umuyaga ikonjesha cyangwa igitanga amashanyarazi cyari gihari none kikaba kidahari cyangwa cyaravuyeho bibarirwa muri `fans_bad` cyangwa `psus_bad` kugeza ubikoze, bityo umuyaga ikonjesha wakuwemo utanga impuruza; umwanya utigeze ushyirwamo ikintu ntubarwa. Add Graphs yemera ibice BMC itanga ubu, kandi Cacti yongera gukora indekisi y'ibibazo; igice cyavuyeho kigumana isoko ry'amakuru n'igishushanyo mbonera byacyo, bisoma `U` guhera icyo gihe, naho igice gishya kikabona igishushanyo mbonera. Siba n'intoki ibishushanyo mbonera by'ibice byavuyeho igihe amateka yabyo atakiri ngombwa.
+### Uburyo bwa IPMI bwo kwitabaza butari itegeko
 
-Gusiba igikoresho bikuraho ihuzwa rya BMC yacyo ariko bikagumishaho iyo BMC n'ububiko bwayo bw'agateganyo. Gusiba BMC, cyangwa gukuramo umugereka, bigumishaho igikoresho n'ibishushanyo mbonera byacyo.
+- **Guhitamo kuri buri BMC.** Bufunze nk'uko bisanzwe (`protocols` ihitamo `redfish` nk'uko bisanzwe; gukoresha uburyo bwa IPMI bishyiraho `redfish,ipmi`).
+- **Imikorere y'uburyo bwo kwitabaza ifite imipaka.** Ikora gusa igihe ikusanyamakuru rya Redfish rinaniranywe n'ubwoko bw'ikosa ryemewe; ntikora na rimwe kuri `AuthRejected`, `CredentialUnavailable`, `AddressRefused`, `OperationRefused`, cyangwa `Deadline`.
+- **Imikorere ifite umutekano.** Ihamagara `ipmitool` kuri `-I lanplus` binyuze kuri `proc_open()` mu buryo bw'urutonde nta shell, hamwe n'igihe ntarengwa gihamye n'umupaka wo gusohora wa 256 KiB. Amagambo y'ibanga atangwa binyuze kuri `IPMITOOL_PASSWORD` (`-E`) cyangwa dosiye y'agateganyo ya mode-0600 (`-f`) isibwa muri `finally`, ntikoreshwa na rimwe kuri CLI argv.
+- **Urutonde rw'amabwiriza yo gusoma gusa yemewe.** Amabwiriza mato atanu yo gusoma gusa ni yo yemewe: `dcmi power reading`, `sdr type Temperature`, `sdr type Fan`, `sdr type Power Supply`, na `chassis status`. Amabwiriza ahindura imiterere arangwa.
+- **Ibisohoka bitunganijwe n'umuburo w'umutekano.** `IpmiNormalizer` ishyira ibipimo mu buryo bumwe bwa `Observation`/`Member`/`Reading`, igasohora `U` ku byuma bifata ibipimo bibuze cyangwa bidashobora gusomwa. Gukoresha uburyo bwa IPMI bitera umuburo ku rupapuro rw'ubuzima no mu igenzura rya Doctor `redfish.bmc_security` wibutsa abakozi kugarukira UDP 623 kuri VLAN yo gucunga.
+
+### Igiteranyo cy'amashanyarazi ya rack
+
+- **Igitabo cy'iyandikisha rya rack.** Imiterere ya verisiyo ya 3 yongeramo `plugin_redfish_rack` (`(site_id, name)` idasanzwe, `power_budget_watts` itari itegeko, `min_coverage_pct` igira `80` nk'uko bisanzwe, n'inyandiko) hamwe na `plugin_redfish_rack_member` (umwanya wa rack utarenze umwe kuri buri `host_id`, `bmc_id` na `unit_position` bitari itegeko, ikurwaho mu buryo bwikora iyo igikoresho cya Cacti gisibwe).
+- **Ibiteranyo birinzwe n'igipimo cy'ibyahuje.** `RackPowerSummary` iteranya ibipimo bishya bya `power_watts` by'ibice biva mu bubiko bw'agateganyo bwo mu gikoresho kandi ikabara ikoreshwa ry'ingengo n'umwanya usigaye. Iyo igipimo cy'ibice bitanga amakuru kigiye munsi ya `min_coverage_pct`, `power_watts`, `utilization_pct`, na `headroom_watts` bisubiza `U` kugira ngo kunanirwa k'umukusanyi kutagaragara na rimwe nk'igabanuka ry'amashanyarazi ya rack.
+- **Icyinjizwa cya script server giteguwe ku bwa Thold.** `scripts/ss_redfish_rack.php` (`ss_redfish_rack(<rack_id>)`) isubiza `power_watts`, `power_budget_watts`, `utilization_pct`, `headroom_watts`, `members_total`, `members_reporting`, na `coverage_pct` biva mu bubiko bw'agateganyo bwo mu gikoresho gusa.
+
+### Guhuza na Cacti Maint
+
+- Ibipimo ntarengwa bya Thold ku masoko y'amakuru ya Redfish bitanga impuruza kandi Cacti Maint ikazihagarika nta mpinduka zikozwe ku mugereka n'umwe muri iyo yombi.
+- `MaintWindow` igenzura gahunda za Maint zikora kuri buri host ya Cacti yahujwe (gahunda z'inshuro imwe `mtype=1` n'izigaruka `mtype=2`, hamwe na `plugin_maint_check_cacti_host()` iyo yashyizweho) kandi ikerekana igihe cyo kubungabunga gikora ku rupapuro rwa Redfish Health (`[MAINT]`), mu bisohoka bya `cli/redfish.php health`, no mu bushobozi bwa `redfish-get-health`.
+
+### Abakusanyi b'amakuru bo ku ruhande
+
+- `INFO` itangaza `remote_collect:1`. Za BMC zemera `poller_id >= 1` iyo ari yo yose, kandi `poller_redfish.php --poller=N` ikusanya gusa za BMC zifunguye zahawe iyo poller.
+- **Umugereko wa `replicate_out`.** Ikoporora binyuze kuri `replicate_out_table()` imbonerahamwe z'igenamiterere zitarimo amabanga zireba iyo poller yo ku ruhande gusa: `plugin_redfish_bmc`, metadata ya `plugin_redfish_credential` (nta magambo yahishwe), `plugin_redfish_rack`, na `plugin_redfish_rack_member`. `plugin_redfish_secret` ntikopororwa, kandi dosiye z'imfunguzo z'ububiko bw'ibanga ziguma kuri buri poller mu buryo budakuka.
+- **Umugereko wa `remote_agent`.** Itanga ibikorwa byo gusoma gusa `redfish_health` na `redfish_discovery` byemera gusa ibipimo by'imibare `poller_id` na `bmc_id`. Ibipimo bitateganyijwe birangwa kandi nta byangombwa byo kwinjira cyangwa amabanga asubizwa.
+
+### Imigereko y'urusobe rw'ibikorwa (CasC, ubushobozi bwa MCP, na Doctor)
+
+- **Umutangabikorwa wa CasC (`casc_register_providers`).** Yandika umutangabikorwa `redfish` (verisiyo y'imiterere `1`) hamwe no gusohora muri YAML na XML ya PHP gusa, gusesengura (yanga XXE), kwemeza, gutegura itandukaniro (diff), no gushyira mu bikorwa. Ibyangombwa byo kwinjira bigaragara gusa nk'ibyerekezo by'ububiko bw'ibanga (`vault:redfish:<name>`); imfunguzo z'ibanga zidatunganyijwe (`pass`, `secret`, `token`, `private_key`, `vault_key`, `auth_token`) zirangwa. Gushyira mu bikorwa bisaba `PLAN_HASH` ya SHA-256 nyayo.
+- **MCP / Abilities API (`abilities_register`).** Yandika ubushobozi butatu bwo gusoma gusa buyobowe n'urwego rwa Redfish View (`redfish_health.php`) n'uburenganzira bw'ibikoresho bya Cacti, budasubiza ibyangombwa byo kwinjira na rimwe:
+  - `redfish-list-bmcs` (`poller_id` itari itegeko)
+  - `redfish-get-rack-power` (`rack_id` itari itegeko)
+  - `redfish-get-health` (`bmc_id` itari itegeko)
+- **Igenzura rya Doctor (`doctor_register_checks`).** Yandika igenzura ryo gusuzuma ibibazo ritanu ryo mu gikoresho ryo gusoma gusa ritavugana na BMC cyangwa ngo risubize ibikoresho by'urufunguzo:
+  - `redfish.schema`: ukuri kw'igihe kwa verisiyo y'imiterere
+  - `redfish.vault_key`: ubushobozi bwo gusoma n'uburenganzira bw'urufunguzo rw'ububiko bw'ibanga
+  - `redfish.collector_runs`: ingengo n'uburyo bushya bw'ikoreshwa ry'umukusanyi wa poller
+  - `redfish.bmc_security`: za BMC zifunguye zifite TLS itagenzuwe cyangwa uburyo bwa IPMI
+  - `redfish.rack_power`: iyubahirizwa ry'ingengo y'amashanyarazi ya rack n'umupaka wo hasi w'ibyahuje
+
+## CLI
+
+Koresha uhereye mu bubiko fatizo bwa Cacti ukoresheje PHP 8.2 cyangwa izisumbuyeho:
+
+```sh
+# Operator and CasC CLI (reads --file=PATH or stdin for validate, plan, and apply)
+php plugins/redfish/cli/redfish.php export --format=yaml|xml
+php plugins/redfish/cli/redfish.php validate [--file=PATH] [--format=yaml|xml]
+php plugins/redfish/cli/redfish.php plan [--file=PATH] [--format=yaml|xml]
+php plugins/redfish/cli/redfish.php apply [--file=PATH] [--format=yaml|xml] --confirm=<PLAN_HASH>
+php plugins/redfish/cli/redfish.php health --format=text|json
+
+# Collector entry point (normally started by poller_bottom)
+php plugins/redfish/poller_redfish.php [--poller=N] [--force] [--debug]
+
+# Rack power summary script server entry point
+php plugins/redfish/scripts/ss_redfish_rack.php <rack_id>
+```
 
 ## Inzego z'uburenganzira
 
@@ -42,19 +90,9 @@ Gusiba igikoresho bikuraho ihuzwa rya BMC yacyo ariko bikagumishaho iyo BMC n'ub
 | Redfish Operator | Gukurikirana hiyongereyeho urupapuro rwa Operations n'ibyemezo byihariye byo kumenya ikibazo (triage). |
 | Redfish Admin | Uburenganzira bwa Operator hiyongereyeho igenamiterere risanzwe n'ibikorwa by'ubuyobozi. |
 
-Nyuma yo gukoporora dosiye z'ivugurura, fungura urupapuro rwa Plugins nk'umuyobozi kugira ngo wandike
-urwego rushya. Tanga uburenganzira bw'urwego rwa Operator mu buryo bweruye munsi ya **Configuration > Users** cyangwa amatsinda y'abakoresha.
-Amavugurura agumana nimero za ID n'uburenganzira byari bisanzwe bya View na Admin. Uburenganzira bwa Admin
-buragwa ubwa Operator, naho ubwa Operator bukaragwa ubwa View kuri buri busabe;
-ibi ntibyongera uburenganzira bubitswe ku bakoresha cyangwa amatsinda. Igenamiterere ry'umugereka ryo rinasaba
-uburenganzira bwa Redfish Admin hiyongereyeho uburenganzira bwa Cacti bwa Settings.
+Nyuma yo gukoporora dosiye z'ivugurura, fungura urupapuro rwa Plugins nk'umuyobozi kugira ngo wandike inzego. Tanga uburenganzira bw'urwego rwa Operator mu buryo bweruye munsi ya **Configuration > Users** cyangwa amatsinda y'abakoresha. Amavugurura agumana nimero za ID n'uburenganzira byari bisanzwe bya View na Admin. Uburenganzira bwa Admin buragwa ubwa Operator, naho ubwa Operator bukaragwa ubwa View kuri buri busabe; ibi ntibyongera uburenganzira bubitswe ku bakoresha cyangwa amatsinda. Igenamiterere ry'umugereka rinasaba uburenganzira bwa Redfish Admin hiyongereyeho uburenganzira bwa Cacti bwa Settings.
 
-Uburenganzira bw'ibikoresho bya Cacti bukomeza kugena imirongo n'ibikorwa biboneka kuri buri mukoresha; ibikoresho bitarahujwe bisaba umuyobozi. Abafite urwego rwa Operator bashobora kurekura ihagarikwa ry'ikusanyamakuru kuri BMC yemerewe ku gikorwa gikurikiraho cyateganyijwe.
-Ibyangombwa byo kwinjira, igenamiterere, guhuza, gusiba n'izindi mpinduka z'ubuyobozi
-biguma mu mpapuro z'ubuyobozi. Kwemeza ko ikibazo cyabonywe bimara gusa muri sesiyo y'umukoresha iriho
-ubu, mu gihe kitarenze isaha imwe kandi gusa mu gihe iryo suzuma rimwe rigifite amakuru mashya.
-Amasuzuma mashya cyangwa yahindutse ahita abitesha agaciro. Ntibishobora na rimwe kwerekana igipimo
-cyananiranye nk'aho kimeze neza cyangwa ngo bihagarike impuruza.
+Uburenganzira bw'ibikoresho bya Cacti bugena imirongo n'ibikorwa biboneka kuri buri mukoresha; ibikoresho bitarahujwe bisaba umuyobozi. Abafite urwego rwa Operator bashobora kurekura ihagarikwa ry'ikusanyamakuru kuri BMC yemerewe ku gikorwa gikurikiraho cyateganyijwe. Ibyangombwa byo kwinjira, igenamiterere, guhuza, gusiba n'izindi mpinduka z'ubuyobozi biguma mu mpapuro z'ubuyobozi. Kwemeza ko ikibazo cyabonywe bimara gusa muri sesiyo y'umukoresha iriho ubu, mu gihe kitarenze isaha imwe kandi gusa mu gihe iryo suzuma rimwe rigifite amakuru mashya. Amasuzuma mashya cyangwa yahindutse ahita abitesha agaciro. Ntibishobora na rimwe kwerekana igipimo cyananiranye nk'aho kimeze neza cyangwa ngo bihagarike impuruza.
 
 ## Impamvu
 
@@ -66,17 +104,17 @@ Cacti igira igice cy'ibi ikora ubu:
 - **Ubwoko bw'ibyangombwa byo kwinjira budafite umukusanyi.** plugin_credentials isobanura icyangombwa cya "IPMI / Redfish (BMC)" ariko ntacyo isoma kuri BMC.
 - **Nta mbonerahamwe ku rwego rwa rack.** Cacti y'ibanze nta kintu cya rack igira; igikoresho kigira umwanya wa `location` wandikwamo amagambo ayo ari yo yose.
 
-Umugereka ukusanya amakuru kuri za BMC hanze y'igikorwa cy'ikusanya rya Cacti, ukabika by'agateganyo ibipimo byatunganijwe, kandi ukabigaragaza binyuze ku kibazo cy'amakuru cya script server n'amasoko y'amakuru y'incamake. Ukoresha nanone uburyo bwa Cacti bwo gushushanya, uburenganzira, Thold, na Maint, kandi ntuhindura imiterere ya BMC. Ubufasha bw'abakusanyi b'amakuru bo ku ruhande buteganyijwe mu cyiciro cya 4; ikusanyamakuru ry'ubu rikorwa kuri poller nyamukuru gusa.
+Umugereka ukusanya amakuru kuri za BMC hanze y'igikorwa cy'ikusanya rya Cacti kuri poller nyamukuru cyangwa abakusanyi b'amakuru bo ku ruhande, ukabika by'agateganyo ibipimo byatunganijwe, kandi ukabigaragaza binyuze ku bibazo by'amakuru bya script server, incamake y'inodo, n'incamake y'amashanyarazi ya rack. Ukoresha nanone uburyo bwa Cacti bwo gushushanya, uburenganzira, Thold, na Maint, kandi ntuhindura imiterere ya BMC.
 
-## Ibiteganyijwe kugerwaho
+## Imipaka n'imiterere
 
-| Icyiciro | Ibikubiyemo | Ibyiciro by'ishyirwa mu bikorwa |
-|---|---|---|
-| 0, ubushakashatsi | Imbonerahamwe y'abakora ibikoresho, kwemeza imikorere y'amavuko kuri za BMC nyazo, ikiguzi cy'ikusanyamakuru, igerageza ry'ikibazo cy'amakuru | [M1](https://github.com/somethingwithproof/plugin_redfish/milestone/1) |
-| 1, kwitegereza | Igitabo cy'iyandikisha rya BMC, ibyangombwa byo kwinjira, TLS, umukusanyi wa Redfish, ibipimo byatunganijwe, ibikoresho, ibishushanyo mbonera kuri buri ndekisi, impuruza za Thold, ihagarika ry'agateganyo rya Maint, urupapuro rw'ubuzima | [M2](https://github.com/somethingwithproof/plugin_redfish/milestone/2), [M3](https://github.com/somethingwithproof/plugin_redfish/milestone/3), [M4](https://github.com/somethingwithproof/plugin_redfish/milestone/4) |
-| 2, ipmi | Uburyo bwa IPMI bwo kwitabaza ku ma BMC adafite Redfish ikoreshwa, bufunze nk'uko bisanzwe | [M5](https://github.com/somethingwithproof/plugin_redfish/milestone/5) |
-| 3, racks | Igitabo cy'iyandikisha rya rack, igiteranyo cy'amashanyarazi ya rack hamwe n'igipimo cy'ibyahuje, umwanya usigaye w'ingengo | [M6](https://github.com/somethingwithproof/plugin_redfish/milestone/6) |
-| 4, kure | Abakusanyi b'amakuru bo ku ruhande ba Cacti ku miyoboro ya BMC yitaruye | [M7](https://github.com/somethingwithproof/plugin_redfish/milestone/7) |
+| Icyiciro | Ibikubiyemo | Ibyiciro by'ishyirwa mu bikorwa | Imiterere |
+|---|---|---|---|
+| 0, ubushakashatsi | Imbonerahamwe y'abakora ibikoresho, kwemeza imikorere y'amavuko kuri za BMC nyazo, ikiguzi cy'ikusanyamakuru, igerageza ry'ikibazo cy'amakuru | [M1](https://github.com/somethingwithproof/plugin_redfish/milestone/1) | Byararangiye, hategerejwe ibyafashwe kuri firmware ya BMC nyayo |
+| 1, kwitegereza | Igitabo cy'iyandikisha rya BMC, ibyangombwa byo kwinjira, TLS, umukusanyi wa Redfish, ibipimo byatunganijwe, ibikoresho, ibishushanyo mbonera kuri buri ndekisi, impuruza za Thold, guhuza na Maint, urupapuro rw'ubuzima | [M2](https://github.com/somethingwithproof/plugin_redfish/milestone/2), [M3](https://github.com/somethingwithproof/plugin_redfish/milestone/3), [M4](https://github.com/somethingwithproof/plugin_redfish/milestone/4) | Byashyizwe mu bikorwa; kwemeza itsinda ry'igerageza rya M4 birategereje |
+| 2, ipmi | Uburyo bwa IPMI (`lanplus`) bwo gusoma gusa binyuze kuri `ipmitool`, bufunze nk'uko bisanzwe | [M5](https://github.com/somethingwithproof/plugin_redfish/milestone/5) | Byashyizwe mu bikorwa |
+| 3, racks | Igitabo cy'iyandikisha rya rack, igiteranyo cy'amashanyarazi ya rack hamwe n'umupaka wo hasi w'ibyahuje, umwanya usigaye w'ingengo, `ss_redfish_rack.php` | [M6](https://github.com/somethingwithproof/plugin_redfish/milestone/6) | Byashyizwe mu bikorwa |
+| 4, kure n'urusobe rw'ibikorwa | Abakusanyi b'amakuru bo ku ruhande (`replicate_out`, `remote_agent`), umutangabikorwa wa CasC na CLI, ubushobozi bwa MCP, igenzura rya Doctor | [M7](https://github.com/somethingwithproof/plugin_redfish/milestone/7) | Byashyizwe mu bikorwa |
 
 Ibitari mu nshingano: gushyiraho imipaka y'amashanyarazi cyangwa irindi genamiterere iryo ari ryo ryose rya BMC, kugenzura amashanyarazi, kuvugurura firmware, kwinjira kuri console, moteri y'impuruza yihariye y'umugereka, no guhuza na gahunda ya scheduler.
 
@@ -86,34 +124,50 @@ Ibitari mu nshingano: gushyiraho imipaka y'amashanyarazi cyangwa irindi genamite
 |---|---|
 | Cacti | 1.2.31 cyangwa izisumbuyeho, nta mpinduka ku shingiro rya Cacti |
 | Ububiko bw'amakuru | MariaDB 10.2 cyangwa MySQL 5.7 cyangwa izisumbuyeho: BMC imwe kuri buri gikoresho igenzurwa n'urufunguzo rwihariye ku mbonerahamwe ibyarwa (generated column) |
-| PHP | 8.2 cyangwa izisumbuyeho; `setup.php` ikomeza gusomwa kuri 8.0 kugira ngo sisitemu itemewe ihabwe ubutumwa bwo kwanga aho kwangiza imigaragarire ya Cacti |
+| PHP | 8.2 cyangwa izisumbuyeho; imirongo y'itangiriro ikomeza gusomwa kuri 8.0 kugira ngo sisitemu itemewe ihabwe ubutumwa bwo kwanga aho kwangiza imigaragarire ya Cacti |
+| Imigereka ya PHP | `ext-openssl` (isabwa na Cacti 1.2.31); nta `ext-curl` kandi nta bishingirwaho bya Composer mu gihe cyo gukora |
+| Ibikoresho bitari itegeko | `ipmitool` kuri pollers zikusanya za BMC zifite uburyo bwa IPMI bwafunguwe |
 | BMCs | Dell iDRAC, HPE iLO, Lenovo XCC, na OpenBMC, hakurikijwe urutonde rwa firmware; reba [imbonerahamwe y'abakora ibikoresho](../../research/vendor-matrix.md) |
 | Redfish | Ibikoresho bishya bya subsystem na sensor mbere, `Power` na `Thermal` bishaje nk'uburyo bwo kwitabaza |
-| Thold, Maint | Nta mpinduka zisabwa |
+| Thold, Maint | Nta mpinduka zisabwa (CI igerageza Thold v1.8.2 na Maint v1.3) |
 
 ## Igishushanyo
 
-- [docs/PLAN.md](../../PLAN.md) ni gahunda irambuye: imyubakire, amakuru y'ibanze yishingikirijeho (hamwe n'amasoko n'ibikekwa bigomba kwemezwa), uburyo bw'ipima, imipaka y'umutekano, imibare y'imikorere, igerageza, n'ibyago.
-- [docs/decisions/](../../decisions) ibitse inyandiko z'ibyemezo by'imyubakire ku mahitamo yamaze gufatwa.
+- [docs/PLAN.md](../../PLAN.md) ni gahunda irambuye: imyubakire, amakuru y'ibanze yishingikirijeho, uburyo bw'ipima, imipaka y'umutekano, imibare y'imikorere, igerageza, n'ibyago.
+- [docs/decisions/](../../decisions/) ibitse inyandiko z'ibyemezo by'imyubakire ku mahitamo yamaze gufatwa.
 - [docs/REQUIREMENTS.md](../../REQUIREMENTS.md) ihuza buri nomero ya ID y'ibisabwa n'ikibazo cyayo.
 
 ```mermaid
 flowchart LR
-    BMC[BMCs: Redfish kuri HTTPS] --> C[Umukusanyi kuri poller ya Cacti]
+    BMC["BMCs: Redfish HTTPS / uburyo bwa IPMI lanplus butari itegeko"] --> C["Umukusanyi kuri poller nyamukuru cyangwa yo ku ruhande"]
     C --> CACHE[(Ububiko bw'agateganyo bw'ibipimo byatunganijwe)]
-    CACHE --> SS[Ikibazo cy'amakuru cya script server]
+    CACHE --> SS["Script server: ibice, incamake y'inodo, incamake ya rack"]
     SS -->|poller_output| T[Thold na Maint]
     SS --> G[Ibishushanyo mbonera n'uburenganzira bya Cacti]
-    CACHE --> R[Igiteranyo cya rack, icyiciro cya 3]
+    CACHE --> ECO["CLI, CasC, ubushobozi bwa MCP, Doctor"]
 ```
 
 ## Umutekano
 
-Ibyangombwa byo kwinjira bya BMC bigenzura imicungire yo hanze y'ibikoresho bya za seriveri. Igishushanyo kibikura mu mirongo y'amabwiriza, mu nyandiko z'ibikorwa (logs), no mu mpapuro, kigenzura TLS nk'uko bisanzwe, gikoresha amabwiriza yo hanze ayo ari yo yose kivuye ku rutonde rw'ingingo zemewe gusa, kandi gikoresha konti za BMC zo gusoma gusa. Reba [docs/PLAN.md](../../PLAN.md#security) na [SECURITY.md](../../../SECURITY.md).
+Ibyangombwa byo kwinjira bya BMC bigenzura imicungire yo hanze y'ibikoresho bya za seriveri. Igishushanyo kibikura amabanga mu mirongo y'amabwiriza, mu nyandiko z'ibikorwa (logs), mu bisohoka bya CasC, mu makuru y'umukozi wo ku ruhande, mu bisubizo bya MCP, no mu mpapuro za web; gishyira mu ibanga amagambo y'ibanga abitswe hakoreshejwe AES-256-GCM hifashishijwe dosiye y'urufunguzo rw'ububiko bw'ibanga rwo mu gikoresho kuri buri poller; kigenzura TLS nk'uko bisanzwe; gikoresha `ipmitool` bivuye ku rutonde rweruye rw'ibipimo hamwe n'amabwiriza mato yo gusoma gusa yemewe; kandi gikoresha konti za BMC zo gusoma gusa. Reba [docs/PLAN.md](../../PLAN.md#security) na [SECURITY.md](../../../SECURITY.md).
 
 ## Imfashanyigisho y'umukoresha w'ibikorwa
 
 Reba [docs/operator-guide.md](../../operator-guide.md) ku bijyanye n'ibisabwa mbere yo gushyiramo, gutegura ububiko bw'ibanga na TLS, kwandika BMC, gukora ibishushanyo mbonera, igihe cy'impuruza, kubika kopi z'amakuru, no gukemura amakosa. Iyi mfashanyigisho ntiyemeza ko umurongo wa firmware y'umukora ibikoresho runaka wemewe kugeza igihe amakuru yakuweho ibanga avuye kuri iyo firmware atsinze igerageza.
+
+## Iterambere n'igerageza
+
+CI ([.github/workflows/plugin-ci-workflow.yml](../../../.github/workflows/plugin-ci-workflow.yml)) isuzuma imirongo y'itangiriro kuri PHP 8.0, igakora itsinda ry'igerageza ry'ibice rya Pest (`phpunit.xml`) n'iry'ihuza ry'ubuzima bw'igikoresho (`phpunit-integration.xml`) na PHPStan urwego rwa 9 kuri PHP 8.2 kugeza kuri 8.5 ku bya Cacti `release/1.2.31` na `1.2.x`, ikemeza kwanga kuri PHP 8.1, ikagerageza mu buryo bwuzuye DMTF Redfish Mockup Server (ibishushanyo bya subsystem, legacy-only, na HPE iLO Gen11) na Thold v1.8.2 / Maint v1.3, kandi ikagenzura ibitabo bya gettext, workflows, n'uruhushya rwa REUSE.
+
+Igenzura ryo mu gikoresho mbere yo kohereza (push):
+
+```sh
+sh tests/lint-workflows.sh
+sh locales/build_gettext.sh --check
+CACTI_PATH=/path/to/cacti phpstan analyse -c phpstan.neon --no-progress
+```
+
+Koresha Pest hamwe na `--configuration=phpunit.xml` ku bigerageza ibice n'amategeko y'inkomoko, cyangwa `--configuration=phpunit-integration.xml` hamwe na `CACTI_PATH` na `REDFISH_TEST_DATABASE=disposable` ku bubiko bw'amakuru bwa Cacti bwo kugeragezaho busibwa nyuma ku bigerageza ihuza ry'ubuzima bw'igikoresho.
 
 ## Uko imirimo ikurikiranwa
 

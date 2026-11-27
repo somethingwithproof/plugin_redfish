@@ -1,4 +1,4 @@
-<!-- Source: README.md; SHA256: 7b4e83a58a1adc844cb0615ef30e95476cba2851f96bb454d2a816fb2774724d -->
+<!-- Source: README.md; SHA256: 6972a6c9ac754cd60e63c5caf971451ea8fe6e279eef757d886e1a168d3eef01 -->
 
 <!-- translations:start -->
 [English](../../../README.md) | [简体中文](../zh-CN/README.md) | [हिन्दी](../hi-IN/README.md) | [Español (España)](../es-ES/README.md) | [Español (Latinoamérica)](../es-419/README.md) | [العربية (السعودية)](../ar-SA/README.md) | [Afrikaans](../af-ZA/README.md) | [አማርኛ](../am-ET/README.md) | [العربية (مصر)](../ar-EG/README.md) | [العربية (المغرب)](../ar-MA/README.md) | [বাংলা](../bn-BD/README.md) | [Bosanski](../bs-BA/README.md) | [Deutsch](../de-DE/README.md) | [فارسی](../fa-IR/README.md) | [Filipino](../fil-PH/README.md) | [Français](../fr-FR/README.md) | [Français (Maroc)](../fr-MA/README.md) | [Français (Sénégal)](../fr-SN/README.md) | [Hausa](../ha-NG/README.md) | [עברית](../he-IL/README.md) | [Hrvatski](../hr-HR/README.md) | [Bahasa Indonesia](../id-ID/README.md) | [Igbo](../ig-NG/README.md) | [Italiano](../it-IT/README.md) | [日本語](../ja-JP/README.md) | [한국어](../ko-KR/README.md) | [Malagasy](../mg-MG/README.md) | [मराठी](../mr-IN/README.md) | [Bahasa Melayu](../ms-MY/README.md) | [Nederlands](README.md) | [Polski](../pl-PL/README.md) | [Português (Brasil)](../pt-BR/README.md) | [Русский](../ru-RU/README.md) | [Kinyarwanda](../rw-RW/README.md) | [Soomaali](../so-SO/README.md) | [Српски](../sr-RS/README.md) | [Svenska](../sv-SE/README.md) | [Kiswahili](../sw-KE/README.md) | [தமிழ்](../ta-IN/README.md) | [తెలుగు](../te-IN/README.md) | [ไทย](../th-TH/README.md) | [Türkçe](../tr-TR/README.md) | [Українська](../uk-UA/README.md) | [اردو](../ur-PK/README.md) | [Tiếng Việt](../vi-VN/README.md) | [isiXhosa](../xh-ZA/README.md) | [Yorùbá](../yo-NG/README.md) | [繁體中文](../zh-TW/README.md) | [isiZulu](../zu-ZA/README.md)
@@ -6,33 +6,81 @@
 
 # plugin_redfish
 
-Een Cacti 1.2-plugin die het stroomverbruik van servers, de inlaattemperatuur, de ventilatorstatus en de gezondheid van voedingen vanaf baseboard management controllers (BMC's) naar Cacti brengt als gewone apparaten, gegevensbronnen en grafieken, via Redfish met een optionele IPMI-terugvaloptie. Thold en Maint kunnen hier vervolgens meldingen voor genereren en onderdrukken, en een latere fase voegt vermogenstotalen op rackniveau toe.
+Een Cacti 1.2-plugin die het stroomverbruik van servers, de inlaattemperatuur, de ventilatorstatus en de gezondheid van voedingen vanaf baseboard management controllers (BMC's) naar Cacti brengt als gewone apparaten, gegevensbronnen en grafieken, via Redfish met een optionele alleen-lezen IPMI-terugvaloptie en vermogenstotalen op rackniveau. Thold en Maint genereren meldingen en onderdrukken ze via standaard Cacti-gegevensbronnen.
 
-> **Status: in ontwikkeling, nog geen release (0.1.0-dev).** Mijlpalen 2 (basis) en 3 (Cacti-objecten en alarmering) zijn samengevoegd op `main`. Deze plugin is niet gelieerd aan het Cacti-project. De plugin kan worden geïnstalleerd op Cacti 1.2.31 onder PHP 8.2 of hoger, registreert BMC's en inloggegevens, leest vermogen, temperaturen, ventilatoren en voedingsgezondheid van elke BMC uit via Redfish naar een eigen cache, en toont de verzamelstatus. Hij voegt Cacti-apparaten, grafieken per onderdeel en samenvattingsgrafieken, en ondersteuning voor Thold en Maint toe via gewone gegevensbronnen. CI heeft een gesimuleerde BMC getest die is opgebouwd uit handgeschreven fixtures en de DMTF Redfish-mockupserver; er is nog geen echte BMC of pilotomgeving gekwalificeerd. Het ontwerp en onderzoek staan in [docs/PLAN.md](../../PLAN.md), [docs/research/](../../research) en [docs/decisions/](../../decisions).
+> **Status: in ontwikkeling, nog geen release (`0.1.0-dev`).** Deze plugin is niet gelieerd aan het Cacti-project. Hij wordt geïnstalleerd op Cacti 1.2.31 of hoger onder PHP 8.2 of hoger en implementeert de Redfish-collector, een versleutelde inloggegevenskluis, het inrichten van Cacti-apparaten en -grafieken, een optionele alleen-lezen IPMI-terugvaloptie, rack-vermogenstotalen, weergave van Cacti Maint-onderhoudsvensters, replicatie en agent-endpoints voor externe gegevenscollectors, een CasC-provider en beheerders-CLI, MCP-abilities en Doctor-diagnosecontroles. CI test fixtures, de DMTF Redfish Mockup Server (subsystem-, legacy-only- en HPE iLO Gen11-mockups) en Thold v1.8.2 met Maint v1.3; er is nog geen echte fysieke BMC of pilotomgeving gekwalificeerd. Het ontwerp en onderzoek staan in [docs/PLAN.md](../../PLAN.md), [docs/research/](../../research/) en [docs/decisions/](../../decisions/).
 
-### Wat mijlpaal 2 levert
+## Geïmplementeerde mogelijkheden
 
-- Installeren, bijwerken, uitschakelen en verwijderen via de plugin-API van Cacti, waarbij tabellen bij verwijdering behouden blijven tenzij de instelling wordt uitgevinkt. Op PHP ouder dan 8.2 weigert de plugin te installeren of in te schakelen en geeft hij aan waarom.
-- Rechtenniveaus (realms) "Redfish View" (statuspagina), "Redfish Operator" (beheerpagina voor operaties) en "Redfish Admin" (pagina's voor BMC's en inloggegevens), en instellingen onder Configuration > Settings > Redfish.
-- Een BMC-register met CSV-import en JSON-export. Importbestanden mogen geen wachtwoorden bevatten; naar inloggegevens wordt verwezen op naam.
-- Inloggegevens worden versleuteld opgeslagen met AES-256-GCM. De sleutel is een bestand buiten de database, standaard `/etc/cacti/redfish-vault.key`, met daarin 64 hexadecimale tekens (`openssl rand -hex 32`) of precies 32 willekeurige bytes, eigendom van de poller-gebruiker, niet leesbaar voor andere gebruikers, in een map waarin alleen de poller-gebruiker of root mag schrijven. Een sleutel van 32 afdrukbare tekens wordt geweigerd als wachtwoordzin. **Maak samen met de database een back-up van het sleutelbestand**; zonder dit bestand moet elk opgeslagen wachtwoord opnieuw worden ingevoerd.
-- TLS-verificatie staat standaard aan, met een CA-bundel of SPKI SHA-256-pin per BMC. Een gelogde uitzondering voor ongeverifieerde TLS per BMC blijft als waarschuwing op de statuspagina staan.
-- Een alleen-lezen Redfish-client: uitsluitend `GET` plus het aan- en afmelden van sessies, gecontroleerd aan de hand van een acceptatielijst voordat er een verzoek wordt verzonden.
-- Een collector die vanuit `poller_bottom` wordt gestart voor BMC's op de hoofdpoller, met leases en deadlines per BMC, backoff en opschoning na een crash van de ene sessie die de plugin heeft vastgelegd. Externe collectors worden nog niet ondersteund; daarvoor is een expliciete keuze nodig voor hoe de collector de database en de sleutel bereikt (fase 4).
-- BMC-records en inloggegevens volgen de apparaatrechten van Cacti: een Redfish Admin ziet, wijzigt en koppelt alleen BMC's op apparaten die deze mag zien, en alleen inloggegevens die door geen enkele BMC op een verborgen apparaat worden gebruikt.
+### Kerncollector, kluis en Cacti-objecten
 
-### Wat mijlpaal 3 toevoegt
+- **Levenscyclus en schema.** Installeert, werkt bij, schakelt uit en verwijdert via de plugin-API van Cacti (`Schema::VERSION = 3`, 12 tabellen). Tabellen blijven behouden bij verwijdering, tenzij *Keep Plugin Tables on Uninstall* wordt uitgevinkt. Startbestanden zijn parsebaar onder PHP 8.0 en weigeren PHP onder 8.2 of een ontbrekende `ext-openssl` met een expliciete foutmelding.
+- **Register en rechten.** Rechtenniveaus (realms) *Redfish View* (`redfish_health.php`), *Redfish Operator* (`redfish_operator.php`) en *Redfish Admin* (`redfish_bmcs.php`, `redfish_credentials.php`), plus instellingen onder **Configuration > Settings > Redfish**. Het BMC-register ondersteunt CSV-import (inloggegevens op naam aangegeven; wachtwoorden in importbestanden worden geweigerd) en JSON-export. BMC-records en inloggegevens volgen de apparaatrechten van Cacti.
+- **Versleutelde inloggegevenskluis.** Wachtwoorden worden versleuteld met AES-256-GCM opgeslagen in `plugin_redfish_secret`. De sleutel staat buiten de database (standaard `/etc/cacti/redfish-vault.key`) als 64 hexadecimale tekens (`openssl rand -hex 32`) of 32 ruwe bytes, in eigendom van de poller-gebruiker, niet leesbaar voor andere gebruikers en in een map waarin alleen root of die gebruiker mag schrijven. Een wachtwoordzin van 32 afdrukbare tekens wordt geweigerd. **Maak samen met de database een back-up van het sleutelbestand**; zonder dit bestand moeten opgeslagen wachtwoorden opnieuw worden ingevoerd.
+- **TLS en alleen-lezen Redfish-client.** TLS-verificatie is standaard ingeschakeld via de CA-opslag van het systeem, een CA-bundel per BMC of een SPKI SHA-256-pin; een uitzondering voor ongeverifieerde TLS per BMC blijft zichtbaar als gezondheidswaarschuwing en als waarschuwing bij de Doctor-controle. De client staat alleen `GET` toe plus Redfish-sessielogin (`POST`) en -uitloggen (`DELETE`), met een optionele Basic-terugvaloptie per BMC wanneer sessies niet beschikbaar zijn. Discovery geeft de voorkeur aan nieuwe Redfish-subsysteem- en sensorresources en valt terug op verouderde `Power`- en `Thermal`-resources.
+- **Uitvoering van de collector.** `poller_redfish.php` start vanuit `poller_bottom`, draait één hoofdproces per poller via het procesregister van Cacti met configureerbare werkprocessen (`redfish_workers`), verkrijgt leases per BMC, handhaaft een tijdsbudget (`redfish_collector_budget`), past exponentiële backoff toe en ruimt na een crash de eigen voorgaande sessie van de plugin op.
+- **Sjablonen, apparaten en grafieken.** Importeert `templates/redfish-templates.xml` op basis van hash en kopieert drie scriptserver-gegevensquery-XML-bestanden (`redfish_fans.xml`, `redfish_temperatures.xml`, `redfish_psus.xml`) naar `<cacti>/resource/script_server/` zonder door de gebruiker gewijzigde bestanden te overschrijven. **Create Device** en **Add Graphs** vereisen bevestiging van een inrichtingsplan, koppelen query's aan een gekoppeld serverapparaat of maken een apparaat "Redfish BMC" onder `.invalid` aan met beschikbaarheidscontroles uitgeschakeld, en koppelen elke Redfish-grafiek terug naar de Redfish-grafieken van het apparaat via `graph_buttons`.
+- **Alleen-cache scriptserverinvoer.** `scripts/ss_redfish_members.php` levert ventilator-, temperatuur- en PSU-metingen per onderdeel, en `scripts/ss_redfish_summary.php` levert metrische gegevens voor "Redfish Node Summary" (vermogen, inlaat- en maximumtemperatuur, aantallen defecte ventilatoren en PSU's, knooppuntgezondheid en ouderdom van de laatst geslaagde meting). Scriptserveraanroepen lezen uitsluitend uit de lokale cache en nemen nooit contact op met een BMC. Ontbrekende, verouderde of van verdwenen onderdelen afkomstige metingen geven `U` terug (nooit `0`), terwijl `age` altijd een waarde rapporteert zodat drempelwaarden stille BMC's detecteren.
 
-- Sjablonen die als Cacti-sjabloon-XML worden meegeleverd in `templates/` en bij installatie en upgrade worden geïmporteerd met Cacti's eigen importprogramma, gekoppeld op basis van een hash, zodat een import de objecten van de plugin bijwerkt en niets dubbel toevoegt. De drie gegevensquerybestanden worden gekopieerd naar `<cacti>/resource/script_server/` met een vastgelegde hash; de plugin vervangt daar nooit een bestand dat hij niet zelf heeft geschreven, en de statuspagina waarschuwt beheerders wanneer de sjablonen of een querybestand ontbreken. **Reinstall the Redfish Templates** op de pagina BMCs importeert ze opnieuw; hiervoor is het Cacti-recht Import Templates vereist.
-- **Create Device** of **Add Graphs** bij elke BMC ([ADR 0015](../../decisions/0015-attach-to-the-server-device-or-create-one-per-bmc.md)). Een BMC die is gekoppeld aan een bestaand apparaat van een server krijgt zijn gegevensquery's en grafieken op dat apparaat. Een niet-gekoppelde BMC krijgt een nieuw apparaat op basis van het apparaatsjabloon "Redfish BMC", met beschikbaarheidscontroles uitgeschakeld en een hostnaam onder `.invalid`, zodat Cacti nooit contact opneemt met de BMC en het adres nooit toont. In beide gevallen bevestigt een beheerder eerst een plan waarin staat wat er wordt toegevoegd. Voor beide acties zijn zowel Cacti's recht voor apparaatbeheer als Redfish Admin vereist; een nieuw apparaat dat de aanmaker niet zou kunnen zien, wordt weer verwijderd.
-- Drie scriptserver-gegevensquery's, "Redfish Fans", "Redfish Temperatures" en "Redfish Power Supplies", geïndexeerd op de onderdeelsleutel van de BMC, met een grafiek per onderdeel: ventilatorsnelheid in procenten of RPM (afhankelijk van de eenheid die de BMC rapporteert), temperatuur en het ingaande en uitgaande vermogen van de voeding in watt, telkens met de bijbehorende statuscode.
-- Een invoer "Redfish Node Summary" met vermogen, inlaattemperatuur, hoogste temperatuur, aantal ventilatoren en voedingen dat niet OK is, knooppuntstatus en de ouderdom van de laatst geslaagde meting, weergegeven in vier grafieken: vermogen, temperaturen, componentgezondheid en gegevensouderdom. Thold-drempels op deze gegevensbronnen geven meldingen en Maint onderdrukt ze, zonder wijzigingen aan een van beide plugins.
-- De scriptserver antwoordt uitsluitend vanuit de cache van de plugin en neemt nooit contact op met een BMC. Een waarde die ontbreekt, verouderd is, een andere eenheid heeft of afkomstig is van een verdwenen onderdeel is `U`, zodat grafieken een onderbreking tonen en nooit nul; `age` heeft altijd een waarde, zodat een drempelwaarde hierop een BMC detecteert die niet meer reageert.
-- Een grafiekkoppeling van elke Redfish-grafiek naar de Redfish-grafieken van het apparaat, alleen zichtbaar voor gebruikers aan wie Cacti toestaat het apparaat te bekijken.
+**Wanneer de onderdelen van een BMC veranderen** (zoals een vervangen ventilator of een firmware-update die sensoren hernoemt), voert u opnieuw **Add Graphs** uit. Een eerder aanwezige ventilator of voeding die afwezig raakt, telt mee in `fans_bad` of `psus_bad` totdat dit is geaccepteerd; een slot dat nooit bezet was, telt niet mee. Verdwenen onderdelen behouden hun bestaande gegevensbronnen en grafieken, die vanaf dat moment `U` weergeven totdat ze handmatig worden verwijderd. Het verwijderen van een Cacti-apparaat ontkoppelt de bijbehorende BMC en verwijdert de rack-toewijzing, terwijl de BMC en cache behouden blijven; het verwijderen van een BMC of het verwijderen van de plugin behoudt de Cacti-apparaten en grafieken.
 
-**Wanneer de onderdelen van een BMC veranderen** (een vervangen ventilator, een firmware-update die sensoren hernoemt), kiest u opnieuw **Add Graphs**. Een ventilator of voeding die aanwezig was en nu ontbreekt of verdwenen is, telt mee in `fans_bad` of `psus_bad` totdat u dat doet, zodat een verwijderde ventilator een melding veroorzaakt; een slot dat nooit gevuld was telt niet mee. Add Graphs accepteert de onderdelen die de BMC nu rapporteert en Cacti indexeert de query's opnieuw; een verdwenen onderdeel behoudt zijn gegevensbron en grafiek, die vanaf dat moment `U` weergeven, en een nieuw onderdeel krijgt een grafiek. Verwijder de grafieken van verdwenen onderdelen handmatig zodra hun historie niet meer nodig is.
+### Optionele IPMI-terugvaloptie
 
-Het verwijderen van een apparaat ontkoppelt de bijbehorende BMC en behoudt de BMC en zijn cache. Het verwijderen van een BMC, of het verwijderen van de plugin, behoudt het bijbehorende apparaat en de grafieken.
+- **Opt-in per BMC.** Standaard uitgeschakeld (`protocols` is standaard `redfish`; het inschakelen van de IPMI-terugvaloptie stelt `redfish,ipmi` in).
+- **Afgebakende terugvaltrigger.** Draait alleen wanneer Redfish-verzameling mislukt met een daarvoor in aanmerking komende foutklasse; wordt nooit geactiveerd bij `AuthRejected`, `CredentialUnavailable`, `AddressRefused`, `OperationRefused` of `Deadline`.
+- **Veilige uitvoering.** Roept `ipmitool` over `-I lanplus` aan via array-vorm `proc_open()` zonder shell, met een begrensde wall-clock-time-out en een uitvoerlimiet van 256 KiB. Wachtwoorden worden aangeleverd via `IPMITOOL_PASSWORD` (`-E`) of een tijdelijk bestand met modus 0600 (`-f`) dat in `finally` wordt verwijderd, nooit via CLI-argv.
+- **Acceptatielijst van alleen-lezen opdrachten.** Alleen vijf alleen-lezen subopdrachten zijn toegestaan: `dcmi power reading`, `sdr type Temperature`, `sdr type Fan`, `sdr type Power Supply` en `chassis status`. Opdrachten die wijzigingen aanbrengen worden geweigerd.
+- **Genormaliseerde uitvoer en beveiligingswaarschuwing.** `IpmiNormalizer` zet metingen om naar hetzelfde `Observation`/`Member`/`Reading`-model en geeft `U` terug voor ontbrekende of niet-parseerbare sensoren. Het inschakelen van de IPMI-terugvaloptie geeft een waarschuwing op de gezondheidspagina en in de Doctor-controle `redfish.bmc_security`, waarmee beheerders eraan worden herinnerd UDP 623 te beperken tot een beheer-VLAN.
+
+### Rack-vermogenstotalen
+
+- **Rackregister.** Schemaversie 3 voegt `plugin_redfish_rack` toe (unieke `(site_id, name)`, optionele `power_budget_watts`, `min_coverage_pct` standaard op `80` en notities) en `plugin_redfish_rack_member` (maximaal één rack-toewijzing per `host_id`, optionele `bmc_id` en `unit_position`, automatisch verwijderd wanneer een Cacti-apparaat wordt verwijderd).
+- **Door dekking bewaakte totalen.** `RackPowerSummary` telt actuele `power_watts`-metingen van leden uit de lokale cache op en berekent budgetbenutting en beschikbare ruimte (headroom). Wanneer de dekking van rapporterende leden onder `min_coverage_pct` zakt, geven `power_watts`, `utilization_pct` en `headroom_watts` `U` terug zodat collectorstoringen nooit als een daling van het rackvermogen worden weergegeven.
+- **Thold-klare scriptserverinvoer.** `scripts/ss_redfish_rack.php` (`ss_redfish_rack(<rack_id>)`) geeft `power_watts`, `power_budget_watts`, `utilization_pct`, `headroom_watts`, `members_total`, `members_reporting` en `coverage_pct` uitsluitend uit de lokale cache terug.
+
+### Integratie met Cacti Maint
+
+- Thold-drempels op Redfish-gegevensbronnen geven meldingen en Cacti Maint onderdrukt deze zonder wijzigingen aan een van beide plugins.
+- `MaintWindow` controleert actieve Maint-schema's voor elke gekoppelde Cacti-host (eenmalige `mtype=1` en terugkerende `mtype=2` schema's, plus `plugin_maint_check_cacti_host()` indien geladen) en markeert actief onderhoud op de pagina Redfish Health (`[MAINT]`), in de uitvoer van `cli/redfish.php health` en in de ability `redfish-get-health`.
+
+### Externe gegevenscollectors
+
+- `INFO` declareert `remote_collect:1`. BMC's accepteren elke `poller_id >= 1`, en `poller_redfish.php --poller=N` verzamelt alleen ingeschakelde BMC's die aan die poller zijn toegewezen.
+- **`replicate_out`-hook.** Repliceert via `replicate_out_table()` alleen niet-geheime configuratietabellen die zijn afgebakend tot de externe doelpoller: `plugin_redfish_bmc`, `plugin_redfish_credential`-metadata (zonder cijfertekst), `plugin_redfish_rack` en `plugin_redfish_rack_member`. `plugin_redfish_secret` wordt niet gerepliceerd en sleutelbestanden van de kluis blijven strikt lokaal op elke poller.
+- **`remote_agent`-hook.** Biedt de alleen-lezen acties `redfish_health` en `redfish_discovery` die uitsluitend numerieke parameters `poller_id` en `bmc_id` accepteren. Onverwachte parameters worden geweigerd en er worden nul inloggegevens of geheimen geretourneerd.
+
+### Ecosysteem-hooks (CasC, MCP-abilities en Doctor)
+
+- **CasC-provider (`casc_register_providers`).** Registreert de `redfish`-provider (schemaversie `1`) met YAML- en XML-export in pure PHP, parsing (waarbij XXE wordt geweigerd), validatie, diff-planning en toepassing. Inloggegevens verschijnen alleen als kluisverwijzingen (`vault:redfish:<name>`); onbewerkte geheime sleutels (`pass`, `secret`, `token`, `private_key`, `vault_key`, `auth_token`) worden geweigerd. Toepassen vereist een exacte SHA-256 `PLAN_HASH`.
+- **MCP / Abilities API (`abilities_register`).** Registreert drie alleen-lezen abilities die worden afgeschermd door het rechtenniveau Redfish View (`redfish_health.php`) en Cacti-apparaatrechten, zonder inloggegevens terug te geven:
+  - `redfish-list-bmcs` (optionele `poller_id`)
+  - `redfish-get-rack-power` (optionele `rack_id`)
+  - `redfish-get-health` (optionele `bmc_id`)
+- **Doctor-controles (`doctor_register_checks`).** Registreert vijf lokale, alleen-lezen diagnosecontroles die nooit contact opnemen met een BMC of sleutelmateriaal teruggeven:
+  - `redfish.schema`: actualiteit van de schemaversie
+  - `redfish.vault_key`: leesbaarheid en rechten van de kluissleutel
+  - `redfish.collector_runs`: budget en actualiteit van de poller-collector
+  - `redfish.bmc_security`: ingeschakelde BMC's met ongeverifieerde TLS of IPMI-terugvaloptie
+  - `redfish.rack_power`: naleving van het rack-vermogensbudget en minimale dekkingsgrens
+
+## CLI
+
+Uitvoeren vanuit de hoofdmap van Cacti met PHP 8.2 of hoger:
+
+```sh
+# Operator and CasC CLI (reads --file=PATH or stdin for validate, plan, and apply)
+php plugins/redfish/cli/redfish.php export --format=yaml|xml
+php plugins/redfish/cli/redfish.php validate [--file=PATH] [--format=yaml|xml]
+php plugins/redfish/cli/redfish.php plan [--file=PATH] [--format=yaml|xml]
+php plugins/redfish/cli/redfish.php apply [--file=PATH] [--format=yaml|xml] --confirm=<PLAN_HASH>
+php plugins/redfish/cli/redfish.php health --format=text|json
+
+# Collector entry point (normally started by poller_bottom)
+php plugins/redfish/poller_redfish.php [--poller=N] [--force] [--debug]
+
+# Rack power summary script server entry point
+php plugins/redfish/scripts/ss_redfish_rack.php <rack_id>
+```
 
 ## Toegangsrollen
 
@@ -42,31 +90,31 @@ Het verwijderen van een apparaat ontkoppelt de bijbehorende BMC en behoudt de BM
 | Redfish Operator | Monitoring plus de pagina Operations en persoonlijke triagebevestigingen. |
 | Redfish Admin | Operator-toegang plus de bestaande configuratie- en beheeracties. |
 
-Open na het kopiëren van de upgradebestanden als beheerder de pagina Plugins om het nieuwe rechtenniveau te registreren. Wijs het niveau Operator expliciet toe onder **Configuration > Users** of gebruikersgroepen. Bij upgrades blijven de bestaande realm-ID's en toekenningen voor View en Admin behouden. Admin-toegang erft bij elk verzoek Operator-toegang, en Operator-toegang erft View-toegang; dit voegt geen opgeslagen toekenningen toe aan gebruikers of groepen. Voor plugin-instellingen is naast het Cacti-recht Settings ook Redfish Admin-toegang vereist.
+Open na het kopiëren van upgradebestanden als beheerder de pagina Plugins om de rechtenniveaus te registreren. Wijs het niveau Operator expliciet toe onder **Configuration > Users** of gebruikersgroepen. Bij upgrades blijven de bestaande realm-ID's en toekenningen voor View en Admin behouden. Admin-toegang erft bij elk verzoek Operator-toegang, en Operator-toegang erft View-toegang; dit voegt geen opgeslagen toekenningen toe aan gebruikers of groepen. Voor plugin-instellingen is naast het Cacti-recht Settings ook Redfish Admin-toegang vereist.
 
-Apparaatrechten in Cacti blijven de rijen en acties beperken die voor elke gebruiker beschikbaar zijn; voor niet-gekoppelde objecten is een beheerder vereist. Operators kunnen een verzamelblokkade op een toegestane BMC vrijgeven voor de volgende geplande uitvoering. Inloggegevens, configuratie, koppeling, verwijdering en andere beheerwijzigingen blijven op de beheerpagina's. Bevestigingen gelden alleen binnen de huidige gebruikerssessie, maximaal één uur en alleen zolang dezelfde waarneming actueel blijft. Nieuwe of gewijzigde waarnemingen maken ze ongeldig. Ze markeren een mislukte meting nooit als gezond en onderdrukken geen meldingen.
+Apparaatrechten in Cacti beperken de rijen en acties die voor elke gebruiker beschikbaar zijn; voor niet-gekoppelde objecten is een beheerder vereist. Operators kunnen een verzamelblokkade op een toegestane BMC vrijgeven voor de volgende geplande uitvoering. Inloggegevens, configuratie, koppeling, verwijdering en andere beheerwijzigingen blijven op de beheerpagina's. Bevestigingen gelden alleen binnen de huidige gebruikerssessie, maximaal één uur en alleen zolang dezelfde waarneming actueel blijft. Nieuwe of gewijzigde waarnemingen maken ze ongeldig. Ze markeren een mislukte meting nooit als gezond en onderdrukken geen meldingen.
 
 ## Waarom
 
-Elke server heeft een BMC die het stroomverbruik en de thermische status onafhankelijk van het besturingssysteem rapporteert, en dus blijft antwoorden wanneer het besturingssysteem niet actief is. De gegevens dienen voor capaciteits- en kostenbeheer, vroegtijdige waarschuwing bij een defecte ventilator of voeding en, in high-performance computing, beslissingen over vermogensbegrenzing. De plugin is niet specifiek voor HPC.
+Elke server heeft een BMC die het stroomverbruik en de thermische status onafhankelijk van het besturingssysteem rapporteert, en dus blijft antwoorden wanneer het OS niet actief is. De gegevens dienen voor capaciteits- en kostenbeheer, vroegtijdige waarschuwing bij een defecte ventilator of voeding en, in high-performance computing, beslissingen over vermogensbegrenzing. De plugin is niet specifiek voor HPC.
 
 Cacti dekt een deel hiervan al af:
 
 - **SNMP-pakketten van leveranciers.** De 1.2.x-tak levert Dell iDRAC- en HPE iLO-sjablonen mee die een SNMP-agent vereisen en leverancierspecifiek zijn; uit onderzoek in mijlpaal 1 bleek dat geen van beide het stroomverbruik in watt rapporteert ([docs/research/overlap.md](../../research/overlap.md)).
 - **Een inloggegevenstype zonder collector.** plugin_credentials definieert een "IPMI / Redfish (BMC)"-inloggegeven, maar leest geen enkele BMC uit.
-- **Geen overzicht op rackniveau.** Cacti Core heeft geen rackobject; een apparaat heeft alleen een vrij tekstveld `location`.
+- **Geen overzicht op rackniveau.** Cacti Core heeft geen rackobject; een apparaat heeft een vrij tekstveld `location`.
 
-De plugin bevraagt BMC's out-of-band ten opzichte van Cacti's pollcyclus, slaat genormaliseerde metingen op in een cache en stelt deze beschikbaar via een scriptserver-gegevensquery en samenvattende gegevensbronnen. Hij hergebruikt Cacti's grafieken, rechten, Thold en Maint en wijzigt de status van de BMC niet. Ondersteuning voor externe gegevenscollectors staat gepland voor fase 4; de huidige gegevensverzameling draait uitsluitend op de hoofdpoller.
+De plugin bevraagt BMC's out-of-band ten opzichte van Cacti's pollcyclus op de hoofdpoller of externe gegevenscollectors, slaat genormaliseerde metingen op in een cache en stelt deze beschikbaar via scriptserver-gegevensquery's, knooppuntsamenvattingen en rack-vermogenssamenvattingen. Hij hergebruikt Cacti's grafieken, rechten, Thold en Maint en wijzigt de status van de BMC niet.
 
-## Geplande reikwijdte
+## Reikwijdte en status
 
-| Fase | Reikwijdte | Mijlpalen |
-|---|---|---|
-| 0, onderzoek | Leveranciersmatrix, bevestiging van upstream-gedrag op live BMC's, pollkosten, data-query-spike | [M1](https://github.com/somethingwithproof/plugin_redfish/milestone/1) |
-| 1, observeren | BMC-register, inloggegevens, TLS, Redfish-collector, genormaliseerde metingen, apparaten, grafieken per index, Thold-alarmering, Maint-onderdrukking, statuspagina | [M2](https://github.com/somethingwithproof/plugin_redfish/milestone/2), [M3](https://github.com/somethingwithproof/plugin_redfish/milestone/3), [M4](https://github.com/somethingwithproof/plugin_redfish/milestone/4) |
-| 2, ipmi | IPMI-terugvaloptie voor BMC's zonder bruikbare Redfish, standaard uitgeschakeld | [M5](https://github.com/somethingwithproof/plugin_redfish/milestone/5) |
-| 3, racks | Rackregister, rack-vermogenstotalen met dekking, budgetruimte | [M6](https://github.com/somethingwithproof/plugin_redfish/milestone/6) |
-| 4, extern | Externe Cacti-gegevenscollectors voor geïsoleerde BMC-netwerken | [M7](https://github.com/somethingwithproof/plugin_redfish/milestone/7) |
+| Fase | Reikwijdte | Mijlpalen | Status |
+|---|---|---|---|
+| 0, onderzoek | Leveranciersmatrix, bevestiging van upstream-gedrag op live BMC's, pollkosten, data-query-spike | [M1](https://github.com/somethingwithproof/plugin_redfish/milestone/1) | Gereed, wacht op echte BMC-firmware-opnamen |
+| 1, observeren | BMC-register, inloggegevens, TLS, Redfish-collector, genormaliseerde metingen, apparaten, grafieken per index, Thold-alarmering, Maint-integratie, statuspagina | [M2](https://github.com/somethingwithproof/plugin_redfish/milestone/2), [M3](https://github.com/somethingwithproof/plugin_redfish/milestone/3), [M4](https://github.com/somethingwithproof/plugin_redfish/milestone/4) | Geïmplementeerd; kwalificatie van M4-pilotomgeving in behandeling |
+| 2, ipmi | Alleen-lezen IPMI (`lanplus`) terugvaloptie via `ipmitool`, standaard uitgeschakeld | [M5](https://github.com/somethingwithproof/plugin_redfish/milestone/5) | Geïmplementeerd |
+| 3, racks | Rackregister, rack-vermogenstotalen met minimale dekkingsgrens, budgetruimte, `ss_redfish_rack.php` | [M6](https://github.com/somethingwithproof/plugin_redfish/milestone/6) | Geïmplementeerd |
+| 4, extern en ecosysteem | Externe gegevenscollectors (`replicate_out`, `remote_agent`), CasC-provider en CLI, MCP-abilities, Doctor-controles | [M7](https://github.com/somethingwithproof/plugin_redfish/milestone/7) | Geïmplementeerd |
 
 Buiten de reikwijdte: het instellen van vermogenslimieten of enige andere BMC-configuratie, stroombeheer, firmware-updates, consoletoegang, een eigen alarmeringsengine in de plugin en plannerintegratie.
 
@@ -76,34 +124,50 @@ Buiten de reikwijdte: het instellen van vermogenslimieten of enige andere BMC-co
 |---|---|
 | Cacti | 1.2.31 of hoger, geen core-patches |
 | Database | MariaDB 10.2 of MySQL 5.7 of hoger: één BMC per apparaat wordt afgedwongen door een unieke sleutel op een gegenereerde kolom |
-| PHP | 8.2 of hoger; `setup.php` blijft parsebaar op 8.0 zodat een niet-ondersteunde runtime een weigering krijgt in plaats van een kapotte Cacti-UI |
+| PHP | 8.2 of hoger; startbestanden blijven parsebaar op 8.0 zodat een niet-ondersteunde runtime een weigering krijgt in plaats van een kapotte Cacti-UI |
+| PHP-extensies | `ext-openssl` (vereist door Cacti 1.2.31); geen `ext-curl` en geen Composer-runtime-afhankelijkheden |
+| Optionele hulpmiddelen | `ipmitool` op pollers die BMC's verzamelen waarvoor IPMI-terugval is ingeschakeld |
 | BMC's | Dell iDRAC, HPE iLO, Lenovo XCC en OpenBMC, per firmwarebereik; zie [de leveranciersmatrix](../../research/vendor-matrix.md) |
 | Redfish | Nieuwe subsysteem- en sensorresources eerst, verouderde `Power` en `Thermal` als terugvaloptie |
-| Thold, Maint | Geen wijzigingen vereist |
+| Thold, Maint | Geen wijzigingen vereist (CI test Thold v1.8.2 en Maint v1.3) |
 
 ## Ontwerp
 
-- [docs/PLAN.md](../../PLAN.md) is het volledige plan: architectuur, upstream-feiten waarop het steunt (met bronnen en nog te bevestigen aannames), meetmodel, beveiligingsgrenzen, prestatieberekeningen, testen en risico's.
-- [docs/decisions/](../../decisions) bevat Architecture Decision Records voor reeds gemaakte keuzes.
+- [docs/PLAN.md](../../PLAN.md) is het volledige plan: architectuur, upstream-feiten waarop het steunt, meetmodel, beveiligingsgrenzen, prestatieberekeningen, testen en risico's.
+- [docs/decisions/](../../decisions/) bevat Architecture Decision Records voor reeds gemaakte keuzes.
 - [docs/REQUIREMENTS.md](../../REQUIREMENTS.md) koppelt elk vereiste-ID aan het bijbehorende issue.
 
 ```mermaid
 flowchart LR
-    BMC["BMC's: Redfish via HTTPS"] --> C[Collector op de Cacti-poller]
+    BMC["BMC's: Redfish HTTPS / optionele IPMI lanplus"] --> C[Collector op hoofd- of externe poller]
     C --> CACHE[(Cache met genormaliseerde metingen)]
-    CACHE --> SS[Scriptserver-gegevensquery]
+    CACHE --> SS["Scriptserver: onderdelen, knooppuntsamenvatting, racksamenvatting"]
     SS -->|poller_output| T[Thold en Maint]
     SS --> G[Cacti-grafieken en -rechten]
-    CACHE --> R[Racktotalen, fase 3]
+    CACHE --> ECO["CLI, CasC, MCP-abilities, Doctor"]
 ```
 
 ## Beveiliging
 
-BMC-inloggegevens geven toegang tot het out-of-band-beheer van servers. Het ontwerp houdt ze buiten opdrachtregels, logboeken en pagina's, verifieert standaard TLS, voert eventuele externe opdrachten uit via een argumentenarray met subopdrachten uit een acceptatielijst en gebruikt alleen-lezen BMC-accounts. Zie [docs/PLAN.md](../../PLAN.md#security) en [SECURITY.md](../../../SECURITY.md).
+BMC-inloggegevens geven toegang tot het out-of-band-beheer van servers. Het ontwerp houdt geheimen buiten opdrachtregels, logboeken, CasC-exports, payloads van externe agents, MCP-antwoorden en webpagina's; versleutelt opgeslagen wachtwoorden met AES-256-GCM via een lokaal kluissleutelbestand per poller; verifieert standaard TLS; voert `ipmitool` uit via een expliciete argumentenarray met alleen-lezen subopdrachten op de acceptatielijst; en gebruikt alleen-lezen BMC-accounts. Zie [docs/PLAN.md](../../PLAN.md#security) en [SECURITY.md](../../../SECURITY.md).
 
 ## Beheerdershandleiding
 
 Zie [docs/operator-guide.md](../../operator-guide.md) voor installatievereisten, kluis- en TLS-configuratie, BMC-registratie, het aanmaken van grafieken, meldingsintervallen, back-ups en foutafhandeling. De handleiding verklaart een echte firmwarelijn van een leverancier pas als ondersteund zodra een geanonimiseerde opname van die firmware de testsuite doorstaat.
+
+## Ontwikkeling en testen
+
+CI ([.github/workflows/plugin-ci-workflow.yml](../../../.github/workflows/plugin-ci-workflow.yml)) lint startbestanden op PHP 8.0, draait Pest-unit- (`phpunit.xml`) en levenscyclusintegratiesuites (`phpunit-integration.xml`) en PHPStan niveau 9 over PHP 8.2 tot en met 8.5 tegen Cacti `release/1.2.31` en `1.2.x`, verifieert de weigering op PHP 8.1, test de DMTF Redfish Mockup Server (subsystem-, legacy-only- en HPE iLO Gen11-mockups) en Thold v1.8.2 / Maint v1.3 end-to-end, en controleert gettext-catalogi, workflows en REUSE-licenties.
+
+Lokale controles vóór het pushen:
+
+```sh
+sh tests/lint-workflows.sh
+sh locales/build_gettext.sh --check
+CACTI_PATH=/path/to/cacti phpstan analyse -c phpstan.neon --no-progress
+```
+
+Draai Pest met `--configuration=phpunit.xml` voor unit- en bronregeltests, of `--configuration=phpunit-integration.xml` met `CACTI_PATH` en `REDFISH_TEST_DATABASE=disposable` tegen een wegwerpbare Cacti-database voor levenscyclusintegratietests.
 
 ## Hoe werk wordt bijgehouden
 
