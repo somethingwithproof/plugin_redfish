@@ -1,4 +1,4 @@
-<!-- Source: README.md; SHA256: 6972a6c9ac754cd60e63c5caf971451ea8fe6e279eef757d886e1a168d3eef01 -->
+<!-- Source: README.md; SHA256: cf31b9f80d6c00020bbe08e80951d4de1c910793911d040ae7a66b54e8a2eaf0 -->
 
 <!-- translations:start -->
 [English](../../../README.md) | [简体中文](../zh-CN/README.md) | [हिन्दी](../hi-IN/README.md) | [Español (España)](../es-ES/README.md) | [Español (Latinoamérica)](../es-419/README.md) | [العربية (السعودية)](../ar-SA/README.md) | [Afrikaans](../af-ZA/README.md) | [አማርኛ](../am-ET/README.md) | [العربية (مصر)](../ar-EG/README.md) | [العربية (المغرب)](../ar-MA/README.md) | [বাংলা](../bn-BD/README.md) | [Bosanski](../bs-BA/README.md) | [Deutsch](../de-DE/README.md) | [فارسی](../fa-IR/README.md) | [Filipino](../fil-PH/README.md) | [Français](../fr-FR/README.md) | [Français (Maroc)](../fr-MA/README.md) | [Français (Sénégal)](../fr-SN/README.md) | [Hausa](../ha-NG/README.md) | [עברית](../he-IL/README.md) | [Hrvatski](../hr-HR/README.md) | [Bahasa Indonesia](../id-ID/README.md) | [Igbo](../ig-NG/README.md) | [Italiano](../it-IT/README.md) | [日本語](../ja-JP/README.md) | [한국어](../ko-KR/README.md) | [Malagasy](../mg-MG/README.md) | [मराठी](../mr-IN/README.md) | [Bahasa Melayu](../ms-MY/README.md) | [Nederlands](../nl-NL/README.md) | [Polski](../pl-PL/README.md) | [Português (Brasil)](../pt-BR/README.md) | [Русский](../ru-RU/README.md) | [Kinyarwanda](../rw-RW/README.md) | [Soomaali](../so-SO/README.md) | [Српски](../sr-RS/README.md) | [Svenska](../sv-SE/README.md) | [Kiswahili](../sw-KE/README.md) | [தமிழ்](../ta-IN/README.md) | [తెలుగు](../te-IN/README.md) | [ไทย](../th-TH/README.md) | [Türkçe](../tr-TR/README.md) | [Українська](../uk-UA/README.md) | [اردو](../ur-PK/README.md) | [Tiếng Việt](../vi-VN/README.md) | [isiXhosa](../xh-ZA/README.md) | [Yorùbá](../yo-NG/README.md) | [繁體中文](README.md) | [isiZulu](../zu-ZA/README.md)
@@ -157,7 +157,7 @@ BMC 憑證控管伺服器的頻外管理。設計上將機密隔離於命令列�
 
 ## 開發與測試
 
-CI（[.github/workflows/plugin-ci-workflow.yml](../../../.github/workflows/plugin-ci-workflow.yml)）在 PHP 8.0 上進行進入點語法檢查，針對 Cacti `release/1.2.31` 與 `1.2.x` 在 PHP 8.2 至 8.5 上執行 Pest 單元測試（`phpunit.xml`）與生命週期整合測試（`phpunit-integration.xml`）套件及 PHPStan 等級 9，驗證在 PHP 8.1 上的拒絕行為，對 DMTF Redfish Mockup Server（子系統、僅限舊版架構以及 HPE iLO Gen11 模擬環境）與 Thold v1.8.2 / Maint v1.3 進行端對端測試，並檢查 gettext 目錄、工作流程與 REUSE 授權。
+CI（`.github/workflows/plugin-ci-workflow.yml`）在 PHP 8.0 上進行進入點語法檢查，針對 Cacti `release/1.2.31` 與 `1.2.x` 在 PHP 8.2 至 8.5 上執行 Pest 單元測試（`phpunit.xml`）與生命週期整合測試（`phpunit-integration.xml`）套件及 PHPStan 等級 9，驗證在 PHP 8.1 上的拒絕行為，對 DMTF Redfish Mockup Server（子系統、僅限舊版架構以及 HPE iLO Gen11 模擬環境）與 Thold v1.8.2 / Maint v1.3 進行端對端測試，並檢查 gettext 目錄、工作流程與 REUSE 授權。
 
 推送前的本地檢查：
 

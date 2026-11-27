@@ -1,4 +1,4 @@
-<!-- Source: README.md; SHA256: 6972a6c9ac754cd60e63c5caf971451ea8fe6e279eef757d886e1a168d3eef01 -->
+<!-- Source: README.md; SHA256: cf31b9f80d6c00020bbe08e80951d4de1c910793911d040ae7a66b54e8a2eaf0 -->
 
 <!-- translations:start -->
 [English](../../../README.md) | [简体中文](../zh-CN/README.md) | [हिन्दी](../hi-IN/README.md) | [Español (España)](../es-ES/README.md) | [Español (Latinoamérica)](../es-419/README.md) | [العربية (السعودية)](../ar-SA/README.md) | [Afrikaans](../af-ZA/README.md) | [አማርኛ](../am-ET/README.md) | [العربية (مصر)](../ar-EG/README.md) | [العربية (المغرب)](../ar-MA/README.md) | [বাংলা](../bn-BD/README.md) | [Bosanski](../bs-BA/README.md) | [Deutsch](../de-DE/README.md) | [فارسی](../fa-IR/README.md) | [Filipino](../fil-PH/README.md) | [Français](../fr-FR/README.md) | [Français (Maroc)](../fr-MA/README.md) | [Français (Sénégal)](../fr-SN/README.md) | [Hausa](../ha-NG/README.md) | [עברית](../he-IL/README.md) | [Hrvatski](../hr-HR/README.md) | [Bahasa Indonesia](../id-ID/README.md) | [Igbo](../ig-NG/README.md) | [Italiano](../it-IT/README.md) | [日本語](../ja-JP/README.md) | [한국어](README.md) | [Malagasy](../mg-MG/README.md) | [मराठी](../mr-IN/README.md) | [Bahasa Melayu](../ms-MY/README.md) | [Nederlands](../nl-NL/README.md) | [Polski](../pl-PL/README.md) | [Português (Brasil)](../pt-BR/README.md) | [Русский](../ru-RU/README.md) | [Kinyarwanda](../rw-RW/README.md) | [Soomaali](../so-SO/README.md) | [Српски](../sr-RS/README.md) | [Svenska](../sv-SE/README.md) | [Kiswahili](../sw-KE/README.md) | [தமிழ்](../ta-IN/README.md) | [తెలుగు](../te-IN/README.md) | [ไทย](../th-TH/README.md) | [Türkçe](../tr-TR/README.md) | [Українська](../uk-UA/README.md) | [اردو](../ur-PK/README.md) | [Tiếng Việt](../vi-VN/README.md) | [isiXhosa](../xh-ZA/README.md) | [Yorùbá](../yo-NG/README.md) | [繁體中文](../zh-TW/README.md) | [isiZulu](../zu-ZA/README.md)
@@ -157,7 +157,7 @@ BMC 자격 증명은 서버의 대역 외 관리를 제어합니다. 본 설계�
 
 ## 개발 및 테스트
 
-CI([.github/workflows/plugin-ci-workflow.yml](../../../.github/workflows/plugin-ci-workflow.yml))는 PHP 8.0에서 진입점 린트 검사를 수행하고, Cacti `release/1.2.31` 및 `1.2.x`를 대상으로 PHP 8.2~8.5에서 Pest 단위 테스트(`phpunit.xml`)와 수명 주기 통합 테스트(`phpunit-integration.xml`) 스위트 및 PHPStan 레벨 9를 실행하며, PHP 8.1에서의 거부를 확인하고, DMTF Redfish Mockup Server(서브시스템, 레거시 전용 및 HPE iLO Gen11 목업)와 Thold v1.8.2 / Maint v1.3을 종단 간으로 테스트하며, gettext 카탈로그, 워크플로 및 REUSE 라이선스를 검사합니다.
+CI(`.github/workflows/plugin-ci-workflow.yml`)는 PHP 8.0에서 진입점 린트 검사를 수행하고, Cacti `release/1.2.31` 및 `1.2.x`를 대상으로 PHP 8.2~8.5에서 Pest 단위 테스트(`phpunit.xml`)와 수명 주기 통합 테스트(`phpunit-integration.xml`) 스위트 및 PHPStan 레벨 9를 실행하며, PHP 8.1에서의 거부를 확인하고, DMTF Redfish Mockup Server(서브시스템, 레거시 전용 및 HPE iLO Gen11 목업)와 Thold v1.8.2 / Maint v1.3을 종단 간으로 테스트하며, gettext 카탈로그, 워크플로 및 REUSE 라이선스를 검사합니다.
 
 푸시 전 로컬 검사:
 

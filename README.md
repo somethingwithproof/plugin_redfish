@@ -155,7 +155,7 @@ See [docs/operator-guide.md](docs/operator-guide.md) for installation prerequisi
 
 ## Development and testing
 
-CI ([.github/workflows/plugin-ci-workflow.yml](.github/workflows/plugin-ci-workflow.yml)) lints entry points on PHP 8.0, runs Pest unit (`phpunit.xml`) and lifecycle integration (`phpunit-integration.xml`) suites and PHPStan level 9 across PHP 8.2 to 8.5 against Cacti `release/1.2.31` and `1.2.x`, verifies refusal on PHP 8.1, exercises the DMTF Redfish Mockup Server (subsystem, legacy-only, and HPE iLO Gen11 mockups) and Thold v1.8.2 / Maint v1.3 end to end, and checks gettext catalogs, workflows, and REUSE licensing.
+CI (`.github/workflows/plugin-ci-workflow.yml`) lints entry points on PHP 8.0, runs Pest unit (`phpunit.xml`) and lifecycle integration (`phpunit-integration.xml`) suites and PHPStan level 9 across PHP 8.2 to 8.5 against Cacti `release/1.2.31` and `1.2.x`, verifies refusal on PHP 8.1, exercises the DMTF Redfish Mockup Server (subsystem, legacy-only, and HPE iLO Gen11 mockups) and Thold v1.8.2 / Maint v1.3 end to end, and checks gettext catalogs, workflows, and REUSE licensing.
 
 Local checks before pushing:
 

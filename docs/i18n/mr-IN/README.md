@@ -1,4 +1,4 @@
-<!-- Source: README.md; SHA256: 6972a6c9ac754cd60e63c5caf971451ea8fe6e279eef757d886e1a168d3eef01 -->
+<!-- Source: README.md; SHA256: cf31b9f80d6c00020bbe08e80951d4de1c910793911d040ae7a66b54e8a2eaf0 -->
 
 <!-- translations:start -->
 [English](../../../README.md) | [简体中文](../zh-CN/README.md) | [हिन्दी](../hi-IN/README.md) | [Español (España)](../es-ES/README.md) | [Español (Latinoamérica)](../es-419/README.md) | [العربية (السعودية)](../ar-SA/README.md) | [Afrikaans](../af-ZA/README.md) | [አማርኛ](../am-ET/README.md) | [العربية (مصر)](../ar-EG/README.md) | [العربية (المغرب)](../ar-MA/README.md) | [বাংলা](../bn-BD/README.md) | [Bosanski](../bs-BA/README.md) | [Deutsch](../de-DE/README.md) | [فارسی](../fa-IR/README.md) | [Filipino](../fil-PH/README.md) | [Français](../fr-FR/README.md) | [Français (Maroc)](../fr-MA/README.md) | [Français (Sénégal)](../fr-SN/README.md) | [Hausa](../ha-NG/README.md) | [עברית](../he-IL/README.md) | [Hrvatski](../hr-HR/README.md) | [Bahasa Indonesia](../id-ID/README.md) | [Igbo](../ig-NG/README.md) | [Italiano](../it-IT/README.md) | [日本語](../ja-JP/README.md) | [한국어](../ko-KR/README.md) | [Malagasy](../mg-MG/README.md) | [मराठी](README.md) | [Bahasa Melayu](../ms-MY/README.md) | [Nederlands](../nl-NL/README.md) | [Polski](../pl-PL/README.md) | [Português (Brasil)](../pt-BR/README.md) | [Русский](../ru-RU/README.md) | [Kinyarwanda](../rw-RW/README.md) | [Soomaali](../so-SO/README.md) | [Српски](../sr-RS/README.md) | [Svenska](../sv-SE/README.md) | [Kiswahili](../sw-KE/README.md) | [தமிழ்](../ta-IN/README.md) | [తెలుగు](../te-IN/README.md) | [ไทย](../th-TH/README.md) | [Türkçe](../tr-TR/README.md) | [Українська](../uk-UA/README.md) | [اردو](../ur-PK/README.md) | [Tiếng Việt](../vi-VN/README.md) | [isiXhosa](../xh-ZA/README.md) | [Yorùbá](../yo-NG/README.md) | [繁體中文](../zh-TW/README.md) | [isiZulu](../zu-ZA/README.md)
@@ -157,7 +157,7 @@ BMC क्रेडेन्शियल्स सर्व्हरचे आ�
 
 ## विकास आणि चाचणी
 
-CI ([.github/workflows/plugin-ci-workflow.yml](../../../.github/workflows/plugin-ci-workflow.yml)) PHP 8.0 वर एंट्री पॉइंट्स लिंट करते, Cacti `release/1.2.31` आणि `1.2.x` विरुद्ध PHP 8.2 ते 8.5 वर Pest युनिट (`phpunit.xml`) व जीवनचक्र एकत्रीकरण (`phpunit-integration.xml`) संच आणि PHPStan स्तर 9 चालवते, PHP 8.1 वरील नकार पडताळते, DMTF Redfish Mockup Server (सबसिस्टम, लेगसी-ओन्ली आणि HPE iLO Gen11 मॉकअप्स) व Thold v1.8.2 / Maint v1.3 एंड टू एंड तपासते, आणि gettext कॅटलॉग, वर्कफ्लो व REUSE परवाना तपासते.
+CI (`.github/workflows/plugin-ci-workflow.yml`) PHP 8.0 वर एंट्री पॉइंट्स लिंट करते, Cacti `release/1.2.31` आणि `1.2.x` विरुद्ध PHP 8.2 ते 8.5 वर Pest युनिट (`phpunit.xml`) व जीवनचक्र एकत्रीकरण (`phpunit-integration.xml`) संच आणि PHPStan स्तर 9 चालवते, PHP 8.1 वरील नकार पडताळते, DMTF Redfish Mockup Server (सबसिस्टम, लेगसी-ओन्ली आणि HPE iLO Gen11 मॉकअप्स) व Thold v1.8.2 / Maint v1.3 एंड टू एंड तपासते, आणि gettext कॅटलॉग, वर्कफ्लो व REUSE परवाना तपासते.
 
 पुश करण्यापूर्वी स्थानिक तपासण्या:
 
