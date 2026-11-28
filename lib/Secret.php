@@ -32,19 +32,38 @@ final class Secret {
 	/** @var \WeakMap<self, string>|null */
 	private static ?\WeakMap $values = null;
 
+	/**
+	 * Initialize a new Secret instance.
+	 */
 	public function __construct(#[\SensitiveParameter] string $value) {
 		self::$values ??= new \WeakMap();
 		self::$values[$this] = $value;
 	}
 
+	/**
+	 * Reveal.
+	 *
+	 * @return string
+	 */
 	public function reveal(): string {
 		return self::$values[$this] ?? '';
 	}
 
+	/**
+	 * Is empty.
+	 *
+	 * @return bool
+	 */
 	public function isEmpty(): bool {
 		return $this->reveal() === '';
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param self $other
+	 * @return bool
+	 */
 	public function equals(self $other): bool {
 		return hash_equals($this->reveal(), $other->reveal());
 	}
@@ -56,6 +75,11 @@ final class Secret {
 		return ['value' => '[redacted]'];
 	}
 
+	/**
+	 * Handle cloning behavior for this instance.
+	 *
+	 * @throws \LogicException
+	 */
 	public function __clone() {
 		throw new \LogicException('A secret cannot be cloned');
 	}

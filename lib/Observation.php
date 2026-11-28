@@ -29,25 +29,50 @@ final class Observation {
 	/** @var array<string, Reading> keyed by member and metric */
 	public array $readings = [];
 
+	/**
+	 * Member.
+	 *
+	 * @param Member $member
+	 * @return void
+	 */
 	public function member(Member $member): void {
 		// The first source to name a member wins; a later one only adds readings.
 		$this->members[$member->key] ??= $member;
 	}
 
+	/**
+	 * Add.
+	 *
+	 * @param Reading $reading
+	 * @return void
+	 */
 	public function add(Reading $reading): void {
 		$this->readings[$reading->member . "\0" . $reading->metric] = $reading;
 	}
 
+	/**
+	 * Merge.
+	 *
+	 * @param self $other
+	 * @return void
+	 */
 	public function merge(self $other): void {
-		foreach ($other->members as $member) {
-			$this->member($member);
+		foreach ($other->members as $key => $member) {
+			$this->members[$key] ??= $member;
 		}
 
-		foreach ($other->readings as $reading) {
-			$this->add($reading);
+		foreach ($other->readings as $key => $reading) {
+			$this->readings[$key] = $reading;
 		}
 	}
 
+	/**
+	 * Find.
+	 *
+	 * @param string $member
+	 * @param string $metric
+	 * @return Reading|null
+	 */
 	public function find(string $member, string $metric): ?Reading {
 		return $this->readings[$member . "\0" . $metric] ?? null;
 	}

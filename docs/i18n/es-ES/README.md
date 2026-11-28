@@ -1,134 +1,185 @@
-<!-- Source: README.md; SHA256: 7b4e83a58a1adc844cb0615ef30e95476cba2851f96bb454d2a816fb2774724d -->
+<!-- Source: README.md; SHA256: cf31b9f80d6c00020bbe08e80951d4de1c910793911d040ae7a66b54e8a2eaf0 -->
 
 <!-- translations:start -->
 [English](../../../README.md) | [简体中文](../zh-CN/README.md) | [हिन्दी](../hi-IN/README.md) | [Español (España)](README.md) | [Español (Latinoamérica)](../es-419/README.md) | [العربية (السعودية)](../ar-SA/README.md) | [Afrikaans](../af-ZA/README.md) | [አማርኛ](../am-ET/README.md) | [العربية (مصر)](../ar-EG/README.md) | [العربية (المغرب)](../ar-MA/README.md) | [বাংলা](../bn-BD/README.md) | [Bosanski](../bs-BA/README.md) | [Deutsch](../de-DE/README.md) | [فارسی](../fa-IR/README.md) | [Filipino](../fil-PH/README.md) | [Français](../fr-FR/README.md) | [Français (Maroc)](../fr-MA/README.md) | [Français (Sénégal)](../fr-SN/README.md) | [Hausa](../ha-NG/README.md) | [עברית](../he-IL/README.md) | [Hrvatski](../hr-HR/README.md) | [Bahasa Indonesia](../id-ID/README.md) | [Igbo](../ig-NG/README.md) | [Italiano](../it-IT/README.md) | [日本語](../ja-JP/README.md) | [한국어](../ko-KR/README.md) | [Malagasy](../mg-MG/README.md) | [मराठी](../mr-IN/README.md) | [Bahasa Melayu](../ms-MY/README.md) | [Nederlands](../nl-NL/README.md) | [Polski](../pl-PL/README.md) | [Português (Brasil)](../pt-BR/README.md) | [Русский](../ru-RU/README.md) | [Kinyarwanda](../rw-RW/README.md) | [Soomaali](../so-SO/README.md) | [Српски](../sr-RS/README.md) | [Svenska](../sv-SE/README.md) | [Kiswahili](../sw-KE/README.md) | [தமிழ்](../ta-IN/README.md) | [తెలుగు](../te-IN/README.md) | [ไทย](../th-TH/README.md) | [Türkçe](../tr-TR/README.md) | [Українська](../uk-UA/README.md) | [اردو](../ur-PK/README.md) | [Tiếng Việt](../vi-VN/README.md) | [isiXhosa](../xh-ZA/README.md) | [Yorùbá](../yo-NG/README.md) | [繁體中文](../zh-TW/README.md) | [isiZulu](../zu-ZA/README.md)
 <!-- translations:end -->
 
-<a id="plugin_redfish"></a>
 # plugin_redfish
 
-Un complemento para Cacti 1.2 que incorpora el consumo eléctrico, la temperatura de entrada, el estado de los ventiladores y la salud de las fuentes de alimentación de los controladores de gestión de placa base (BMC) como dispositivos, fuentes de datos y gráficos normales de Cacti, mediante Redfish y con una alternativa IPMI opcional prevista. Thold y Maint permiten alertar y suprimir notificaciones; una fase posterior añadirá totales de potencia por rack.
+Un complemento de Cacti 1.2 que lleva el consumo eléctrico del servidor, la temperatura de entrada, el estado de los ventiladores y la salud de las fuentes de alimentación desde los controladores de gestión de placa base (BMC) a Cacti como dispositivos, orígenes de datos y gráficas ordinarios, utilizando Redfish con una alternativa opcional de IPMI de solo lectura y resúmenes de potencia a nivel de bastidor (rack). Thold y Maint generan y suprimen alertas sobre ellos mediante los orígenes de datos estándar de Cacti.
 
-> **Estado: en desarrollo, aún sin versión publicada (0.1.0-dev).** Los hitos 2 (base) y 3 (objetos Cacti y alertas) están integrados en `main`. Este complemento no está afiliado al proyecto Cacti. Se instala en Cacti 1.2.31 con PHP 8.2 o posterior, registra BMC y credenciales, lee por Redfish la potencia, temperaturas, ventiladores y salud de las fuentes en su propia caché, y muestra el estado de la recopilación. Añade dispositivos Cacti, gráficos por miembro y de resumen, y compatibilidad con Thold y Maint mediante fuentes de datos normales. CI ha probado un BMC simulado con datos escritos a mano y el servidor de simulación Redfish de DMTF; no se ha validado ningún BMC real ni despliegue piloto. El diseño y la investigación están en [docs/PLAN.md](../../PLAN.md), [docs/research/](../../research) y [docs/decisions/](../../decisions).
+> **Estado: en desarrollo, aún sin versión publicada (`0.1.0-dev`).** Este complemento no está afiliado al proyecto Cacti. Se instala en Cacti 1.2.31 o posterior bajo PHP 8.2 o posterior e implementa el recopilador Redfish, el almacén cifrado de credenciales, el aprovisionamiento de dispositivos y gráficas de Cacti, la alternativa opcional de IPMI de solo lectura, el resumen de potencia por bastidor, la visualización de ventanas de Maint de Cacti, la replicación de recopiladores de datos remotos y endpoints de agente, el proveedor CasC y la CLI de operador, las capacidades MCP y las comprobaciones de diagnóstico Doctor. La CI prueba fixtures, el servidor DMTF Redfish Mockup Server (maquetas de subsistema, solo heredado y HPE iLO Gen11) y Thold v1.8.2 con Maint v1.3; todavía no se ha cualificado ningún BMC físico real ni una flota piloto. El diseño y la investigación se encuentran en [docs/PLAN.md](../../PLAN.md), [docs/research/](../../research/) y [docs/decisions/](../../decisions/).
 
-<a id="what-milestone-2-ships"></a>
-### Qué incluye el hito 2
+## Capacidades implementadas
 
-- Instalación, actualización, desactivación y desinstalación mediante la API de complementos de Cacti. Las tablas se conservan al desinstalar salvo que se desmarque la opción. En PHP anterior a 8.2 el complemento rechaza instalarse o activarse e indica el motivo.
-- Permisos «Redfish View» (página de estado), «Redfish Operator» (operaciones) y «Redfish Admin» (BMC y credenciales), y ajustes en Configuration > Settings > Redfish.
-- Registro de BMC con importación CSV y exportación JSON. Los archivos de importación no deben contener contraseñas; las credenciales se referencian por nombre.
-- Credenciales cifradas con AES-256-GCM. La clave reside en un archivo fuera de la base de datos, por defecto `/etc/cacti/redfish-vault.key`, con 64 caracteres hexadecimales (`openssl rand -hex 32`) o exactamente 32 bytes aleatorios. Debe pertenecer al usuario del sondeador, no ser legible por otros usuarios y estar en un directorio donde solo ese usuario o root puedan escribir. Una clave de 32 caracteres imprimibles se rechaza por considerarse una frase de contraseña. **Respalde el archivo de clave junto con la base de datos**; sin él deberá volver a introducir todas las contraseñas.
-- Verificación TLS activada por defecto, con un paquete de certificados CA o una huella SPKI SHA-256 por BMC. La desactivación por BMC se registra y permanece como advertencia en la página de estado.
-- Cliente Redfish de solo lectura: únicamente `GET`, inicio y cierre de sesión, comprobados contra una lista de operaciones permitidas antes de enviar cada solicitud.
-- Recopilador iniciado desde `poller_bottom` para los BMC del sondeador principal, con arrendamientos y plazos por BMC, espera progresiva y limpieza tras un fallo de la única sesión registrada por el complemento. Aún no se admiten recopiladores remotos; requieren decidir expresamente cómo accederán a la base de datos y la clave (fase 4).
-- Los registros y credenciales respetan los permisos de dispositivos Cacti: un Redfish Admin solo ve, modifica y vincula BMC de dispositivos visibles, y solo credenciales que ningún BMC de un dispositivo oculto utilice.
+### Recopilador principal, almacén y objetos de Cacti
 
-<a id="what-milestone-3-adds"></a>
-### Qué añade el hito 3
+- **Ciclo de vida y esquema.** Se instala, actualiza, desactiva y desinstala mediante la API de complementos de Cacti (`Schema::VERSION = 3`, 12 tablas). Las tablas se conservan al desinstalar salvo que se desmarque *Keep Plugin Tables on Uninstall*. Los puntos de entrada se analizan en PHP 8.0 y rechazan PHP inferior a 8.2 o la ausencia de `ext-openssl` con un mensaje de error explícito.
+- **Registro y permisos.** Reinos *Redfish View* (`redfish_health.php`), *Redfish Operator* (`redfish_operator.php`) y *Redfish Admin* (`redfish_bmcs.php`, `redfish_credentials.php`), además de la configuración en **Configuration > Settings > Redfish**. El registro de BMC admite importación CSV (credenciales referenciadas por nombre; se rechazan contraseñas en los archivos de importación) y exportación JSON. Los registros de BMC y las credenciales siguen los permisos de dispositivos de Cacti.
+- **Almacén cifrado de credenciales.** Las contraseñas se almacenan cifradas con AES-256-GCM en `plugin_redfish_secret`. La clave reside fuera de la base de datos (`/etc/cacti/redfish-vault.key` de forma predeterminada) como 64 caracteres hexadecimales (`openssl rand -hex 32`) o 32 bytes sin procesar, propiedad del usuario del poller, ilegible para otros usuarios, en un directorio en el que solo pueden escribir root o ese usuario. Se rechaza una frase de contraseña imprimible de 32 caracteres. **Haga una copia de seguridad del archivo de clave junto con la base de datos**; sin él, las contraseñas almacenadas deberán volver a introducirse.
+- **TLS y cliente Redfish de solo lectura.** La verificación TLS está activada de forma predeterminada mediante el almacén de CA del sistema, un paquete de CA por BMC o un pin SPKI SHA-256; la exclusión voluntaria sin verificar por BMC permanece visible como una advertencia de salud y una advertencia de comprobación de Doctor. El cliente permite únicamente `GET`, además del inicio (`POST`) y cierre (`DELETE`) de sesión Redfish, con alternativa opcional de autenticación Basic por BMC cuando las sesiones no están disponibles. El descubrimiento prioriza los nuevos recursos de subsistema y sensores de Redfish y recurre a los recursos obsoletos `Power` y `Thermal`.
+- **Ejecución del recopilador.** `poller_redfish.php` se inicia desde `poller_bottom`, ejecuta un proceso maestro por poller mediante el registro de procesos de Cacti con procesos de trabajo configurables (`redfish_workers`), adquiere concesiones por BMC, aplica un presupuesto de tiempo (`redfish_collector_budget`), aplica retroceso exponencial y limpia la sesión anterior del propio complemento tras un fallo inesperado.
+- **Plantillas, dispositivos y gráficas.** Importa `templates/redfish-templates.xml` por hash y copia tres archivos XML de consultas de datos del script server (`redfish_fans.xml`, `redfish_temperatures.xml`, `redfish_psus.xml`) en `<cacti>/resource/script_server/` sin sobrescribir los archivos modificados por el usuario. **Create Device** y **Add Graphs** requieren la confirmación de un plan de aprovisionamiento, asocian consultas a un dispositivo servidor mapeado o crean un dispositivo "Redfish BMC" bajo `.invalid` con las comprobaciones de disponibilidad desactivadas, y enlazan cada gráfica de Redfish de vuelta a las gráficas de Redfish del dispositivo mediante `graph_buttons`.
+- **Entradas del script server solo desde caché.** `scripts/ss_redfish_members.php` sirve lecturas por miembro de ventiladores, temperaturas y PSU, y `scripts/ss_redfish_summary.php` sirve métricas de "Redfish Node Summary" (potencia, temperatura de entrada y máxima, recuentos de ventiladores y PSU con fallos, salud del nodo y antigüedad de la última lectura válida). Las llamadas al script server leen únicamente la caché local y nunca contactan con un BMC. Las lecturas ausentes, caducadas o de miembros desaparecidos devuelven `U` (nunca `0`), mientras que `age` siempre informa un valor para que los umbrales detecten BMC silenciosos.
 
-- Plantillas XML de Cacti en `templates/`, importadas con el importador de Cacti durante la instalación y actualización, identificadas por hash para actualizar los objetos sin duplicarlos. Los tres archivos de consulta se copian a `<cacti>/resource/script_server/` y se registra su hash; nunca se sustituye allí un archivo que el complemento no haya escrito. La página de estado avisa cuando faltan plantillas o archivos de consulta. **Reinstall the Redfish Templates**, en la página BMC, vuelve a importarlos y requiere el permiso Import Templates de Cacti.
-- **Create Device** o **Add Graphs** en cada BMC ([ADR 0015](../../decisions/0015-attach-to-the-server-device-or-create-one-per-bmc.md)). Un BMC asignado a un dispositivo existente añade allí sus consultas y gráficos. Un BMC sin asignar obtiene un dispositivo de la plantilla «Redfish BMC», con comprobaciones de disponibilidad desactivadas y un nombre bajo `.invalid`, para que Cacti nunca contacte con el BMC ni muestre su dirección. En ambos casos, un administrador confirma antes un plan de elementos que se añadirán. Se requieren Redfish Admin y el permiso de gestión de dispositivos; si el creador no puede ver el dispositivo nuevo, se elimina de nuevo.
-- Tres consultas del servidor de scripts: «Redfish Fans», «Redfish Temperatures» y «Redfish Power Supplies», indexadas por la clave de miembro del BMC y con un gráfico por miembro: velocidad de ventilador en porcentaje o RPM, según la unidad notificada; temperatura; y vatios de entrada y salida de las fuentes, junto con sus códigos de salud.
-- Entrada «Redfish Node Summary» con potencia, temperatura de entrada, temperatura máxima, ventiladores y fuentes en estado incorrecto, salud del nodo y antigüedad de la última lectura correcta. Se representa en cuatro gráficos: potencia, temperaturas, salud de componentes y antigüedad de datos. Thold alerta sobre estas fuentes y Maint suprime notificaciones sin modificar ninguno de los dos complementos.
-- El servidor de scripts responde exclusivamente desde la caché y nunca contacta con un BMC. Un valor ausente, obsoleto, con otra unidad o perteneciente a un miembro desaparecido es `U`: el gráfico muestra un hueco, nunca cero. `age` siempre tiene valor, de modo que un umbral detecta un BMC que deja de responder.
-- Enlace desde cada gráfico Redfish a los gráficos Redfish de su dispositivo, visible solo para los usuarios a quienes Cacti permite ver el dispositivo.
+**Cuando cambien los miembros de un BMC** (como un ventilador sustituido o una actualización de firmware que renombre sensores), vuelva a ejecutar **Add Graphs**. Un ventilador o fuente de alimentación previamente presente que pase a estar ausente cuenta en `fans_bad` o `psus_bad` hasta que se acepte; una ranura que nunca estuvo ocupada no cuenta. Los miembros desaparecidos conservan sus orígenes de datos y gráficas existentes, que a partir de entonces leen `U` hasta que se eliminan manualmente. Eliminar un dispositivo de Cacti desasocia su BMC y elimina su asignación de bastidor manteniendo el BMC y la caché; eliminar un BMC o desinstalar el complemento conserva los dispositivos y las gráficas de Cacti.
 
-**Cuando cambien los miembros de un BMC** (sustitución de un ventilador o firmware que renombra sensores), seleccione de nuevo **Add Graphs**. Un ventilador o fuente antes presente que ahora falta cuenta en `fans_bad` o `psus_bad` hasta hacerlo, de modo que retirar un ventilador provoca una alerta; una ranura nunca ocupada no cuenta. Add Graphs acepta los miembros notificados actualmente y Cacti reindexa las consultas. Un miembro desaparecido conserva su fuente y gráfico, que desde entonces leen `U`, y los miembros nuevos reciben gráficos. Elimine manualmente los gráficos obsoletos solo cuando ya no necesite su historial.
+### Alternativa opcional de IPMI
 
-Eliminar un dispositivo desasigna su BMC y conserva el BMC y su caché. Eliminar un BMC o desinstalar el complemento conserva el dispositivo y los gráficos.
+- **Activación opcional por BMC.** Desactivada de forma predeterminada (`protocols` tiene el valor predeterminado `redfish`; activar la alternativa IPMI establece `redfish,ipmi`).
+- **Disparador de alternativa acotado.** Solo se ejecuta cuando la recopilación Redfish falla con una clase de fallo elegible; nunca se dispara ante `AuthRejected`, `CredentialUnavailable`, `AddressRefused`, `OperationRefused` o `Deadline`.
+- **Ejecución segura.** Invoca `ipmitool` sobre `-I lanplus` mediante `proc_open()` en forma de arreglo sin shell, tiempo de espera acotado de reloj real y un límite de salida de 256 KiB. Las contraseñas se suministran mediante `IPMITOOL_PASSWORD` (`-E`) o un archivo temporal con modo 0600 (`-f`) eliminado en `finally`, nunca en los argumentos argv de la CLI.
+- **Lista blanca de comandos de solo lectura.** Solo se permiten cinco subcomandos de solo lectura: `dcmi power reading`, `sdr type Temperature`, `sdr type Fan`, `sdr type Power Supply` y `chassis status`. Se rechazan los comandos mutantes.
+- **Salida normalizada y advertencia de postura.** `IpmiNormalizer` mapea las lecturas en el mismo modelo `Observation`/`Member`/`Reading`, emitiendo `U` para sensores ausentes o no analizables. Activar la alternativa IPMI genera una advertencia en la página de salud y en la comprobación de Doctor `redfish.bmc_security` recordando a los operadores que restrinjan UDP 623 a una VLAN de gestión.
 
-<a id="access-roles"></a>
+### Resumen de potencia por bastidor
+
+- **Registro de bastidores.** La versión 3 del esquema añade `plugin_redfish_rack` (`(site_id, name)` único, `power_budget_watts` opcional, `min_coverage_pct` con valor predeterminado `80` y notas) y `plugin_redfish_rack_member` (como máximo una asignación de bastidor por `host_id`, `bmc_id` y `unit_position` opcionales, eliminada automáticamente cuando se borra un dispositivo de Cacti).
+- **Totales protegidos por cobertura.** `RackPowerSummary` suma las lecturas recientes de `power_watts` de los miembros desde la caché local y calcula la utilización del presupuesto y el margen disponible. Cuando la cobertura de miembros que informan cae por debajo de `min_coverage_pct`, `power_watts`, `utilization_pct` y `headroom_watts` devuelven `U` para que los fallos del recopilador nunca aparezcan como una caída de potencia del bastidor.
+- **Entrada de script server lista para Thold.** `scripts/ss_redfish_rack.php` (`ss_redfish_rack(<rack_id>)`) devuelve `power_watts`, `power_budget_watts`, `utilization_pct`, `headroom_watts`, `members_total`, `members_reporting` y `coverage_pct` únicamente desde la caché local.
+
+### Integración con Cacti Maint
+
+- Los umbrales de Thold sobre orígenes de datos de Redfish generan alertas y Cacti Maint las suprime sin cambios en ninguno de los dos complementos.
+- `MaintWindow` comprueba las programaciones activas de Maint para cada host de Cacti mapeado (programaciones únicas `mtype=1` y recurrentes `mtype=2`, además de `plugin_maint_check_cacti_host()` cuando está cargado) y marca el mantenimiento activo en la página de salud de Redfish (`[MAINT]`), en la salida de `cli/redfish.php health` y en la capacidad `redfish-get-health`.
+
+### Recopiladores de datos remotos
+
+- `INFO` declara `remote_collect:1`. Los BMC aceptan cualquier `poller_id >= 1`, y `poller_redfish.php --poller=N` recopila solo los BMC habilitados asignados a ese poller.
+- **Hook `replicate_out`.** Replica únicamente tablas de configuración no secretas limitadas al poller remoto de destino mediante `replicate_out_table()`: `plugin_redfish_bmc`, metadatos de `plugin_redfish_credential` (sin texto cifrado), `plugin_redfish_rack` y `plugin_redfish_rack_member`. `plugin_redfish_secret` no se replica, y los archivos de clave del almacén permanecen estrictamente locales en cada poller.
+- **Hook `remote_agent`.** Expone acciones de solo lectura `redfish_health` y `redfish_discovery` que aceptan únicamente parámetros numéricos `poller_id` y `bmc_id`. Los parámetros inesperados se rechazan y no se devuelve ninguna credencial ni secreto.
+
+### Hooks del ecosistema (CasC, capacidades MCP y Doctor)
+
+- **Proveedor CasC (`casc_register_providers`).** Registra el proveedor `redfish` (versión de esquema `1`) con exportación, análisis (rechazando XXE), validación, planificación de diferencias y aplicación en YAML y XML en PHP puro. Las credenciales aparecen solo como referencias del almacén (`vault:redfish:<name>`); se rechazan claves de secreto sin procesar (`pass`, `secret`, `token`, `private_key`, `vault_key`, `auth_token`). La aplicación requiere un `PLAN_HASH` SHA-256 exacto.
+- **API de MCP / Abilities (`abilities_register`).** Registra tres capacidades de solo lectura controladas por el reino Redfish View (`redfish_health.php`) y los permisos de dispositivos de Cacti, sin devolver credenciales:
+  - `redfish-list-bmcs` (`poller_id` opcional)
+  - `redfish-get-rack-power` (`rack_id` opcional)
+  - `redfish-get-health` (`bmc_id` opcional)
+- **Comprobaciones de Doctor (`doctor_register_checks`).** Registra cinco comprobaciones de diagnóstico locales de solo lectura que nunca contactan con un BMC ni devuelven material de clave:
+  - `redfish.schema`: vigencia de la versión del esquema
+  - `redfish.vault_key`: legibilidad y permisos de la clave del almacén
+  - `redfish.collector_runs`: presupuesto y vigencia de las ejecuciones del recopilador del poller
+  - `redfish.bmc_security`: BMC habilitados con TLS sin verificar o alternativa IPMI
+  - `redfish.rack_power`: cumplimiento del presupuesto de potencia del bastidor y umbral mínimo de cobertura
+
+## CLI
+
+Ejecútese desde el directorio raíz de Cacti con PHP 8.2 o posterior:
+
+```sh
+# Operator and CasC CLI (reads --file=PATH or stdin for validate, plan, and apply)
+php plugins/redfish/cli/redfish.php export --format=yaml|xml
+php plugins/redfish/cli/redfish.php validate [--file=PATH] [--format=yaml|xml]
+php plugins/redfish/cli/redfish.php plan [--file=PATH] [--format=yaml|xml]
+php plugins/redfish/cli/redfish.php apply [--file=PATH] [--format=yaml|xml] --confirm=<PLAN_HASH>
+php plugins/redfish/cli/redfish.php health --format=text|json
+
+# Collector entry point (normally started by poller_bottom)
+php plugins/redfish/poller_redfish.php [--poller=N] [--force] [--debug]
+
+# Rack power summary script server entry point
+php plugins/redfish/scripts/ss_redfish_rack.php <rack_id>
+```
+
 ## Roles de acceso
 
-| Permiso | Acceso |
+| Reino | Acceso |
 | --- | --- |
-| Redfish View | Páginas de supervisión existentes. |
-| Redfish Operator | Supervisión, página de operaciones y acuses personales de investigación. |
-| Redfish Admin | Acceso de operador más configuración y acciones administrativas existentes. |
+| Redfish View | Páginas de monitorización existentes. |
+| Redfish Operator | Monitorización más la página de Operaciones y reconocimientos personales de triaje. |
+| Redfish Admin | Acceso de Operador más la configuración existente y las acciones administrativas. |
 
-Después de copiar los archivos de actualización, abra Plugins como administrador para registrar el nuevo permiso. Asigne expresamente Operator en **Configuration > Users** o en los grupos. Las actualizaciones conservan los identificadores y concesiones existentes de View y Admin. En cada solicitud, Admin hereda Operator y Operator hereda View; no se añaden concesiones persistentes a usuarios o grupos. Los ajustes del complemento requieren Redfish Admin además del permiso Settings de Cacti.
+Tras copiar los archivos de actualización, abra la página Plugins como administrador para registrar los reinos. Asigne el reino Operator explícitamente en **Configuration > Users** o en los grupos de usuarios. Las actualizaciones conservan los ID y concesiones existentes de los reinos View y Admin. El acceso Admin hereda el acceso Operator, y el acceso Operator hereda el acceso View en cada solicitud; esto no añade concesiones almacenadas a usuarios o grupos. Los ajustes del complemento también requieren acceso Redfish Admin además del permiso Settings de Cacti.
 
-Los permisos de dispositivos Cacti siguen limitando las filas y acciones disponibles para cada usuario; los objetos sin asignar requieren un administrador. Los operadores pueden liberar una retención de recopilación de un BMC permitido para la siguiente ejecución programada. Las credenciales, configuración, asignación, eliminación y demás cambios administrativos permanecen en las páginas de administración. Los acuses solo duran en la sesión actual, como máximo una hora y mientras la misma observación siga vigente. Las observaciones nuevas o modificadas los invalidan. Nunca convierten una medición fallida en saludable ni suprimen alertas.
+Los permisos de dispositivos de Cacti limitan las filas y acciones disponibles para cada usuario; los objetos sin mapear requieren un administrador. Los operadores pueden liberar una retención de recopilación en un BMC permitido para la siguiente ejecución programada. Las credenciales, la configuración, el mapeo, la eliminación y otros cambios administrativos permanecen en las páginas administrativas. Los reconocimientos duran solo en la sesión actual del usuario, durante un máximo de una hora y únicamente mientras la misma observación siga vigente. Las observaciones nuevas o modificadas los invalidan. Nunca marcan una medición fallida como saludable ni suprimen alertas.
 
-<a id="why"></a>
-## Motivo
+## Por qué
 
-Cada servidor tiene un BMC que informa de potencia y estado térmico con independencia del sistema operativo, por lo que sigue respondiendo cuando este falla. Los datos permiten seguir capacidad y costes, detectar pronto fallos de ventiladores o fuentes y, en computación de alto rendimiento, decidir límites de potencia. El complemento no es exclusivo de HPC.
+Cada servidor tiene un BMC que informa del estado eléctrico y térmico independientemente del sistema operativo, por lo que sigue respondiendo cuando el SO está caído. Los datos sirven para el seguimiento de capacidad y costes, la alerta temprana ante el fallo de un ventilador o una fuente de alimentación y, en computación de alto rendimiento, para decisiones de limitación de potencia. El complemento no es específico de HPC.
 
-Cacti ya cubre parte de estas necesidades:
+Cacti cubre hoy una parte de esto:
 
-- **Paquetes SNMP de fabricantes.** La rama 1.2.x incluye plantillas Dell iDRAC y HPE iLO que requieren un agente SNMP y son específicas del fabricante. La investigación del hito 1 encontró que ninguna informa del consumo en vatios ([docs/research/overlap.md](../../research/overlap.md)).
-- **Un tipo de credencial sin recopilador.** plugin_credentials define una credencial «IPMI / Redfish (BMC)», pero no lee ningún BMC.
-- **Sin vista por rack.** El núcleo de Cacti no tiene un objeto rack; los dispositivos tienen un campo libre `location`.
+- **Paquetes SNMP de fabricantes.** La rama 1.2.x incluye plantillas para Dell iDRAC y HPE iLO que necesitan un agente SNMP y son específicas de cada fabricante; la investigación del hito 1 comprobó que ninguna informa el consumo eléctrico en vatios ([docs/research/overlap.md](../../research/overlap.md)).
+- **Un tipo de credencial sin recopilador.** plugin_credentials define una credencial "IPMI / Redfish (BMC)", pero no lee ningún BMC.
+- **Sin vista a nivel de bastidor.** El núcleo de Cacti no tiene un objeto de bastidor; un dispositivo tiene un campo `location` de texto libre.
 
-El complemento sondea los BMC fuera del ciclo de sondeo de Cacti, guarda lecturas normalizadas y las expone mediante consultas del servidor de scripts y fuentes de resumen. Reutiliza gráficos, permisos, Thold y Maint de Cacti, sin cambiar el estado de los BMC. La compatibilidad con recopiladores remotos está prevista para la fase 4; actualmente la recopilación se ejecuta solo en el sondeador principal.
+El complemento sondea los BMC fuera de banda respecto al ciclo de sondeo de Cacti en el poller principal o en recopiladores de datos remotos, almacena en caché las lecturas normalizadas y las expone mediante consultas de datos del script server, resúmenes de nodo y resúmenes de potencia por bastidor. Reutiliza las gráficas, los permisos, Thold y Maint de Cacti, y no modifica el estado del BMC.
 
-<a id="planned-scope"></a>
-## Alcance previsto
+## Alcance y estado
 
-| Fase | Alcance | Hitos |
-|---|---|---|
-| 0, investigación | Matriz de fabricantes, confirmación del comportamiento upstream en BMC reales, coste del sondeo y prueba de consulta de datos | [M1](https://github.com/somethingwithproof/plugin_redfish/milestone/1) |
-| 1, observación | Registro BMC, credenciales, TLS, recopilador Redfish, lecturas normalizadas, dispositivos, gráficos por índice, alertas Thold, supresión Maint y página de estado | [M2](https://github.com/somethingwithproof/plugin_redfish/milestone/2), [M3](https://github.com/somethingwithproof/plugin_redfish/milestone/3), [M4](https://github.com/somethingwithproof/plugin_redfish/milestone/4) |
-| 2, IPMI | Alternativa IPMI para BMC sin Redfish utilizable, desactivada por defecto | [M5](https://github.com/somethingwithproof/plugin_redfish/milestone/5) |
-| 3, racks | Registro de racks, totales de potencia con cobertura y margen presupuestado | [M6](https://github.com/somethingwithproof/plugin_redfish/milestone/6) |
-| 4, remoto | Recopiladores remotos Cacti para redes BMC aisladas | [M7](https://github.com/somethingwithproof/plugin_redfish/milestone/7) |
+| Fase | Alcance | Hitos | Estado |
+|---|---|---|---|
+| 0, investigación | Matriz de fabricantes, confirmación del comportamiento previo en BMC reales, coste de sondeo, prueba de consultas de datos | [M1](https://github.com/somethingwithproof/plugin_redfish/milestone/1) | Realizado, pendiente de capturas de firmware de BMC reales |
+| 1, observación | Registro de BMC, credenciales, TLS, recopilador Redfish, lecturas normalizadas, dispositivos, gráficas por índice, alertas Thold, integración Maint, página de salud | [M2](https://github.com/somethingwithproof/plugin_redfish/milestone/2), [M3](https://github.com/somethingwithproof/plugin_redfish/milestone/3), [M4](https://github.com/somethingwithproof/plugin_redfish/milestone/4) | Implementado; cualificación de flota piloto de M4 pendiente |
+| 2, ipmi | Alternativa IPMI (`lanplus`) de solo lectura mediante `ipmitool`, desactivada por defecto | [M5](https://github.com/somethingwithproof/plugin_redfish/milestone/5) | Implementado |
+| 3, bastidores | Registro de bastidores, totales de potencia de bastidor con suelo de cobertura, margen presupuestario, `ss_redfish_rack.php` | [M6](https://github.com/somethingwithproof/plugin_redfish/milestone/6) | Implementado |
+| 4, remoto y ecosistema | Recopiladores de datos remotos (`replicate_out`, `remote_agent`), proveedor CasC y CLI, capacidades MCP, comprobaciones Doctor | [M7](https://github.com/somethingwithproof/plugin_redfish/milestone/7) | Implementado |
 
-Fuera de alcance: fijar límites de potencia u otra configuración BMC, control de encendido, actualización de firmware, acceso a consola, motor propio de alertas e integración con planificadores.
+Fuera de alcance: establecer límites de potencia o cualquier otra configuración de BMC, control de energía, actualización de firmware, acceso a consola, un motor de alertas propio del complemento e integración con el programador.
 
-<a id="compatibility-targets"></a>
 ## Objetivos de compatibilidad
 
 | Componente | Objetivo |
 |---|---|
-| Cacti | 1.2.31 o posterior, sin parches del núcleo |
-| Base de datos | MariaDB 10.2 o MySQL 5.7 o posterior: una clave única sobre una columna generada garantiza un BMC por dispositivo |
-| PHP | 8.2 o posterior; `setup.php` sigue siendo interpretable en 8.0 para rechazar una versión no compatible sin romper la interfaz |
-| BMC | Dell iDRAC, HPE iLO, Lenovo XCC y OpenBMC, por intervalo de firmware; consulte la [matriz de fabricantes](../../research/vendor-matrix.md) |
-| Redfish | Primero los recursos nuevos de subsistemas y sensores; `Power` y `Thermal`, obsoletos, como alternativa |
-| Thold, Maint | Sin cambios necesarios |
+| Cacti | 1.2.31 o posterior, sin parches en el núcleo |
+| Base de datos | MariaDB 10.2 o MySQL 5.7 o posterior: una clave única en una columna generada garantiza un BMC por dispositivo |
+| PHP | 8.2 o posterior; los puntos de entrada siguen siendo analizables en 8.0 para que un entorno no compatible reciba un rechazo en lugar de una interfaz de Cacti rota |
+| Extensiones de PHP | `ext-openssl` (requerida por Cacti 1.2.31); sin `ext-curl` y sin dependencias de ejecución de Composer |
+| Herramientas opcionales | `ipmitool` en los pollers que recopilan BMC con la alternativa IPMI activada |
+| BMC | Dell iDRAC, HPE iLO, Lenovo XCC y OpenBMC, según rango de firmware; véase [la matriz de fabricantes](../../research/vendor-matrix.md) |
+| Redfish | Primero los nuevos recursos de subsistema y sensores; `Power` y `Thermal` obsoletos como alternativa |
+| Thold, Maint | No requieren cambios (la CI ejercita Thold v1.8.2 y Maint v1.3) |
 
-<a id="design"></a>
 ## Diseño
 
-- [docs/PLAN.md](../../PLAN.md) contiene el plan completo: arquitectura, hechos upstream de los que depende, fuentes y supuestos pendientes, modelo de medición, límites de seguridad, cálculos de rendimiento, pruebas y riesgos.
-- [docs/decisions/](../../decisions) contiene los registros de decisiones de arquitectura ya tomadas.
-- [docs/REQUIREMENTS.md](../../REQUIREMENTS.md) relaciona cada identificador de requisito con su incidencia.
+- [docs/PLAN.md](../../PLAN.md) es el plan completo: arquitectura, hechos previos de los que depende, modelo de medición, límites de seguridad, aritmética de rendimiento, pruebas y riesgos.
+- [docs/decisions/](../../decisions/) contiene los registros de decisiones de arquitectura para las opciones ya tomadas.
+- [docs/REQUIREMENTS.md](../../REQUIREMENTS.md) asigna cada ID de requisito a su incidencia.
 
 ```mermaid
 flowchart LR
-    BMC[BMCs: Redfish over HTTPS] --> C[Collector on the Cacti poller]
-    C --> CACHE[(Normalized reading cache)]
-    CACHE --> SS[Script server data query]
-    SS -->|poller_output| T[Thold and Maint]
-    SS --> G[Cacti graphs and permissions]
-    CACHE --> R[Rack totals, phase 3]
+    BMC["BMC: Redfish HTTPS / IPMI lanplus opcional"] --> C["Recopilador en poller principal o remoto"]
+    C --> CACHE[("Caché de lecturas normalizadas")]
+    CACHE --> SS["Script server: miembros, resumen de nodo, resumen de bastidor"]
+    SS -->|poller_output| T["Thold y Maint"]
+    SS --> G["Gráficas y permisos de Cacti"]
+    CACHE --> ECO["CLI, CasC, capacidades MCP, Doctor"]
 ```
 
-<a id="security"></a>
 ## Seguridad
 
-Las credenciales BMC controlan la gestión fuera de banda de los servidores. El diseño las mantiene fuera de comandos, registros y páginas, verifica TLS por defecto, ejecuta comandos externos mediante matrices de argumentos con subcomandos permitidos y usa cuentas BMC de solo lectura. Consulte [docs/PLAN.md](../../PLAN.md#security) y [SECURITY.md](../../../SECURITY.md).
+Las credenciales de BMC controlan la gestión fuera de banda de los servidores. El diseño mantiene los secretos fuera de las líneas de comandos, registros, exportaciones CasC, cargas útiles de agente remoto, respuestas MCP y páginas web; cifra las contraseñas almacenadas con AES-256-GCM mediante un archivo de clave del almacén local por poller; verifica TLS de forma predeterminada; ejecuta `ipmitool` desde un arreglo explícito de argumentos con subcomandos de solo lectura en lista blanca; y utiliza cuentas de BMC de solo lectura. Véase [docs/PLAN.md](../../PLAN.md#security) y [SECURITY.md](../../../SECURITY.md).
 
-<a id="operator-guide"></a>
 ## Guía del operador
 
-Consulte [docs/operator-guide.md](docs/operator-guide.md) para requisitos de instalación, bóveda y TLS, registro BMC, gráficos, intervalos de alerta, copias de seguridad y fallos. La guía no declara compatible una línea real de firmware hasta que una captura anonimizada de esa versión supera la batería de pruebas.
+Véase [docs/operator-guide.md](../../operator-guide.md) para consultar los requisitos previos de instalación, configuración del almacén y TLS, registro de BMC, creación de gráficas, intervalos de alerta, copias de seguridad y gestión de fallos. La guía no declara compatible ninguna línea de firmware de fabricante real hasta que una captura anonimizada de ese firmware supere el conjunto de pruebas.
 
-<a id="how-work-is-tracked"></a>
-## Seguimiento del trabajo
+## Desarrollo y pruebas
 
-- Los **hitos** siguen el plan. Cada uno tiene una incidencia principal con subincidencias y pruebas de cumplimiento.
-- Las **incidencias** se clasifican con `type: requirement`, `type: research`, `type: decision` y `type: epic`. Las de requisitos incluyen requisitos numerados y comprobables (`REQ-AREA-NNN`) y criterios de aceptación.
-- Las **etiquetas** también incluyen `area:`, `phase:`, `priority:` y `status:`. Consulte [CONTRIBUTING.md](../../../CONTRIBUTING.md#labels).
-- El [tablero del proyecto](https://github.com/users/somethingwithproof/projects/12) muestra todas las incidencias de los hitos.
+La CI (`.github/workflows/plugin-ci-workflow.yml`) valida la sintaxis de los puntos de entrada en PHP 8.0, ejecuta las suites Pest unitaria (`phpunit.xml`) y de integración de ciclo de vida (`phpunit-integration.xml`) y PHPStan nivel 9 de PHP 8.2 a 8.5 frente a Cacti `release/1.2.31` y `1.2.x`, verifica el rechazo en PHP 8.1, ejercita de extremo a extremo el DMTF Redfish Mockup Server (maquetas de subsistema, solo heredado y HPE iLO Gen11) y Thold v1.8.2 / Maint v1.3, y comprueba los catálogos gettext, flujos de trabajo y licencias REUSE.
 
-<a id="contributing"></a>
-## Contribuciones
+Comprobaciones locales antes de enviar cambios:
 
-Lea [CONTRIBUTING.md](../../../CONTRIBUTING.md). Los commits necesitan firma DCO. El diseño se debate en incidencias y las decisiones abiertas llevan `type: decision`. Las pruebas de BMC reales son ahora la contribución más útil; oculte direcciones, números de serie y credenciales antes de publicar capturas.
+```sh
+sh tests/lint-workflows.sh
+sh locales/build_gettext.sh --check
+CACTI_PATH=/path/to/cacti phpstan analyse -c phpstan.neon --no-progress
+```
 
-<a id="license"></a>
+Ejecute Pest con `--configuration=phpunit.xml` para pruebas unitarias y de reglas de código fuente, o `--configuration=phpunit-integration.xml` con `CACTI_PATH` y `REDFISH_TEST_DATABASE=disposable` contra una base de datos de Cacti desechable para pruebas de integración del ciclo de vida.
+
+## Cómo se realiza el seguimiento del trabajo
+
+- Los **hitos** siguen los hitos del plan. Cada uno tiene una incidencia épica que enumera sus subincidencias y evidencias de salida.
+- Las **incidencias** están tipificadas por etiqueta: `type: requirement`, `type: research`, `type: decision`, `type: epic`. Las incidencias de requisito indican requisitos numerados y comprobables (`REQ-AREA-NNN`) y criterios de aceptación.
+- Las **etiquetas** también incluyen `area:`, `phase:`, `priority:` y `status:`. Véase [CONTRIBUTING.md](../../../CONTRIBUTING.md#labels).
+- El [tablero del proyecto](https://github.com/users/somethingwithproof/projects/12) muestra todas las incidencias a lo largo de los hitos.
+
+## Contribución
+
+Lea [CONTRIBUTING.md](../../../CONTRIBUTING.md). Los commits necesitan una firma DCO (sign-off). La discusión de diseño se realiza en las incidencias; las decisiones abiertas llevan la etiqueta `type: decision`. La evidencia de BMC reales es la contribución más útil ahora; oculte direcciones, números de serie y credenciales antes de publicar cualquier captura.
+
 ## Licencia
 
-Licencia Pública General GNU v2.0, la misma que Cacti y sus complementos. Consulte [LICENSE](../../../LICENSE).
+GNU General Public License v2.0, la misma licencia que Cacti y sus complementos. Véase [LICENSE](../../../LICENSE).

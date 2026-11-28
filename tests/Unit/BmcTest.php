@@ -57,7 +57,8 @@ it('validates the edit form and names each failing field', function () {
 
 	expect(BmcInput::parse($ok, 0)->bmc?->port)->toBe(443)
 		->and(BmcInput::parse(['address' => 'https://bmc01'] + $ok, 0)->errors)->toHaveKey('address')
-		->and(BmcInput::parse(['poller_id' => '2'] + $ok, 0)->errors)->toHaveKey('poller_id')
+		->and(BmcInput::parse(['poller_id' => '0'] + $ok, 0)->errors)->toHaveKey('poller_id')
+		->and(BmcInput::parse(['poller_id' => '2'] + $ok, 0)->bmc?->pollerId)->toBe(2)
 		->and(BmcInput::parse(['credential_id' => ''] + $ok, 0)->errors)->toHaveKey('credential_id')
 		->and(BmcInput::parse(['tls_mode' => 'off'] + $ok, 0)->errors)->toHaveKey('tls_mode')
 		->and(BmcInput::parse(['tls_mode' => 'pin', 'pin_sha256' => 'nope'] + $ok, 0)->errors)->toHaveKey('pin_sha256')

@@ -40,8 +40,14 @@ namespace Somethingwithproof\Redfish;
  * whether to follow it; the transport never follows anything itself.
  */
 final class SocketTransport implements HttpTransport {
+	/**
+	 * Max header bytes constant.
+	 */
 	private const MAX_HEADER_BYTES = 65536;
 
+	/**
+	 * Max ca bytes constant.
+	 */
 	private const MAX_CA_BYTES = 1048576;
 
 	/** A private copy of the checked CA bundle, which OpenSSL reads by path. */
@@ -66,12 +72,22 @@ final class SocketTransport implements HttpTransport {
 	) {
 	}
 
+	/**
+	 * Release resources held by this instance.
+	 */
 	public function __destruct() {
 		if ($this->caCopy !== null) {
 			@unlink($this->caCopy);
 		}
 	}
 
+	/**
+	 * Send.
+	 *
+	 * @param HttpRequest $request
+	 * @return HttpResponse
+	 * @throws TransportError
+	 */
 	public function send(HttpRequest $request): HttpResponse {
 		$deadline = microtime(true) + $this->totalTimeout;
 		$method   = $request->method;
@@ -157,6 +173,12 @@ final class SocketTransport implements HttpTransport {
 		return $this->addresses = array_values($addresses);
 	}
 
+	/**
+	 * Loopback.
+	 *
+	 * @param string $ip
+	 * @return bool
+	 */
 	private static function loopback(string $ip): bool {
 		return $ip === '::1' || str_starts_with($ip, '127.');
 	}
@@ -559,6 +581,12 @@ final class SocketTransport implements HttpTransport {
 		}
 	}
 
+	/**
+	 * Classify.
+	 *
+	 * @param string $message
+	 * @return FailureClass
+	 */
 	private static function classify(string $message): FailureClass {
 		$lower = strtolower($message);
 
@@ -573,6 +601,12 @@ final class SocketTransport implements HttpTransport {
 		};
 	}
 
+	/**
+	 * Clean.
+	 *
+	 * @param string $message
+	 * @return string
+	 */
 	private static function clean(string $message): string {
 		return substr((string) preg_replace('/[\x00-\x1f\x7f]+/', ' ', $message), 0, 300);
 	}

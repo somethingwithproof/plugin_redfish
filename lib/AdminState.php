@@ -19,6 +19,9 @@
 
 namespace Somethingwithproof\Redfish;
 
+/**
+ * Enum representing admin state.
+ */
 enum AdminState: string {
 	case Enabled  = 'enabled';
 	case Disabled = 'disabled';

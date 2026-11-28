@@ -67,6 +67,11 @@ final readonly class DiscoveryPlan {
 		};
 	}
 
+	/**
+	 * Plan json.
+	 *
+	 * @return string
+	 */
 	public function planJson(): string {
 		return (string) json_encode([
 			'chassis' => $this->chassis,

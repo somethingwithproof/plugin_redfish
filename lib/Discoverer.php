@@ -33,12 +33,30 @@ namespace Somethingwithproof\Redfish;
  * in linksRefused and ignored (REQ-RF-005).
  */
 final class Discoverer {
+	/**
+	 * Max chassis constant.
+	 */
 	public const MAX_CHASSIS = 16;
+	/**
+	 * Max fans constant.
+	 */
 	public const MAX_FANS    = 64;
+	/**
+	 * Max psus constant.
+	 */
 	public const MAX_PSUS    = 32;
 
+	/**
+	 * Links refused property.
+	 */
 	private int $linksRefused = 0;
 
+	/**
+	 * Initialize a new Discoverer instance.
+	 *
+	 * @param RedfishClient $client
+	 * @param Endpoint $endpoint
+	 */
 	public function __construct(private readonly RedfishClient $client, private readonly Endpoint $endpoint) {
 	}
 
@@ -81,7 +99,10 @@ final class Discoverer {
 			$found   = $this->chassis($resource, $id);
 
 			$chassis[] = ['id' => $id, 'path' => $chassisPath, 'systems' => $systems, 'power' => $found['power']];
-			$targets   = array_merge($targets, $found['targets']);
+
+			if ($found['targets'] !== []) {
+				array_push($targets, ...$found['targets']);
+			}
 		}
 
 		if ($chassis === []) {
@@ -113,6 +134,11 @@ final class Discoverer {
 		);
 	}
 
+	/**
+	 * Links refused.
+	 *
+	 * @return int
+	 */
 	public function linksRefused(): int {
 		return $this->linksRefused;
 	}
@@ -290,12 +316,14 @@ final class Discoverer {
 	 */
 	private function members(array $collection, int $limit): array {
 		$paths = [];
+		$seen  = [];
 
 		foreach (is_array($collection['Members'] ?? null) ? $collection['Members'] : [] as $member) {
 			$path = is_array($member) ? $this->follow($member['@odata.id'] ?? null) : null;
 
-			if ($path !== null && !in_array($path, $paths, true)) {
-				$paths[] = $path;
+			if ($path !== null && !isset($seen[$path])) {
+				$seen[$path] = true;
+				$paths[]     = $path;
 			}
 
 			if (count($paths) >= $limit) {
@@ -306,6 +334,12 @@ final class Discoverer {
 		return $paths;
 	}
 
+	/**
+	 * Follow.
+	 *
+	 * @param mixed $link
+	 * @return string|null
+	 */
 	private function follow(mixed $link): ?string {
 		if ($link === null) {
 			return null;

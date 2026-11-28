@@ -25,8 +25,24 @@ namespace Somethingwithproof\Redfish;
  * a response body, and no secret is read here at all (REQ-HEALTH-005).
  */
 final class HealthPage {
+	/**
+	 * File constant.
+	 */
 	public const FILE = 'redfish_health.php';
 
+	/**
+	 * Initialize a new HealthPage instance.
+	 *
+	 * @param BmcRepository $bmcs
+	 * @param HealthRepository $health
+	 * @param ReadingRepository $readings
+	 * @param DiscoveryRepository $discovery
+	 * @param CredentialStore $credentials
+	 * @param FreshnessEvaluator $freshness
+	 * @param Clock $clock
+	 * @param DeviceScope $scope
+	 * @param MaintWindow|null $maint
+	 */
 	public function __construct(
 		private readonly BmcRepository $bmcs,
 		private readonly HealthRepository $health,
@@ -36,6 +52,7 @@ final class HealthPage {
 		private readonly FreshnessEvaluator $freshness,
 		private readonly Clock $clock,
 		private readonly DeviceScope $scope,
+		private readonly ?MaintWindow $maint = null,
 	) {
 	}
 
@@ -144,9 +161,16 @@ final class HealthPage {
 
 		$data = $states === [] ? '-' : implode(', ', array_map(static fn (string $s, int $n): string => "$s $n", array_keys($states), $states)) . '; ' . __('newest %s', Html::age($now - $newest), 'redfish');
 
+		$activeMaint  = $this->maint !== null ? $this->maint->activeForHost($bmc->hostId) : null;
+		$reachability = $bmc->enabled() ? $h->reachability->value : __('disabled', 'redfish');
+
+		if ($activeMaint !== null) {
+			$reachability .= ' [MAINT]';
+		}
+
 		return [
 			$bmc->name,
-			$bmc->enabled() ? $h->reachability->value : __('disabled', 'redfish'),
+			$reachability,
 			$h->failure->value ?? '-',
 			$h->lastSuccess > 0 ? Html::age($now - $h->lastSuccess) : __('Never', 'redfish'),
 			$h->generation === '' ? '-' : $h->generation . ($plan === null ? '' : ' (' . trim($plan->vendor . ' ' . $plan->redfishVersion) . ')'),

@@ -42,11 +42,26 @@ final class TemplateInstaller {
 	/** Bump when templates/redfish-templates.xml or a query XML changes. */
 	public const VERSION = 1;
 
+	/**
+	 * Setting constant.
+	 */
 	public const SETTING         = 'redfish_templates_version';
+	/**
+	 * Failure setting constant.
+	 */
 	public const FAILURE_SETTING = 'redfish_templates_failure';
+	/**
+	 * Files setting constant.
+	 */
 	public const FILES_SETTING   = 'redfish_query_files';
 
+	/**
+	 * Device template constant.
+	 */
 	public const DEVICE_TEMPLATE = 'Redfish BMC';
+	/**
+	 * Summary constant.
+	 */
 	public const SUMMARY         = 'Redfish Node Summary';
 
 	/** Graph templates of the summary data source, on every mapped device. */
@@ -95,6 +110,11 @@ final class TemplateInstaller {
 		return md5('plugin_redfish:' . $kind . ':' . $name);
 	}
 
+	/**
+	 * Is current.
+	 *
+	 * @return bool
+	 */
 	public function isCurrent(): bool {
 		return (int) read_config_option(self::SETTING) === self::VERSION && $this->present() && $this->queryFileProblems() === [];
 	}
@@ -341,10 +361,22 @@ final class TemplateInstaller {
 		return $out;
 	}
 
+	/**
+	 * Query source.
+	 *
+	 * @param string $file
+	 * @return string
+	 */
 	private function querySource(string $file): string {
 		return $this->pluginPath . '/resource/script_server/' . $file;
 	}
 
+	/**
+	 * Query target.
+	 *
+	 * @param string $file
+	 * @return string|null
+	 */
 	private function queryTarget(string $file): ?string {
 		$dir = $this->queryDir();
 

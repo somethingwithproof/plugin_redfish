@@ -25,9 +25,20 @@ namespace Somethingwithproof\Redfish;
  * a short time, because the script server asks for one value at a time.
  */
 final class NodeCacheRepository {
+	/**
+	 * Initialize a new NodeCacheRepository instance.
+	 *
+	 * @param \PDO|false $connection
+	 */
 	public function __construct(private readonly \PDO|false $connection) {
 	}
 
+	/**
+	 * For host.
+	 *
+	 * @param int $hostId
+	 * @return NodeCache|null
+	 */
 	public function forHost(int $hostId): ?NodeCache {
 		if ($hostId <= 0) {
 			return null;
@@ -36,6 +47,12 @@ final class NodeCacheRepository {
 		return $this->load('b.host_id = ?', $hostId);
 	}
 
+	/**
+	 * For bmc.
+	 *
+	 * @param int $bmcId
+	 * @return NodeCache|null
+	 */
 	public function forBmc(int $bmcId): ?NodeCache {
 		return $bmcId > 0 ? $this->load('b.id = ?', $bmcId) : null;
 	}
@@ -84,6 +101,13 @@ final class NodeCacheRepository {
 		}
 	}
 
+	/**
+	 * Read.
+	 *
+	 * @param string $where
+	 * @param int $id
+	 * @return NodeCache|null
+	 */
 	private function read(string $where, int $id): ?NodeCache {
 		$row = db_fetch_row_prepared("SELECT b.id, b.created_at, COALESCE(h.last_success, 0) AS last_success FROM plugin_redfish_bmc AS b LEFT JOIN plugin_redfish_health AS h ON h.bmc_id = b.id WHERE $where ORDER BY b.id LIMIT 1", [$id], true, $this->connection);
 

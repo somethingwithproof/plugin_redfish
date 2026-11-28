@@ -19,6 +19,9 @@
 
 namespace Somethingwithproof\Redfish;
 
+/**
+ * Class representing http request.
+ */
 final readonly class HttpRequest {
 	/**
 	 * @param string                $path    an absolute path on the BMC, without a query

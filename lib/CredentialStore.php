@@ -27,10 +27,22 @@ namespace Somethingwithproof\Redfish;
  * to another credential or a default (REQ-CRED-005).
  */
 final class CredentialStore {
+	/**
+	 * Max password bytes constant.
+	 */
 	public const MAX_PASSWORD_BYTES = 1024;
 
+	/**
+	 * Vault property.
+	 */
 	private ?Vault $vault = null;
 
+	/**
+	 * Initialize a new CredentialStore instance.
+	 *
+	 * @param CredentialRepository $credentials
+	 * @param string $keyFile
+	 */
 	public function __construct(
 		private readonly CredentialRepository $credentials,
 		private readonly string $keyFile,
@@ -61,6 +73,12 @@ final class CredentialStore {
 		return ['credential' => $credential, 'password' => $this->vault()->decrypt($entry, $credential->id, CredentialRepository::PASSWORD)];
 	}
 
+	/**
+	 * Has password.
+	 *
+	 * @param int $credentialId
+	 * @return bool
+	 */
 	public function hasPassword(int $credentialId): bool {
 		return $this->credentials->hasSecret($credentialId, CredentialRepository::PASSWORD);
 	}

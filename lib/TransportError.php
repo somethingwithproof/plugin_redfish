@@ -28,6 +28,13 @@ namespace Somethingwithproof\Redfish;
  * that fails after that point may have created a session on the BMC.
  */
 final class TransportError extends \RuntimeException {
+	/**
+	 * Initialize a new TransportError instance.
+	 *
+	 * @param FailureClass $class
+	 * @param string $detail
+	 * @param bool $sent
+	 */
 	public function __construct(
 		public readonly FailureClass $class,
 		string $detail = '',

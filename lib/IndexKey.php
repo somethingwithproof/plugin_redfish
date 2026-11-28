@@ -33,12 +33,31 @@ namespace Somethingwithproof\Redfish;
  * gives the same index.
  */
 final class IndexKey {
+	/**
+	 * Max constant.
+	 */
 	public const MAX = 120;
 
-	private const SAFE = '/^[A-Za-z0-9._:\/-]+$/';
+	/**
+	 * Safe character mask for fast strspn() checks without PCRE overhead.
+	 */
+	private const SAFE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._:/-';
 
+	/**
+	 * Plausible index character mask (SAFE_CHARS plus tilde digest separator).
+	 */
+	private const PLAUSIBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._:/~-';
+
+	/**
+	 * Of.
+	 *
+	 * @param string $memberKey
+	 * @return string
+	 */
 	public static function of(string $memberKey): string {
-		if ($memberKey !== '' && strlen($memberKey) <= self::MAX && preg_match(self::SAFE, $memberKey) === 1) {
+		$len = strlen($memberKey);
+
+		if ($len > 0 && $len <= self::MAX && strspn($memberKey, self::SAFE_CHARS) === $len) {
 			return $memberKey;
 		}
 
@@ -52,6 +71,8 @@ final class IndexKey {
 	 * before it is compared with anything.
 	 */
 	public static function plausible(string $index): bool {
-		return $index !== '' && strlen($index) <= self::MAX && preg_match('/^[A-Za-z0-9._:\/~-]+$/', $index) === 1;
+		$len = strlen($index);
+
+		return $len > 0 && $len <= self::MAX && strspn($index, self::PLAUSIBLE_CHARS) === $len;
 	}
 }

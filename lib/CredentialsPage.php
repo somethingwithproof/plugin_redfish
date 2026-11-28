@@ -28,8 +28,19 @@ namespace Somethingwithproof\Redfish;
  * by a BMC on a device the user cannot see is left out (DeviceScope).
  */
 final class CredentialsPage {
+	/**
+	 * File constant.
+	 */
 	public const FILE = 'redfish_credentials.php';
 
+	/**
+	 * Initialize a new CredentialsPage instance.
+	 *
+	 * @param CredentialRepository $credentials
+	 * @param CredentialStore $store
+	 * @param BmcRepository $bmcs
+	 * @param DeviceScope $scope
+	 */
 	public function __construct(
 		private readonly CredentialRepository $credentials,
 		private readonly CredentialStore $store,
@@ -38,10 +49,21 @@ final class CredentialsPage {
 	) {
 	}
 
+	/**
+	 * Visible.
+	 *
+	 * @param Credential $credential
+	 * @return bool
+	 */
 	public function visible(Credential $credential): bool {
 		return $this->scope->allowsCredential($this->bmcs, $credential->id);
 	}
 
+	/**
+	 * Render list.
+	 *
+	 * @return void
+	 */
 	public function renderList(): void {
 		html_start_box(__('Redfish Credentials', 'redfish'), '100%', '', '3', 'center', self::FILE . '?action=edit');
 

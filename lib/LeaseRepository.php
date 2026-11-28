@@ -26,9 +26,24 @@ namespace Somethingwithproof\Redfish;
  * can neither read one BMC at once nor read it twice in one interval.
  */
 final class LeaseRepository {
+	/**
+	 * Initialize a new LeaseRepository instance.
+	 *
+	 * @param \PDO|false $connection
+	 * @param Clock $clock
+	 */
 	public function __construct(private readonly \PDO|false $connection, private readonly Clock $clock) {
 	}
 
+	/**
+	 * Acquire.
+	 *
+	 * @param int $bmcId
+	 * @param string $holder
+	 * @param int $seconds
+	 * @param int $notSince
+	 * @return bool
+	 */
 	public function acquire(int $bmcId, string $holder, int $seconds, int $notSince): bool {
 		$now = $this->clock->now();
 
@@ -38,6 +53,13 @@ final class LeaseRepository {
 		return $this->holds($bmcId, $holder);
 	}
 
+	/**
+	 * Holds.
+	 *
+	 * @param int $bmcId
+	 * @param string $holder
+	 * @return bool
+	 */
 	public function holds(int $bmcId, string $holder): bool {
 		return (int) db_fetch_cell_prepared('SELECT COUNT(*) FROM plugin_redfish_lease WHERE bmc_id = ? AND holder = ? AND expires_at >= ?', [$bmcId, $holder, $this->clock->now()], '', true, $this->connection) === 1;
 	}
@@ -50,6 +72,13 @@ final class LeaseRepository {
 		return (int) db_fetch_cell_prepared('SELECT acquired_at FROM plugin_redfish_lease WHERE bmc_id = ?', [$bmcId], '', true, $this->connection);
 	}
 
+	/**
+	 * Release.
+	 *
+	 * @param int $bmcId
+	 * @param string $holder
+	 * @return void
+	 */
 	public function release(int $bmcId, string $holder): void {
 		db_execute_prepared('UPDATE plugin_redfish_lease SET expires_at = 0 WHERE bmc_id = ? AND holder = ?', [$bmcId, $holder], true, $this->connection);
 	}

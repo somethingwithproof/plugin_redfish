@@ -35,13 +35,25 @@ namespace Somethingwithproof\Redfish;
  * given.
  */
 final class OperationGuard {
+	/**
+	 * Segment constant.
+	 */
 	private const SEGMENT = "(?:[A-Za-z0-9._~!$&'()*+,;=:@-]|%[0-9A-Fa-f]{2})+";
 
+	/**
+	 * Sessions path property.
+	 */
 	private string $sessionsPath = '';
 
 	/** @var array<string, true> */
 	private array $deletable = [];
 
+	/**
+	 * Readable path.
+	 *
+	 * @param string $path
+	 * @return bool
+	 */
 	public static function readablePath(string $path): bool {
 		if (strlen($path) > 512 || preg_match('#^/redfish/v1(?:/' . self::SEGMENT . ')*/?$#', $path) !== 1) {
 			return false;
@@ -69,6 +81,11 @@ final class OperationGuard {
 		$this->sessionsPath = $path;
 	}
 
+	/**
+	 * Sessions path.
+	 *
+	 * @return string
+	 */
 	public function sessionsPath(): string {
 		return $this->sessionsPath;
 	}
@@ -85,6 +102,12 @@ final class OperationGuard {
 		$this->deletable[$path] = true;
 	}
 
+	/**
+	 * Is session member.
+	 *
+	 * @param string $path
+	 * @return bool
+	 */
 	public function isSessionMember(string $path): bool {
 		if ($this->sessionsPath === '' || !self::readablePath($path)) {
 			return false;

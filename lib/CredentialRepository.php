@@ -24,11 +24,26 @@ namespace Somethingwithproof\Redfish;
  * names the fields that changed, never their values (REQ-CRED-002).
  */
 final class CredentialRepository {
+	/**
+	 * Password constant.
+	 */
 	public const PASSWORD = 'password';
 
+	/**
+	 * Initialize a new CredentialRepository instance.
+	 *
+	 * @param \PDO|false $connection
+	 * @param Clock $clock
+	 */
 	public function __construct(private readonly \PDO|false $connection, private readonly Clock $clock) {
 	}
 
+	/**
+	 * Find.
+	 *
+	 * @param int $id
+	 * @return Credential|null
+	 */
 	public function find(int $id): ?Credential {
 		$row = db_fetch_row_prepared('SELECT * FROM plugin_redfish_credential WHERE id = ?', [$id], true, $this->connection);
 
@@ -52,6 +67,13 @@ final class CredentialRepository {
 		return $credentials;
 	}
 
+	/**
+	 * Name taken.
+	 *
+	 * @param string $name
+	 * @param int $exceptId
+	 * @return bool
+	 */
 	public function nameTaken(string $name, int $exceptId): bool {
 		return (int) db_fetch_cell_prepared('SELECT COUNT(*) FROM plugin_redfish_credential WHERE name = ? AND id != ?', [$name, $exceptId], '', true, $this->connection) > 0;
 	}
@@ -119,10 +141,24 @@ final class CredentialRepository {
 		return true;
 	}
 
+	/**
+	 * Has secret.
+	 *
+	 * @param int $credentialId
+	 * @param string $purpose
+	 * @return bool
+	 */
 	public function hasSecret(int $credentialId, string $purpose): bool {
 		return (int) db_fetch_cell_prepared('SELECT COUNT(*) FROM plugin_redfish_secret WHERE credential_id = ? AND purpose = ?', [$credentialId, $purpose], '', true, $this->connection) === 1;
 	}
 
+	/**
+	 * Load secret.
+	 *
+	 * @param int $credentialId
+	 * @param string $purpose
+	 * @return VaultEntry|null
+	 */
 	public function loadSecret(int $credentialId, string $purpose): ?VaultEntry {
 		$row = db_fetch_row_prepared('SELECT nonce, ciphertext, tag, key_id FROM plugin_redfish_secret WHERE credential_id = ? AND purpose = ?', [$credentialId, $purpose], true, $this->connection);
 
@@ -137,6 +173,13 @@ final class CredentialRepository {
 		return (int) db_fetch_cell_prepared('SELECT COUNT(*) FROM plugin_redfish_bmc WHERE credential_id = ?', [$credentialId], '', true, $this->connection);
 	}
 
+	/**
+	 * Delete.
+	 *
+	 * @param int $id
+	 * @param int $userId
+	 * @return bool
+	 */
 	public function delete(int $id, int $userId): bool {
 		if ($this->find($id) === null || $this->usage($id) > 0 || !db_begin_transaction($this->connection)) {
 			return false;

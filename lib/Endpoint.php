@@ -24,6 +24,15 @@ namespace Somethingwithproof\Redfish;
  * its certificate is trusted.
  */
 final readonly class Endpoint {
+	/**
+	 * Initialize a new Endpoint instance.
+	 *
+	 * @param string $host
+	 * @param int $port
+	 * @param TlsMode $tlsMode
+	 * @param string $caFile
+	 * @param string $pin
+	 */
 	public function __construct(
 		public string $host,
 		public int $port,
@@ -33,6 +42,12 @@ final readonly class Endpoint {
 	) {
 	}
 
+	/**
+	 * For bmc.
+	 *
+	 * @param Bmc $bmc
+	 * @return self
+	 */
 	public static function forBmc(Bmc $bmc): self {
 		return new self($bmc->address, $bmc->port, $bmc->tlsMode, $bmc->caFile, $bmc->pin);
 	}

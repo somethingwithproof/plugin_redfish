@@ -205,6 +205,16 @@ final class DeviceProvisioner {
 		return $created;
 	}
 
+	/**
+	 * Query graphs.
+	 *
+	 * @param int $bmcId
+	 * @param int $hostId
+	 * @param string $queryName
+	 * @param string $kind
+	 * @param int $queryId
+	 * @return int
+	 */
 	private function queryGraphs(int $bmcId, int $hostId, string $queryName, string $kind, int $queryId): int {
 		$created = 0;
 		$units   = $kind === 'fan' ? $this->objects->cachedField($hostId, $queryId, 'redfishUnit') : [];

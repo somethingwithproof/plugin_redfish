@@ -23,6 +23,29 @@ namespace Somethingwithproof\Redfish;
  * Collection status of one BMC, as stored in plugin_redfish_health.
  */
 final readonly class BmcHealth {
+	/**
+	 * Initialize a new BmcHealth instance.
+	 *
+	 * @param int $bmcId
+	 * @param int $runStarted
+	 * @param int $runFinished
+	 * @param float $runDuration
+	 * @param Reachability $reachability
+	 * @param FailureClass|null $failure
+	 * @param int $lastSuccess
+	 * @param string $generation
+	 * @param string $authMode
+	 * @param int $requests
+	 * @param float $latencyMs
+	 * @param int $failures
+	 * @param int $backoffUntil
+	 * @param int $authCredentialId
+	 * @param int $authRevision
+	 * @param bool $sessionPending
+	 * @param int $sessionsLost
+	 * @param int $linksRefused
+	 * @param string $sessionUri
+	 */
 	public function __construct(
 		public int $bmcId,
 		public int $runStarted = 0,

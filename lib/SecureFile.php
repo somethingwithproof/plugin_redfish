@@ -33,6 +33,12 @@ namespace Somethingwithproof\Redfish;
  * (REQ-CRED-004, REQ-TLS-002).
  */
 final class SecureFile {
+	/**
+	 * Path acceptable.
+	 *
+	 * @param string $path
+	 * @return bool
+	 */
 	public static function pathAcceptable(string $path): bool {
 		return $path !== '' && strlen($path) <= 512 && $path[0] === '/' && preg_match('/[\x00-\x1f\x7f]/', $path) !== 1 && !str_contains($path, '/../') && !str_ends_with($path, '/..');
 	}

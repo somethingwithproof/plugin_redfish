@@ -31,6 +31,11 @@ enum TlsMode: string {
 	case Pin        = 'pin';
 	case Unverified = 'unverified';
 
+	/**
+	 * Label.
+	 *
+	 * @return string
+	 */
 	public function label(): string {
 		return match ($this) {
 			self::System     => __('Verify against the system CA store', 'redfish'),

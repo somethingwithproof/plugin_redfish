@@ -24,12 +24,23 @@ namespace Somethingwithproof\Redfish;
  * (REQ-CRED-006), and the path that deletes it.
  */
 final readonly class Session {
+	/**
+	 * Initialize a new Session instance.
+	 *
+	 * @param Secret $token
+	 * @param string $path
+	 */
 	public function __construct(
 		public Secret $token,
 		public string $path,
 	) {
 	}
 
+	/**
+	 * Id.
+	 *
+	 * @return string
+	 */
 	public function id(): string {
 		return rawurldecode((string) basename(rtrim($this->path, '/')));
 	}

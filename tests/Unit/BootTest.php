@@ -29,7 +29,7 @@ it('reads its metadata from INFO', function () {
 	expect($info['name'])->toBe('redfish')
 		->and($info['compat'])->toBe('1.2.31')
 		->and($info['homepage'])->toBe('https://github.com/somethingwithproof/plugin_redfish')
-		->and($info['capabilities'])->toBe('online_view:1, online_mgmt:1, offline_view:0, offline_mgmt:0, remote_collect:0');
+		->and($info['capabilities'])->toBe('online_view:1, online_mgmt:1, offline_view:0, offline_mgmt:0, remote_collect:1');
 });
 
 it('boots and loads plugin classes on a supported runtime', function () {

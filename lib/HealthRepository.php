@@ -25,6 +25,11 @@ namespace Somethingwithproof\Redfish;
  * that lost its lease cannot overwrite the newer holder's status.
  */
 final class HealthRepository {
+	/**
+	 * Initialize a new HealthRepository instance.
+	 *
+	 * @param \PDO|false $connection
+	 */
 	public function __construct(private readonly \PDO|false $connection) {
 	}
 
@@ -105,6 +110,15 @@ final class HealthRepository {
 		return $runs;
 	}
 
+	/**
+	 * Save run finish.
+	 *
+	 * @param int $pollerId
+	 * @param int $bmcs
+	 * @param int $finished
+	 * @param float $duration
+	 * @return void
+	 */
 	public function saveRunFinish(int $pollerId, int $bmcs, int $finished, float $duration): void {
 		db_execute_prepared('UPDATE plugin_redfish_run SET bmcs = ?, run_finished = ?, run_duration = ? WHERE poller_id = ?', [$bmcs, $finished, round($duration, 3), $pollerId], true, $this->connection);
 	}

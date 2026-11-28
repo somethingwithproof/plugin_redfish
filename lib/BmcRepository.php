@@ -24,12 +24,30 @@ namespace Somethingwithproof\Redfish;
  * the user, the time, and the changed columns, never their values.
  */
 final class BmcRepository {
+	/**
+	 * Delete attempts constant.
+	 */
 	private const DELETE_ATTEMPTS = 3;
+	/**
+	 * Delete savepoint constant.
+	 */
 	private const DELETE_SAVEPOINT = 'redfish_delete';
 
+	/**
+	 * Initialize a new BmcRepository instance.
+	 *
+	 * @param \PDO|false $connection
+	 * @param Clock $clock
+	 */
 	public function __construct(private readonly \PDO|false $connection, private readonly Clock $clock) {
 	}
 
+	/**
+	 * Find.
+	 *
+	 * @param int $id
+	 * @return Bmc|null
+	 */
 	public function find(int $id): ?Bmc {
 		$row = db_fetch_row_prepared('SELECT * FROM plugin_redfish_bmc WHERE id = ?', [$id], true, $this->connection);
 
@@ -52,6 +70,13 @@ final class BmcRepository {
 		return $this->bmcs(db_fetch_assoc_prepared('SELECT * FROM plugin_redfish_bmc WHERE poller_id = ? AND admin_state = ? ORDER BY id', [$pollerId, AdminState::Enabled->value], true, $this->connection));
 	}
 
+	/**
+	 * Name taken.
+	 *
+	 * @param string $name
+	 * @param int $exceptId
+	 * @return bool
+	 */
 	public function nameTaken(string $name, int $exceptId): bool {
 		return (int) db_fetch_cell_prepared('SELECT COUNT(*) FROM plugin_redfish_bmc WHERE name = ? AND id != ?', [$name, $exceptId], '', true, $this->connection) > 0;
 	}
@@ -82,6 +107,12 @@ final class BmcRepository {
 		return $scope->allowsBmc($holder) && $holder->name !== '' ? $holder->name : __('another BMC', 'redfish');
 	}
 
+	/**
+	 * Credential exists.
+	 *
+	 * @param int $credentialId
+	 * @return bool
+	 */
 	public function credentialExists(int $credentialId): bool {
 		return (int) db_fetch_cell_prepared('SELECT COUNT(*) FROM plugin_redfish_credential WHERE id = ?', [$credentialId], '', true, $this->connection) === 1;
 	}
@@ -95,6 +126,12 @@ final class BmcRepository {
 		return array_map(static fn (array $row): int => Row::int($row, 'host_id'), Row::rows(db_fetch_assoc_prepared('SELECT host_id FROM plugin_redfish_bmc WHERE credential_id = ?', [$credentialId], true, $this->connection)));
 	}
 
+	/**
+	 * Host exists.
+	 *
+	 * @param int $hostId
+	 * @return bool
+	 */
 	public function hostExists(int $hostId): bool {
 		return (int) db_fetch_cell_prepared('SELECT COUNT(*) FROM host WHERE id = ?', [$hostId], '', true, $this->connection) === 1;
 	}
@@ -369,6 +406,13 @@ final class BmcRepository {
 		return $entries;
 	}
 
+	/**
+	 * Write.
+	 *
+	 * @param Bmc $bmc
+	 * @param Bmc|null $before
+	 * @return int
+	 */
 	private function write(Bmc $bmc, ?Bmc $before): int {
 		$row = $bmc->toRow();
 		$now = $this->clock->now();
@@ -392,6 +436,16 @@ final class BmcRepository {
 		return $ok ? $bmc->id : 0;
 	}
 
+	/**
+	 * After write.
+	 *
+	 * @param int $id
+	 * @param Bmc $bmc
+	 * @param Bmc|null $before
+	 * @param int $userId
+	 * @param string $create
+	 * @return void
+	 */
 	private function afterWrite(int $id, Bmc $bmc, ?Bmc $before, int $userId, string $create = 'create'): void {
 		$changed = $bmc->changedFields($before);
 

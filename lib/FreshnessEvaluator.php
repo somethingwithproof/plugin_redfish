@@ -28,6 +28,14 @@ namespace Somethingwithproof\Redfish;
  * vouched for.
  */
 final class FreshnessEvaluator {
+	/**
+	 * Initialize a new FreshnessEvaluator instance.
+	 *
+	 * @param Clock $clock
+	 * @param int $interval
+	 * @param int $delayedAfter
+	 * @param int $staleAfter
+	 */
 	public function __construct(
 		private readonly Clock $clock,
 		private readonly int $interval,
@@ -36,10 +44,23 @@ final class FreshnessEvaluator {
 	) {
 	}
 
+	/**
+	 * From settings.
+	 *
+	 * @param Clock $clock
+	 * @param Settings $settings
+	 * @return self
+	 */
 	public static function fromSettings(Clock $clock, Settings $settings): self {
 		return new self($clock, $settings->collectInterval, $settings->delayedAfter, $settings->staleAfter);
 	}
 
+	/**
+	 * Evaluate.
+	 *
+	 * @param int $observedAt
+	 * @return Freshness
+	 */
 	public function evaluate(int $observedAt): Freshness {
 		if ($observedAt <= 0) {
 			return Freshness::Never;

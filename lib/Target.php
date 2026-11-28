@@ -29,15 +29,59 @@ namespace Somethingwithproof\Redfish;
  * when ThermalMetrics already supplies the temperatures.
  */
 final readonly class Target {
+	/**
+	 * Environment constant.
+	 */
 	public const ENVIRONMENT     = 'environment';
+	/**
+	 * Thermal metrics constant.
+	 */
 	public const THERMAL_METRICS = 'thermal_metrics';
+	/**
+	 * Fan constant.
+	 */
 	public const FAN             = 'fan';
+	/**
+	 * Psu constant.
+	 */
 	public const PSU             = 'psu';
+	/**
+	 * Psu metrics constant.
+	 */
 	public const PSU_METRICS     = 'psu_metrics';
+	/**
+	 * Legacy thermal constant.
+	 */
 	public const LEGACY_THERMAL  = 'legacy_thermal';
+	/**
+	 * Legacy power constant.
+	 */
 	public const LEGACY_POWER    = 'legacy_power';
+	/**
+	 * Power subsystem redundancy constant.
+	 */
+	public const POWER_SUBSYSTEM = 'power_subsystem';
+	/**
+	 * Memory ECC metrics constant.
+	 */
+	public const MEMORY_METRICS  = 'memory_metrics';
+	/**
+	 * Storage drive health constant.
+	 */
+	public const DRIVE           = 'drive';
+	/**
+	 * BMC SEL entries constant.
+	 */
+	public const SEL_ENTRIES     = 'sel_entries';
 
-	public const KINDS = [self::ENVIRONMENT, self::THERMAL_METRICS, self::FAN, self::PSU, self::PSU_METRICS, self::LEGACY_THERMAL, self::LEGACY_POWER];
+	/**
+	 * Kinds constant.
+	 */
+	public const KINDS = [
+		self::ENVIRONMENT, self::THERMAL_METRICS, self::FAN, self::PSU, self::PSU_METRICS,
+		self::LEGACY_THERMAL, self::LEGACY_POWER, self::POWER_SUBSYSTEM,
+		self::MEMORY_METRICS, self::DRIVE, self::SEL_ENTRIES,
+	];
 
 	/**
 	 * @param string       $type   resource type from @odata.type, such as "Fan"
@@ -83,6 +127,12 @@ final readonly class Target {
 		return new self($kind, $path, Row::string($row, 'id'), Row::string($row, 'type'), Row::string($row, 'chassis'), Row::string($row, 'member'), Row::string($row, 'unit'), Row::string($row, 'secondary_unit'), $uses);
 	}
 
+	/**
+	 * Supplies.
+	 *
+	 * @param string $reading
+	 * @return bool
+	 */
 	public function supplies(string $reading): bool {
 		return in_array($reading, $this->uses, true);
 	}

@@ -25,6 +25,12 @@ namespace Somethingwithproof\Redfish;
  * contents or secret material.
  */
 final class CredentialError extends \RuntimeException {
+	/**
+	 * Because.
+	 *
+	 * @param string $reason
+	 * @return self
+	 */
 	public static function because(string $reason): self {
 		return new self($reason);
 	}

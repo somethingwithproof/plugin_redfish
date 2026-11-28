@@ -35,9 +35,21 @@ namespace Somethingwithproof\Redfish;
  * Basic is used only when the BMC allows it and sessions are unavailable.
  */
 final class Collector {
+	/**
+	 * Due slack constant.
+	 */
 	public const DUE_SLACK      = 30;
+	/**
+	 * Backoff cap constant.
+	 */
 	public const BACKOFF_CAP    = 3600;
+	/**
+	 * Session budget constant.
+	 */
 	public const SESSION_BUDGET = 3;
+	/**
+	 * Rediscover after failures constant.
+	 */
 	public const REDISCOVER_AFTER_FAILURES = 3;
 
 	/** Failure classes that end the reading of targets for this run. */
@@ -50,6 +62,21 @@ final class Collector {
 	/** When the lease on the BMC being collected expires. */
 	private int $leaseExpires = 0;
 
+	/**
+	 * Initialize a new Collector instance.
+	 *
+	 * @param BmcRepository $bmcs
+	 * @param CredentialStore $credentials
+	 * @param LeaseRepository $leases
+	 * @param HealthRepository $health
+	 * @param DiscoveryRepository $discovery
+	 * @param ReadingRepository $readings
+	 * @param ClientFactory $clients
+	 * @param Settings $settings
+	 * @param Clock $clock
+	 * @param string $holder
+	 * @param IpmiClient|null $ipmi
+	 */
 	public function __construct(
 		private readonly BmcRepository $bmcs,
 		private readonly CredentialStore $credentials,
@@ -61,6 +88,7 @@ final class Collector {
 		private readonly Settings $settings,
 		private readonly Clock $clock,
 		private readonly string $holder,
+		private readonly ?IpmiClient $ipmi = null,
 	) {
 	}
 
@@ -207,6 +235,7 @@ final class Collector {
 		$ownPending = false;
 		$lost       = $previous->sessionsLost;
 		$authMode   = '';
+		$generation = '';
 
 		try {
 			$root     = $client->serviceRoot();
@@ -320,13 +349,31 @@ final class Collector {
 			}
 		}
 
+		// Phase 2 read-only IPMI fallback when explicitly enabled on the BMC
+		// and Redfish is unavailable (never on rejected credentials or refused addresses).
+		if ($failure !== null && $bmc->ipmiFallback && $this->ipmi !== null && self::ipmiFallbackEligible($failure)) {
+			try {
+				$obs        = $this->ipmi->collect($bmc, $credential->username, $password, $redactor);
+				$failure    = null;
+				$retryAfter = 0;
+				$complete   = true;
+				$authMode   = 'ipmi_lanplus';
+				$generation = 'ipmi';
+			} catch (ClientError $ipmiError) {
+				$failure  = $ipmiError->class;
+				$rejected = $rejected || $ipmiError->class === FailureClass::AuthRejected;
+			} catch (\Throwable $ipmiThrowable) {
+				Log::error(sprintf('BMC %d (%s): unexpected %s during IPMI fallback', $bmc->id, $bmc->name, $ipmiThrowable::class));
+			}
+		}
+
 		$this->finish($bmc, $previous, $started, $t0, $failure, $retryAfter, $newPlan, $obs, $complete && $failure === null, $markStale, $client, [
 			'auth_mode'     => $authMode,
 			'pending'       => $oldPending || $ownPending,
 			'session_uri'   => $own ?? $staleUri,
 			'sessions_lost' => $lost,
 			'rejected'      => $rejected ? $credential->revision : -1,
-			'generation'    => $plan?->generation() ?? $previous->generation,
+			'generation'    => $generation !== '' ? $generation : ($plan?->generation() ?? $previous->generation),
 			'links'         => $newPlan === null ? $previous->linksRefused : $newPlan->linksRefused,
 		]);
 
@@ -350,6 +397,19 @@ final class Collector {
 	 */
 	private static function definitive(ClientError $e): bool {
 		return $e->class !== FailureClass::SessionLost && ($e->status > 0 || !$e->sent);
+	}
+
+	/**
+	 * Whether a Redfish failure may fall back to read-only IPMI.
+	 */
+	private static function ipmiFallbackEligible(FailureClass $failure): bool {
+		return !in_array($failure, [
+			FailureClass::AuthRejected,
+			FailureClass::CredentialUnavailable,
+			FailureClass::AddressRefused,
+			FailureClass::OperationRefused,
+			FailureClass::Deadline,
+		], true);
 	}
 
 	/**

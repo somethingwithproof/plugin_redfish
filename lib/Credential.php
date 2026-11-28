@@ -25,6 +25,14 @@ namespace Somethingwithproof\Redfish;
  * how a BMC held in auth_failed learns that a new credential may be tried.
  */
 final readonly class Credential {
+	/**
+	 * Initialize a new Credential instance.
+	 *
+	 * @param int $id
+	 * @param string $name
+	 * @param string $username
+	 * @param int $revision
+	 */
 	public function __construct(
 		public int $id,
 		public string $name,

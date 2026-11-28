@@ -24,8 +24,21 @@ namespace Somethingwithproof\Redfish;
  * socket transport in tests; the guard always wraps whatever it returns.
  */
 final class ClientFactory {
+	/**
+	 * Max requests constant.
+	 */
 	public const MAX_REQUESTS = 256;
 
+	/**
+	 * Initialize a new ClientFactory instance.
+	 *
+	 * @param Resolver $resolver
+	 * @param float $connectTimeout
+	 * @param float $totalTimeout
+	 * @param int $maxBytes
+	 * @param bool $allowLoopback
+	 * @param \Closure|null $transportFor
+	 */
 	public function __construct(
 		private readonly Resolver $resolver,
 		private readonly float $connectTimeout,
@@ -36,6 +49,12 @@ final class ClientFactory {
 	) {
 	}
 
+	/**
+	 * Production.
+	 *
+	 * @param Settings $settings
+	 * @return self
+	 */
 	public static function production(Settings $settings): self {
 		return new self(new SystemResolver(), (float) $settings->connectTimeout, (float) $settings->requestTimeout, $settings->maxBodyBytes);
 	}

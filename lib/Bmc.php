@@ -24,8 +24,28 @@ namespace Somethingwithproof\Redfish;
  * secret.
  */
 final readonly class Bmc {
+	/**
+	 * Main poller constant.
+	 */
 	public const MAIN_POLLER = 1;
 
+	/**
+	 * Initialize a new Bmc instance.
+	 *
+	 * @param int $id
+	 * @param string $name
+	 * @param string $address
+	 * @param int $port
+	 * @param int $pollerId
+	 * @param int $hostId
+	 * @param int $credentialId
+	 * @param TlsMode $tlsMode
+	 * @param string $caFile
+	 * @param string $pin
+	 * @param bool $basicFallback
+	 * @param AdminState $adminState
+	 * @param bool $ipmiFallback
+	 */
 	public function __construct(
 		public int $id,
 		public string $name,
@@ -39,6 +59,7 @@ final readonly class Bmc {
 		public string $pin,
 		public bool $basicFallback,
 		public AdminState $adminState,
+		public bool $ipmiFallback = false,
 	) {
 	}
 
@@ -60,7 +81,8 @@ final readonly class Bmc {
 			return null;
 		}
 
-		$port = Row::int($row, 'port', 443, 1);
+		$port      = Row::int($row, 'port', 443, 1);
+		$protocols = array_map('trim', explode(',', strtolower(Row::string($row, 'protocols'))));
 
 		return new self(
 			id: $id,
@@ -75,6 +97,7 @@ final readonly class Bmc {
 			pin: self::normalizePin(Row::string($row, 'pin_sha256')) ?? '',
 			basicFallback: Row::bool($row, 'basic_fallback'),
 			adminState: AdminState::tryFrom(Row::string($row, 'admin_state')) ?? AdminState::Disabled,
+			ipmiFallback: in_array('ipmi', $protocols, true),
 		);
 	}
 
@@ -108,7 +131,7 @@ final readonly class Bmc {
 			'name'           => $this->name,
 			'address'        => $this->address,
 			'port'           => $this->port,
-			'protocols'      => 'redfish',
+			'protocols'      => $this->ipmiFallback ? 'redfish,ipmi' : 'redfish',
 			'poller_id'      => $this->pollerId,
 			'host_id'        => $this->hostId,
 			'credential_id'  => $this->credentialId,
@@ -132,10 +155,20 @@ final readonly class Bmc {
 		return array_keys(array_filter($now, static fn ($value, $key) => !array_key_exists($key, $then) || $then[$key] !== $value, ARRAY_FILTER_USE_BOTH));
 	}
 
+	/**
+	 * Enabled.
+	 *
+	 * @return bool
+	 */
 	public function enabled(): bool {
 		return $this->adminState === AdminState::Enabled;
 	}
 
+	/**
+	 * Verifies tls.
+	 *
+	 * @return bool
+	 */
 	public function verifiesTls(): bool {
 		return $this->tlsMode !== TlsMode::Unverified;
 	}

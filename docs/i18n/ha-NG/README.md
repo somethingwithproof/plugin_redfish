@@ -1,4 +1,4 @@
-<!-- Source: README.md; SHA256: 7b4e83a58a1adc844cb0615ef30e95476cba2851f96bb454d2a816fb2774724d -->
+<!-- Source: README.md; SHA256: cf31b9f80d6c00020bbe08e80951d4de1c910793911d040ae7a66b54e8a2eaf0 -->
 
 <!-- translations:start -->
 [English](../../../README.md) | [简体中文](../zh-CN/README.md) | [हिन्दी](../hi-IN/README.md) | [Español (España)](../es-ES/README.md) | [Español (Latinoamérica)](../es-419/README.md) | [العربية (السعودية)](../ar-SA/README.md) | [Afrikaans](../af-ZA/README.md) | [አማርኛ](../am-ET/README.md) | [العربية (مصر)](../ar-EG/README.md) | [العربية (المغرب)](../ar-MA/README.md) | [বাংলা](../bn-BD/README.md) | [Bosanski](../bs-BA/README.md) | [Deutsch](../de-DE/README.md) | [فارسی](../fa-IR/README.md) | [Filipino](../fil-PH/README.md) | [Français](../fr-FR/README.md) | [Français (Maroc)](../fr-MA/README.md) | [Français (Sénégal)](../fr-SN/README.md) | [Hausa](README.md) | [עברית](../he-IL/README.md) | [Hrvatski](../hr-HR/README.md) | [Bahasa Indonesia](../id-ID/README.md) | [Igbo](../ig-NG/README.md) | [Italiano](../it-IT/README.md) | [日本語](../ja-JP/README.md) | [한국어](../ko-KR/README.md) | [Malagasy](../mg-MG/README.md) | [मराठी](../mr-IN/README.md) | [Bahasa Melayu](../ms-MY/README.md) | [Nederlands](../nl-NL/README.md) | [Polski](../pl-PL/README.md) | [Português (Brasil)](../pt-BR/README.md) | [Русский](../ru-RU/README.md) | [Kinyarwanda](../rw-RW/README.md) | [Soomaali](../so-SO/README.md) | [Српски](../sr-RS/README.md) | [Svenska](../sv-SE/README.md) | [Kiswahili](../sw-KE/README.md) | [தமிழ்](../ta-IN/README.md) | [తెలుగు](../te-IN/README.md) | [ไทย](../th-TH/README.md) | [Türkçe](../tr-TR/README.md) | [Українська](../uk-UA/README.md) | [اردو](../ur-PK/README.md) | [Tiếng Việt](../vi-VN/README.md) | [isiXhosa](../xh-ZA/README.md) | [Yorùbá](../yo-NG/README.md) | [繁體中文](../zh-TW/README.md) | [isiZulu](../zu-ZA/README.md)
@@ -6,126 +6,180 @@
 
 # plugin_redfish
 
-Ƙarin Cacti 1.2 (plugin) da ke kawo amfanin wutar lantarki na uwar garke, zafin shigowa, yanayin fanka, da lafiyar na'urar samar da wuta daga masu sarrafa gudanarwa na asali (BMCs) zuwa Cacti a matsayin na'urori na yau da kullun, tushen bayanai, da zane-zane, ta hanyar amfani da Redfish tare da zaɓin komawa kan IPMI. Daga nan Thold da Maint suna ba da faɗakarwa da dakatar da su, kuma mataki na gaba yana ƙara jimillar wutar lantarki na matakin rack.
+Ƙarin Cacti 1.2 (plugin) da ke kawo amfanin wutar lantarki na uwar garke, zafin shigowa, yanayin fanka, da lafiyar na'urar samar da wuta daga masu sarrafa gudanarwa na asali (BMCs) zuwa Cacti a matsayin na'urori na yau da kullun, tushen bayanai, da zane-zane, ta hanyar amfani da Redfish tare da zaɓin komawa kan IPMI mai karatu kaɗai da jimillar wutar lantarki na matakin rack. Thold da Maint suna faɗakarwa kuma suna dakatar da su ta hanyar tushen bayanai na yau da kullun na Cacti.
 
-> **Matsayi: ana kan haɓakawa, babu fitarwa tukuna (0.1.0-dev).** An haɗa matakan ci gaba na 2 (tushe) da na 3 (abubuwan Cacti da faɗakarwa) a kan `main`. Wannan ƙarin ba shi da alaƙa da aikin Cacti. Ana shigar da shi a kan Cacti 1.2.31 ƙarƙashin PHP 8.2 ko sama da haka, yana yin rajistar BMCs da bayanan sirri na shiga, yana karanta wuta, yanayin zafi, fankoki, da lafiyar na'urar samar da wuta daga kowane BMC ta Redfish zuwa cikin ma'ajiyarsa ta wucin gadi, kuma yana nuna lafiyar tattara bayanai. Yana ƙara na'urorin Cacti, zane-zane na kowane memba da na taƙaitawa, da goyon bayan Thold da Maint ta hanyar tushen bayanai na yau da kullun. CI ya gwada wani BMC na bogi da aka gina daga kayan gwaji da aka rubuta da hannu da uwar garken kwaikwayo na DMTF Redfish; ba a tantance wani BMC na gaske ko rukunin gwaji ba tukuna. Tsarin da binciken suna cikin [docs/PLAN.md](../../PLAN.md), [docs/research/](../../research), da [docs/decisions/](../../decisions).
+> **Matsayi: ana kan haɓakawa, babu fitarwa tukuna (`0.1.0-dev`).** Wannan ƙarin ba shi da alaƙa da aikin Cacti. Ana shigar da shi a kan Cacti 1.2.31 ko sama da haka ƙarƙashin PHP 8.2 ko sama da haka kuma yana aiwatar da mai tattara bayanan Redfish, ma'ajiyar sirri mai ɓoye bayanan shiga, samar da na'urori da zane-zane na Cacti, zaɓin komawa kan IPMI mai karatu kaɗai, jimillar wutar rack, nunin lokacin Cacti Maint, kwafin bayanai da wuraren shigar wakilai na masu tattara bayanai na nesa, mai samar da CasC da CLI na mai gudanarwa, iyawar MCP, da binciken ganewar matsala na Doctor. CI tana gwada kayan gwaji, DMTF Redfish Mockup Server (kwaikwayon subsystem, tsohon tsari kaɗai, da HPE iLO Gen11), da Thold v1.8.2 tare da Maint v1.3; ba a tantance wani BMC na zahiri ko rukunin gwaji ba tukuna. Tsarin da binciken suna cikin [docs/PLAN.md](../../PLAN.md), [docs/research/](../../research/), da [docs/decisions/](../../decisions/).
 
-### Abin da matakin ci gaba na 2 ya ƙunsa
+## Abubuwan da aka aiwatar
 
-- Shigarwa, haɓakawa, kashewa, da cirewa ta hanyar API na ƙarin Cacti, tare da ajiye teburori lokacin cirewa sai dai idan an goge saitin. A kan PHP ƙasa da 8.2 ƙarin yana ƙin shigarwa ko kunnawa kuma ya bayyana dalili.
-- Yankunan izini "Redfish View" (shafin lafiya), "Redfish Operator" (shafin ayyuka), da "Redfish Admin" (shafukan BMCs da bayanan sirri na shiga), da saituna ƙarƙashin Configuration > Settings > Redfish.
-- Rajistar BMC tare da shigo da CSV da fitar da JSON. Dole ne fayilolin shigowa su guji ƙunsar kalmomin sirri; ana nuni da bayanan sirri ta suna.
-- Ana adana bayanan sirri a ɓoye tare da AES-256-GCM. Mabuɗin wani fayil ne a wajen rumbun adana bayanai, `/etc/cacti/redfish-vault.key` ta tsohuwa, mai ɗauke da haruffan hexadecimal guda 64 (`openssl rand -hex 32`) ko baiti na bazuwar guda 32 daidai, mallakar mai amfani na poller, ba a iya karanta shi ga sauran masu amfani, a cikin babban fayil da mai amfani na poller ko root kaɗai za su iya rubutawa. Ana ƙin mabuɗi mai haruffa masu iya bugawa guda 32 a matsayin kalmar wucewa. **Ajiye madadin fayil ɗin mabuɗin tare da rumbun adana bayanai**; ba tare da shi ba dole ne a sake shigar da kowace kalmar sirri da aka adana.
-- Tabbatar da TLS yana kunne ta tsohuwa, tare da tarin CA na kowane BMC ko pin na SPKI SHA-256. Zaɓin fita ba tare da tabbatarwa ba na kowane BMC da aka rubuta a rajista yana kasancewa a shafin lafiya a matsayin gargaɗi.
-- Abokin ciniki na Redfish na karatu kaɗai: `GET` tare da shiga da fita na zama kaɗai, ana dubawa da jerin izini kafin a aika kowace buƙata.
-- Mai tattarawa da aka fara daga `poller_bottom` don BMCs a kan babban poller, tare da hayar lokaci da wa'adin kammalawa na kowane BMC, jinkirin sake gwadawa, da tsaftacewa bayan faɗuwar zama ɗaya da ƙarin ya rubuta. Ba a goyi bayan masu tattarawa na nesa ba tukuna; suna buƙatar zaɓi bayyananne na yadda mai tattarawa zai isa rumbun adana bayanai da mabuɗin (mataki na 4).
-- Bayanan BMC da bayanan sirri suna bin izinin na'urar Cacti: Redfish Admin yana gani, yana canzawa, kuma yana haɗa BMCs kaɗai a kan na'urorin da aka ba su damar gani, da bayanan sirri kaɗai waɗanda babu wani BMC a kan ɓoyayyar na'ura ke amfani da su.
+### Mai tattarawa na asali, ma'ajiyar sirri, da abubuwan Cacti
 
-### Abin da matakin ci gaba na 3 ya ƙara
+- **Zagayowar rayuwa da tsarin bayanai (Schema).** Yana shigarwa, haɓakawa, kashewa, da cirewa ta hanyar API na ƙarin Cacti (`Schema::VERSION = 3`, teburori 12). Ana ajiye teburori lokacin cirewa sai dai idan an cire zaɓin *Keep Plugin Tables on Uninstall*. Wuraren shiga suna tantancewa a PHP 8.0 kuma suna ƙin PHP ƙasa da 8.2 ko rashin `ext-openssl` tare da bayyanannen saƙon kuskure.
+- **Rijista da izini.** Fannonin izini na *Redfish View* (`redfish_health.php`), *Redfish Operator* (`redfish_operator.php`), da *Redfish Admin* (`redfish_bmcs.php`, `redfish_credentials.php`), tare da saituna ƙarƙashin **Configuration > Settings > Redfish**. Rijistar BMC tana goyon bayan shigar da CSV (ana nuni ga bayanan shiga da suna; ana ƙin kalmomin sirri a cikin fayilolin shigarwa) da fitar da JSON. Bayanan BMC da bayanan shiga suna bin izinin na'urorin Cacti.
+- **Ma'ajiyar sirri mai ɓoyayyen bayanan shiga.** Ana adana kalmomin sirri a ɓoye da AES-256-GCM cikin `plugin_redfish_secret`. Maɓallin yana zaune a wajen rumbun bayanai (`/etc/cacti/redfish-vault.key` ta tsohuwa) a matsayin haruffan hexadecimal 64 (`openssl rand -hex 32`) ko bytes 32 kai tsaye, mallakar mai amfani da poller, wanda sauran masu amfani ba za su iya karantawa ba, a cikin babban fayil da root ko wannan mai amfani kaɗai ke iya rubutawa a ciki. Ana ƙin kalmar sirri mai haruffa 32 da za a iya bugawa. **Ajiye fayil ɗin maɓalli tare da rumbun bayanai**; idan babu shi, dole ne a sake shigar da kalmomin sirri da aka adana.
+- **TLS da abokin ciniki na Redfish mai karatu kaɗai.** An kunna tantancewar TLS ta tsohuwa ta amfani da ma'ajiyar CA ta tsarin, kunshin CA na kowane BMC, ko SPKI SHA-256 pin; zaɓin rashin tantancewa na kowane BMC yana kasancewa a bayyane a matsayin gargaɗin lafiya da gargaɗin binciken Doctor. Abokin ciniki yana ba da izinin `GET` kawai tare da shiga zaman Redfish (`POST`) da fita (`DELETE`), tare da zaɓin komawa kan Basic ga kowane BMC lokacin da zama ba ya samuwa. Bincike yana fifita sabbin albarkatun subsystem da na'urori masu auna sigina na Redfish kuma yana komawa kan tsofaffin albarkatun `Power` da `Thermal`.
+- **Gudanar da mai tattarawa.** `poller_redfish.php` yana farawa daga `poller_bottom`, yana gudanar da babban tsari guda ɗaya a kowane poller ta hanyar rijistar tsari ta Cacti tare da yawan masu aiki da za a iya daidaitawa (`redfish_workers`), yana samun hayar kowane BMC, yana aiwatar da ƙayyadadden lokaci (`redfish_collector_budget`), yana amfani da jinkiri mai ƙaruwa, kuma yana share zaman plugin ɗin da ya gabata bayan faɗuwa.
+- **Samfura, na'urori, da zane-zane.** Yana shigar da `templates/redfish-templates.xml` ta hanyar hash kuma yana kwafin fayilolin XML uku na tambayar bayanai na script server (`redfish_fans.xml`, `redfish_temperatures.xml`, `redfish_psus.xml`) zuwa `<cacti>/resource/script_server/` ba tare da goge fayilolin da mai amfani ya gyara ba. **Create Device** da **Add Graphs** suna buƙatar tabbatar da tsarin samarwa, suna haɗa tambayoyi zuwa na'urar uwar garke da aka haɗa ko ƙirƙirar na'urar "Redfish BMC" ƙarƙashin `.invalid` tare da kashe duba samuwa, kuma suna haɗa kowane zanen Redfish zuwa zane-zanen Redfish na na'urar ta hanyar `graph_buttons`.
+- **Shigarwar script server daga ma'ajiyar wucin gadi kaɗai.** `scripts/ss_redfish_members.php` yana ba da karatun fanka, zafi, da PSU na kowane memba, kuma `scripts/ss_redfish_summary.php` yana ba da ma'aunin "Redfish Node Summary" (wuta, zafin shigowa da mafi girma, yawan fankoki da PSUs marasa lafiya, lafiyar node, da tsawon lokacin karatu mai kyau na ƙarshe). Kiran script server suna karantawa daga ma'ajiyar wucin gadi ta gida kaɗai kuma ba sa tuntuɓar BMC. Karatun da suka ɓace, suka tsufa, ko na membobin da suka tafi suna dawo da `U` (ba `0` ba), yayin da `age` ke ba da ƙima koyaushe don iyakoki su gano BMCs masu shiru.
 
-- Samfura da aka haɗa a matsayin XML na samfurin Cacti a cikin `templates/` kuma aka shigo da su ta mai shigo da bayanai na Cacti da kansa lokacin shigarwa da haɓakawa, ana daidaita su ta hash, ta yadda shigowa ke sabunta abubuwan ƙarin ba tare da ƙara wani abu sau biyu ba. Ana kwafin fayilolin tambayar bayanai guda uku zuwa `<cacti>/resource/script_server/` tare da hash da aka rubuta; ƙarin ba ya taɓa maye gurbin fayil a wurin da ba shi ya rubuta ba, kuma shafin lafiya yana gargaɗar masu gudanarwa lokacin da samfuran ko fayil ɗin tambaya ba sa wurin. **Reinstall the Redfish Templates** a shafin BMCs yana sake shigo da su; yana buƙatar izinin Import Templates na Cacti.
-- **Create Device** ko **Add Graphs** a kan kowane BMC ([ADR 0015](../../decisions/0015-attach-to-the-server-device-or-create-one-per-bmc.md)). BMC da aka haɗa da na'urar uwar garke da ke akwai yana samun tambayoyin bayanai da zane-zane a kan wannan na'urar. BMC da ba a haɗa ba yana samun sabuwar na'ura daga samfurin na'urar "Redfish BMC", tare da kashe duban samuwa da sunan uwar garke ƙarƙashin `.invalid`, ta yadda Cacti ba ya taɓa tuntuɓar BMC ɗin kuma ba ya taɓa nuna adireshinsa. Ta kowace hanya mai gudanarwa yana fara tabbatar da shirin da ke lissafa abin da za a ƙara. Dukansu suna buƙatar izinin gudanar da na'urar Cacti da kuma Redfish Admin; ana sake cire sabuwar na'urar da mai ƙirƙirar ba zai iya gani ba.
-- Tambayoyin bayanai na script server guda uku, "Redfish Fans", "Redfish Temperatures", da "Redfish Power Supplies", waɗanda aka jera su ta maɓallin memba na BMC, tare da zane ga kowane memba: saurin fanka a cikin kashi ko RPM (duk naúrar da BMC ya bayar), zafin jiki, da watts na shigowa da fitarwa na na'urar samar da wuta, kowanne da lambar lafiyarsa.
-- Shigarwa na "Redfish Node Summary" tare da wuta, zafin shigowa, zafi mafi girma, fankoki da na'urorin wuta da ba su da kyau, lafiyar node, da shekarun kyakkyawan karatu na ƙarshe, da aka zana a kan zane-zane guda huɗu: wuta, yanayin zafi, lafiyar sassa, da shekarun bayanai. Iyakan Thold a kan waɗannan tushen bayanai suna faɗakarwa, kuma Maint yana dakatar da su, ba tare da wani sauyi ga kowane ƙarin ba.
-- Script server yana amsawa ne kawai daga ma'ajiyar wucin gadi ta ƙarin kuma ba ya taɓa tuntuɓar BMC. Ƙimar da ta ɓace, ta tsufa, ta wata naúrar daban, ko ta memba da ya ɓace tana zama `U`, ta yadda zane-zane ke nuna gibi, ba sifili ba; `age` koyaushe yana da ƙima, ta yadda iyaka a kansa ke kama BMC da ya daina amsawa.
-- Hanyar haɗin zane daga kowane zanen Redfish zuwa zane-zanen Redfish na na'urar, ana nuna ta ne kawai ga masu amfani da Cacti ya ba su damar ganin na'urar.
+**Lokacin da membobin BMC suka canza** (kamar fanka da aka sauya ko sabunta firmware da ke canza sunayen na'urori masu auna sigina), sake gudanar da **Add Graphs**. Fanka ko na'urar samar da wuta da ta kasance a baya wadda ta ɓace ana ƙidaya ta cikin `fans_bad` ko `psus_bad` har sai an amince da ita; ramin da ba a taɓa sanya abu a ciki ba ba a ƙidaya shi. Membobin da suka tafi suna riƙe tushen bayanai da zane-zanensu na yanzu, waɗanda za su riƙa karanta `U` daga baya har sai an goge su da hannu. Goge na'urar Cacti yana cire haɗin BMC ɗinta kuma yana cire rabon rack ɗinta yayin adana BMC da ma'ajiyar wucin gadi; goge BMC ko cire plugin ɗin yana adana na'urori da zane-zanen Cacti.
 
-**Lokacin da membobin BMC suka canza** (an maye gurbin fanka, sabunta firmware ya sake suna wa na'urorin auna), zaɓi **Add Graphs** kuma. Fanka ko na'urar samar da wuta da ke akwai a baya kuma yanzu ba ta nan ko ta ɓace tana ƙidaya a cikin `fans_bad` ko `psus_bad` har sai ka yi hakan, don haka fanka da aka cire tana faɗakarwa; ramin da ba a taɓa cikawa ba ba ya ƙidaya. Add Graphs yana karɓar membobin da BMC ke bayarwa yanzu, kuma Cacti yana sake jera tambayoyin; memban da ya ɓace yana riƙe tushen bayanansa da zanensa, waɗanda ke karanta `U` daga nan gaba, kuma sabon memba yana samun zane. Share zane-zanen membobin da suka ɓace da hannu da zarar ba a ƙara buƙatar tarihinsu ba.
+### Zaɓin komawa kan IPMI
 
-Share na'ura yana cire haɗin BMC ɗinta kuma yana riƙe BMC ɗin da ma'ajiyarta ta wucin gadi. Share BMC, ko cire ƙarin, yana riƙe na'urarsa da zane-zanensa.
+- **Zaɓi na kowane BMC.** A kashe yake ta tsohuwa (`protocols` yana tsohuwa akan `redfish`; kunna komawa kan IPMI yana saita `redfish,ipmi`).
+- **Ƙayyadadden abin da ke kunna komawa.** Yana aiki ne kawai lokacin da tattarawar Redfish ta gaza da nau'in kuskuren da ya cancanta; ba ya tashi a kan `AuthRejected`, `CredentialUnavailable`, `AddressRefused`, `OperationRefused`, ko `Deadline`.
+- **Amintaccen aiwatarwa.** Yana kiran `ipmitool` akan `-I lanplus` ta hanyar `proc_open()` mai tsarin jeri ba tare da shell ba, da ƙayyadadden lokacin agogo, da iyakar fitarwa na 256 KiB. Ana bayar da kalmomin sirri ta `IPMITOOL_PASSWORD` (`-E`) ko fayil na wucin gadi mai yanayin 0600 (`-f`) da ake gogewa a `finally`, ba a kan CLI argv ba.
+- **Jerin umarnin karatu kaɗai da aka yarda da su.** Umarnin karatu kaɗai guda biyar ne kawai aka halatta: `dcmi power reading`, `sdr type Temperature`, `sdr type Fan`, `sdr type Power Supply`, da `chassis status`. Ana ƙin umarnin da ke canza yanayi.
+- **Fitowar da aka daidaita da gargaɗin matsayi.** `IpmiNormalizer` yana daidaita karatu zuwa tsarin `Observation`/`Member`/`Reading` iri ɗaya, yana fitar da `U` ga na'urori masu auna sigina da suka ɓace ko ba sa fassaruwa. Kunna komawa kan IPMI yana tayar da gargaɗi a shafin lafiya da kuma cikin binciken Doctor `redfish.bmc_security` don tunatar da masu gudanarwa su takaita UDP 623 zuwa VLAN na gudanarwa.
 
-## Matsayin shiga
+### Jimillar wutar lantarki na rack
 
-| Yanki | Izini |
+- **Rijistar rack.** Sigar schema ta 3 tana ƙara `plugin_redfish_rack` (`(site_id, name)` na musamman, `power_budget_watts` na zaɓi, `min_coverage_pct` mai tsohuwar ƙima `80`, da bayanan kula) da `plugin_redfish_rack_member` (mafi yawa rabon rack guda ɗaya a kowane `host_id`, `bmc_id` da `unit_position` na zaɓi, waɗanda ake cirewa ta atomatik idan an goge na'urar Cacti).
+- **Jimillar da aka kare da rufin bayani.** `RackPowerSummary` yana haɗa sabbin karatun `power_watts` na membobi daga ma'ajiyar wucin gadi ta gida kuma yana lissafin amfanin kasafin kuɗi da sauran ƙarfi. Lokacin da yawan membobin da ke ba da rahoto ya faɗi ƙasa da `min_coverage_pct`, `power_watts`, `utilization_pct`, da `headroom_watts` suna dawo da `U` don gazawar mai tattarawa kada ta taɓa bayyana a matsayin faɗuwar wutar rack.
+- **Shigarwar script server a shirye don Thold.** `scripts/ss_redfish_rack.php` (`ss_redfish_rack(<rack_id>)`) yana dawo da `power_watts`, `power_budget_watts`, `utilization_pct`, `headroom_watts`, `members_total`, `members_reporting`, da `coverage_pct` daga ma'ajiyar wucin gadi ta gida kaɗai.
+
+### Haɗin kai da Cacti Maint
+
+- Iyakokin Thold a kan tushen bayanai na Redfish suna ba da faɗakarwa kuma Cacti Maint yana dakatar da su ba tare da wani canji ga kowane plugin ba.
+- `MaintWindow` yana duba jadawalin Maint masu aiki ga kowane uwar garken Cacti da aka haɗa (jadawalin sau ɗaya `mtype=1` da mai maimaitawa `mtype=2`, tare da `plugin_maint_check_cacti_host()` idan an ɗora) kuma yana nuna kulawa mai aiki a shafin Redfish Health (`[MAINT]`), a cikin fitowar `cli/redfish.php health`, da cikin iyawar `redfish-get-health`.
+
+### Masu tattara bayanai na nesa
+
+- `INFO` yana bayyana `remote_collect:1`. BMCs suna karɓar kowane `poller_id >= 1`, kuma `poller_redfish.php --poller=N` yana tattara BMCs masu kunnawa da aka sanya wa wannan poller ɗin kaɗai.
+- **`replicate_out` hook.** Yana kwafin teburorin saituna marasa sirri kaɗai waɗanda aka keɓance don poller na nesa da aka nufa ta hanyar `replicate_out_table()`: `plugin_redfish_bmc`, bayanan `plugin_redfish_credential` (babu rubutu mai ɓoye), `plugin_redfish_rack`, da `plugin_redfish_rack_member`. Ba a kwafin `plugin_redfish_secret`, kuma fayilolin maɓallin ma'ajiyar sirri suna kasancewa a gida kawai a kowane poller.
+- **`remote_agent` hook.** Yana bayyana ayyukan karatu kaɗai na `redfish_health` da `redfish_discovery` waɗanda ke karɓar sigogin lambobi `poller_id` da `bmc_id` kaɗai. Ana ƙin sigogin da ba a zata ba kuma ba a dawo da wani bayanan shiga ko sirri.
+
+### Ƙugiyoyin yanayin aiki (CasC, iyawar MCP, da Doctor)
+
+- **Mai samar da CasC (`casc_register_providers`).** Yana yin rajistar mai samar da `redfish` (sigar schema `1`) tare da fitar da YAML da XML cikin PHP zalla, fassara (tare da ƙin XXE), tantancewa, tsara bambanci, da aiwatarwa. Bayanan shiga suna bayyana ne kawai a matsayin nuni na ma'ajiyar sirri (`vault:redfish:<name>`); ana ƙin maɓallan sirri kai tsaye (`pass`, `secret`, `token`, `private_key`, `vault_key`, `auth_token`). Aiwatarwa yana buƙatar ainihin SHA-256 `PLAN_HASH`.
+- **MCP / Abilities API (`abilities_register`).** Yana yin rajistar iyawa uku na karatu kaɗai da aka kulle a fannin Redfish View (`redfish_health.php`) da izinin na'urorin Cacti, ba tare da dawo da wani bayanan shiga ba:
+  - `redfish-list-bmcs` (`poller_id` na zaɓi)
+  - `redfish-get-rack-power` (`rack_id` na zaɓi)
+  - `redfish-get-health` (`bmc_id` na zaɓi)
+- **Binciken Doctor (`doctor_register_checks`).** Yana yin rajistar binciken ganewar matsala guda biyar na gida kuma na karatu kaɗai waɗanda ba sa tuntuɓar BMC ko dawo da kayan maɓalli:
+  - `redfish.schema`: sabuntawar sigar schema
+  - `redfish.vault_key`: karantawa da izinin maɓallin ma'ajiyar sirri
+  - `redfish.collector_runs`: kasafin kuɗi da sabuntawar mai tattarawa na poller
+  - `redfish.bmc_security`: BMCs masu kunnawa tare da TLS mara tantancewa ko komawa kan IPMI
+  - `redfish.rack_power`: bin kasafin kuɗin wutar rack da mafi ƙarancin rufi
+
+## CLI
+
+Gudanar daga babban kundin adireshi na Cacti tare da PHP 8.2 ko sama da haka:
+
+```sh
+# Operator and CasC CLI (reads --file=PATH or stdin for validate, plan, and apply)
+php plugins/redfish/cli/redfish.php export --format=yaml|xml
+php plugins/redfish/cli/redfish.php validate [--file=PATH] [--format=yaml|xml]
+php plugins/redfish/cli/redfish.php plan [--file=PATH] [--format=yaml|xml]
+php plugins/redfish/cli/redfish.php apply [--file=PATH] [--format=yaml|xml] --confirm=<PLAN_HASH>
+php plugins/redfish/cli/redfish.php health --format=text|json
+
+# Collector entry point (normally started by poller_bottom)
+php plugins/redfish/poller_redfish.php [--poller=N] [--force] [--debug]
+
+# Rack power summary script server entry point
+php plugins/redfish/scripts/ss_redfish_rack.php <rack_id>
+```
+
+## Matsayin samun dama
+
+| Fanni (Realm) | Samun dama |
 | --- | --- |
-| Redfish View | Shafukan sa ido na yanzu. |
-| Redfish Operator | Sa ido tare da shafin Ayyuka (Operations) da tabbatarwar tantancewa ta sirri. |
-| Redfish Admin | Izinin Operator tare da saitunan yanzu da ayyukan gudanarwa. |
+| Redfish View | Shafukan sa ido da ke akwai. |
+| Redfish Operator | Sa ido tare da shafin Operations da amincewar rarraba matsala na mutum ɗaya. |
+| Redfish Admin | Samun damar Operator tare da saitunan da ke akwai da ayyukan gudanarwa. |
 
-Bayan kwafin fayilolin haɓakawa, buɗe shafin Plugins a matsayin mai gudanarwa don yin rajistar
-sabon yankin. Sanya yankin Operator a bayyane ƙarƙashin **Configuration > Users** ko ƙungiyoyin masu amfani.
-Haɓakawa yana riƙe ID na yankin View da Admin da ke akwai da izini. Izinin Admin yana
-gādar izinin Operator, kuma izinin Operator yana gādar izinin View a kan kowace buƙata;
-wannan ba ya ƙara izinin da aka adana ga masu amfani ko ƙungiyoyi. Saitunan ƙarin kuma suna buƙatar
-izinin Redfish Admin baya ga izinin Settings na Cacti.
+Bayan kwafin fayilolin haɓakawa, buɗe shafin Plugins a matsayin mai gudanarwa don yin rajistar fannonin izini. Sanya fannin Operator a sarari ƙarƙashin **Configuration > Users** ko ƙungiyoyin masu amfani. Haɓakawa suna adana lambobin fanni da izini na View da Admin da ke akwai. Samun damar Admin yana gadon samun damar Operator, kuma samun damar Operator yana gadon samun damar View a kowace buƙata; wannan ba ya ƙara izini da aka adana ga masu amfani ko ƙungiyoyi. Saitunan plugin suma suna buƙatar samun damar Redfish Admin baya ga izinin Settings na Cacti.
 
-Izinin na'urar Cacti har yanzu yana iyakance layuka da ayyukan da ke akwai ga kowane mai amfani; abubuwan da ba a haɗa su ba suna buƙatar mai gudanarwa. Masu aiki za su iya sakin riƙon tattarawa a kan BMC da aka ba da izini don gudanarwar da aka tsara ta gaba.
-Bayanan sirri na shiga, saiti, haɗawa, sharewa da sauran sauye-sauyen gudanarwa
-suna kasancewa a cikin shafukan gudanarwa. Tabbatarwa tana wanzuwa ne kawai a cikin zaman
-mai amfani na yanzu, na tsawon awa ɗaya a mafi yawa kuma kawai yayin da wannan abin lura ya kasance
-sabo. Sabbin abubuwan lura ko waɗanda suka canza suna soke su. Ba sa taɓa nuna ma'aunin
-da ya gaza a matsayin mai lafiya ko dakatar da faɗakarwa.
+Izinin na'urorin Cacti suna iyakance layuka da ayyukan da ke samuwa ga kowane mai amfani; abubuwan da ba a haɗa ba suna buƙatar mai gudanarwa. Masu aiki za su iya sakin riƙewar tattara bayanai a kan BMC da aka yarda don gudanarwa mai zuwa da aka tsara. Bayanan shiga, saiti, haɗawa, gogewa, da sauran canje-canjen gudanarwa suna kasancewa a shafukan gudanarwa. Amincewa tana dawwama ne kawai a zaman mai amfani na yanzu, na tsawon awa ɗaya a mafi yawa kuma yayin da wannan kallon ya kasance sabo. Sabbin kallon ko waɗanda suka canza suna soke su. Ba sa taɓa yi wa ma'aunin da ya gaza alamar lafiya ko dakatar da faɗakarwa.
 
 ## Dalili
 
-Kowane uwar garke yana da BMC da ke ba da rahoton yanayin wuta da zafi ba tare da dogaro da tsarin aiki ba, don haka yana ci gaba da amsawa lokacin da OS ya sauka. Bayanan suna amfani don bin diddigin ƙarfi da farashi, gargaɗin farko na fanka ko na'urar samar da wuta da ta lalace, kuma, a cikin ƙididdiga mai ƙarfi, yanke shawarar iyakance wuta. Ƙarin ba na HPC kaɗai ba ne.
+Kowace uwar garke tana da BMC da ke ba da rahoton yanayin wuta da zafi ba tare da dogaro da tsarin aiki ba, don haka tana ci gaba da amsawa lokacin da OS ya sauka. Bayanan suna taimakawa wajen bin diddigin ƙarfi da farashi, gargaɗi da wuri game da fanka ko na'urar wuta da ta gaza, kuma, a cikin kwamfuta mai ƙarfi (HPC), yanke shawara kan iyakance wuta. Wannan ƙarin ba na HPC kaɗai ba ne.
 
 Cacti yana rufe wani ɓangare na wannan a yau:
 
-- **Kunshe-kunshen SNMP na masu samarwa.** Reshen 1.2.x yana jigilar samfuran Dell iDRAC da HPE iLO waɗanda ke buƙatar wakilin SNMP kuma sun keɓanta ga mai samarwa; binciken matakin ci gaba na 1 ya gano cewa babu ɗayansu da ke ba da rahoton amfanin wutar lantarki a watts ([docs/research/overlap.md](../../research/overlap.md)).
-- **Nau'in bayanan sirri ba tare da mai tattarawa ba.** plugin_credentials yana ayyana bayanan sirri na "IPMI / Redfish (BMC)" amma ba ya karanta wani BMC.
-- **Babu kallon matakin rack.** Babban Cacti ba shi da abin rack; na'ura tana da filin `location` na rubutu kyauta.
+- **Kunshe-kunshen SNMP na masu siyarwa.** Reshen 1.2.x yana zuwa da samfuran Dell iDRAC da HPE iLO waɗanda ke buƙatar wakilin SNMP kuma sun keɓanta ga mai siyarwa; binciken mataki na 1 ya gano cewa babu ko ɗaya da ke ba da rahoton amfanin wuta a watts ([docs/research/overlap.md](../../research/overlap.md)).
+- **Nau'in bayanan shiga ba tare da mai tattarawa ba.** plugin_credentials yana bayyana bayanan shiga na "IPMI / Redfish (BMC)" amma ba ya karanta wani BMC.
+- **Babu kallo a matakin rack.** Tushen Cacti ba shi da abin rack; na'ura tana da filin rubutu kyauta na `location` kawai.
 
-Ƙarin yana tambayar BMCs a wajen zagayowar tambaya ta Cacti, yana adana karatu mai daidaito a ma'ajiyar wucin gadi, kuma yana nuna su ta hanyar tambayar bayanai ta script server da tushen bayanai na taƙaitawa. Yana sake amfani da zane-zane, izini, Thold, da Maint na Cacti, kuma ba ya canza yanayin BMC. An shirya goyon bayan mai tattara bayanai na nesa don mataki na 4; tattarawar yanzu tana gudana ne a kan babban poller kaɗai.
+Ƙarin yana binciken BMCs a wajen zagayowar binciken Cacti a kan babban poller ko masu tattara bayanai na nesa, yana adana karatu da aka daidaita a ma'ajiyar wucin gadi, kuma yana bayyana su ta hanyar tambayoyin bayanai na script server, taƙaitawar node, da taƙaitawar wutar rack. Yana sake amfani da zane-zane, izini, Thold, da Maint na Cacti, kuma ba ya canza yanayin BMC.
 
-## Iyakar da aka tsara
+## Iyaka da matsayi
 
-| Mataki | Iyaka | Matakan ci gaba |
-|---|---|---|
-| 0, bincike | Jadawalin masu samarwa, tabbatar da halayyar asali a kan BMCs masu aiki, farashin tambaya, gwajin tambayar bayanai | [M1](https://github.com/somethingwithproof/plugin_redfish/milestone/1) |
-| 1, lura | Rajistar BMC, bayanan sirri, TLS, mai tattarawa na Redfish, karatu mai daidaito, na'urori, zane-zane na kowane ma'auni, faɗakarwar Thold, dakatarwar Maint, shafin lafiya | [M2](https://github.com/somethingwithproof/plugin_redfish/milestone/2), [M3](https://github.com/somethingwithproof/plugin_redfish/milestone/3), [M4](https://github.com/somethingwithproof/plugin_redfish/milestone/4) |
-| 2, ipmi | Komawa kan IPMI don BMCs ba tare da Redfish mai amfani ba, a kashe ta tsohuwa | [M5](https://github.com/somethingwithproof/plugin_redfish/milestone/5) |
-| 3, racks | Rajistar rack, jimillar wutar rack tare da rufewa, sararin kasafin kuɗi | [M6](https://github.com/somethingwithproof/plugin_redfish/milestone/6) |
-| 4, nesa | Masu tattara bayanai na nesa na Cacti don keɓaɓɓun hanyoyin sadarwa na BMC | [M7](https://github.com/somethingwithproof/plugin_redfish/milestone/7) |
+| Mataki | Iyaka | Matakan ci gaba | Matsayi |
+|---|---|---|---|
+| 0, bincike | Jadawalin masu siyarwa, tabbatar da halayen asali a kan BMCs na zahiri, farashin bincike, gwajin tambayar bayanai | [M1](https://github.com/somethingwithproof/plugin_redfish/milestone/1) | An kammala, ana jiran bayanan firmware na BMC na gaske |
+| 1, lura | Rijistar BMC, bayanan shiga, TLS, mai tattara Redfish, karatu da aka daidaita, na'urori, zane-zanen kowane ma'auni, faɗakarwar Thold, haɗin Maint, shafin lafiya | [M2](https://github.com/somethingwithproof/plugin_redfish/milestone/2), [M3](https://github.com/somethingwithproof/plugin_redfish/milestone/3), [M4](https://github.com/somethingwithproof/plugin_redfish/milestone/4) | An aiwatar; tantancewar rukunin gwaji na M4 tana jiran aiki |
+| 2, ipmi | Komawa kan IPMI (`lanplus`) mai karatu kaɗai ta hanyar `ipmitool`, a kashe ta tsohuwa | [M5](https://github.com/somethingwithproof/plugin_redfish/milestone/5) | An aiwatar |
+| 3, racks | Rijistar rack, jimillar wutar rack tare da mafi ƙarancin rufi, sauran ƙarfin kasafin kuɗi, `ss_redfish_rack.php` | [M6](https://github.com/somethingwithproof/plugin_redfish/milestone/6) | An aiwatar |
+| 4, nesa da yanayin aiki | Masu tattara bayanai na nesa (`replicate_out`, `remote_agent`), mai samar da CasC da CLI, iyawar MCP, binciken Doctor | [M7](https://github.com/somethingwithproof/plugin_redfish/milestone/7) | An aiwatar |
 
-A wajen iyaka: saita iyakokin wuta ko duk wani saitin BMC, sarrafa wuta, sabunta firmware, samun damar console, injin faɗakarwa mallakar ƙarin, da haɗin mai tsarawa.
+Abubuwan da ba sa ciki: saita iyakokin wuta ko wani saitin BMC daban, sarrafa wuta, sabunta firmware, samun damar console, injin faɗakarwa mallakar plugin, da haɗin mai tsara jadawali.
 
 ## Manufofin dacewa
 
 | Sashi | Manufa |
 |---|---|
-| Cacti | 1.2.31 ko sama da haka, babu gyare-gyare a ainihin tsari |
-| Rumbun adana bayanai | MariaDB 10.2 ko MySQL 5.7 ko sama da haka: ana riƙe BMC guda ɗaya ga kowace na'ura ta maɓalli na musamman a kan shafi da aka ƙirƙira |
-| PHP | 8.2 ko sama da haka; `setup.php` yana ci gaba da kasancewa mai karantuwa a kan 8.0 don haka tsarin da ba a goyi bayansa ba yana samun ƙi maimakon UI na Cacti da ya lalace |
-| BMCs | Dell iDRAC, HPE iLO, Lenovo XCC, da OpenBMC, ta kewayon firmware; duba [jadawalin masu samarwa](../../research/vendor-matrix.md) |
-| Redfish | Sabbin albarkatun sashi da na'urar auna da farko, tsoffin `Power` da `Thermal` a matsayin madadin komawa |
-| Thold, Maint | Ba a buƙatar wani sauyi ba |
+| Cacti | 1.2.31 ko sama da haka, babu gyare-gyaren tushe |
+| Rumbun bayanai | MariaDB 10.2 ko MySQL 5.7 ko sama da haka: maɓalli na musamman a kan ginshiƙi da aka samar yana riƙe BMC ɗaya a kowace na'ura |
+| PHP | 8.2 ko sama da haka; wuraren shiga suna ci gaba da tantancewa a kan 8.0 don tsarin da ba a tallafawa ya sami ƙi maimakon karyewar UI na Cacti |
+| Ƙarin PHP | `ext-openssl` (wanda Cacti 1.2.31 ke buƙata); babu `ext-curl` kuma babu dogaro na lokacin gudu na Composer |
+| Kayan aiki na zaɓi | `ipmitool` a kan pollers da ke tattara BMCs waɗanda aka kunna masu komawa kan IPMI |
+| BMCs | Dell iDRAC, HPE iLO, Lenovo XCC, da OpenBMC, bisa kewayon firmware; duba [jadawalin masu siyarwa](../../research/vendor-matrix.md) |
+| Redfish | Sabbin albarkatun subsystem da na'urori masu auna sigina da farko, tsofaffin `Power` da `Thermal` a matsayin abin komawa |
+| Thold, Maint | Babu canje-canjen da ake buƙata (CI tana gwada Thold v1.8.2 da Maint v1.3) |
 
 ## Tsari
 
-- [docs/PLAN.md](../../PLAN.md) shi ne cikakken shirin: tsarin gine-gine, gaskiyar asali da ya dogara da ita (tare da tushe da zato da har yanzu za a tabbatar), tsarin auna, iyakokin tsaro, lissafin aiki, gwaji, da haɗari.
-- [docs/decisions/](../../decisions) yana riƙe bayanan yanke shawara na tsarin gine-gine don zaɓuɓɓukan da aka riga aka yi.
-- [docs/REQUIREMENTS.md](../../REQUIREMENTS.md) yana haɗa kowane ID na buƙata zuwa batunsa.
+- [docs/PLAN.md](../../PLAN.md) shine cikakken tsarin: gine-gine, gaskiyar asali da ya dogara da ita, tsarin aunawa, iyakokin tsaro, lissafin aiki, gwaji, da haɗari.
+- [docs/decisions/](../../decisions/) yana riƙe da bayanan shawarwarin gine-gine don zaɓukan da aka riga aka yanke.
+- [docs/REQUIREMENTS.md](../../REQUIREMENTS.md) yana haɗa kowace lambar buƙata zuwa batunta.
 
 ```mermaid
 flowchart LR
-    BMC[BMCs: Redfish ta HTTPS] --> C[Mai tattarawa a kan Cacti poller]
-    C --> CACHE[(Ma'ajiyar karatu mai daidaito)]
-    CACHE --> SS[Tambayar bayanai ta script server]
-    SS -->|poller_output| T[Thold da Maint]
-    SS --> G[Zane-zanen Cacti da izini]
-    CACHE --> R[Jimillar rack, mataki na 3]
+    BMC["BMCs: Redfish HTTPS / zaɓin IPMI lanplus"] --> C["Mai tattarawa a kan babban poller ko na nesa"]
+    C --> CACHE[("Ma'ajiyar karatu da aka daidaita")]
+    CACHE --> SS["Script server: membobi, taƙaitawar node, taƙaitawar rack"]
+    SS -->|poller_output| T["Thold da Maint"]
+    SS --> G["Zane-zane da izinin Cacti"]
+    CACHE --> ECO["CLI, CasC, iyawar MCP, Doctor"]
 ```
 
 ## Tsaro
 
-Bayanan sirri na BMC suna sarrafa gudanarwar uwar garke a wajen tsarin aiki. Tsarin yana hana su shiga layin umarni, rajista, da shafuka, yana tabbatar da TLS ta tsohuwa, yana gudanar da kowane umarni na waje daga jeri na muhawara tare da ƙananan umarni da ke cikin jerin izini, kuma yana amfani da asusun BMC na karatu kaɗai. Duba [docs/PLAN.md](../../PLAN.md#security) da [SECURITY.md](../../../SECURITY.md).
+Bayanan shiga na BMC suna sarrafa gudanarwar uwar garke daga waje. Tsarin yana kiyaye sirri daga layukan umarni, rajistar bayanai, fitar da CasC, kayan aikin wakilin nesa, amsoshin MCP, da shafukan yanar gizo; yana ɓoye kalmomin sirri da aka adana da AES-256-GCM ta amfani da fayil ɗin maɓallin ma'ajiyar sirri na gida a kowane poller; yana tantance TLS ta tsohuwa; yana gudanar da `ipmitool` daga takamaiman tsarin jeri na hujjoji tare da ƙananan umarnin karatu kaɗai da aka halatta; kuma yana amfani da asusun BMC masu karatu kaɗai. Duba [docs/PLAN.md](../../PLAN.md#security) da [SECURITY.md](../../../SECURITY.md).
 
 ## Jagorar mai aiki
 
-Duba [docs/operator-guide.md](../../operator-guide.md) don buƙatun shigarwa, saitin vault da TLS, rajistar BMC, ƙirƙirar zane-zane, tazarar faɗakarwa, adana madadi, da magance matsala. Jagorar ba ta ayyana cewa ana goyi bayan wani layin firmware na mai samarwa na gaske ba har sai wani rikodin da aka tace daga wannan firmware ɗin ya ci gwajin.
+Duba [docs/operator-guide.md](../../operator-guide.md) don buƙatun shigarwa, saita ma'ajiyar sirri da TLS, rijistar BMC, ƙirƙirar zane, tazarar faɗakarwa, ajiyar bayanai, da sarrafa gazawa. Jagorar ba ta ayyana wani layin firmware na mai siyarwa na zahiri a matsayin wanda aka tallafa ba har sai bayanin da aka tace daga wannan firmware ɗin ya ci gwajin.
+
+## Haɓakawa da gwaji
+
+CI (`.github/workflows/plugin-ci-workflow.yml`) tana duba wuraren shiga a PHP 8.0, tana gudanar da gwaje-gwajen Pest unit (`phpunit.xml`) da na haɗin zagayowar rayuwa (`phpunit-integration.xml`) da PHPStan mataki na 9 a kan PHP 8.2 zuwa 8.5 akan Cacti `release/1.2.31` da `1.2.x`, tana tabbatar da ƙin PHP 8.1, tana gwada DMTF Redfish Mockup Server (kwaikwayon subsystem, tsohon tsari kaɗai, da HPE iLO Gen11) da Thold v1.8.2 / Maint v1.3 gaba ɗaya, kuma tana duba kundin gettext, ayyukan workflow, da lasisin REUSE.
+
+Binciken gida kafin turawa (push):
+
+```sh
+sh tests/lint-workflows.sh
+sh locales/build_gettext.sh --check
+CACTI_PATH=/path/to/cacti phpstan analyse -c phpstan.neon --no-progress
+```
+
+Gudanar da Pest tare da `--configuration=phpunit.xml` don gwaje-gwajen unit da ƙa'idodin tushe, ko `--configuration=phpunit-integration.xml` tare da `CACTI_PATH` da `REDFISH_TEST_DATABASE=disposable` akan rumbun bayanai na Cacti mai jefarwa don gwaje-gwajen haɗin zagayowar rayuwa.
 
 ## Yadda ake bin diddigin aiki
 
-- **Matakan ci gaba** suna bin matakan ci gaba na shirin. Kowanne yana da babban batu da ke lissafa ƙananan batutuwa da shaidar kammalawa.
-- **Batutuwa** an rarraba su ta alamar lakabi: `type: requirement`, `type: research`, `type: decision`, `type: epic`. Batutuwan buƙatu suna bayyana buƙatu masu lamba, masu gwaji (`REQ-AREA-NNN`) da sharuɗɗan karɓa.
+- **Matakan ci gaba (Milestones)** suna bin matakan ci gaba na tsarin. Kowanne yana da batun epic da ke jera ƙananan batutuwa da shaidar fita.
+- **Batutuwa (Issues)** an rarraba su ta lakabi: `type: requirement`, `type: research`, `type: decision`, `type: epic`. Batutuwan buƙatu suna bayyana buƙatu masu lamba da za a iya gwadawa (`REQ-AREA-NNN`) da ƙa'idodin karɓa.
 - **Lakabi** kuma suna ɗauke da `area:`, `phase:`, `priority:`, da `status:`. Duba [CONTRIBUTING.md](../../../CONTRIBUTING.md#labels).
-- [Allon aikin](https://github.com/users/somethingwithproof/projects/12) yana nuna duk batutuwa a cikin matakan ci gaba.
+- [Allon aiki](https://github.com/users/somethingwithproof/projects/12) yana nuna duk batutuwa a cikin matakan ci gaba.
 
-## Bayar da gudummawa
+## Gudunmawa
 
-Karanta [CONTRIBUTING.md](../../../CONTRIBUTING.md). Ayyukan commit suna buƙatar sa hannu na DCO. Tattaunawar tsari tana faruwa a kan batutuwa; buɗaɗɗun shawarwari suna ɗauke da lakabin `type: decision`. Shaida daga BMCs na gaske ita ce gudummawa mafi amfani a yanzu; goge adireshi, lambobin serial, da bayanan sirri kafin a wallafa kowane rikodi.
+Karanta [CONTRIBUTING.md](../../../CONTRIBUTING.md). Ayyukan commit suna buƙatar sa hannun DCO. Tattaunawar tsari tana faruwa a cikin batutuwa; buɗaɗɗun shawarwari suna ɗauke da lakabin `type: decision`. Shaida daga BMCs na zahiri ita ce gudunmawa mafi amfani a yanzu; cire adireshi, lambobin serial, da bayanan shiga kafin saka kowane bayani.
 
 ## Lasisi
 
-GNU General Public License v2.0, lasisi iri ɗaya da na Cacti da ƙarinsa. Duba [LICENSE](../../../LICENSE).
+GNU General Public License v2.0, lasisi iri ɗaya da na Cacti da ƙarin abubuwan sa. Duba [LICENSE](../../../LICENSE).

@@ -90,6 +90,12 @@ final class Address {
 		return ctype_digit((string) end($labels)) ? null : $address;
 	}
 
+	/**
+	 * Is ip.
+	 *
+	 * @param string $address
+	 * @return bool
+	 */
 	public static function isIp(string $address): bool {
 		return filter_var($address, FILTER_VALIDATE_IP) !== false;
 	}

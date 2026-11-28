@@ -29,11 +29,20 @@ namespace Somethingwithproof\Redfish;
  * pattern, so a value that never reached the known list is still masked.
  */
 final class Redactor {
+	/**
+	 * Mask constant.
+	 */
 	private const MASK = '[redacted]';
 
-	/** @var list<string> */
+	/** @var array<string, int> form => byte length */
 	private array $known = [];
 
+	/**
+	 * Add.
+	 *
+	 * @param Secret $secret
+	 * @return void
+	 */
 	public function add(Secret $secret): void {
 		$value = $secret->reveal();
 
@@ -44,13 +53,10 @@ final class Redactor {
 		}
 
 		foreach ([$value, rawurlencode($value), urlencode($value), substr((string) json_encode($value), 1, -1), substr((string) json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 1, -1)] as $form) {
-			if ($form !== '' && !in_array($form, $this->known, true)) {
-				$this->known[] = $form;
+			if ($form !== '' && !isset($this->known[$form])) {
+				$this->known[$form] = strlen($form);
 			}
 		}
-
-		// Longest first, so a secret containing another is masked whole.
-		usort($this->known, static fn (string $a, string $b): int => strlen($b) <=> strlen($a));
 	}
 
 	/**
@@ -64,6 +70,12 @@ final class Redactor {
 		'/-----BEGIN [A-Z ]*PRIVATE KEY-----.*?(?:-----END [A-Z ]*PRIVATE KEY-----|$)/s',
 	];
 
+	/**
+	 * Clean.
+	 *
+	 * @param string $text
+	 * @return string
+	 */
 	public function clean(string $text): string {
 		// Every span is found in the original text and masked once at the
 		// end. Applied one after another, a pass could hide material from
@@ -84,9 +96,9 @@ final class Redactor {
 			}
 		}
 
-		foreach ($this->known as $form) {
+		foreach ($this->known as $form => $length) {
 			for ($at = strpos($text, $form); $at !== false; $at = strpos($text, $form, $at + 1)) {
-				$spans[] = [$at, $at + strlen($form)];
+				$spans[] = [$at, $at + $length];
 			}
 		}
 

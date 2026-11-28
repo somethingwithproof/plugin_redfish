@@ -27,17 +27,63 @@ namespace Somethingwithproof\Redfish;
  * clock at write time; freshness is derived from it when read.
  */
 final readonly class Reading {
+	/**
+	 * Source environment constant.
+	 */
 	public const SOURCE_ENVIRONMENT = 'redfish.environment';
+	/**
+	 * Source sensor constant.
+	 */
 	public const SOURCE_SENSOR      = 'redfish.sensor';
+	/**
+	 * Source legacy constant.
+	 */
 	public const SOURCE_LEGACY      = 'redfish.legacy';
+	/**
+	 * Source node constant.
+	 */
 	public const SOURCE_NODE        = 'redfish.node';
+	/**
+	 * Source ipmi dcmi constant.
+	 */
+	public const SOURCE_IPMI_DCMI   = 'ipmi.dcmi';
+	/**
+	 * Source ipmi sdr constant.
+	 */
+	public const SOURCE_IPMI_SDR    = 'ipmi.sdr';
+	/**
+	 * Source ipmi sel constant.
+	 */
+	public const SOURCE_IPMI_SEL    = 'ipmi.sel';
 
+	/**
+	 * Metrics constant.
+	 */
 	public const METRICS = [
 		'power_watts', 'inlet_celsius', 'ambient_celsius', 'temperature_celsius', 'fan_speed',
 		'psu_input_watts', 'psu_output_watts', 'health_code',
 		'members_absent', 'members_unknown', 'members_degraded',
+		'fans_degraded', 'fans_failed', 'fan_min_rpm', 'fan_max_rpm', 'fan_min_percent', 'fan_max_percent',
+		'psu_redundancy_code', 'psu_redundancy_loss_count',
+		'ecc_corrected_errors', 'ecc_uncorrected_errors',
+		'ecc_period_corrected_errors', 'ecc_period_uncorrected_errors',
+		'drive_predicted_wear_pct', 'drive_media_life_left_pct', 'drive_failure_predicted',
+		'sel_critical_count', 'sel_warning_count',
+		'sel_critical_rate_per_hour', 'sel_warning_rate_per_hour',
+		'sel_percent_used', 'sel_overflow',
 	];
 
+	/**
+	 * Initialize a new Reading instance.
+	 *
+	 * @param string $member
+	 * @param string $metric
+	 * @param float|null $value
+	 * @param string $unit
+	 * @param string $source
+	 * @param string $rule
+	 * @param string $state
+	 */
 	public function __construct(
 		public string $member,
 		public string $metric,

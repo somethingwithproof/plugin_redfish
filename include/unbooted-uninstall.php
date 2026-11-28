@@ -27,6 +27,11 @@
  * lifecycle integration tests run both paths.
  */
 
+/**
+ * Uninstall unbooted.
+ *
+ * @return void
+ */
 function redfish_uninstall_unbooted(): void {
 	$row  = db_fetch_row_prepared('SELECT value FROM settings WHERE name = ?', array('redfish_uninstall_keep_tables'));
 	$keep = !is_array($row) || $row === array() || (isset($row['value']) && $row['value'] === 'on');

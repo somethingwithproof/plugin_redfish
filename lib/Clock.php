@@ -19,6 +19,14 @@
 
 namespace Somethingwithproof\Redfish;
 
+/**
+ * Interface representing clock.
+ */
 interface Clock {
+	/**
+	 * Now.
+	 *
+	 * @return int
+	 */
 	public function now(): int;
 }

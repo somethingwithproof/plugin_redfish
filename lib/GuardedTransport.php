@@ -32,10 +32,26 @@ namespace Somethingwithproof\Redfish;
  * worker never holds a session on the BMC at the same time.
  */
 final class GuardedTransport implements HttpTransport {
+	/**
+	 * Busy property.
+	 */
 	private bool $busy = false;
 
+	/**
+	 * Sent property.
+	 */
 	private int $sent = 0;
 
+	/**
+	 * Initialize a new GuardedTransport instance.
+	 *
+	 * @param HttpTransport $inner
+	 * @param OperationGuard $guard
+	 * @param int $maxRequests
+	 * @param Clock|null $clock
+	 * @param int $deadline
+	 * @param int $closeDeadline
+	 */
 	public function __construct(
 		private readonly HttpTransport $inner,
 		private readonly OperationGuard $guard,
@@ -46,6 +62,13 @@ final class GuardedTransport implements HttpTransport {
 	) {
 	}
 
+	/**
+	 * Send.
+	 *
+	 * @param HttpRequest $request
+	 * @return HttpResponse
+	 * @throws TransportError
+	 */
 	public function send(HttpRequest $request): HttpResponse {
 		$this->guard->check($request);
 
@@ -71,10 +94,20 @@ final class GuardedTransport implements HttpTransport {
 		}
 	}
 
+	/**
+	 * Requests.
+	 *
+	 * @return int
+	 */
 	public function requests(): int {
 		return $this->sent;
 	}
 
+	/**
+	 * Guard.
+	 *
+	 * @return OperationGuard
+	 */
 	public function guard(): OperationGuard {
 		return $this->guard;
 	}
